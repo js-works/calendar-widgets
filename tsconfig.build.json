@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "allowJs": false,
+    "target": "ES2022",
+    "module": "ES2022",
+    "moduleResolution": "node",
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "useDefineForClassFields": false,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": true,
+    "removeComments": true,
+    "preserveConstEnums": true,
+    "downlevelIteration": true,
+    "sourceMap": true,
+    "lib": ["ES2022", "dom"],
+    "esModuleInterop": true,
+    "baseUrl": "./src/main",
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "paths": {},
+    "typeRoots": ["node_modules/@types"],
+    "types": []
+  },
+  "files": ["src/main/calendar-widgets.ts"],
+  "include": ["src/main/**/*.ts", "src/main/**/*.tsx"],
+  "exclude": ["node_modules"]
+}

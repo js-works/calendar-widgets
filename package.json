@@ -1,0 +1,39 @@
+{
+  "name": "calendar-widgets",
+  "version": "0.0.1",
+  "description": "",
+  "type": "module",
+  "main": "./dist/calendar-widgets.cjs.js",
+  "module": "./dist/calendar-widgets.esm.js",
+  "types": "./dist/types/calendar-widgets.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "node ./scripts/build.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/js-works/calendar-widgets.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/js-works/calendar-widgets/issues"
+  },
+  "homepage": "https://github.com/js-works/calendar-widgets#readme",
+  "devDependencies": {
+    "archiver": "^5.3.1",
+    "del": "^7.0.0",
+    "esbuild": "^0.15.5",
+    "prettier": "^2.7.1",
+    "terser": "^5.15.0",
+    "typescript": "4.6.4"
+  },
+  "dependencies": {
+    "@shoelace-style/localize": "^3.0.1",
+    "@shoelace-style/shoelace": "^2.0.0-beta.83",
+    "lit": "^2.3.1"
+  }
+}
