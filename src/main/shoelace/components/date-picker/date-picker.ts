@@ -1,5 +1,4 @@
 import { css, html, unsafeCSS, LitElement } from 'lit';
-import type { ComplexAttributeConverter } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { unsafeHTML } from 'lit/directives/unsafe-html';
 import { createRef, ref } from 'lit/directives/ref';
@@ -9,6 +8,7 @@ import { renderDatePicker } from '../../../shared/date-picker-render';
 import { diff, renderToString } from '../../../shared/vdom';
 import type { VNode } from '../../../shared/vdom';
 import datePickerBaseStyles from '../../../shared/date-picker.styles';
+import { dateAttributeConverter } from '../../common/attribute-converters';
 
 // === exports =======================================================
 
@@ -21,30 +21,6 @@ namespace DatePicker {
 }
 
 // === converters ====================================================
-
-const dateAttributeConverter: ComplexAttributeConverter<Date | null, Date> = {
-  fromAttribute(value) {
-    if (!value || !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-      return null;
-    }
-
-    return new Date(value);
-  },
-
-  toAttribute(date) {
-    if (!date) {
-      return '';
-    }
-
-    return (
-      String(date.getFullYear()).padStart(4, '0') +
-      '-' +
-      String(date.getMonth()).padStart(2, '0') +
-      '-' +
-      String(date.getDate()).padStart(2, '0')
-    );
-  }
-};
 
 const datePickerCustomStyles = css`
   .base {
@@ -84,7 +60,7 @@ const datePickerCustomStyles = css`
   }
 `;
 
-@customElement('cp-date-picker')
+@customElement('sx-date-picker')
 class DatePicker extends LitElement {
   static styles = [unsafeCSS(datePickerBaseStyles), datePickerCustomStyles];
 

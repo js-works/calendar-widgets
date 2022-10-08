@@ -21,13 +21,10 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "skipLibCheck": true,
-    "paths": {
-      "calendar-widgets": ["./src/main/calendar-widgets.ts"]
-    },
+    "paths": {},
     "typeRoots": ["node_modules/@types"],
     "types": []
   },
-  "files": ["src/main/calendar-widgets.ts"],
   "include": ["./src/main/**/*.*", "./src/stories/**/*.*"],
   "exclude": ["node_modules"]
 }
