@@ -3,7 +3,6 @@ import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import { getDirection, getLanguage, translate } from '../i18n/i18n';
-//import { FocusTrap } from '@a11y/focus-trap'
 
 // icons
 import infoIcon from '../icons/info-circle.icon';
@@ -29,13 +28,10 @@ export {
   showWarnDialog
 };
 
-// required custom element (to prevent too much tree shaking)
-//void FocusTrap;
-
 // === types =========================================================
 
 type DialogConfig<T> = {
-  type: 'normal' | 'success' | 'warning' | 'danger';
+  type: 'default' | 'success' | 'warning' | 'danger';
   icon: string;
   title: string;
   message: string;
@@ -68,7 +64,7 @@ const showInfoDialog = createDialogFn<{
   okText?: string;
 }>((parent, params) => {
   return showDialog(parent, (translate) => ({
-    type: 'normal',
+    type: 'default',
     icon: infoIcon,
     title: params.title || translate('information'),
     message: params.message || '',
@@ -152,7 +148,7 @@ const showConfirmDialog = createDialogFn<
   boolean
 >((parent, params) => {
   return showDialog(parent, (translate) => ({
-    type: 'normal',
+    type: 'default',
     icon: confirmationIcon,
     title: params.title || translate('confirmation'),
     message: params.message || '',
@@ -215,7 +211,7 @@ const showInputDialog = createDialogFn<
   inputField.setAttribute('autofocus', '');
 
   return showDialog(parent, (translate) => ({
-    type: 'normal',
+    type: 'default',
     icon: inputIcon,
     title: params.title || translate('input'),
     message: params.message || '',
@@ -264,23 +260,21 @@ function showDialog<T = void>(
   };
 
   // required custom elements
-  void (/*FocusTrap  || */ (SlButton || SlIcon || SlInput || SlDialog));
+  void (SlButton || SlIcon || SlInput || SlDialog);
 
   containerShadow.innerHTML = `
     <style>
     </style>
     <form class="form" dir=${currentDir}>
-      <focus-trap>
-        <sl-dialog open class="dialog">
-          <div slot="label" class="header">
-            <sl-icon class="icon"></sl-icon>
-            <div class="title"></div>
-          </div>
-          <div class="message"></div>
-          <div class="content"></div>
-          <div slot="footer" class="buttons"></div>
-        </sl-dialog>
-      </focus-trap>
+      <sl-dialog open class="dialog">
+        <div slot="label" class="header">
+          <sl-icon class="icon"></sl-icon>
+          <div class="title"></div>
+        </div>
+        <div class="message"></div>
+        <div class="content"></div>
+        <div slot="footer" class="buttons"></div>
+      </sl-dialog>
     </form>
   `;
 
