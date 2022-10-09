@@ -66,7 +66,7 @@ export default css`
     font-size: var(--sl-font-size-x-large);
   }
 
-  .icon.normal {
+  .icon.default {
     color: var(--sl-color-primary-500);
   }
 
