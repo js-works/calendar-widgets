@@ -4,6 +4,8 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import { getDirection, getLanguage, translate } from '../i18n/i18n';
 
+import { createDialogFunctions, DialogConfig } from '../../shared/dialogs';
+
 // icons
 import infoIcon from '../icons/info-circle.icon';
 import successIcon from '../icons/info-circle.icon';
@@ -28,219 +30,20 @@ export {
   showWarnDialog
 };
 
-// === types =========================================================
-
-type DialogConfig<T> = {
-  type: 'default' | 'success' | 'warning' | 'danger';
-  icon: string;
-  title: string;
-  message: string;
-
-  buttons: {
-    text: string;
-    variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
-  }[];
-
-  defaultResult?: T;
-  content?: HTMLElement | null;
-  mapResult?: (data: Record<string, string>) => T;
+const icons = {
+  info: infoIcon,
+  success: successIcon,
+  warning: warningIcon,
+  error: errorIcon,
+  confirmation: confirmationIcon,
+  approval: approvalIcon,
+  input: inputIcon
 };
 
-// --- functions -----------------------------------------------------
-
-function createDialogFunction<P extends Record<string, any>, R = void>(
-  logic: (parent: HTMLElement, params: P) => Promise<R>
-): {
-  (parent: HTMLElement, params: P): Promise<R>;
-} {
-  return (parent, params) => logic(parent, params);
-}
-
-function createDialogFunctions(
-  showDialog: <T = void>(
-    parent: HTMLElement,
-    init: (translate: (key: string) => string) => DialogConfig<T>
-  ) => Promise<T>
-) {
-  return {
-    showInfoDialog: createDialogFunction<{
-      message: string;
-      title?: string;
-      okText?: string;
-    }>((parent, params) => {
-      return showDialog(parent, (translate) => ({
-        type: 'default',
-        icon: infoIcon,
-        title: params.title || translate('information'),
-        message: params.message || '',
-
-        buttons: [
-          {
-            variant: 'primary',
-            text: params.okText || translate('ok')
-          }
-        ]
-      }));
-    }),
-
-    showSuccessDialog: createDialogFunction<{
-      message: string;
-      title?: string;
-      okText?: string;
-    }>((parent, params) => {
-      return showDialog(parent, (translate) => ({
-        type: 'success',
-        icon: successIcon,
-        title: params.title || translate('success'),
-        message: params.message || '',
-
-        buttons: [
-          {
-            variant: 'success',
-            text: params.okText || translate('ok')
-          }
-        ]
-      }));
-    }),
-
-    showWarnDialog: createDialogFunction<{
-      message: string;
-      title?: string;
-      okText?: string;
-    }>((parent, params) => {
-      return showDialog(parent, (translate) => ({
-        type: 'warning',
-        icon: warningIcon,
-        title: params.title || translate('warning'),
-        message: params.message || '',
-
-        buttons: [
-          {
-            variant: 'warning',
-            text: params.okText || translate('ok')
-          }
-        ]
-      }));
-    }),
-
-    showErrorDialog: createDialogFunction<{
-      message: string;
-      title?: string;
-      okText?: string;
-    }>((parent, params) => {
-      return showDialog(parent, (translate) => ({
-        type: 'danger',
-        icon: errorIcon,
-        title: params.title || translate('error'),
-        message: params.message || '',
-
-        buttons: [
-          {
-            variant: 'danger',
-            text: params.okText || translate('ok')
-          }
-        ]
-      }));
-    }),
-
-    showConfirmDialog: createDialogFunction<
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-        cancelText?: string;
-      },
-      boolean
-    >((parent, params) => {
-      return showDialog(parent, (translate) => ({
-        type: 'default',
-        icon: confirmationIcon,
-        title: params.title || translate('confirmation'),
-        message: params.message || '',
-        mapResult: ({ button }) => button === '1',
-
-        buttons: [
-          {
-            text: params.cancelText || translate('cancel')
-          },
-          {
-            variant: 'primary',
-            text: params.okText || translate('ok')
-          }
-        ]
-      }));
-    }),
-
-    showApproveDialog: createDialogFunction<
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-        cancelText?: string;
-      },
-      boolean
-    >((parent, params) => {
-      return showDialog(parent, (translate) => ({
-        type: 'danger',
-        icon: approvalIcon,
-        title: params.title || translate('approval'),
-        message: params.message || '',
-        mapResult: ({ button }) => button === '1',
-
-        buttons: [
-          {
-            text: params.cancelText || translate('cancel')
-          },
-          {
-            variant: 'danger',
-            text: params.okText || translate('ok')
-          }
-        ]
-      }));
-    }),
-
-    showInputDialog: createDialogFunction<
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-        cancelText?: string;
-        value?: string;
-      },
-      string | null
-    >((parent, params) => {
-      const inputField = document.createElement('sl-input');
-      inputField.name = 'input';
-      inputField.value = params.value || '';
-      inputField.size = 'small';
-      inputField.setAttribute('autofocus', '');
-
-      return showDialog(parent, (translate) => ({
-        type: 'default',
-        icon: inputIcon,
-        title: params.title || translate('input'),
-        message: params.message || '',
-        content: inputField,
-        mapResult: ({ button, input }) => (button === '0' ? null : input),
-
-        buttons: [
-          {
-            text: params.cancelText || translate('cancel')
-          },
-          {
-            variant: 'primary',
-            text: params.okText || translate('ok')
-          }
-        ]
-      }));
-    })
-  };
-}
-
-function showDialog<T = void>(
+function showDialog<R = void>(
   parent: HTMLElement,
-  init: (translate: (key: string) => string) => DialogConfig<T>
-): Promise<T> {
+  init: (translate: (key: string) => string) => DialogConfig<R>
+): Promise<R> {
   const target =
     parent ||
     document.querySelector('#app') ||
@@ -326,7 +129,8 @@ function showDialog<T = void>(
 
   const icon = containerShadow.querySelector<SlIcon>('sl-icon.icon')!;
   icon.classList.add(`${params.type}`);
-  icon.src = params.icon;
+
+  icon.src = icons[params.type];
 
   setText(dialogsStyles.toString(), 'style');
 

@@ -3,6 +3,7 @@ import { customElement } from 'lit/decorators';
 import { DateField } from '../../main/shoelace/components/date-field/date-field';
 
 import '../../../node_modules/@shoelace-style/shoelace/dist/themes/light.css';
+import '../../../node_modules/@shoelace-style/shoelace/dist/themes/dark.css';
 
 export default {
   title: 'Shoelace'

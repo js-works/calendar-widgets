@@ -20,8 +20,7 @@ export default css`
     height: 100%;
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
-    color: var(--sl-light, var(--sl-color-neutral-1000))
-      var(--sl-dark, var(--sl-color-neutral-1000));
+    color: var(--sl-color-neutral-1000);
     padding: 0;
     --header-spacing: 0;
     --body-spacing: 0;
@@ -66,7 +65,10 @@ export default css`
     font-size: var(--sl-font-size-x-large);
   }
 
-  .icon.default {
+  .icon.info,
+  .icon.question,
+  .icon.confirmation,
+  .icon.input {
     color: var(--sl-color-primary-500);
   }
 
@@ -78,7 +80,8 @@ export default css`
     color: var(--sl-color-warning-500);
   }
 
-  .icon.danger {
+  .icon.error,
+  .icon.approval {
     color: var(--sl-color-danger-500);
   }
 

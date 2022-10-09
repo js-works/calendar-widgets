@@ -15,7 +15,8 @@ export default {
   title: 'Shoelace'
 };
 
-export const dialogs = () => '<dialogs-demo></dialogs-demo>';
+export const dialogs = () =>
+  '<dialogs-demo class="sl-theme-light"></dialogs-demo>';
 
 const styles = css`
   :host {
