@@ -8,7 +8,7 @@ import { renderDatePicker } from '../../../shared/date-picker-render';
 import { diff, renderToString } from '../../../shared/vdom';
 import type { VNode } from '../../../shared/vdom';
 import datePickerBaseStyles from '../../../shared/date-picker.styles';
-import { dateAttributeConverter } from '../../common/attribute-converters';
+import { dateAttributeConverter } from '../../utils/attribute-converters';
 
 // === exports =======================================================
 

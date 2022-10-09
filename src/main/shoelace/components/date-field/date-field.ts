@@ -3,7 +3,7 @@ import { customElement, property, state } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
 import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '@shoelace-style/localize';
-import { dateAttributeConverter } from '../../common/attribute-converters';
+import { dateAttributeConverter } from '../../utils/attribute-converters';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -16,14 +16,14 @@ import { DatePicker } from '../date-picker/date-picker';
 import dateFieldStyles from './date-field.styles';
 
 // icons
-import dateIcon from './icons/calendar3.icon';
-import datesIcon from './icons/calendar3.icon';
-import timeIcon from './icons/clock.icon';
-import dateTimeIcon from './icons/calendar3.icon';
-import dateRangeIcon from './icons/calendar-range.icon';
-import weekIcon from './icons/calendar.icon';
-import monthIcon from './icons/calendar.icon';
-import yearIcon from './icons/calendar.icon';
+import dateIcon from '../../icons/calendar3.icon';
+import datesIcon from '../../icons/calendar3.icon';
+import timeIcon from '../../icons/clock.icon';
+import dateTimeIcon from '../../icons/calendar3.icon';
+import dateRangeIcon from '../../icons/calendar-range.icon';
+import weekIcon from '../../icons/calendar.icon';
+import monthIcon from '../../icons/calendar.icon';
+import yearIcon from '../../icons/calendar.icon';
 
 // === types =========================================================
 
