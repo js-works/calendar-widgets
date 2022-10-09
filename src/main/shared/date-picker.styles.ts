@@ -1,13 +1,9 @@
 export default /*css*/ `
-  :host {
-    display: inline-block;
+  .cal-base {
     color: var(--cal-color);
     background-color: var(--cal-background-color);
     font-family: var(--cal-font-family);
     font-size: var(--cal-font-size);
-  }
-
-  .cal-base {
     position: relative;
     display: flex;
     flex-direction: column;
