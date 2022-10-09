@@ -48,190 +48,197 @@ type DialogConfig<T> = {
 
 // --- functions -----------------------------------------------------
 
-function createDialogFn<P extends Record<string, any>, R = void>(
-  logic: (parent: HTMLElement | null, params: P) => Promise<R>
+function createDialogFunction<P extends Record<string, any>, R = void>(
+  logic: (parent: HTMLElement, params: P) => Promise<R>
 ): {
-  (params: P): Promise<R>;
-  (parent: HTMLElement | null, params: P): Promise<R>;
+  (parent: HTMLElement, params: P): Promise<R>;
 } {
-  return (arg1: any, arg2?: any) =>
-    arg2 && typeof arg2 === 'object' ? logic(arg1, arg2) : logic(null, arg1);
+  return (parent, params) => logic(parent, params);
 }
 
-const showInfoDialog = createDialogFn<{
-  message: string;
-  title?: string;
-  okText?: string;
-}>((parent, params) => {
-  return showDialog(parent, (translate) => ({
-    type: 'default',
-    icon: infoIcon,
-    title: params.title || translate('information'),
-    message: params.message || '',
+function createDialogFunctions(
+  showDialog: <T = void>(
+    parent: HTMLElement,
+    init: (translate: (key: string) => string) => DialogConfig<T>
+  ) => Promise<T>
+) {
+  return {
+    showInfoDialog: createDialogFunction<{
+      message: string;
+      title?: string;
+      okText?: string;
+    }>((parent, params) => {
+      return showDialog(parent, (translate) => ({
+        type: 'default',
+        icon: infoIcon,
+        title: params.title || translate('information'),
+        message: params.message || '',
 
-    buttons: [
+        buttons: [
+          {
+            variant: 'primary',
+            text: params.okText || translate('ok')
+          }
+        ]
+      }));
+    }),
+
+    showSuccessDialog: createDialogFunction<{
+      message: string;
+      title?: string;
+      okText?: string;
+    }>((parent, params) => {
+      return showDialog(parent, (translate) => ({
+        type: 'success',
+        icon: successIcon,
+        title: params.title || translate('success'),
+        message: params.message || '',
+
+        buttons: [
+          {
+            variant: 'success',
+            text: params.okText || translate('ok')
+          }
+        ]
+      }));
+    }),
+
+    showWarnDialog: createDialogFunction<{
+      message: string;
+      title?: string;
+      okText?: string;
+    }>((parent, params) => {
+      return showDialog(parent, (translate) => ({
+        type: 'warning',
+        icon: warningIcon,
+        title: params.title || translate('warning'),
+        message: params.message || '',
+
+        buttons: [
+          {
+            variant: 'warning',
+            text: params.okText || translate('ok')
+          }
+        ]
+      }));
+    }),
+
+    showErrorDialog: createDialogFunction<{
+      message: string;
+      title?: string;
+      okText?: string;
+    }>((parent, params) => {
+      return showDialog(parent, (translate) => ({
+        type: 'danger',
+        icon: errorIcon,
+        title: params.title || translate('error'),
+        message: params.message || '',
+
+        buttons: [
+          {
+            variant: 'danger',
+            text: params.okText || translate('ok')
+          }
+        ]
+      }));
+    }),
+
+    showConfirmDialog: createDialogFunction<
       {
-        variant: 'primary',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }));
-});
-
-const showSuccessDialog = createDialogFn<{
-  message: string;
-  title?: string;
-  okText?: string;
-}>((parent, params) => {
-  return showDialog(parent, (translate) => ({
-    type: 'success',
-    icon: successIcon,
-    title: params.title || translate('success'),
-    message: params.message || '',
-
-    buttons: [
-      {
-        variant: 'success',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }));
-});
-
-const showWarnDialog = createDialogFn<{
-  message: string;
-  title?: string;
-  okText?: string;
-}>((parent, params) => {
-  return showDialog(parent, (translate) => ({
-    type: 'warning',
-    icon: warningIcon,
-    title: params.title || translate('warning'),
-    message: params.message || '',
-
-    buttons: [
-      {
-        variant: 'warning',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }));
-});
-
-const showErrorDialog = createDialogFn<{
-  message: string;
-  title?: string;
-  okText?: string;
-}>((parent, params) => {
-  return showDialog(parent, (translate) => ({
-    type: 'danger',
-    icon: errorIcon,
-    title: params.title || translate('error'),
-    message: params.message || '',
-
-    buttons: [
-      {
-        variant: 'danger',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }));
-});
-
-const showConfirmDialog = createDialogFn<
-  {
-    message: string;
-    title?: string;
-    okText?: string;
-    cancelText?: string;
-  },
-  boolean
->((parent, params) => {
-  return showDialog(parent, (translate) => ({
-    type: 'default',
-    icon: confirmationIcon,
-    title: params.title || translate('confirmation'),
-    message: params.message || '',
-    mapResult: ({ button }) => button === '1',
-
-    buttons: [
-      {
-        text: params.cancelText || translate('cancel')
+        message: string;
+        title?: string;
+        okText?: string;
+        cancelText?: string;
       },
-      {
-        variant: 'primary',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }));
-});
+      boolean
+    >((parent, params) => {
+      return showDialog(parent, (translate) => ({
+        type: 'default',
+        icon: confirmationIcon,
+        title: params.title || translate('confirmation'),
+        message: params.message || '',
+        mapResult: ({ button }) => button === '1',
 
-const showApproveDialog = createDialogFn<
-  {
-    message: string;
-    title?: string;
-    okText?: string;
-    cancelText?: string;
-  },
-  boolean
->((parent, params) => {
-  return showDialog(parent, (translate) => ({
-    type: 'danger',
-    icon: approvalIcon,
-    title: params.title || translate('approval'),
-    message: params.message || '',
-    mapResult: ({ button }) => button === '1',
+        buttons: [
+          {
+            text: params.cancelText || translate('cancel')
+          },
+          {
+            variant: 'primary',
+            text: params.okText || translate('ok')
+          }
+        ]
+      }));
+    }),
 
-    buttons: [
+    showApproveDialog: createDialogFunction<
       {
-        text: params.cancelText || translate('cancel')
+        message: string;
+        title?: string;
+        okText?: string;
+        cancelText?: string;
       },
+      boolean
+    >((parent, params) => {
+      return showDialog(parent, (translate) => ({
+        type: 'danger',
+        icon: approvalIcon,
+        title: params.title || translate('approval'),
+        message: params.message || '',
+        mapResult: ({ button }) => button === '1',
+
+        buttons: [
+          {
+            text: params.cancelText || translate('cancel')
+          },
+          {
+            variant: 'danger',
+            text: params.okText || translate('ok')
+          }
+        ]
+      }));
+    }),
+
+    showInputDialog: createDialogFunction<
       {
-        variant: 'danger',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }));
-});
-
-const showInputDialog = createDialogFn<
-  {
-    message: string;
-    title?: string;
-    okText?: string;
-    cancelText?: string;
-    value?: string;
-  },
-  string | null
->((parent, params) => {
-  const inputField = document.createElement('sl-input');
-  inputField.name = 'input';
-  inputField.value = params.value || '';
-  inputField.size = 'small';
-  inputField.setAttribute('autofocus', '');
-
-  return showDialog(parent, (translate) => ({
-    type: 'default',
-    icon: inputIcon,
-    title: params.title || translate('input'),
-    message: params.message || '',
-    content: inputField,
-    mapResult: ({ button, input }) => (button === '0' ? null : input),
-
-    buttons: [
-      {
-        text: params.cancelText || translate('cancel')
+        message: string;
+        title?: string;
+        okText?: string;
+        cancelText?: string;
+        value?: string;
       },
-      {
-        variant: 'primary',
-        text: params.okText || translate('ok')
-      }
-    ]
-  }));
-});
+      string | null
+    >((parent, params) => {
+      const inputField = document.createElement('sl-input');
+      inputField.name = 'input';
+      inputField.value = params.value || '';
+      inputField.size = 'small';
+      inputField.setAttribute('autofocus', '');
+
+      return showDialog(parent, (translate) => ({
+        type: 'default',
+        icon: inputIcon,
+        title: params.title || translate('input'),
+        message: params.message || '',
+        content: inputField,
+        mapResult: ({ button, input }) => (button === '0' ? null : input),
+
+        buttons: [
+          {
+            text: params.cancelText || translate('cancel')
+          },
+          {
+            variant: 'primary',
+            text: params.okText || translate('ok')
+          }
+        ]
+      }));
+    })
+  };
+}
 
 function showDialog<T = void>(
-  parent: HTMLElement | null,
+  parent: HTMLElement,
   init: (translate: (key: string) => string) => DialogConfig<T>
 ): Promise<T> {
   const target =
@@ -382,3 +389,13 @@ function showDialog<T = void>(
     };
   });
 }
+
+const {
+  showApproveDialog,
+  showConfirmDialog,
+  showErrorDialog,
+  showInfoDialog,
+  showInputDialog,
+  showSuccessDialog,
+  showWarnDialog
+} = createDialogFunctions(showDialog);
