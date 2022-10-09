@@ -2,7 +2,7 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-import { getDirection, getLanguage, translate } from '../misc/i18n';
+import { getDirection, getLanguage, translate } from '../i18n/i18n';
 //import { FocusTrap } from '@a11y/focus-trap'
 
 // icons
@@ -15,7 +15,7 @@ import approvalIcon from '../icons/question-diamond.icon';
 import inputIcon from '../icons/keyboard.icon';
 
 // styles
-import dialogStyles from './dialogs.styles';
+import dialogsStyles from './dialogs.styles';
 
 // === exports =======================================================
 
@@ -42,7 +42,7 @@ type DialogConfig<T> = {
 
   buttons: {
     text: string;
-    variant?: 'default' | 'primary' | 'danger';
+    variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
   }[];
 
   defaultResult?: T;
@@ -95,7 +95,7 @@ const showSuccessDialog = createDialogFn<{
 
     buttons: [
       {
-        variant: 'primary',
+        variant: 'success',
         text: params.okText || translate('ok')
       }
     ]
@@ -115,7 +115,7 @@ const showWarnDialog = createDialogFn<{
 
     buttons: [
       {
-        variant: 'primary',
+        variant: 'warning',
         text: params.okText || translate('ok')
       }
     ]
@@ -135,7 +135,7 @@ const showErrorDialog = createDialogFn<{
 
     buttons: [
       {
-        variant: 'primary',
+        variant: 'danger',
         text: params.okText || translate('ok')
       }
     ]
@@ -246,7 +246,11 @@ function showDialog<T = void>(
 
   const currentLang = getLanguage(target);
   const currentDir = getDirection(target);
-  const params = init((key) => translate(currentLang, key));
+
+  const params = init((key) =>
+    translate(currentLang, `shoelaceWidgets.dialogs/${key}`)
+  );
+
   const container = document.createElement('div');
   container.attachShadow({ mode: 'open' });
   const containerShadow = container.shadowRoot!;
@@ -323,7 +327,7 @@ function showDialog<T = void>(
   icon.classList.add(`${params.type}`);
   icon.src = params.icon;
 
-  // setText(dialogStyles, 'style'); // TODO
+  setText(dialogsStyles.toString(), 'style');
 
   const buttonBox: HTMLElement = containerShadow.querySelector('.buttons')!;
   const hiddenField = document.createElement('input');

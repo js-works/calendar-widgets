@@ -17,17 +17,13 @@ export default {
 
 export const dialogs = () => '<dialogs-demo></dialogs-demo>';
 
-const styles = `
+const styles = css`
   :host {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    left: 0;
-    top: 0;
     padding: 3rem;
     box-sizing: border-box;
     background-color: var(--sl-color-neutral-0);
   }
+
   .demo sl-button {
     width: 8rem;
     margin: 4px 2px;
@@ -36,7 +32,7 @@ const styles = `
 
 @customElement('dialogs-demo')
 class DialogsDemo extends LitElement {
-  static style = styles;
+  static styles = styles;
 
   private _onInfoClick = () => {
     showInfoDialog(this, {
