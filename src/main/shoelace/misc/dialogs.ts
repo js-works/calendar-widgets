@@ -96,8 +96,14 @@ function showDialog<R = void>(
   const contentBox =
     containerShadow.querySelector<HTMLDivElement>('div.content')!;
 
-  if (params.content) {
-    contentBox.append(params.content);
+  if (params.type === 'input') {
+    const inputField = document.createElement('sl-input');
+    inputField.name = 'input';
+    // TODO - this is not very nice
+    inputField.value = typeof params.value === 'string' ? params.value : '';
+    inputField.size = 'small';
+    inputField.setAttribute('autofocus', '');
+    contentBox.append(inputField);
   }
 
   form.addEventListener('submit', (ev: any) => {

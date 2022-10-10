@@ -24,7 +24,7 @@ type DialogConfig<R> = {
   }[];
 
   defaultResult?: R;
-  content?: HTMLElement | null;
+  value?: string; // only needed for input dialog // TODO? - this is not very nice
   mapResult?: (data: Record<string, string>) => R;
 };
 
@@ -200,17 +200,11 @@ function createDialogFunctions<C>(
       },
       string | null
     >((base, params) => {
-      const inputField = document.createElement('sl-input');
-      inputField.name = 'input';
-      inputField.value = params.value || '';
-      inputField.size = 'small';
-      inputField.setAttribute('autofocus', '');
-
       return showDialog(base, (translate) => ({
         type: 'input',
         title: params.title || translate('input'),
         message: params.message || '',
-        content: inputField,
+        value: params.value || '',
         mapResult: ({ button, input }) => (button === '0' ? null : input),
 
         buttons: [
