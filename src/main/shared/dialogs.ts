@@ -46,11 +46,11 @@ function createDialogsApi<B>(
   ) => Promise<R>
 ) {
   return {
-    info(params: {
+    info: (params: {
       message: string; //
       title?: string;
       okText?: string;
-    }) {
+    }) => {
       return showDialog(base, (translate) => ({
         type: 'info',
         title: params.title || translate('information'),
@@ -65,7 +65,11 @@ function createDialogsApi<B>(
       }));
     },
 
-    success(params: { message: string; title?: string; okText?: string }) {
+    success: (params: {
+      message: string; //
+      title?: string;
+      okText?: string;
+    }) => {
       return showDialog(base, (translate) => ({
         type: 'success',
         title: params.title || translate('success'),
@@ -80,7 +84,11 @@ function createDialogsApi<B>(
       }));
     },
 
-    warn(params: { message: string; title?: string; okText?: string }) {
+    warn: (params: {
+      message: string; //
+      title?: string;
+      okText?: string;
+    }) => {
       return showDialog(base, (translate) => ({
         type: 'warning',
         title: params.title || translate('warning'),
@@ -95,7 +103,11 @@ function createDialogsApi<B>(
       }));
     },
 
-    error(params: { message: string; title?: string; okText?: string }) {
+    error(params: {
+      message: string; //
+      title?: string;
+      okText?: string;
+    }) {
       return showDialog(base, (translate) => ({
         type: 'error',
         title: params.title || translate('error'),
@@ -110,12 +122,12 @@ function createDialogsApi<B>(
       }));
     },
 
-    confirm(params: {
-      message: string;
+    confirm: (params: {
+      message: string; //
       title?: string;
       okText?: string;
       cancelText?: string;
-    }) {
+    }) => {
       return showDialog(base, (translate) => ({
         type: 'confirmation',
         title: params.title || translate('confirmation'),
@@ -134,12 +146,12 @@ function createDialogsApi<B>(
       }));
     },
 
-    approve(params: {
-      message: string;
+    approve: (params: {
+      message: string; //
       title?: string;
       okText?: string;
       cancelText?: string;
-    }) {
+    }) => {
       return showDialog(base, (translate) => ({
         type: 'approval',
         title: params.title || translate('approval'),
@@ -158,13 +170,13 @@ function createDialogsApi<B>(
       }));
     },
 
-    input(params: {
+    input: (params: {
       message: string;
       title?: string;
       okText?: string;
       cancelText?: string;
       value?: string;
-    }) {
+    }) => {
       return showDialog(base, (translate) => ({
         type: 'input',
         title: params.title || translate('input'),
