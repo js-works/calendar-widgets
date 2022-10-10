@@ -1,7 +1,7 @@
 // === exports =======================================================
 
-export { createDialogFunctions };
-export type { DialogConfig };
+export { createDialogsApi, AbstractDialogCtrl };
+export type { DialogConfig, DialogsApi };
 
 // === types =========================================================
 
@@ -28,31 +28,29 @@ type DialogConfig<R> = {
   mapResult?: (data: Record<string, string>) => R;
 };
 
+type DialogsApi = ReturnType<typeof createDialogsApi>;
+
+type Params<K extends keyof DialogsApi> = DialogsApi[K] extends (
+  params: infer P
+) => unknown
+  ? P
+  : never;
+
 // --- functions -----------------------------------------------------
 
-function createDialogFunction<C, P extends Record<string, any>, R = void>(
-  logic: (base: C, params: P) => Promise<R>
-): {
-  (base: C, params: P): Promise<R>;
-} {
-  return (base, params) => logic(base, params);
-}
-
-function createDialogFunctions<C>(
-  showDialog: <R = void>(
-    base: C,
-    init: (translate: (key: string) => string) => DialogConfig<R>
+function createDialogsApi<B>(
+  base: B,
+  showDialog: <B, R = void>(
+    base: B,
+    fn: (translate: (key: string) => string) => DialogConfig<R>
   ) => Promise<R>
 ) {
   return {
-    showInfoDialog: createDialogFunction<
-      C,
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-      }
-    >((base, params) => {
+    info(params: {
+      message: string; //
+      title?: string;
+      okText?: string;
+    }) {
       return showDialog(base, (translate) => ({
         type: 'info',
         title: params.title || translate('information'),
@@ -65,16 +63,9 @@ function createDialogFunctions<C>(
           }
         ]
       }));
-    }),
+    },
 
-    showSuccessDialog: createDialogFunction<
-      C,
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-      }
-    >((base, params) => {
+    success(params: { message: string; title?: string; okText?: string }) {
       return showDialog(base, (translate) => ({
         type: 'success',
         title: params.title || translate('success'),
@@ -87,16 +78,9 @@ function createDialogFunctions<C>(
           }
         ]
       }));
-    }),
+    },
 
-    showWarnDialog: createDialogFunction<
-      C,
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-      }
-    >((base, params) => {
+    warn(params: { message: string; title?: string; okText?: string }) {
       return showDialog(base, (translate) => ({
         type: 'warning',
         title: params.title || translate('warning'),
@@ -109,16 +93,9 @@ function createDialogFunctions<C>(
           }
         ]
       }));
-    }),
+    },
 
-    showErrorDialog: createDialogFunction<
-      C,
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-      }
-    >((base, params) => {
+    error(params: { message: string; title?: string; okText?: string }) {
       return showDialog(base, (translate) => ({
         type: 'error',
         title: params.title || translate('error'),
@@ -131,18 +108,14 @@ function createDialogFunctions<C>(
           }
         ]
       }));
-    }),
+    },
 
-    showConfirmDialog: createDialogFunction<
-      C,
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-        cancelText?: string;
-      },
-      boolean
-    >((base, params) => {
+    confirm(params: {
+      message: string;
+      title?: string;
+      okText?: string;
+      cancelText?: string;
+    }) {
       return showDialog(base, (translate) => ({
         type: 'confirmation',
         title: params.title || translate('confirmation'),
@@ -159,18 +132,14 @@ function createDialogFunctions<C>(
           }
         ]
       }));
-    }),
+    },
 
-    showApproveDialog: createDialogFunction<
-      C,
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-        cancelText?: string;
-      },
-      boolean
-    >((base, params) => {
+    approve(params: {
+      message: string;
+      title?: string;
+      okText?: string;
+      cancelText?: string;
+    }) {
       return showDialog(base, (translate) => ({
         type: 'approval',
         title: params.title || translate('approval'),
@@ -187,19 +156,15 @@ function createDialogFunctions<C>(
           }
         ]
       }));
-    }),
+    },
 
-    showInputDialog: createDialogFunction<
-      C,
-      {
-        message: string;
-        title?: string;
-        okText?: string;
-        cancelText?: string;
-        value?: string;
-      },
-      string | null
-    >((base, params) => {
+    input(params: {
+      message: string;
+      title?: string;
+      okText?: string;
+      cancelText?: string;
+      value?: string;
+    }) {
       return showDialog(base, (translate) => ({
         type: 'input',
         title: params.title || translate('input'),
@@ -217,6 +182,53 @@ function createDialogFunctions<C>(
           }
         ]
       }));
-    })
+    }
   };
+}
+
+class AbstractDialogCtrl implements DialogsApi {
+  readonly #getTarget: () => HTMLElement;
+  readonly #query: string;
+
+  constructor(parent: HTMLElement | (() => HTMLElement), query: string) {
+    this.#getTarget = typeof parent === 'function' ? parent : () => parent;
+    this.#query = query;
+  }
+
+  info(params: Params<'info'>) {
+    return this.#getDialogsApi().info(params);
+  }
+
+  success(params: Params<'success'>) {
+    return this.#getDialogsApi().success(params);
+  }
+
+  warn(params: Params<'warn'>) {
+    return this.#getDialogsApi().warn(params);
+  }
+
+  error(params: Params<'error'>) {
+    return this.#getDialogsApi().error(params);
+  }
+
+  confirm(params: Params<'confirm'>) {
+    return this.#getDialogsApi().confirm(params);
+  }
+
+  approve(params: Params<'approve'>) {
+    return this.#getDialogsApi().approve(params);
+  }
+
+  input(params: Params<'input'>) {
+    return this.#getDialogsApi().input(params);
+  }
+
+  #getDialogsApi(): DialogsApi {
+    const elem = this.#getTarget();
+    const root = elem.shadowRoot || elem;
+
+    const dialogsElem = root.querySelector(this.#query);
+
+    return (dialogsElem as any).api;
+  }
 }

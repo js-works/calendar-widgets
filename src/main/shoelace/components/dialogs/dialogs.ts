@@ -1,34 +1,30 @@
+import { LitElement } from 'lit';
+import { customElement } from 'lit/decorators';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-import { getDirection, getLanguage, translate } from '../i18n/i18n';
-
-import { createDialogFunctions, DialogConfig } from '../../shared/dialogs';
+import { getDirection, getLanguage, translate } from '../../i18n/i18n';
+import { createDialogsApi } from '../../../shared/dialogs';
+import type { DialogConfig, DialogsApi } from '../../../shared/dialogs';
 
 // icons
-import infoIcon from '../icons/info-circle.icon';
-import successIcon from '../icons/info-circle.icon';
-import warningIcon from '../icons/exclamation-circle.icon';
-import errorIcon from '../icons/exclamation-triangle.icon';
-import confirmationIcon from '../icons/question-circle.icon';
-import approvalIcon from '../icons/question-diamond.icon';
-import inputIcon from '../icons/keyboard.icon';
+import infoIcon from '../../icons/info-circle.icon';
+import successIcon from '../../icons/info-circle.icon';
+import warningIcon from '../../icons/exclamation-circle.icon';
+import errorIcon from '../../icons/exclamation-triangle.icon';
+import confirmationIcon from '../../icons/question-circle.icon';
+import approvalIcon from '../../icons/question-diamond.icon';
+import inputIcon from '../../icons/keyboard.icon';
 
 // styles
 import dialogsStyles from './dialogs.styles';
 
 // === exports =======================================================
 
-export {
-  showApproveDialog,
-  showConfirmDialog,
-  showErrorDialog,
-  showInfoDialog,
-  showInputDialog,
-  showSuccessDialog,
-  showWarnDialog
-};
+export { Dialogs };
+
+// === icons of dialog types =========================================
 
 const icons = {
   info: infoIcon,
@@ -40,18 +36,28 @@ const icons = {
   input: inputIcon
 };
 
+// === Dialogs =======================================================
+
+@customElement('sw-dialogs')
+class Dialogs extends LitElement {
+  readonly api: Readonly<DialogsApi>;
+
+  constructor() {
+    super();
+    this.api = createDialogsApi(this, showDialog as any); // TODO!!!!
+  }
+
+  protected shouldUpdate() {
+    return false;
+  }
+}
+
 function showDialog<R = void>(
-  parent: HTMLElement,
+  parent: Dialogs,
   init: (translate: (key: string) => string) => DialogConfig<R>
 ): Promise<R> {
-  const target =
-    parent ||
-    document.querySelector('#app') ||
-    document.querySelector('#root') ||
-    document.body;
-
-  const currentLang = getLanguage(target);
-  const currentDir = getDirection(target);
+  const currentLang = getLanguage(parent);
+  const currentDir = getDirection(parent);
 
   const params = init((key) =>
     translate(currentLang, `shoelaceWidgets.dialogs/${key}`)
@@ -93,6 +99,7 @@ function showDialog<R = void>(
 
   const form = containerShadow.querySelector<HTMLFormElement>('form.form')!;
   const dialog = containerShadow.querySelector<SlDialog>('sl-dialog.dialog')!;
+
   const contentBox =
     containerShadow.querySelector<HTMLDivElement>('div.content')!;
 
@@ -183,7 +190,7 @@ function showDialog<R = void>(
     buttonBox.append(button);
   });
 
-  (target.shadowRoot || target).appendChild(container);
+  parent.shadowRoot!.appendChild(container);
 
   const elem = dialog.querySelector<HTMLElement>('[autofocus]');
 
@@ -199,13 +206,3 @@ function showDialog<R = void>(
     };
   });
 }
-
-const {
-  showApproveDialog,
-  showConfirmDialog,
-  showErrorDialog,
-  showInfoDialog,
-  showInputDialog,
-  showSuccessDialog,
-  showWarnDialog
-} = createDialogFunctions(showDialog);

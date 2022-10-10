@@ -1,15 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
-
-import {
-  showApproveDialog,
-  showConfirmDialog,
-  showErrorDialog,
-  showInfoDialog,
-  showInputDialog,
-  showSuccessDialog,
-  showWarnDialog
-} from '../../main/calendar-widgets-shoelace';
+import { DialogsCtrl } from '../../main/calendar-widgets-shoelace';
 
 export default {
   title: 'Shoelace'
@@ -35,8 +26,10 @@ const styles = css`
 class DialogsDemo extends LitElement {
   static styles = styles;
 
+  private _dlg = new DialogsCtrl(this);
+
   private _onInfoClick = () => {
-    showInfoDialog(this, {
+    this._dlg.info({
       message: 'Your question has been submitted successfully',
       title: 'Submit',
       okText: 'Thanks :-)'
@@ -44,7 +37,7 @@ class DialogsDemo extends LitElement {
   };
 
   private _onSuccessClick = () => {
-    showSuccessDialog(this, {
+    this._dlg.success({
       message: 'Your question has been submitted successfully',
       title: 'Submit',
       okText: 'Good to know'
@@ -52,7 +45,7 @@ class DialogsDemo extends LitElement {
   };
 
   private _onWarnClick = () => {
-    showWarnDialog(this, {
+    this._dlg.warn({
       message: 'This is your last warning',
       title: 'Important!!!',
       okText: 'OK - I understand'
@@ -60,7 +53,7 @@ class DialogsDemo extends LitElement {
   };
 
   private _onErrorClick = () => {
-    showErrorDialog(this, {
+    this._dlg.error({
       message: 'The form could not be submitted',
       title: 'Form error',
       okText: 'OK - I understand'
@@ -68,53 +61,59 @@ class DialogsDemo extends LitElement {
   };
 
   private _onConfirmClick = () => {
-    showConfirmDialog(this, {
-      message: 'Do you really want to log out?',
-      okText: 'Log out'
-    }).then(async (confirmed) => {
-      if (confirmed) {
-        showInfoDialog(this, {
-          message: "You've been logged out"
-        });
-      }
-    });
+    this._dlg
+      .confirm({
+        message: 'Do you really want to log out?',
+        okText: 'Log out'
+      })
+      .then(async (confirmed) => {
+        if (confirmed) {
+          this._dlg.info({
+            message: "You've been logged out"
+          });
+        }
+      });
   };
 
   private _onApproveClick = () => {
-    showApproveDialog(this, {
-      message: 'Do you really want to delete the project?',
-      title: 'Are you sure?',
-      okText: 'Delete project'
-    }).then((approved) => {
-      if (approved) {
-        showInfoDialog(this, {
-          message: 'Project has been deleted'
-        });
-      }
-    });
+    this._dlg
+      .approve({
+        message: 'Do you really want to delete the project?',
+        title: 'Are you sure?',
+        okText: 'Delete project'
+      })
+      .then((approved) => {
+        if (approved) {
+          this._dlg.info({
+            message: 'Project has been deleted'
+          });
+        }
+      });
   };
 
   private _onInputClick = () => {
-    showInputDialog(this, {
-      message: 'Please enter your name',
-      title: 'Input required',
-      cancelText: 'No way!'
-    }).then(async (name) => {
-      if (name !== null) {
-        showInfoDialog(this, {
-          message: `Hello, ${name || 'stranger'}!`
-        });
-      }
-    });
+    this._dlg
+      .input({
+        message: 'Please enter your name',
+        title: 'Input required',
+        cancelText: 'No way!'
+      })
+      .then(async (name) => {
+        if (name !== null) {
+          this._dlg.info({
+            message: `Hello, ${name || 'stranger'}!`
+          });
+        }
+      });
   };
 
   private _onDestroyPlanet = async () => {
-    const confirmed = await showConfirmDialog(this, {
+    const confirmed = await this._dlg.confirm({
       message: 'Are you really sure that the planet shall be destroyed?'
     });
 
     if (confirmed) {
-      const approved = await showApproveDialog(this, {
+      const approved = await this._dlg.approve({
         message:
           'But this is such a lovely planet. ' +
           'Are you really, really sure it shall be destroyed?',
@@ -124,7 +123,7 @@ class DialogsDemo extends LitElement {
       });
 
       if (approved) {
-        showErrorDialog(this, {
+        this._dlg.error({
           message:
             'You are not allowed to destroy planets. ' +
             'Only Darth Vader is authorized.'
@@ -160,6 +159,7 @@ class DialogsDemo extends LitElement {
         <br />
         <sl-button @click=${this._onDestroyPlanet}>Destroy planet</sl-button>
       </div>
+      <sw-dialogs></sw-dialogs>
     `;
   }
 }
