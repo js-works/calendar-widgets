@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
-import { DialogsCtrl } from '../../main/calendar-widgets-shoelace';
+import { DialogsCtrl } from '../../main/js-widgets-shoelace';
 
 export default {
   title: 'Shoelace'

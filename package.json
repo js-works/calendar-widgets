@@ -1,11 +1,11 @@
 {
-  "name": "calendar-widgets",
+  "name": "js-widgets",
   "version": "0.0.1",
   "description": "",
   "type": "module",
-  "main": "./dist/calendar-widgets.cjs.js",
-  "module": "./dist/calendar-widgets.esm.js",
-  "types": "./dist/types/calendar-widgets.d.ts",
+  "main": "./dist/js-widgets.cjs.js",
+  "module": "./dist/js-widgets.esm.js",
+  "types": "./dist/types/js-widgets.d.ts",
   "files": [
     "dist"
   ],
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/js-works/calendar-widgets.git"
+    "url": "git+https://github.com/js-works/js-widgets.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/js-works/calendar-widgets/issues"
+    "url": "https://github.com/js-works/js-widgets/issues"
   },
-  "homepage": "https://github.com/js-works/calendar-widgets#readme",
+  "homepage": "https://github.com/js-works/js-widgets#readme",
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@storybook/addon-actions": "^6.5.12",
@@ -45,6 +45,7 @@
   "dependencies": {
     "@shoelace-style/localize": "^3.0.1",
     "@shoelace-style/shoelace": "^2.0.0-beta.83",
-    "lit": "^2.3.1"
+    "lit": "^2.3.1",
+    "preact": "^10.11.1"
   }
 }

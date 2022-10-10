@@ -22,7 +22,7 @@
     "typeRoots": ["node_modules/@types"],
     "types": []
   },
-  "files": ["src/main/calendar-widgets.ts"],
+  "files": ["src/main/js-widgets.ts"],
   "include": ["src/main/**/*.ts", "src/main/**/*.tsx"],
   "exclude": ["node_modules"]
 }

@@ -16,7 +16,7 @@ build().catch((e) => {
 async function build() {
   await rm('./dist', { recursive: true, force: true });
 
-  for (const pkg of ['calendar-widgets', 'calendar-widgets-shoelace']) {
+  for (const pkg of ['js-widgets', 'js-widgets-shoelace']) {
     for (const format of ['esm', 'cjs']) {
       const outfile = `./dist/${pkg}.${format}.js`;
 
