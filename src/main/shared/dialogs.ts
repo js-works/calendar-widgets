@@ -225,8 +225,12 @@ class AbstractDialogCtrl implements DialogsApi {
 
   #getDialogsApi(): DialogsApi {
     const elem = this.#getTarget();
-    const root = elem.shadowRoot || elem;
 
+    if (elem.matches(this.#query) && 'api' in elem) {
+      return (elem as unknown as { api: DialogsApi }).api;
+    }
+
+    const root = elem.shadowRoot || elem;
     const dialogsElem = root.querySelector(this.#query);
 
     return (dialogsElem as any).api;
