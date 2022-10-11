@@ -2,14 +2,15 @@ import { css, unsafeCSS } from 'lit';
 
 export default css`
   :host {
-    --defaulted-label-align-vertical: inherit;
-    --defaulted-label-align-horizontal: ;
-  }
+    --on: inherit;
+    --off: ;
 
-  .base {
-    --xxxdefaulted-label-align-vertical: var(--label-align-vertical, inherit);
-    /* prettier-ignore */
-    --xxxdefaulted-label-align-horizontal: var(--label-align-horizontal,);
+    --defaulted-label-align-vertical: var(--label-align-vertical, var(--n));
+
+    --defaulted-label-align-horizontal: var(
+      --label-align-horizontal,
+      var(--off)
+    );
 
     --defaulted-label-align-horizontal-width: var(
       --label-align-horizontal-width,
@@ -18,15 +19,18 @@ export default css`
 
     --defaulted-label-align-horizontal-gap: var(
       --label-align-horizontal-gap,
-      1rem
+      2rem
     );
   }
 
-  .sl-control {
+  .base {
     --label-align-vertical: var(--defaulted-label-align-vertical);
     --label-align-horizontal: var(--defaulted-label-align-horizontal);
-    /* prettier-ignore */
-    --label-align-horizontal-width: var(--defaulted-label-align-horizontal-width);
+
+    --label-align-horizontal-width: var(
+      --defaulted-label-align-horizontal-width
+    );
+
     --label-align-horizontal-gap: var(--defaulted-label-align-horizontal-gap);
   }
 
