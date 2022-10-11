@@ -1,6 +1,6 @@
 import { html } from 'lit';
 import { repeat } from 'lit/directives/repeat';
-import { LocalizeController } from '@shoelace-style/localize';
+import { LocalizeController } from '../shoelace/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { AbstractDialogsCtrl } from '../shared/dialogs';
 import type { DialogConfig } from '../shared/dialogs';
@@ -32,10 +32,11 @@ const icons = {
   error: errorIcon,
   confirmation: confirmationIcon,
   approval: approvalIcon,
+  prompt: inputIcon,
   input: inputIcon
 };
 
-export class DialogsCtrl extends AbstractDialogsCtrl {
+export class DialogsCtrl extends AbstractDialogsCtrl<TemplateResult> {
   readonly #host: ReactiveControllerHost & HTMLElement;
   readonly #localize: LocalizeController;
   readonly #dialogs = new Set<TemplateResult>();
@@ -56,7 +57,9 @@ export class DialogsCtrl extends AbstractDialogsCtrl {
   }
 
   #showDialog = <R = void>(
-    init: (translate: (key: string) => string) => DialogConfig<R>
+    init: (
+      translate: (key: string) => string
+    ) => DialogConfig<TemplateResult, R>
   ): Promise<R> => {
     let lastClickedButton: number = -1;
     let emitResult: (result: any) => void;
@@ -71,13 +74,15 @@ export class DialogsCtrl extends AbstractDialogsCtrl {
       (it) => it.variant === 'primary'
     );
 
-    if (config.type === 'input') {
+    if (config.type === 'prompt') {
       const value = config.value === 'string' ? config.value : '';
 
       content = html`
         <sl-input name="input" size="small" autofocus value=${value}>
         </sl-input>
       `;
+    } else if (config.type === 'input') {
+      content = (config as any).content;
     }
 
     const onFormSubmit = (ev: SubmitEvent) => {

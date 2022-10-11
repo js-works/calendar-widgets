@@ -91,9 +91,9 @@ class DialogsDemo extends LitElement {
       });
   };
 
-  private _onInputClick = () => {
+  private _onPromptClick = () => {
     this._dlg
-      .input({
+      .prompt({
         message: 'Please enter your name',
         title: 'Input required',
         cancelText: 'No way!'
@@ -102,6 +102,25 @@ class DialogsDemo extends LitElement {
         if (name !== null) {
           this._dlg.info({
             message: `Hello, ${name || 'stranger'}!`
+          });
+        }
+      });
+  };
+
+  private _onInputClick = () => {
+    this._dlg
+      .input({
+        message: 'Please enter data of new user',
+        title: 'Add user',
+        content: html`
+          <sl-input name="firstName" label="First name" required></sl-input>
+          <sl-input name="lastName" label="Last name" required></sl-input>
+        `
+      })
+      .then(async (name) => {
+        if (name !== null) {
+          this._dlg.info({
+            message: `Done!`
           });
         }
       });
@@ -152,6 +171,9 @@ class DialogsDemo extends LitElement {
         </div>
         <div>
           <sl-button @click=${this._onApproveClick}>Approve</sl-button>
+        </div>
+        <div>
+          <sl-button @click=${this._onPromptClick}>Prompt</sl-button>
         </div>
         <div>
           <sl-button @click=${this._onInputClick}>Input</sl-button>

@@ -5,7 +5,7 @@ import './translations/en';
 
 // === exports =======================================================
 
-export { getDirection, getLanguage, translate };
+export { getDirection, getLanguage, translate, LocalizeController };
 export type { Translations };
 
 // === exported types ================================================

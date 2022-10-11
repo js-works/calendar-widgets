@@ -89,13 +89,13 @@ export default css`
     display: flex;
     align-items: center;
     gap: 0.7rem;
-    font-size: calc(1.25 * var(--sl-font-size-medium));
+    font-size: calc(1.2 * var(--sl-font-size-medium));
     padding: 0.75rem 1.25rem;
   }
 
   .message {
     font-family: var(--sl-font-sans);
-    font-size: calc(1.05 * var(--sl-font-size-medium));
+    font-size: var(--sl-font-size-medium);
     padding: 0.5rem 0 1rem 0;
   }
 
