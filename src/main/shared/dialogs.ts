@@ -1,6 +1,6 @@
 // === exports =======================================================
 
-export { createDialogsApi, AbstractDialogCtrl };
+export { createDialogsApi, AbstractDialogCtrl, AbstractDialogsCtrl };
 export type { DialogConfig, DialogsApi };
 
 // === types =========================================================
@@ -37,6 +37,170 @@ type Params<K extends keyof DialogsApi> = DialogsApi[K] extends (
   : never;
 
 // --- functions -----------------------------------------------------
+
+abstract class AbstractDialogsCtrl {
+  #showDialog: <R = void>(
+    init: (translate: (key: string) => string) => DialogConfig<R>
+  ) => Promise<R>;
+
+  constructor(
+    showDialog: <R = void>(
+      fn: (translate: (key: string) => string) => DialogConfig<R>
+    ) => Promise<R>
+  ) {
+    this.#showDialog = showDialog;
+  }
+
+  info(params: {
+    message: string; //
+    title?: string;
+    okText?: string;
+  }) {
+    return this.#showDialog((translate) => ({
+      type: 'info',
+      title: params.title || translate('information'),
+      message: params.message || '',
+
+      buttons: [
+        {
+          variant: 'primary',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }));
+  }
+
+  success(params: {
+    message: string; //
+    title?: string;
+    okText?: string;
+  }) {
+    return this.#showDialog((translate) => ({
+      type: 'success',
+      title: params.title || translate('success'),
+      message: params.message || '',
+
+      buttons: [
+        {
+          variant: 'success',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }));
+  }
+
+  warn(params: {
+    message: string; //
+    title?: string;
+    okText?: string;
+  }) {
+    return this.#showDialog((translate) => ({
+      type: 'warning',
+      title: params.title || translate('warning'),
+      message: params.message || '',
+
+      buttons: [
+        {
+          variant: 'warning',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }));
+  }
+
+  error(params: {
+    message: string; //
+    title?: string;
+    okText?: string;
+  }) {
+    return this.#showDialog((translate) => ({
+      type: 'error',
+      title: params.title || translate('error'),
+      message: params.message || '',
+
+      buttons: [
+        {
+          variant: 'danger',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }));
+  }
+
+  confirm(params: {
+    message: string; //
+    title?: string;
+    okText?: string;
+    cancelText?: string;
+  }) {
+    return this.#showDialog((translate) => ({
+      type: 'confirmation',
+      title: params.title || translate('confirmation'),
+      message: params.message || '',
+      mapResult: ({ button }) => button === '1',
+
+      buttons: [
+        {
+          text: params.cancelText || translate('cancel')
+        },
+        {
+          variant: 'primary',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }));
+  }
+
+  approve(params: {
+    message: string; //
+    title?: string;
+    okText?: string;
+    cancelText?: string;
+  }) {
+    return this.#showDialog((translate) => ({
+      type: 'approval',
+      title: params.title || translate('approval'),
+      message: params.message || '',
+      mapResult: ({ button }) => button === '1',
+
+      buttons: [
+        {
+          text: params.cancelText || translate('cancel')
+        },
+        {
+          variant: 'danger',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }));
+  }
+
+  input(params: {
+    message: string;
+    title?: string;
+    okText?: string;
+    cancelText?: string;
+    value?: string;
+  }) {
+    return this.#showDialog((translate) => ({
+      type: 'input',
+      title: params.title || translate('input'),
+      message: params.message || '',
+      value: params.value || '',
+      mapResult: ({ button, input }) => (button === '0' ? null : input),
+
+      buttons: [
+        {
+          text: params.cancelText || translate('cancel')
+        },
+        {
+          variant: 'primary',
+          text: params.okText || translate('ok')
+        }
+      ]
+    }));
+  }
+}
 
 function createDialogsApi<B>(
   base: B,

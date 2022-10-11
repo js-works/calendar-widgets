@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
-import { DialogsCtrl } from '../../main/js-widgets-shoelace';
+import { DialogsCtrl } from '../../main/shoelace-widgets-lit';
 
 export default {
   title: 'Shoelace'
@@ -159,7 +159,7 @@ class DialogsDemo extends LitElement {
         <br />
         <sl-button @click=${this._onDestroyPlanet}>Destroy planet</sl-button>
       </div>
-      <sw-dialogs></sw-dialogs>
+      ${this._dlg.render()}
     `;
   }
 }
