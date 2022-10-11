@@ -1,1 +1,1 @@
-export { DialogsCtrl } from './shoelace-lit/dialogs-ctrl';
+export { DialogsController } from './shoelace-lit/dialogs-controller';

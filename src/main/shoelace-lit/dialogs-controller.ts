@@ -36,7 +36,7 @@ const icons = {
   input: inputIcon
 };
 
-export class DialogsCtrl extends AbstractDialogsCtrl<TemplateResult> {
+export class DialogsController extends AbstractDialogsCtrl<TemplateResult> {
   readonly #host: ReactiveControllerHost & HTMLElement;
   readonly #localize: LocalizeController;
   readonly #dialogs = new Set<TemplateResult>();

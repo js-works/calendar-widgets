@@ -1,8 +1,38 @@
-import { css } from 'lit';
+import { css, unsafeCSS } from 'lit';
 
 export default css`
+  :host {
+    --defaulted-label-align-vertical: inherit;
+    --defaulted-label-align-horizontal: ;
+  }
+
+  .base {
+    --xxxdefaulted-label-align-vertical: var(--label-align-vertical, inherit);
+    /* prettier-ignore */
+    --xxxdefaulted-label-align-horizontal: var(--label-align-horizontal,);
+
+    --defaulted-label-align-horizontal-width: var(
+      --label-align-horizontal-width,
+      9rem
+    );
+
+    --defaulted-label-align-horizontal-gap: var(
+      --label-align-horizontal-gap,
+      1rem
+    );
+  }
+
+  .sl-control {
+    --label-align-vertical: var(--defaulted-label-align-vertical);
+    --label-align-horizontal: var(--defaulted-label-align-horizontal);
+    /* prettier-ignore */
+    --label-align-horizontal-width: var(--defaulted-label-align-horizontal-width);
+    --label-align-horizontal-gap: var(--defaulted-label-align-horizontal-gap);
+  }
+
   .sl-control::part(form-control) {
     display: flex;
+
     flex-direction: var(--label-align-vertical, column)
       var(--label-align-horizontal, row);
 
@@ -15,16 +45,20 @@ export default css`
 
   .sl-control::part(form-control-label) {
     flex: 0 0 auto;
+
     width: var(--label-align-vertical, auto)
       var(--label-align-horizontal, var(--label-align-horizontal-width));
+
     text-align: var(--label-align-vertical, left)
       var(--label-align-horizontal, right);
+
     margin: var(--label-align-vertical, 2px 0 1px 0)
       var(--label-align-horizontal, 2px 0);
   }
 
   .sl-control::part(form-control-input) {
     flex: 1 1 auto;
+
     margin: var(--label-align-vertical, 0 0 0.4rem 0)
       var(--label-align-horizontal, 2px 0);
   }

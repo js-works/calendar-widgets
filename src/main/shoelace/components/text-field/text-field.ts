@@ -28,6 +28,7 @@ declare global {
 
 // === TextField =====================================================
 
+@customElement('sx-text-field')
 class TextField extends LitElement {
   static styles = textFieldStyles;
 

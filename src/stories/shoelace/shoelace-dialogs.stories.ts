@@ -1,6 +1,8 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
-import { DialogsCtrl } from '../../main/shoelace-widgets-lit';
+import { DialogsController } from '../../main/shoelace-widgets-lit';
+import { TextField } from '../../main/shoelace/components/text-field/text-field';
+import { Form } from '../../main/shoelace-widgets';
 
 export default {
   title: 'Shoelace'
@@ -26,7 +28,12 @@ const styles = css`
 class DialogsDemo extends LitElement {
   static styles = styles;
 
-  private _dlg = new DialogsCtrl(this);
+  static {
+    // depenencies (to prevent too much tree shaking)
+    void [TextField];
+  }
+
+  private _dlg = new DialogsController(this);
 
   private _onInfoClick = () => {
     this._dlg.info({
@@ -113,8 +120,16 @@ class DialogsDemo extends LitElement {
         message: 'Please enter data of new user',
         title: 'Add user',
         content: html`
-          <sl-input name="firstName" label="First name" required></sl-input>
-          <sl-input name="lastName" label="Last name" required></sl-input>
+          <sx-text-field
+            name="firstName"
+            label="First name"
+            required
+          ></sx-text-field>
+          <sx-text-field
+            name="lastName"
+            label="Last name"
+            required
+          ></sx-text-field>
         `
       })
       .then(async (name) => {
