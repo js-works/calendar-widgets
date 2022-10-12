@@ -5,14 +5,23 @@ import { css } from 'lit';
 //document.body.style.setProperty('--label-layout-vertical', 'inherit');
 //document.body.style.setProperty('--label-layout-horizontal', ' ');
 
+const labelLayoutHorizontalWidth = css`9rem`;
+const labelLayoutVerticalGap = css`1rem`;
+
 export default css`
-  .base {
+  :host {
     --on: inherit;
     --off: ;
+  }
+
+  .base {
     --label-layout-vertical: var(--on);
     --label-layout-horizontal: var(--off);
-    --label-layout-horizontal-width: 9rem;
-    --label-layout-horizontal-gap: 1rem;
+  }
+
+  .sl-control {
+    --xxxlabel-layout-vertical: var(--labels-vertical);
+    --xxxlabel-layout-horizontal: var(--labels-horizontal);
   }
 
   .sl-control::part(form-control) {
@@ -24,7 +33,10 @@ export default css`
     align-items: var(--label-layout-vertical, stretch)
       var(--label-layout-horizontal, center);
 
-    gap: var(--label-layout-horizontal, var(--label-layout-horizontal-gap))
+    gap: var(
+        --label-layout-horizontal,
+        var(--label-layout-horizontal-gap, ${labelLayoutVerticalGap})
+      )
       var(--label-layout-vertical, 0);
   }
 
@@ -32,7 +44,10 @@ export default css`
     flex: 0 0 auto;
 
     width: var(--label-layout-vertical, auto)
-      var(--label-layout-horizontal, var(--label-layout-horizontal-width));
+      var(
+        --label-layout-horizontal,
+        var(--label-layout-horizontal-width, ${labelLayoutHorizontalWidth})
+      );
 
     text-align: var(--label-layout-vertical, left)
       var(--label-layout-horizontal, right);
@@ -78,8 +93,8 @@ export default css`
       var(
         --label-layout-horizontal,
         calc(
-          var(--label-layout-horizontal-width) +
-            var(--label-layout-horizontal-gap)
+          ${labelLayoutHorizontalWidth} +
+            var(--label-layout-horizontal-gap, ${labelLayoutVerticalGap})
         )
       );
   }
