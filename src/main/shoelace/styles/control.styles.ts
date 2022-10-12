@@ -1,69 +1,45 @@
 import { css } from 'lit';
 
-//document.body.style.setProperty('--on', 'inherit');
-//document.body.style.setProperty('--off', ' ');
-//document.body.style.setProperty('--label-layout-vertical', 'inherit');
-//document.body.style.setProperty('--label-layout-horizontal', ' ');
-
-const labelLayoutHorizontalWidth = css`9rem`;
-const labelLayoutVerticalGap = css`1rem`;
+// --label-layout-direction => `column` for vertical layout, `row` otherwise
+// --label-layout-width => 0 for vertical layout
+// --label-layout-gap =>  0 for vertical layout
+// --label-layout-align =>
+// --label-layout-align =>
 
 export default css`
   :host {
-    --on: inherit;
-    --off: ;
-  }
-
-  .base {
-    --label-layout-vertical: var(--on);
-    --label-layout-horizontal: var(--off);
+    --label-layout-direction: row;
+    --label-layout-width: 9rem;
+    --label-layout-gap: 1.25rem;
+    --label-layout-justify: center;
+    --label-layout-align: left;
   }
 
   .sl-control {
-    --xxxlabel-layout-vertical: var(--labels-vertical);
-    --xxxlabel-layout-horizontal: var(--labels-horizontal);
+    margin: 3px;
   }
 
   .sl-control::part(form-control) {
     display: flex;
-
-    flex-direction: var(--label-layout-vertical, column)
-      var(--label-layout-horizontal, row);
-
-    align-items: var(--label-layout-vertical, stretch)
-      var(--label-layout-horizontal, center);
-
-    gap: var(
-        --label-layout-horizontal,
-        var(--label-layout-horizontal-gap, ${labelLayoutVerticalGap})
-      )
-      var(--label-layout-vertical, 0);
+    flex-direction: var(--label-layout-direction, column);
+    align-items: var(--label-layout-justify, stretch);
+    gap: var(--label-layout-gap, 0);
   }
 
   .sl-control::part(form-control-label) {
     flex: 0 0 auto;
-
-    width: var(--label-layout-vertical, auto)
-      var(
-        --label-layout-horizontal,
-        var(--label-layout-horizontal-width, ${labelLayoutHorizontalWidth})
-      );
-
-    text-align: var(--label-layout-vertical, left)
-      var(--label-layout-horizontal, right);
-
-    margin: var(--label-layout-vertical, 2px 0 1px 0)
-      var(--label-layout-horizontal, 2px 0);
+    width: var(--label-layout-width, auto);
+    text-align: var(--label-layout-align, start);
+    margin: 2px 0;
   }
 
   .sl-control::part(form-control-input) {
     flex: 1 1 auto;
 
+    /*
     margin: var(--label-layout-vertical, 0 0 0.4rem 0)
       var(--label-layout-horizontal, 2px 0);
-  }
-
-  .sl-control-label {
+    */
   }
 
   .sl-control-label--required::after {
@@ -89,13 +65,15 @@ export default css`
     color: var(--sl-color-danger-700);
     padding: 0 0.5rem 0.375rem 0;
 
+    /*
     margin: 0 0 0 var(--label-layout-vertical, 0)
       var(
         --label-layout-horizontal,
         calc(
-          ${labelLayoutHorizontalWidth} +
-            var(--label-layout-horizontal-gap, ${labelLayoutVerticalGap})
+          {labelLayoutHorizontalWidth} +
+            var(--label-layout-horizontal-gap, {labelLayoutHorizontalGap})
         )
       );
+    */
   }
 `;
