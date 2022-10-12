@@ -7,12 +7,28 @@ import { css } from 'lit';
 // --label-layout-align =>
 
 export default css`
+  :xxxhost {
+    --label-layout-direction: column;
+    --label-layout-width: auto;
+    --label-layout-gap: 0;
+    --label-layout-justify: stretch;
+    --label-layout-align: start;
+  }
+
   :host {
     --label-layout-direction: row;
     --label-layout-width: 9rem;
     --label-layout-gap: 1.25rem;
     --label-layout-justify: center;
-    --label-layout-align: left;
+    --label-layout-align: end;
+  }
+
+  :xxxhost {
+    --label-layout-direction: row;
+    --label-layout-width: 9rem;
+    --label-layout-gap: 1.25rem;
+    --label-layout-justify: center;
+    --label-layout-align: start;
   }
 
   .sl-control {

@@ -68,6 +68,7 @@ export default css`
   .icon.info,
   .icon.question,
   .icon.confirmation,
+  .icon.prompt,
   .icon.input {
     color: var(--sl-color-primary-500);
   }

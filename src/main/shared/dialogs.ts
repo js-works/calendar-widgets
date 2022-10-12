@@ -210,7 +210,7 @@ abstract class AbstractDialogsCtrl<C> {
   }
 
   input(params: {
-    message: string;
+    message?: string;
     content?: C;
     title?: string;
     okText?: string;

@@ -121,8 +121,9 @@ class DialogsDemo extends LitElement {
   private _onInputClick = () => {
     this._dlg
       .input({
-        message: 'Please enter data of new user',
-        title: 'Add user',
+        title: 'New user',
+        message: 'Please fill out the form to add the new user',
+
         content: html`
           <sx-text-field
             name="firstName"
@@ -134,7 +135,14 @@ class DialogsDemo extends LitElement {
             label="Last name"
             required
           ></sx-text-field>
-        `
+          <sx-date-field
+            name="dateOfBirth"
+            label="Date of Birth"
+            required
+          ></sx-date-field>
+        `,
+
+        okText: 'Add user'
       })
       .then(async (name) => {
         if (name !== null) {
