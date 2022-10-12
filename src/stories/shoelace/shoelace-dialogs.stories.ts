@@ -16,6 +16,10 @@ const styles = css`
     padding: 3rem;
     box-sizing: border-box;
     background-color: var(--sl-color-neutral-0);
+
+    /* TODO!!! */
+    --label-layout-horizontal: inherit;
+    --label-layout-vertical: ;
   }
 
   .demo sl-button {

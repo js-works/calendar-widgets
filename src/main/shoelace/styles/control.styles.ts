@@ -1,70 +1,51 @@
-import { css, unsafeCSS } from 'lit';
+import { css } from 'lit';
+
+//document.body.style.setProperty('--on', 'inherit');
+//document.body.style.setProperty('--off', ' ');
+//document.body.style.setProperty('--label-layout-vertical', 'inherit');
+//document.body.style.setProperty('--label-layout-horizontal', ' ');
 
 export default css`
-  :host {
+  .base {
     --on: inherit;
     --off: ;
-
-    --defaulted-label-align-vertical: var(--label-align-vertical, var(--n));
-
-    --defaulted-label-align-horizontal: var(
-      --label-align-horizontal,
-      var(--off)
-    );
-
-    --defaulted-label-align-horizontal-width: var(
-      --label-align-horizontal-width,
-      9rem
-    );
-
-    --defaulted-label-align-horizontal-gap: var(
-      --label-align-horizontal-gap,
-      2rem
-    );
-  }
-
-  .base {
-    --label-align-vertical: var(--defaulted-label-align-vertical);
-    --label-align-horizontal: var(--defaulted-label-align-horizontal);
-
-    --label-align-horizontal-width: var(
-      --defaulted-label-align-horizontal-width
-    );
-
-    --label-align-horizontal-gap: var(--defaulted-label-align-horizontal-gap);
+    --label-layout-vertical: var(--on);
+    --label-layout-horizontal: var(--off);
+    --label-layout-horizontal-width: 9rem;
+    --label-layout-horizontal-gap: 1rem;
   }
 
   .sl-control::part(form-control) {
     display: flex;
 
-    flex-direction: var(--label-align-vertical, column)
-      var(--label-align-horizontal, row);
+    flex-direction: var(--label-layout-vertical, column)
+      var(--label-layout-horizontal, row);
 
-    align-items: var(--label-align-vertical, stretch)
-      var(--label-align-horizontal, center);
+    align-items: var(--label-layout-vertical, stretch)
+      var(--label-layout-horizontal, center);
 
-    gap: var(--label-align-horizontal, var(--label-align-horizontal-gap))
-      var(--label-align-vertical, 0);
+    gap: var(--label-layout-horizontal, var(--label-layout-horizontal-gap))
+      var(--label-layout-vertical, 0);
   }
 
   .sl-control::part(form-control-label) {
     flex: 0 0 auto;
 
-    width: var(--label-align-vertical, auto)
-      var(--label-align-horizontal, var(--label-align-horizontal-width));
+    width: var(--label-layout-vertical, auto)
+      var(--label-layout-horizontal, var(--label-layout-horizontal-width));
 
-    text-align: var(--label-align-vertical, left)
-      var(--label-align-horizontal, right);
+    text-align: var(--label-layout-vertical, left)
+      var(--label-layout-horizontal, right);
 
-    margin: var(--label-align-vertical, 2px 0 1px 0)
-      var(--label-align-horizontal, 2px 0);
+    margin: var(--label-layout-vertical, 2px 0 1px 0)
+      var(--label-layout-horizontal, 2px 0);
   }
 
   .sl-control::part(form-control-input) {
     flex: 1 1 auto;
 
-    margin: var(--label-align-vertical, 0 0 0.4rem 0)
-      var(--label-align-horizontal, 2px 0);
+    margin: var(--label-layout-vertical, 0 0 0.4rem 0)
+      var(--label-layout-horizontal, 2px 0);
   }
 
   .sl-control-label {
@@ -93,12 +74,12 @@ export default css`
     color: var(--sl-color-danger-700);
     padding: 0 0.5rem 0.375rem 0;
 
-    margin: 0 0 0 var(--label-align-vertical, 0)
+    margin: 0 0 0 var(--label-layout-vertical, 0)
       var(
-        --label-align-horizontal,
+        --label-layout-horizontal,
         calc(
-          var(--label-align-horizontal-width) +
-            var(--label-align-horizontal-gap)
+          var(--label-layout-horizontal-width) +
+            var(--label-layout-horizontal-gap)
         )
       );
   }
