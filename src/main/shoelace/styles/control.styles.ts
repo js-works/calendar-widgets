@@ -51,15 +51,6 @@ export default css`
     color: var(--sl-color-danger-700);
     padding: 0 0.5rem 0.375rem 0;
 
-    /*
-    margin: 0 0 0 var(--label-layout-vertical, 0)
-      var(
-        --label-layout-horizontal,
-        calc(
-          {labelLayoutHorizontalWidth} +
-            var(--label-layout-horizontal-gap, {labelLayoutHorizontalGap})
-        )
-      );
-    */
+    margin: 0 0 0 calc(var(--label-layout-width) + var(--label-layout-gap));
   }
 `;

@@ -1,5 +1,5 @@
 export namespace FormSubmitEvent {
-  export type Type = 'cp-form-submit';
+  export type Type = 'sx-form-submit';
 
   export interface Detail {
     data: Record<string, any> | null;

@@ -1,10 +1,12 @@
 import { html } from 'lit';
 import { classMap } from 'lit/directives/class-map';
+import { createRef, ref } from 'lit/directives/ref';
 import { repeat } from 'lit/directives/repeat';
 import { LocalizeController } from '../shoelace/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { AbstractDialogsController } from '../shared/dialogs';
 import type { DialogConfig } from '../shared/dialogs';
+import { FormSubmitEvent } from '../shoelace/events/form-submit-event';
 
 // components
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
@@ -12,6 +14,7 @@ import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import { Form } from '../shoelace/components/form/form';
+import { TextField } from '../shoelace/components/text-field/text-field';
 
 // icons
 import infoIcon from '../shoelace/icons/info-circle.icon';
@@ -51,7 +54,7 @@ export class DialogsController extends AbstractDialogsController<
 > {
   static {
     // required components (just to prevent too much tree shaking)
-    void [Form, SlButton, SlDialog, SlIcon, SlInput];
+    void [Form, TextField, SlButton, SlDialog, SlIcon, SlInput];
   }
 
   readonly #requestUpdate: () => Promise<boolean>;
@@ -106,6 +109,7 @@ export class DialogsController extends AbstractDialogsController<
     open: boolean,
     emitResult: (result: unknown) => void
   ) {
+    const formRef = createRef<Form>();
     let lastClickedButton: number = -1;
 
     const hasPrimaryButton = config.buttons.some(
@@ -118,22 +122,18 @@ export class DialogsController extends AbstractDialogsController<
       const value = config.params.value === 'string' ? config.params.value : '';
 
       content = html`
-        <sl-input name="input" size="small" autofocus value=${value}>
-        </sl-input>
+        <sx-text-field name="input" size="small" autofocus value=${value}>
+        </sx-text-field>
       `;
     } else if (config.type === 'input') {
       content = (config as any).content;
     }
 
-    const onFormSubmit = (ev: SubmitEvent) => {
+    const onFormSubmit = (ev: FormSubmitEvent) => {
       ev.preventDefault();
+      const data = { ...ev.detail.data };
 
-      const formData = new FormData(ev.target as HTMLFormElement);
-      const data: Record<string, string> = {};
-
-      formData.forEach((value: FormDataEntryValue, key: string) => {
-        data[key] = value.toString();
-      });
+      console.log(data);
 
       setTimeout(() => {
         data.button = lastClickedButton.toString();
@@ -161,7 +161,8 @@ export class DialogsController extends AbstractDialogsController<
           'label-layout-horizontal': labelLayout === 'horizontal'
         })}
         dir=${this.#localize.dir()}
-        @submit=${onFormSubmit}
+        @sx-form-submit=${onFormSubmit}
+        ${ref(formRef)}
       >
         <sl-dialog ?open=${open} class="dialog">
           <div slot="label" class="header">
@@ -180,6 +181,7 @@ export class DialogsController extends AbstractDialogsController<
 
               const onClick = () => {
                 lastClickedButton = idx;
+                formRef.value!.submit();
               };
 
               return html`

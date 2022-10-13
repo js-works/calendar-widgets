@@ -1,5 +1,5 @@
 export namespace FormInvalidEvent {
-  export type Type = 'cp-form-invalid';
+  export type Type = 'sx-form-invalid';
 }
 
 export interface FormInvalidEvent extends CustomEvent<null> {

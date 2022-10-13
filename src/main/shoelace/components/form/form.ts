@@ -34,13 +34,13 @@ class Form extends LitElement {
 
   private _emitFormSubmit = createEmitter(
     this,
-    'cp-form-submit',
+    'sx-form-submit',
     () => this.onFormSubmit
   );
 
   private _emitFormInvalid = createEmitter(
     this,
-    'cp-form-invalid',
+    'sx-form-invalid',
     () => this.onFormInvalid
   );
 
