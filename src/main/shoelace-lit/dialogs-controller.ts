@@ -142,15 +142,18 @@ export class DialogsController extends AbstractDialogsCtrl<
                 lastClickedButton = idx;
               };
 
-              return html` <sl-button
-                type="submit"
-                variant=${variant}
-                value=${idx}
-                class="button"
-                ?autofocus=${autofocus}
-                @click=${onClick}
-                >${text}</sl-button
-              >`;
+              return html`
+                <sl-button
+                  type="submit"
+                  variant=${variant}
+                  value=${idx}
+                  class="button"
+                  ?autofocus=${autofocus}
+                  @click=${onClick}
+                >
+                  ${text}
+                </sl-button>
+              `;
             })}
           </div>
         </sl-dialog>

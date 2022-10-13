@@ -30,14 +30,25 @@ type DialogConfig<C, R> = {
   mapResult?: (data: Record<string, string>) => R;
 };
 
+type TranslationKeys =
+  | 'ok'
+  | 'cancel'
+  | 'information'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'confirmation'
+  | 'approval'
+  | 'input';
+
 // --- functions -----------------------------------------------------
 
 abstract class AbstractDialogsCtrl<C, A = {}> {
   #showDialog: <R = void>(config: DialogConfig<C, R>) => Promise<R>;
-  #translate: (key: string) => string;
+  #translate: (key: TranslationKeys) => string;
 
   constructor(params: {
-    translate: (key: string) => string;
+    translate: (key: TranslationKeys) => string;
     showDialog: <R = void>(config: DialogConfig<C, R>) => Promise<R>;
   }) {
     this.#translate = params.translate;
