@@ -5,4 +5,10 @@ import labelLayoutStyles from '../../styles/label-layout.styles';
 export default css`
   ${componentStyles}
   ${labelLayoutStyles}
+
+  .base {
+    padding: 0;
+    margin: 0;
+    border: none;
+  }
 `;

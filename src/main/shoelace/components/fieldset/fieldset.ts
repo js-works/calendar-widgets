@@ -22,6 +22,7 @@ class Fieldset extends LitElement {
     return html`
       <fieldset
         class=${classMap({
+          'base': true,
           'label-layout-vertical': this.labelLayout === 'vertical',
           'label-layout-horizontal': this.labelLayout === 'horizontal'
         })}

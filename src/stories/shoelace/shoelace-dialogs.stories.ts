@@ -3,6 +3,7 @@ import { customElement } from 'lit/decorators';
 import { DialogsController } from '../../main/shoelace-widgets-lit';
 import { TextField } from '../../main/shoelace/components/text-field/text-field';
 import { Form } from '../../main/shoelace-widgets';
+import { Fieldset } from '../../main/shoelace-widgets';
 
 export default {
   title: 'Shoelace'
@@ -114,21 +115,23 @@ class DialogsDemo extends LitElement {
       message: 'Please fill out the form to add the new user',
 
       content: html`
-        <sx-text-field
-          name="firstName"
-          label="First name"
-          required
-        ></sx-text-field>
-        <sx-text-field
-          name="lastName"
-          label="Last name"
-          required
-        ></sx-text-field>
-        <sx-date-field
-          name="dateOfBirth"
-          label="Date of Birth"
-          required
-        ></sx-date-field>
+        <sx-fieldset label-layout="horizontal">
+          <sx-text-field
+            name="firstName"
+            label="First name"
+            required
+          ></sx-text-field>
+          <sx-text-field
+            name="lastName"
+            label="Last name"
+            required
+          ></sx-text-field>
+          <sx-date-field
+            name="dateOfBirth"
+            label="Date of Birth"
+            required
+          ></sx-date-field>
+        </sx-fieldset>
       `,
 
       okText: 'Add user'
