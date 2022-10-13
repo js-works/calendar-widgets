@@ -74,13 +74,33 @@ export class DialogsController extends AbstractDialogsCtrl<
   #showDialog = <R = void>(
     config: DialogConfig<TemplateResult, R>
   ): Promise<R> => {
+    let emitResult: (result: unknown) => void;
+
+    this.#dialogs.add(
+      this.#renderDialog(config, true, (result) => emitResult(result))
+    );
+
+    this.#host.requestUpdate();
+
+    return new Promise((resolve) => {
+      emitResult = (result: any) => {
+        setTimeout(() => resolve(result), 50);
+      };
+    });
+  };
+
+  #renderDialog<R = void>(
+    config: DialogConfig<TemplateResult, R>,
+    open: boolean,
+    emitResult: (result: unknown) => void
+  ) {
     let lastClickedButton: number = -1;
-    let emitResult: (result: any) => void;
-    let content: TemplateResult | null = null;
 
     const hasPrimaryButton = config.buttons.some(
       (it) => it.variant === 'primary'
     );
+
+    let content: TemplateResult | null = null;
 
     if (config.type === 'prompt') {
       const value = config.params.value === 'string' ? config.params.value : '';
@@ -106,7 +126,6 @@ export class DialogsController extends AbstractDialogsCtrl<
       setTimeout(() => {
         data.button = lastClickedButton.toString();
         emitResult(config.mapResult?.(data));
-        console.log('submit', lastClickedButton, data);
       });
     };
 
@@ -119,7 +138,7 @@ export class DialogsController extends AbstractDialogsCtrl<
         ? 'horizontal'
         : 'auto';
 
-    const output = html`
+    return html`
       <style>
         ${dialogsStyles}
       </style>
@@ -168,14 +187,5 @@ export class DialogsController extends AbstractDialogsCtrl<
         </sl-dialog>
       </form>
     `;
-
-    this.#dialogs.add(output);
-    this.#host.requestUpdate();
-
-    return new Promise((resolve) => {
-      emitResult = (result: any) => {
-        setTimeout(() => resolve(result), 50);
-      };
-    });
-  };
+  }
 }

@@ -1,7 +1,7 @@
 // === exports =======================================================
 
 export { AbstractDialogsCtrl };
-export type { DialogConfig };
+export type { DialogConfig, TranslationKey };
 
 // === types =========================================================
 
@@ -30,7 +30,7 @@ type DialogConfig<C, R> = {
   mapResult?: (data: Record<string, string>) => R;
 };
 
-type TranslationKeys =
+type TranslationKey =
   | 'ok'
   | 'cancel'
   | 'information'
@@ -45,10 +45,10 @@ type TranslationKeys =
 
 abstract class AbstractDialogsCtrl<C, A = {}> {
   #showDialog: <R = void>(config: DialogConfig<C, R>) => Promise<R>;
-  #translate: (key: TranslationKeys) => string;
+  #translate: (key: TranslationKey) => string;
 
   constructor(params: {
-    translate: (key: TranslationKeys) => string;
+    translate: (key: TranslationKey) => string;
     showDialog: <R = void>(config: DialogConfig<C, R>) => Promise<R>;
   }) {
     this.#translate = params.translate;
