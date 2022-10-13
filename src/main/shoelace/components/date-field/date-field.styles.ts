@@ -1,8 +1,10 @@
 import { css } from 'lit';
+import componentStyles from '../../styles/component.styles';
+import controlStyles from '../../styles/control.styles';
 
 export default css`
-  .base {
-  }
+  ${componentStyles}
+  ${controlStyles}
 
   .input:not(.input--disabled),
   .input:not(.input--disabled)::part(input),
@@ -38,5 +40,9 @@ export default css`
 
   .button::part(label) {
     padding: 0 0.5rem;
+  }
+
+  sl-dropdown {
+    display: block;
   }
 `;

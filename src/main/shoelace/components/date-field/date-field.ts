@@ -140,7 +140,6 @@ export class DateField extends LitElement {
         >
           <sl-input
             slot="trigger"
-            class="sl-control"
             value=${this._value}
             ?disabled=${this.disabled}
             readonly
@@ -148,11 +147,14 @@ export class DateField extends LitElement {
             @keydown=${this._onInputKeyDown}
             ${ref(this._inputRef)}
             class=${classMap({
+              'sl-control': true,
               'input': true,
               'input--disabled': this.disabled
             })}
           >
-            <sl-icon slot="suffix" class="calendar-icon" src=${icon}> </sl-icon>
+            <!--
+            <sl-icon slot="suffix" class="calendar-icon" src=${icon}></sl-icon>
+          -->
             <span
               slot="label"
               class=${classMap({
