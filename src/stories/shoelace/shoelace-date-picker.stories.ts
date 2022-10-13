@@ -8,7 +8,8 @@ import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-
 
 import { DatePicker } from '../../main/shoelace-widgets';
 import { DateField } from '../../main/shoelace-widgets';
-import '../../../node_modules/@shoelace-style/shoelace/dist/themes/light.css';
+
+import './shared/shared-theme';
 
 export default {
   title: 'Shoelace'

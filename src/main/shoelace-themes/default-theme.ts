@@ -8,6 +8,8 @@ export {
   utilityStyles
 };
 
+export type Theme = typeof defaultTheme;
+
 // === light theme ===================================================
 
 const colorShades = Object.freeze([

@@ -1,5 +1,9 @@
-import { ThemeBuilder } from './shoelace-themes/theme-builder';
-import { ThemeModifiers } from './shoelace-themes/theme-modifiers';
-import { ColorSchemes } from './shoelace-themes/color-schemes';
-import type { convertThemeToCss, loadTheme } from './shoelace-themes/themes';
-import type { Theme } from './shoelace-themes/themes';
+export type { Theme } from './shoelace-themes/default-theme';
+export { ThemeModifiers } from './shoelace-themes/theme-modifiers';
+export { ColorSchemes } from './shoelace-themes/color-schemes';
+
+export {
+  convertThemeToCss,
+  customizeTheme,
+  loadTheme
+} from './shoelace-themes/theme-utils';

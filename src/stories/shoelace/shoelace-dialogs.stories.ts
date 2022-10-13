@@ -3,7 +3,8 @@ import { customElement } from 'lit/decorators';
 import { DialogsController } from '../../main/shoelace-widgets-lit';
 import { TextField } from '../../main/shoelace/components/text-field/text-field';
 import { Form } from '../../main/shoelace-widgets';
-import { Fieldset } from '../../main/shoelace-widgets';
+
+import './shared/shared-theme';
 
 export default {
   title: 'Shoelace'
@@ -31,7 +32,7 @@ class DialogsDemo extends LitElement {
 
   static {
     // depenencies (to prevent too much tree shaking)
-    void [TextField];
+    void [Form, TextField];
   }
 
   private _dlg = new DialogsController(this);

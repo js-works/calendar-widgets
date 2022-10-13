@@ -2,8 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 import { DateField } from '../../main/shoelace/components/date-field/date-field';
 
-import '../../../node_modules/@shoelace-style/shoelace/dist/themes/light.css';
-import '../../../node_modules/@shoelace-style/shoelace/dist/themes/dark.css';
+import './shared/shared-theme';
 
 export default {
   title: 'Shoelace'
