@@ -32,7 +32,7 @@ type DialogConfig<C, R> = {
 
 // --- functions -----------------------------------------------------
 
-abstract class AbstractDialogsCtrl<C> {
+abstract class AbstractDialogsCtrl<C, A = {}> {
   #showDialog: <R = void>(
     init: (translate: (key: string) => string) => DialogConfig<C, R>
   ) => Promise<R>;
@@ -209,13 +209,15 @@ abstract class AbstractDialogsCtrl<C> {
     }));
   }
 
-  input(params: {
-    message?: string;
-    content?: C;
-    title?: string;
-    okText?: string;
-    cancelText?: string;
-  }) {
+  input(
+    params: {
+      message?: string;
+      content?: C;
+      title?: string;
+      okText?: string;
+      cancelText?: string;
+    } & A
+  ) {
     return this.#showDialog((translate) => ({
       type: 'input',
       title: params.title || translate('input'),

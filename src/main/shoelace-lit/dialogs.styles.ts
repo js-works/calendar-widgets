@@ -1,6 +1,9 @@
 import { css } from 'lit';
+import labelLayoutStyles from '../shoelace/styles/label-layout.styles';
 
 export default css`
+  ${labelLayoutStyles}
+
   .base {
     position: absolute;
     width: 0;

@@ -1,4 +1,5 @@
 import { html } from 'lit';
+import { classMap } from 'lit/directives/class-map';
 import { repeat } from 'lit/directives/repeat';
 import { LocalizeController } from '../shoelace/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
@@ -24,6 +25,12 @@ import inputIcon from '../shoelace/icons/window.icon';
 // styles
 import dialogsStyles from './dialogs.styles';
 
+// === types =========================================================
+
+type ExtraInputConfigParams = {
+  labelLayout?: 'vertical' | 'horizontal' | 'auto';
+};
+
 // === icons of dialog types =========================================
 
 const icons = {
@@ -37,7 +44,10 @@ const icons = {
   input: inputIcon
 };
 
-export class DialogsController extends AbstractDialogsCtrl<TemplateResult> {
+export class DialogsController extends AbstractDialogsCtrl<
+  TemplateResult,
+  ExtraInputConfigParams
+> {
   readonly #host: ReactiveControllerHost & HTMLElement;
   readonly #localize: LocalizeController;
   readonly #dialogs = new Set<TemplateResult>();
@@ -107,7 +117,15 @@ export class DialogsController extends AbstractDialogsCtrl<TemplateResult> {
       <style>
         ${dialogsStyles}
       </style>
-      <form class="form" dir=${this.#localize.dir()} @submit=${onFormSubmit}>
+      <form
+        class=${classMap({
+          'form': true,
+          'label-layout-horizontal': true
+          //(config as any).labelLayout === 'horizontal'
+        })}
+        dir=${this.#localize.dir()}
+        @submit=${onFormSubmit}
+      >
         <sl-dialog open class="dialog">
           <div slot="label" class="header">
             <sl-icon

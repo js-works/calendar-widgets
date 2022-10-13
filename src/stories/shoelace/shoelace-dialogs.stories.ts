@@ -113,25 +113,24 @@ class DialogsDemo extends LitElement {
     const data = await this._dlg.input({
       title: 'New user',
       message: 'Please fill out the form to add the new user',
+      labelLayout: 'horizontal',
 
       content: html`
-        <sx-fieldset label-layout="horizontal">
-          <sx-text-field
-            name="firstName"
-            label="First name"
-            required
-          ></sx-text-field>
-          <sx-text-field
-            name="lastName"
-            label="Last name"
-            required
-          ></sx-text-field>
-          <sx-date-field
-            name="dateOfBirth"
-            label="Date of Birth"
-            required
-          ></sx-date-field>
-        </sx-fieldset>
+        <sx-text-field
+          name="firstName"
+          label="First name"
+          required
+        ></sx-text-field>
+        <sx-text-field
+          name="lastName"
+          label="Last name"
+          required
+        ></sx-text-field>
+        <sx-date-field
+          name="dateOfBirth"
+          label="Date of Birth"
+          required
+        ></sx-date-field>
       `,
 
       okText: 'Add user'
