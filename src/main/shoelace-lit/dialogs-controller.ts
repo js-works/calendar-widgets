@@ -50,7 +50,7 @@ export class DialogsController extends AbstractDialogsController<
 > {
   readonly #host: ReactiveControllerHost & HTMLElement;
   readonly #localize: LocalizeController;
-  readonly #dialogs = new Set<TemplateResult>();
+  readonly #dialogRenderers = new Set<() => TemplateResult>();
 
   static {
     // required components (just to prevent too much tree shaking)
@@ -68,7 +68,7 @@ export class DialogsController extends AbstractDialogsController<
   }
 
   render(): TemplateResult {
-    return html`${repeat(this.#dialogs, (dialog) => dialog)}`;
+    return html`${repeat(this.#dialogRenderers, (it) => it())}`;
   }
 
   #showDialog = <R = void>(
@@ -76,7 +76,7 @@ export class DialogsController extends AbstractDialogsController<
   ): Promise<R> => {
     let emitResult: (result: unknown) => void;
 
-    this.#dialogs.add(
+    this.#dialogRenderers.add(() =>
       this.#renderDialog(config, true, (result) => emitResult(result))
     );
 
