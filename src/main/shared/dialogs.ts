@@ -1,6 +1,6 @@
 // === exports =======================================================
 
-export { AbstractDialogsCtrl };
+export { AbstractDialogsController };
 export type { DialogConfig, TranslationKey };
 
 // === types =========================================================
@@ -43,7 +43,7 @@ type TranslationKey =
 
 // --- functions -----------------------------------------------------
 
-abstract class AbstractDialogsCtrl<C, A = {}> {
+abstract class AbstractDialogsController<C, A = {}> {
   #showDialog: <R = void>(config: DialogConfig<C, R>) => Promise<R>;
   #translate: (key: TranslationKey) => string;
 

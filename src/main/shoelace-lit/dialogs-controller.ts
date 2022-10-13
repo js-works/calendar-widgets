@@ -3,7 +3,7 @@ import { classMap } from 'lit/directives/class-map';
 import { repeat } from 'lit/directives/repeat';
 import { LocalizeController } from '../shoelace/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
-import { AbstractDialogsCtrl } from '../shared/dialogs';
+import { AbstractDialogsController } from '../shared/dialogs';
 import type { DialogConfig } from '../shared/dialogs';
 
 // components
@@ -44,7 +44,7 @@ const icons = {
   input: inputIcon
 };
 
-export class DialogsController extends AbstractDialogsCtrl<
+export class DialogsController extends AbstractDialogsController<
   TemplateResult,
   ExtraInputConfigParams
 > {
@@ -68,7 +68,7 @@ export class DialogsController extends AbstractDialogsCtrl<
   }
 
   render(): TemplateResult {
-    return html` ${repeat(this.#dialogs, (dialog) => dialog)} `;
+    return html`${repeat(this.#dialogs, (dialog) => dialog)}`;
   }
 
   #showDialog = <R = void>(
