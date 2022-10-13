@@ -1,5 +1,4 @@
-import type { Theme } from './theme-utils';
-import { ThemeBuilder } from './theme-builder';
+import type { Theme } from './default-theme';
 import { colorShades, paletteColors, semanticColors } from './default-theme';
 
 // === exports =======================================================
