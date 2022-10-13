@@ -58,7 +58,11 @@ export class DialogsController extends AbstractDialogsCtrl<
   }
 
   constructor(host: ReactiveControllerHost & HTMLElement) {
-    super((init) => this.#showDialog(init));
+    super({
+      translate: (key) => this.#localize.term(`shoelaceWidgets.dialogs/${key}`),
+      showDialog: (config) => this.#showDialog(config)
+    });
+
     this.#host = host;
     this.#localize = new LocalizeController(host);
   }
@@ -68,18 +72,11 @@ export class DialogsController extends AbstractDialogsCtrl<
   }
 
   #showDialog = <R = void>(
-    init: (
-      translate: (key: string) => string
-    ) => DialogConfig<TemplateResult, R>
+    config: DialogConfig<TemplateResult, R>
   ): Promise<R> => {
     let lastClickedButton: number = -1;
     let emitResult: (result: any) => void;
     let content: TemplateResult | null = null;
-
-    const translate = (key: string) =>
-      this.#localize.term(`shoelaceWidgets.dialogs/${key}`);
-
-    const config = init(translate);
 
     const hasPrimaryButton = config.buttons.some(
       (it) => it.variant === 'primary'

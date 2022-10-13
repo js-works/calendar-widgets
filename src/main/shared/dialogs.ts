@@ -16,12 +16,12 @@ type DialogConfig<C, R> = {
     | 'prompt'
     | 'input';
 
-  title: string;
-  message: string;
+  title: string | (() => string);
+  message: string | (() => string);
   content: C | null;
 
   buttons: {
-    text: string;
+    text: string | (() => string);
     variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
   }[];
 
@@ -33,165 +33,164 @@ type DialogConfig<C, R> = {
 // --- functions -----------------------------------------------------
 
 abstract class AbstractDialogsCtrl<C, A = {}> {
-  #showDialog: <R = void>(
-    init: (translate: (key: string) => string) => DialogConfig<C, R>
-  ) => Promise<R>;
+  #showDialog: <R = void>(config: DialogConfig<C, R>) => Promise<R>;
+  #translate: (key: string) => string;
 
-  constructor(
-    showDialog: <R = void>(
-      fn: (translate: (key: string) => string) => DialogConfig<C, R>
-    ) => Promise<R>
-  ) {
-    this.#showDialog = showDialog;
+  constructor(params: {
+    translate: (key: string) => string;
+    showDialog: <R = void>(config: DialogConfig<C, R>) => Promise<R>;
+  }) {
+    this.#translate = params.translate;
+    this.#showDialog = params.showDialog;
   }
 
   info(params: {
-    message: string; //
+    message: string | (() => string);
     content?: C;
-    title?: string;
-    okText?: string;
+    title?: string | (() => string);
+    okText?: string | (() => string);
   }) {
-    return this.#showDialog((translate) => ({
+    return this.#showDialog({
       type: 'info',
-      title: params.title || translate('information'),
+      title: params.title || this.#translate('information'),
       message: params.message || '',
       content: params.content || null,
 
       buttons: [
         {
           variant: 'primary',
-          text: params.okText || translate('ok')
+          text: params.okText || this.#translate('ok')
         }
       ]
-    }));
+    });
   }
 
   success(params: {
-    message: string; //
+    message: string | (() => string);
     content?: C;
-    title?: string;
-    okText?: string;
+    title?: string | (() => string);
+    okText?: string | (() => string);
   }) {
-    return this.#showDialog((translate) => ({
+    return this.#showDialog({
       type: 'success',
-      title: params.title || translate('success'),
+      title: params.title || this.#translate('success'),
       message: params.message || '',
       content: params.content || null,
 
       buttons: [
         {
           variant: 'success',
-          text: params.okText || translate('ok')
+          text: params.okText || this.#translate('ok')
         }
       ]
-    }));
+    });
   }
 
   warn(params: {
-    message: string; //
+    message: string | (() => string);
     content?: C;
     title?: string;
     okText?: string;
   }) {
-    return this.#showDialog((translate) => ({
+    return this.#showDialog({
       type: 'warning',
-      title: params.title || translate('warning'),
+      title: params.title || this.#translate('warning'),
       message: params.message || '',
       content: params.content || null,
 
       buttons: [
         {
           variant: 'warning',
-          text: params.okText || translate('ok')
+          text: params.okText || this.#translate('ok')
         }
       ]
-    }));
+    });
   }
 
   error(params: {
-    message: string; //
+    message: string | (() => string);
     content?: C;
-    title?: string;
-    okText?: string;
+    title?: string | (() => string);
+    okText?: string | (() => string);
   }) {
-    return this.#showDialog((translate) => ({
+    return this.#showDialog({
       type: 'error',
-      title: params.title || translate('error'),
+      title: params.title || this.#translate('error'),
       message: params.message || '',
       content: params.content || null,
 
       buttons: [
         {
           variant: 'danger',
-          text: params.okText || translate('ok')
+          text: params.okText || this.#translate('ok')
         }
       ]
-    }));
+    });
   }
 
   confirm(params: {
-    message: string; //
+    message: string | (() => string);
     content?: C;
-    title?: string;
-    okText?: string;
-    cancelText?: string;
+    title?: string | (() => string);
+    okText?: string | (() => string);
+    cancelText?: string | (() => string);
   }) {
-    return this.#showDialog((translate) => ({
+    return this.#showDialog({
       type: 'confirmation',
-      title: params.title || translate('confirmation'),
+      title: params.title || this.#translate('confirmation'),
       message: params.message || '',
       content: params.content || null,
       mapResult: ({ button }) => button === '1',
 
       buttons: [
         {
-          text: params.cancelText || translate('cancel')
+          text: params.cancelText || this.#translate('cancel')
         },
         {
           variant: 'primary',
-          text: params.okText || translate('ok')
+          text: params.okText || this.#translate('ok')
         }
       ]
-    }));
+    });
   }
 
   approve(params: {
-    message: string; //
-    content?: C; //
-    title?: string;
-    okText?: string;
-    cancelText?: string;
+    message: string | (() => string);
+    content?: C;
+    title?: string | (() => string);
+    okText?: string | (() => string);
+    cancelText?: string | (() => string);
   }) {
-    return this.#showDialog((translate) => ({
+    return this.#showDialog({
       type: 'approval',
-      title: params.title || translate('approval'),
+      title: params.title || this.#translate('approval'),
       message: params.message || '',
       content: params.content || null,
       mapResult: ({ button }) => button === '1',
 
       buttons: [
         {
-          text: params.cancelText || translate('cancel')
+          text: params.cancelText || this.#translate('cancel')
         },
         {
           variant: 'danger',
-          text: params.okText || translate('ok')
+          text: params.okText || this.#translate('ok')
         }
       ]
-    }));
+    });
   }
 
   prompt(params: {
-    message: string;
+    message: string | (() => string);
     content?: C;
-    title?: string;
-    okText?: string;
-    cancelText?: string;
+    title?: string | (() => string);
+    okText?: string | (() => string);
+    cancelText?: string | (() => string);
     value?: string;
   }) {
-    return this.#showDialog((translate) => ({
+    return this.#showDialog({
       type: 'prompt',
-      title: params.title || translate('input'),
+      title: params.title || this.#translate('input'),
       message: params.message || '',
       content: params.content || null,
       value: params.value || '',
@@ -199,41 +198,41 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
 
       buttons: [
         {
-          text: params.cancelText || translate('cancel')
+          text: params.cancelText || this.#translate('cancel')
         },
         {
           variant: 'primary',
-          text: params.okText || translate('ok')
+          text: params.okText || this.#translate('ok')
         }
       ]
-    }));
+    });
   }
 
   input(
     params: {
-      message?: string;
+      message?: string | (() => string);
       content?: C;
-      title?: string;
-      okText?: string;
-      cancelText?: string;
+      title?: string | (() => string);
+      okText?: string | (() => string);
+      cancelText?: string | (() => string);
     } & A
   ) {
-    return this.#showDialog((translate) => ({
+    return this.#showDialog({
       type: 'input',
-      title: params.title || translate('input'),
+      title: params.title || this.#translate('input'),
       message: params.message || '',
       content: params.content || null,
       mapResult: ({ button, input }) => (button === '0' ? null : input),
 
       buttons: [
         {
-          text: params.cancelText || translate('cancel')
+          text: params.cancelText || this.#translate('cancel')
         },
         {
           variant: 'primary',
-          text: params.okText || translate('ok')
+          text: params.okText || this.#translate('ok')
         }
       ]
-    }));
+    });
   }
 }
