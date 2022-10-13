@@ -25,8 +25,8 @@ type DialogConfig<C, R> = {
     variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
   }[];
 
+  params: Record<string, any>; // TODO - mak this type safe
   defaultResult?: R;
-  value?: string; // only needed for input dialog // TODO? - this is not very nice
   mapResult?: (data: Record<string, string>) => R;
 };
 
@@ -63,6 +63,7 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
   }) {
     return this.#showDialog({
       type: 'info',
+      params,
       title: params.title || this.#translate('information'),
       message: params.message || '',
       content: params.content || null,
@@ -84,6 +85,7 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
   }) {
     return this.#showDialog({
       type: 'success',
+      params,
       title: params.title || this.#translate('success'),
       message: params.message || '',
       content: params.content || null,
@@ -105,6 +107,7 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
   }) {
     return this.#showDialog({
       type: 'warning',
+      params,
       title: params.title || this.#translate('warning'),
       message: params.message || '',
       content: params.content || null,
@@ -126,6 +129,7 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
   }) {
     return this.#showDialog({
       type: 'error',
+      params,
       title: params.title || this.#translate('error'),
       message: params.message || '',
       content: params.content || null,
@@ -148,6 +152,7 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
   }) {
     return this.#showDialog({
       type: 'confirmation',
+      params,
       title: params.title || this.#translate('confirmation'),
       message: params.message || '',
       content: params.content || null,
@@ -174,6 +179,7 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
   }) {
     return this.#showDialog({
       type: 'approval',
+      params,
       title: params.title || this.#translate('approval'),
       message: params.message || '',
       content: params.content || null,
@@ -201,10 +207,11 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
   }) {
     return this.#showDialog({
       type: 'prompt',
+      params,
       title: params.title || this.#translate('input'),
       message: params.message || '',
       content: params.content || null,
-      value: params.value || '',
+
       mapResult: ({ button, input }) => (button === '0' ? null : input),
 
       buttons: [
@@ -230,6 +237,7 @@ abstract class AbstractDialogsCtrl<C, A = {}> {
   ) {
     return this.#showDialog({
       type: 'input',
+      params,
       title: params.title || this.#translate('input'),
       message: params.message || '',
       content: params.content || null,

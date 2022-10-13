@@ -83,7 +83,7 @@ export class DialogsController extends AbstractDialogsCtrl<
     );
 
     if (config.type === 'prompt') {
-      const value = config.value === 'string' ? config.value : '';
+      const value = config.params.value === 'string' ? config.params.value : '';
 
       content = html`
         <sl-input name="input" size="small" autofocus value=${value}>
@@ -110,6 +110,15 @@ export class DialogsController extends AbstractDialogsCtrl<
       });
     };
 
+    const labelLayout =
+      config.type !== 'input'
+        ? 'auto'
+        : config.params.labelLayout === 'vertical'
+        ? 'vertical'
+        : config.params.labelLayout === 'horizontal'
+        ? 'horizontal'
+        : 'auto';
+
     const output = html`
       <style>
         ${dialogsStyles}
@@ -117,8 +126,8 @@ export class DialogsController extends AbstractDialogsCtrl<
       <form
         class=${classMap({
           'form': true,
-          'label-layout-horizontal': true
-          //(config as any).labelLayout === 'horizontal'
+          'label-layout-vertical': labelLayout === 'vertical',
+          'label-layout-horizontal': labelLayout === 'horizontal'
         })}
         dir=${this.#localize.dir()}
         @submit=${onFormSubmit}
