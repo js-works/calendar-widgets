@@ -16,10 +16,6 @@ const styles = css`
     padding: 3rem;
     box-sizing: border-box;
     background-color: var(--sl-color-neutral-0);
-
-    /* TODO!!! */
-    --label-layout-horizontal: inherit;
-    --label-layout-vertical: ;
   }
 
   .demo sl-button {
@@ -71,86 +67,72 @@ class DialogsDemo extends LitElement {
     });
   };
 
-  private _onConfirmClick = () => {
-    this._dlg
-      .confirm({
-        message: 'Do you really want to log out?',
-        okText: 'Log out'
-      })
-      .then(async (confirmed) => {
-        if (confirmed) {
-          this._dlg.info({
-            message: "You've been logged out"
-          });
-        }
+  private _onConfirmClick = async () => {
+    const confirmed = await this._dlg.confirm({
+      message: 'Do you really want to log out?',
+      okText: 'Log out'
+    });
+
+    if (confirmed) {
+      this._dlg.info({
+        message: "You've been logged out"
       });
+    }
   };
 
-  private _onApproveClick = () => {
-    this._dlg
-      .approve({
-        message: 'Do you really want to delete the project?',
-        title: 'Are you sure?',
-        okText: 'Delete project'
-      })
-      .then((approved) => {
-        if (approved) {
-          this._dlg.info({
-            message: 'Project has been deleted'
-          });
-        }
+  private _onApproveClick = async () => {
+    const approved = await this._dlg.approve({
+      message: 'Do you really want to delete the project?',
+      title: 'Are you sure?',
+      okText: 'Delete project'
+    });
+
+    if (approved) {
+      this._dlg.info({
+        message: 'Project has been deleted'
       });
+    }
   };
 
-  private _onPromptClick = () => {
-    this._dlg
-      .prompt({
-        message: 'Please enter your name',
-        title: 'Input required',
-        cancelText: 'No way!'
-      })
-      .then(async (name) => {
-        if (name !== null) {
-          this._dlg.info({
-            message: `Hello, ${name || 'stranger'}!`
-          });
-        }
+  private _onPromptClick = async () => {
+    const name = await this._dlg.prompt({
+      message: 'Please enter your name',
+      title: 'Input required',
+      cancelText: 'No way!'
+    });
+
+    if (name !== null) {
+      this._dlg.info({
+        message: `Hello, ${name || 'stranger'}!`
       });
+    }
   };
 
-  private _onInputClick = () => {
-    this._dlg
-      .input({
-        title: 'New user',
-        message: 'Please fill out the form to add the new user',
+  private _onInputClick = async () => {
+    const data = await this._dlg.input({
+      title: 'New user',
+      message: 'Please fill out the form to add the new user',
 
-        content: html`
-          <sx-text-field
-            name="firstName"
-            label="First name"
-            required
-          ></sx-text-field>
-          <sx-text-field
-            name="lastName"
-            label="Last name"
-            required
-          ></sx-text-field>
-          <sx-date-field
-            name="dateOfBirth"
-            label="Date of Birth"
-            required
-          ></sx-date-field>
-        `,
+      content: html`
+        <sx-text-field
+          name="firstName"
+          label="First name"
+          required
+        ></sx-text-field>
+        <sx-text-field
+          name="lastName"
+          label="Last name"
+          required
+        ></sx-text-field>
+        <sx-date-field
+          name="dateOfBirth"
+          label="Date of Birth"
+          required
+        ></sx-date-field>
+      `,
 
-        okText: 'Add user'
-      })
-      .then(async (name) => {
-        if (name !== null) {
-          this._dlg.info({
-            message: `Done!`
-          });
-        }
-      });
+      okText: 'Add user'
+    });
   };
 
   private _onDestroyPlanet = async () => {
