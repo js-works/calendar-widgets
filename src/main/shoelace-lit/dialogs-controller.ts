@@ -11,6 +11,7 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import { Form } from '../shoelace/components/form/form';
 
 // icons
 import infoIcon from '../shoelace/icons/info-circle.icon';
@@ -48,14 +49,14 @@ export class DialogsController extends AbstractDialogsController<
   TemplateResult,
   ExtraInputConfigParams
 > {
-  readonly #host: ReactiveControllerHost & HTMLElement;
-  readonly #localize: LocalizeController;
-  readonly #dialogRenderers = new Set<() => TemplateResult>();
-
   static {
     // required components (just to prevent too much tree shaking)
-    void [SlButton, SlDialog, SlIcon, SlInput];
+    void [Form, SlButton, SlDialog, SlIcon, SlInput];
   }
+
+  readonly #requestUpdate: () => Promise<boolean>;
+  readonly #localize: LocalizeController;
+  readonly #dialogRenderers = new Set<() => TemplateResult>();
 
   constructor(host: ReactiveControllerHost & HTMLElement) {
     super({
@@ -63,24 +64,35 @@ export class DialogsController extends AbstractDialogsController<
       showDialog: (config) => this.#showDialog(config)
     });
 
-    this.#host = host;
     this.#localize = new LocalizeController(host);
+
+    this.#requestUpdate = () => {
+      host.requestUpdate();
+      return host.updateComplete;
+    };
   }
 
   render(): TemplateResult {
     return html`${repeat(this.#dialogRenderers, (it) => it())}`;
   }
 
-  #showDialog = <R = void>(
+  #showDialog = async <R = void>(
     config: DialogConfig<TemplateResult, R>
   ): Promise<R> => {
     let emitResult: (result: unknown) => void;
+    let open = false;
 
-    this.#dialogRenderers.add(() =>
-      this.#renderDialog(config, true, (result) => emitResult(result))
-    );
+    const renderer = () =>
+      this.#renderDialog(config, open, (result) => {
+        this.#dialogRenderers.delete(renderer);
+        return emitResult(result);
+      });
 
-    this.#host.requestUpdate();
+    this.#dialogRenderers.add(renderer);
+
+    await this.#requestUpdate();
+    open = true;
+    await this.#requestUpdate();
 
     return new Promise((resolve) => {
       emitResult = (result: any) => {
@@ -142,7 +154,7 @@ export class DialogsController extends AbstractDialogsController<
       <style>
         ${dialogsStyles}
       </style>
-      <form
+      <sx-form
         class=${classMap({
           'form': true,
           'label-layout-vertical': labelLayout === 'vertical',
@@ -151,7 +163,7 @@ export class DialogsController extends AbstractDialogsController<
         dir=${this.#localize.dir()}
         @submit=${onFormSubmit}
       >
-        <sl-dialog open class="dialog">
+        <sl-dialog ?open=${open} class="dialog">
           <div slot="label" class="header">
             <sl-icon
               class="icon ${config.type}"
@@ -185,7 +197,7 @@ export class DialogsController extends AbstractDialogsController<
             })}
           </div>
         </sl-dialog>
-      </form>
+      </sx-form>
     `;
   }
 }
