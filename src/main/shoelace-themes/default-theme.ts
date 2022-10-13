@@ -1,6 +1,12 @@
 // === exports =======================================================
 
-export { colorShades, defaultTheme, paletteColors, semanticColors };
+export {
+  colorShades,
+  defaultTheme,
+  paletteColors,
+  semanticColors,
+  utilityStyles
+};
 
 // === light theme ===================================================
 
@@ -38,6 +44,8 @@ const paletteColors = Object.freeze([
 ] as const);
 
 const defaultThemeTokens = {
+  'light': 'inherit',
+  'dark': ' ',
   'color-gray-50': 'hsl(0 0% 97.5%)',
   'color-gray-100': 'hsl(240 4.8% 95.9%)',
   'color-gray-200': 'hsl(240 5.9% 90%)',
@@ -431,3 +439,25 @@ const defaultThemeTokens = {
 };
 
 const defaultTheme = Object.freeze(defaultThemeTokens);
+
+const utilityStyles = /*css*/ `
+  .sl-scroll-lock {
+    overflow: hidden !important;
+  }
+
+  .sl-toast-stack {
+    position: fixed;
+    top: 0;
+    inset-inline-end: 0;
+    z-index: var(--sl-z-index-toast);
+    width: 28rem;
+    max-width: 100%;
+    max-height: 100%;
+    overflow: auto;
+  }
+
+  .sl-toast-stack sl-alert {
+    --box-shadow: var(--sl-shadow-large);
+    margin: var(--sl-spacing-medium);
+  }
+`;

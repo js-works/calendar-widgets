@@ -55,7 +55,12 @@ const ThemeModifiers = Object.freeze({
 
   dark(veryDark: boolean = false) {
     return (tokens: Theme): Partial<Theme> => {
-      // TODO!!! - return if already dark
+      if (tokens.dark === 'inherit') {
+        throw new Error(
+          'Colors cannot be inverted to dark mode as base theme is already dark'
+        );
+      }
+
       const darkTokens: Record<string, string> = Object.assign({}, tokens);
 
       [...semanticColors, ...paletteColors].forEach((color) => {
