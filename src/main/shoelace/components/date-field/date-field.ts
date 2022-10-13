@@ -152,9 +152,7 @@ export class DateField extends LitElement {
               'input--disabled': this.disabled
             })}
           >
-            <!--
             <sl-icon slot="suffix" class="calendar-icon" src=${icon}></sl-icon>
-          -->
             <span
               slot="label"
               class=${classMap({

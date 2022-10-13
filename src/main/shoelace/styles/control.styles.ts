@@ -32,7 +32,7 @@ export default css`
   }
 
   .sl-control {
-    margin: 3px;
+    margin: 4px 0;
   }
 
   .sl-control::part(form-control) {

@@ -18,7 +18,8 @@ import warningIcon from '../shoelace/icons/exclamation-circle.icon';
 import errorIcon from '../shoelace/icons/exclamation-triangle.icon';
 import confirmationIcon from '../shoelace/icons/question-circle.icon';
 import approvalIcon from '../shoelace/icons/question-diamond.icon';
-import inputIcon from '../shoelace/icons/keyboard.icon';
+import promptIcon from '../shoelace/icons/keyboard.icon';
+import inputIcon from '../shoelace/icons/window.icon';
 
 // styles
 import dialogsStyles from './dialogs.styles';
@@ -32,7 +33,7 @@ const icons = {
   error: errorIcon,
   confirmation: confirmationIcon,
   approval: approvalIcon,
-  prompt: inputIcon,
+  prompt: promptIcon,
   input: inputIcon
 };
 

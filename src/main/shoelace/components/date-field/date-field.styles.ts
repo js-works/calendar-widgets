@@ -45,4 +45,9 @@ export default css`
   sl-dropdown {
     display: block;
   }
+
+  sl-icon {
+    padding: 0;
+    transform: translateX(calc(-1 * var(--sl-input-spacing-medium)));
+  }
 `;
