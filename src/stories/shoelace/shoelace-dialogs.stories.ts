@@ -21,7 +21,7 @@ const styles = css`
   }
 
   .demo sl-button {
-    width: 8rem;
+    width: 9rem;
     margin: 4px 2px;
   }
 `;
@@ -193,7 +193,9 @@ class DialogsDemo extends LitElement {
           <sl-button @click=${this._onInputClick}>Input</sl-button>
         </div>
         <br />
-        <sl-button @click=${this._onDestroyPlanet}>Destroy planet</sl-button>
+        <sl-button @click=${this._onDestroyPlanet}>
+          Destroy planet &#x1F609;
+        </sl-button>
       </div>
       ${this._dlg.render()}
     `;

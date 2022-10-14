@@ -59,7 +59,7 @@ class DatePickerDemo extends LitElement {
   private _showWeekNumbers = true;
   private _showAdjacentDays = true;
   private _enableCenturyView = false;
-  private _fixedDayCount = false;
+  private _fixedDayCount = true;
 
   private _onChange = (ev: Event) => {
     const target: any = ev.target;

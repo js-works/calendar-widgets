@@ -1,6 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 import { DateField } from '../../main/shoelace/components/date-field/date-field';
+import { Fieldset } from '../../main/shoelace/components/fieldset/fieldset';
 
 import './shared/shared-theme';
 
@@ -14,7 +15,7 @@ const styles = css`
   .base {
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
-    width: 15rem;
+    width: 30rem;
   }
 `;
 
@@ -29,7 +30,7 @@ class DatePickerDemo extends LitElement {
 
   render() {
     return html`
-      <div class="base">
+      <sx-fieldset label-layout="horizontal" class="base">
         <sx-date-field label="Date" show-adjacent-days></sx-date-field>
         <sx-date-field
           label="Date and time"
@@ -50,7 +51,7 @@ class DatePickerDemo extends LitElement {
         ></sx-date-field>
         <sx-date-field label="Month" selection-mode="month"></sx-date-field>
         <sx-date-field label="Year" selection-mode="year"></sx-date-field>
-      </div>
+      </sx-fieldset>
     `;
   }
 }

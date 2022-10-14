@@ -12,6 +12,6 @@ export default css`
 
   .base.invalid sl-input::part(base) {
     border-color: var(--sl-color-danger-500);
-    --sl-input-focus-ring-color: var(--sl-color-danger-300);
+    --sl-input-focus-ring-color: var(--sl-color-danger-400);
   }
 `;
