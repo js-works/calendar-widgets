@@ -1,6 +1,6 @@
 // === exports =======================================================
 
-export { FieldCheckers, FieldValidator };
+export { FieldChecks, FieldValidator };
 
 // === public types ==================================================
 
@@ -72,7 +72,7 @@ class FieldValidator<T> {
   }
 }
 
-const FieldCheckers = {
+const FieldChecks = {
   required: createCheckerFactory(
     (isSatisfied?: (value: unknown) => boolean) => (value, t) => {
       let valid = isSatisfied ? !!isSatisfied(value) : !!value;

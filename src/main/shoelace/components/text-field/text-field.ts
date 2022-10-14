@@ -6,7 +6,7 @@ import { when } from 'lit/directives/when';
 
 import { LocalizeController } from '../../i18n/i18n';
 import { FormFieldController } from '../../controllers/form-field-controller';
-import { FieldCheckers, FieldValidator } from '../../misc/form-validation';
+import { FieldChecks, FieldValidator } from '../../misc/form-validation';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -61,7 +61,7 @@ class TextField extends LitElement {
   private _fieldValidator = new FieldValidator(
     () => this.value,
     () => this._localize.lang(),
-    [FieldCheckers.required((value) => !this.required || !!value)]
+    [FieldChecks.required((value) => !this.required || !!value)]
   );
 
   private _formField = new FormFieldController(this, {

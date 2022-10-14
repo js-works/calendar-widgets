@@ -12,7 +12,7 @@ import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/i
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
 import { DatePicker } from '../date-picker/date-picker';
 import { FormFieldController } from '../../controllers/form-field-controller';
-import { FieldCheckers, FieldValidator } from '../../misc/form-validation';
+import { FieldChecks, FieldValidator } from '../../misc/form-validation';
 
 // styles
 import dateFieldStyles from './date-field.styles';
@@ -100,7 +100,7 @@ export class DateField extends LitElement {
   private _fieldValidator = new FieldValidator(
     () => this.value,
     () => this._localize.lang(),
-    [FieldCheckers.required((value) => !this.required || !!value)]
+    [FieldChecks.required((value) => !this.required || !!value)]
   );
 
   private _formField = new FormFieldController(this, {
