@@ -12,7 +12,7 @@ import { DateField } from '../../main/shoelace-widgets';
 import './shared/shared-theme';
 
 export default {
-  title: 'Shoelace'
+  title: 'shoelace-widgets'
 };
 
 export const datePicker = () => '<date-picker-demo></date-picker-demo>';

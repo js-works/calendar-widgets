@@ -6,7 +6,7 @@ import { Fieldset } from '../../main/shoelace/components/fieldset/fieldset';
 import './shared/shared-theme';
 
 export default {
-  title: 'Shoelace'
+  title: 'shoelace-widgets'
 };
 
 export const dateFields = () => '<date-field-demo></date-field-demo>';
@@ -25,7 +25,7 @@ class DatePickerDemo extends LitElement {
 
   static {
     // dependencies (to prevent to much tree shaking)
-    void DateField;
+    void [DateField, Fieldset];
   }
 
   render() {
