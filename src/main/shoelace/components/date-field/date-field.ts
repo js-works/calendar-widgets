@@ -164,43 +164,50 @@ export class DateField extends LitElement {
             </span>
           </sl-input>
           <div class="popup-content">
-            <sx-date-picker
-              class="date-picker"
-              .selectionMode=${this.selectionMode}
-              .showAdjacentDays=${this.showAdjacentDays}
-              .showWeekNumbers=${this.showWeekNumbers}
-              .highlightWeekends=${this.highlightWeekends}
-              .disableWeekends=${this.disableWeekends}
-              .minDate=${this.minDate}
-              .maxDate=${this.minDate}
-              .fixedDayCount=${this.fixedDayCount}
-              ${ref(this._pickerRef)}
-            >
-            </sx-date-picker>
-            <div class="popup-footer">
-              <sl-button
-                variant="text"
-                size="small"
-                class="button"
-                @click=${this._onClearClick}
-                >Clear</sl-button
+            <div class="popup-column-1">
+              <div class="selection-info-2">Mon</div>
+              <div class="selection-info-3">Dec 21</div>
+              <div class="selection-info-1">2022</div>
+            </div>
+            <div class="popup-column2">
+              <sx-date-picker
+                class="date-picker"
+                .selectionMode=${this.selectionMode}
+                .showAdjacentDays=${this.showAdjacentDays}
+                .showWeekNumbers=${this.showWeekNumbers}
+                .highlightWeekends=${this.highlightWeekends}
+                .disableWeekends=${this.disableWeekends}
+                .minDate=${this.minDate}
+                .maxDate=${this.minDate}
+                .fixedDayCount=${this.fixedDayCount}
+                ${ref(this._pickerRef)}
               >
-              <sl-button
-                variant="text"
-                class="button"
-                size="small"
-                @click=${this._onCancelClick}
-              >
-                Cancel
-              </sl-button>
-              <sl-button
-                variant="text"
-                class="button"
-                size="small"
-                @click=${this._onOkClick}
-              >
-                OK
-              </sl-button>
+              </sx-date-picker>
+              <div class="popup-footer">
+                <sl-button
+                  variant="text"
+                  size="small"
+                  class="button"
+                  @click=${this._onClearClick}
+                  >Clear</sl-button
+                >
+                <sl-button
+                  variant="text"
+                  class="button"
+                  size="small"
+                  @click=${this._onCancelClick}
+                >
+                  Cancel
+                </sl-button>
+                <sl-button
+                  variant="text"
+                  class="button"
+                  size="small"
+                  @click=${this._onOkClick}
+                >
+                  OK
+                </sl-button>
+              </div>
             </div>
           </div>
         </sl-dropdown>

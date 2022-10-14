@@ -17,11 +17,36 @@ export default css`
 
   .popup-content {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     box-shadow: var(--sl-shadow-large);
-    width: 20rem;
     border-radius: 0 0 4px 4px;
     background-color: var(--sl-color-neutral-0);
+  }
+
+  .popup-column-1 {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-primary-500);
+    padding: 1rem 1.25rem;
+    box-sizing: border-box;
+  }
+
+  .popup-column-2 {
+    display: flex;
+    flex-direction: column;
+    width: 20rem;
+  }
+
+  .selection-info-1 {
+    font-size: 115%;
+  }
+
+  .selection-info-2 {
+    font-size: 115%;
+    line-height: 1.25em;
+  }
+
+  .selection-info-3 {
+    font-size: 160%;
   }
 
   .popup-footer {
@@ -32,22 +57,7 @@ export default css`
     padding: 0.25rem 0.25rem 0.5rem 0.25rem;
   }
 
-  .button::part(base) {
-    margin: 0;
-    height: auto;
-    line-height: unset;
-  }
-
-  .button::part(label) {
-    padding: 0 0.5rem;
-  }
-
   sl-dropdown {
     display: block;
-  }
-
-  sl-icon {
-    padding: 0;
-    transform: translateX(calc(-1 * var(--sl-input-spacing-medium)));
   }
 `;

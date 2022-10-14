@@ -49,15 +49,16 @@ const colorLuminances = [
 
 const modifiers = {
   colors(colorScheme: ColorScheme) {
-    return (tokens: Theme): Partial<Theme> => {
+    return (theme: Theme): Partial<Theme> => {
       const ret: Partial<Theme> = {};
+      const isDark = theme.light === ' ';
 
       for (const semanticColor of semanticColors) {
         const colorHex = colorScheme[`${semanticColor}Color`];
 
         if (colorHex) {
           Object.assign(ret, {
-            ...calcColorShades(semanticColor, colorHex)
+            ...calcColorShades(semanticColor, colorHex, isDark)
           });
         }
       }

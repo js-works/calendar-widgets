@@ -131,6 +131,8 @@ class DialogsDemo extends LitElement {
           name="dateOfBirth"
           label="Date of Birth"
           required
+          show-adjacent-days
+          fixed-day-count
         ></sx-date-field>
       `,
 
