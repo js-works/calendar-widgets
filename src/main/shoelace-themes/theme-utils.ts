@@ -16,20 +16,10 @@ type ThemeModifier = (theme: Theme) => Partial<Theme>;
 // === exported functions ============================================
 
 function customizeTheme(
-  baseTheme: Theme,
-  modifiers: ThemeModifier | ThemeModifier[]
-): Theme;
-
-function customizeTheme(
-  modifiers: ThemeModifier | ThemeModifier[] //
-): Theme;
-
-function customizeTheme(arg1: unknown, arg2?: unknown): Theme {
-  const baseTheme = (arg2 ? arg1 : defaultTheme) as Theme;
-  const modifiers = [arg2 ? arg2 : arg1].flat() as ThemeModifier[];
-  const tokens = { ...baseTheme };
-
-  modifiers.forEach((modifier) => Object.assign(tokens, modifier(tokens)));
+  ...modifiers: (ThemeModifier | ThemeModifier[])[] //
+): Theme {
+  const tokens = { ...defaultTheme };
+  modifiers.flat(1).forEach((mod) => Object.assign(tokens, mod(tokens)));
   return Object.freeze(tokens);
 }
 

@@ -10,7 +10,7 @@ const sharedTheme = customizeTheme(
     .colors(ColorSchemes.bostonBlue)
     .modern()
     .compact()
-    //.dark()
+    //.dark(true)
     .build()
 );
 
