@@ -54,11 +54,12 @@ export default css`
     gap: 6px;
     justify-content: flex-end;
     box-sizing: border-box;
-    padding: 0.25rem 0.25rem 0.5rem 0.25rem;
+    padding: 0.25rem 0.5rem 0.5rem 0.25rem;
   }
 
-  .button {
-    font-size: 200%;
+  .button::part(label) {
+    padding-left: 0.5em;
+    padding-right: 0.5em;
   }
 
   sl-dropdown {

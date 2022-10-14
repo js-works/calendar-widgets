@@ -231,7 +231,6 @@ export class DateField extends LitElement {
                 <sl-button
                   variant="text"
                   class="button"
-                  size="small"
                   @click=${this._onCancelClick}
                 >
                   Cancel
@@ -239,7 +238,6 @@ export class DateField extends LitElement {
                 <sl-button
                   variant="text"
                   class="button"
-                  size="small"
                   @click=${this._onOkClick}
                 >
                   OK
