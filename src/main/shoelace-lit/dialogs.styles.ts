@@ -60,10 +60,6 @@ export default css`
     background-color: var(--sl-color-neutral-100);
   }
 
-  .button::part(base) {
-    font-weight: var(--sl-label-font-weight);
-  }
-
   .icon {
     font-size: var(--sl-font-size-x-large);
   }

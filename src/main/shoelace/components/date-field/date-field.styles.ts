@@ -57,6 +57,10 @@ export default css`
     padding: 0.25rem 0.25rem 0.5rem 0.25rem;
   }
 
+  .button {
+    font-size: 200%;
+  }
+
   sl-dropdown {
     display: block;
   }

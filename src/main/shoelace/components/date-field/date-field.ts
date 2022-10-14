@@ -186,7 +186,6 @@ export class DateField extends LitElement {
               <div class="popup-footer">
                 <sl-button
                   variant="text"
-                  size="small"
                   class="button"
                   @click=${this._onClearClick}
                   >Clear</sl-button

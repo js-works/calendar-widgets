@@ -24,7 +24,7 @@ import errorIcon from '../shoelace/icons/exclamation-triangle.icon';
 import confirmationIcon from '../shoelace/icons/question-circle.icon';
 import approvalIcon from '../shoelace/icons/question-diamond.icon';
 import promptIcon from '../shoelace/icons/keyboard.icon';
-import inputIcon from '../shoelace/icons/window.icon';
+import inputIcon from '../shoelace/icons/layers.icon';
 
 // styles
 import dialogsStyles from './dialogs.styles';

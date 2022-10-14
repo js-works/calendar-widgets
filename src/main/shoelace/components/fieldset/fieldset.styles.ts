@@ -6,10 +6,6 @@ export default css`
   ${componentStyles}
   ${labelLayoutStyles}
 
-  :host {
-    display: block;
-  }
-
   .base {
     padding: 0;
     margin: 0;
