@@ -129,7 +129,7 @@ class DialogsDemo extends LitElement {
         ></sx-text-field>
         <sx-date-field
           name="dateOfBirth"
-          label="Date of Birth"
+          label="Date of birth"
           required
           show-adjacent-days
           fixed-day-count

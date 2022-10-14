@@ -11,6 +11,8 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
 import { DatePicker } from '../date-picker/date-picker';
+import { FormFieldController } from '../../controllers/form-field-controller';
+import { FieldCheckers, FieldValidator } from '../../misc/form-validation';
 
 // styles
 import dateFieldStyles from './date-field.styles';
@@ -48,6 +50,9 @@ export class DateField extends LitElement {
   @property()
   name = '';
 
+  @property()
+  value = '';
+
   @property({ type: String })
   label = '';
 
@@ -56,6 +61,9 @@ export class DateField extends LitElement {
 
   @property({ type: Boolean })
   disabled = false;
+
+  @property()
+  size: 'small' | 'medium' | 'large' = 'medium';
 
   @property({ attribute: false })
   selection: Date[] = [];
@@ -84,10 +92,21 @@ export class DateField extends LitElement {
   @state()
   private _value = '';
 
-  private _localize = new LocalizeController(this);
-  private _inputRef = createRef<SlInput>();
   private _pickerRef = createRef<DatePicker>();
   private _dropdownRef = createRef<SlDropdown>();
+  private _inputRef = createRef<SlInput>();
+  private _localize = new LocalizeController(this);
+
+  private _fieldValidator = new FieldValidator(
+    () => this.value,
+    () => this._localize.lang(),
+    [FieldCheckers.required((value) => !this.required || !!value)]
+  );
+
+  private _formField = new FormFieldController(this, {
+    getValue: () => this.value,
+    validate: () => this._fieldValidator.validate()
+  });
 
   private _onInputClick() {
     this._inputRef.value!.focus();
@@ -115,6 +134,18 @@ export class DateField extends LitElement {
     this._dropdownRef.value!.hide();
   };
 
+  get validationMessage(): string {
+    return this._fieldValidator.validate() || '';
+  }
+
+  focus() {
+    this._inputRef.value!.focus();
+  }
+
+  blur(): void {
+    this._inputRef.value?.blur();
+  }
+
   render() {
     const icon = {
       date: dateIcon,
@@ -128,7 +159,13 @@ export class DateField extends LitElement {
     }[this.selectionMode];
 
     return html`
-      <div class="base">
+      <div
+        class=${classMap({
+          base: true,
+          required: this.required,
+          invalid: this._formField.showsError()
+        })}
+      >
         <sl-dropdown
           class="dropdown"
           placement="bottom-center"
@@ -145,6 +182,7 @@ export class DateField extends LitElement {
             readonly
             @click=${this._onInputClick}
             @keydown=${this._onInputKeyDown}
+            size=${this.size}
             ${ref(this._inputRef)}
             class=${classMap({
               'sl-control': true,
@@ -210,6 +248,7 @@ export class DateField extends LitElement {
             </div>
           </div>
         </sl-dropdown>
+        ${this._formField.renderErrorMsg()}
       </div>
     `;
   }
