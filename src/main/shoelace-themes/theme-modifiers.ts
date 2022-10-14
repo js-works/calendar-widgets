@@ -15,6 +15,20 @@ export type ColorScheme = {
   neutralColor?: string;
 };
 
+type Args<F extends Function> = F extends (...args: infer A) => unknown
+  ? A
+  : never;
+
+type ModifierName = keyof typeof modifiers;
+
+type ModifiersBuilder<M extends ModifierName = ModifierName> = {
+  [K in M]: (
+    ...args: Args<typeof modifiers[K]>
+  ) => ModifiersBuilder<Exclude<M, K>>;
+} & {
+  build(): ((theme: Theme) => Partial<Theme>)[];
+};
+
 // === constants =====================================================
 
 const colorLuminances = [
@@ -33,7 +47,7 @@ const colorLuminances = [
 
 // === theme modifiers ===============================================
 
-const ThemeModifiers = Object.freeze({
+const modifiers = {
   colors(colorScheme: ColorScheme) {
     return (tokens: Theme): Partial<Theme> => {
       const ret: Partial<Theme> = {};
@@ -159,6 +173,42 @@ const ThemeModifiers = Object.freeze({
         'input-height-large': '2.5rem'
       };
     };
+  }
+};
+
+const ThemeModifiers = Object.freeze({
+  ...modifiers,
+  builder: (): ModifiersBuilder => {
+    const allMethodNames = Object.keys(ThemeModifiers).filter(
+      (it) => it !== 'builder'
+    );
+
+    const getBuilder = (
+      usedMethodNames: string[],
+      freeMethodNames: string[],
+      modifiers: ((theme: Theme) => Partial<Theme>)[]
+    ): Partial<ModifiersBuilder> => {
+      const ret: any = {};
+
+      for (const key of freeMethodNames) {
+        ret[key] = (...args: unknown[]) => {
+          const modifier = (ThemeModifiers as Record<string, Function>)[key](
+            ...args
+          );
+
+          return getBuilder(
+            usedMethodNames.concat(key),
+            freeMethodNames.filter((it) => it !== 'key'),
+            modifiers.concat(modifier)
+          );
+        };
+      }
+
+      ret.build = () => modifiers;
+      return ret;
+    };
+
+    return getBuilder([], allMethodNames, []) as any;
   }
 });
 
