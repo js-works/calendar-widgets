@@ -146,8 +146,7 @@ export class DialogsController extends AbstractDialogsController<
 
     const onFormInvalid = () => {
       this.#toasts.error({
-        title: 'Invalid form data',
-        message: 'Please correct the invalid entries',
+        message: 'Invalid form data',
         duration: 3000,
         closeable: true
       });

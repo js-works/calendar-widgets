@@ -39,7 +39,7 @@ export default css`
     max-width: 1ex;
     overflow: hidden;
     content: '*';
-    color: var(--sl-color-danger-700);
+    color: var(--sl-color-danger-800);
     box-sizing: border-box;
   }
 
@@ -48,7 +48,7 @@ export default css`
   .validation-error:not(:empty) {
     font-size: 90%;
     font-weight: var(--sl-font-weight-normal);
-    color: var(--sl-color-danger-700);
+    color: var(--sl-color-danger-800);
     padding: 0 0.5rem 0.375rem 0;
 
     margin: 0 0 0 calc(var(--label-layout-width) + var(--label-layout-gap));

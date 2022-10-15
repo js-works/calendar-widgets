@@ -66,7 +66,7 @@ class ToastsController extends AbstractToastsController<
   }
 
   render(): TemplateResult {
-    return html`x${repeat(this.#toastRenderers, (it) => it())}`;
+    return html`${repeat(this.#toastRenderers, (it) => it())}`;
   }
 
   #showToast = async (config: ToastConfig<TemplateResult, ExtraParams>) => {
@@ -103,6 +103,7 @@ class ToastsController extends AbstractToastsController<
         <sl-icon slot="icon" src=${icon}></sl-icon>
         <strong>${title}</strong>
         <div>${message}</div>
+        <div>${config.content}</div>
       </sl-alert>
     `;
   }
