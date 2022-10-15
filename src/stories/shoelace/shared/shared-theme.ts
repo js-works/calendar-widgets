@@ -14,4 +14,4 @@ const sharedTheme = customizeTheme(
     .build()
 );
 
-loadTheme(sharedTheme, '#root');
+loadTheme(sharedTheme, '#root,.sl-toast-stack');

@@ -6,7 +6,8 @@ import { LocalizeController } from '../shoelace/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { AbstractDialogsController } from '../shared/dialogs';
 import type { DialogConfig } from '../shared/dialogs';
-import { FormSubmitEvent } from '../shoelace/events/form-submit-event';
+import { ToastsController } from '../shoelace-lit/toasts-controller';
+import type { FormSubmitEvent } from '../shoelace/events/form-submit-event';
 
 // components
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
@@ -18,7 +19,7 @@ import { TextField } from '../shoelace/components/text-field/text-field';
 
 // icons
 import infoIcon from '../shoelace/icons/info-circle.icon';
-import successIcon from '../shoelace/icons/info-circle.icon';
+import successIcon from '../shoelace/icons/check-circle.icon';
 import warningIcon from '../shoelace/icons/exclamation-circle.icon';
 import errorIcon from '../shoelace/icons/exclamation-triangle.icon';
 import confirmationIcon from '../shoelace/icons/question-circle.icon';
@@ -35,7 +36,7 @@ type ExtraInputConfigParams = {
   labelLayout?: 'vertical' | 'horizontal' | 'auto';
 };
 
-// === icons of dialog types =========================================
+// === icons by dialog type ==========================================
 
 const icons = {
   info: infoIcon,
@@ -59,6 +60,7 @@ export class DialogsController extends AbstractDialogsController<
 
   readonly #requestUpdate: () => Promise<boolean>;
   readonly #localize: LocalizeController;
+  readonly #toasts: ToastsController;
   readonly #dialogRenderers = new Set<() => TemplateResult>();
 
   constructor(host: ReactiveControllerHost & HTMLElement) {
@@ -68,6 +70,7 @@ export class DialogsController extends AbstractDialogsController<
     });
 
     this.#localize = new LocalizeController(host);
+    this.#toasts = new ToastsController(host);
 
     this.#requestUpdate = () => {
       host.requestUpdate();
@@ -141,6 +144,15 @@ export class DialogsController extends AbstractDialogsController<
       });
     };
 
+    const onFormInvalid = () => {
+      this.#toasts.error({
+        title: 'Invalid form data',
+        message: 'Please correct the invalid entries',
+        duration: 3000,
+        closeable: true
+      });
+    };
+
     const labelLayout =
       config.type !== 'input'
         ? 'auto'
@@ -162,6 +174,7 @@ export class DialogsController extends AbstractDialogsController<
         })}
         dir=${this.#localize.dir()}
         @sx-form-submit=${onFormSubmit}
+        @sx-form-invalid=${onFormInvalid}
         ${ref(formRef)}
       >
         <sl-dialog ?open=${open} class="dialog">
@@ -200,6 +213,7 @@ export class DialogsController extends AbstractDialogsController<
           </div>
         </sl-dialog>
       </sx-form>
+      ${this.#toasts.render()}
     `;
   }
 }
