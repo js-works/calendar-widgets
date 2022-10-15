@@ -6,10 +6,10 @@ import { LocalizeController } from '../shoelace/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { AbstractDialogsController } from '../shared/dialogs';
 import type { DialogConfig } from '../shared/dialogs';
-import { ToastsController } from '../shoelace-lit/toasts-controller';
 import type { FormSubmitEvent } from '../shoelace/events/form-submit-event';
 
 // components
+import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -36,6 +36,10 @@ type ExtraInputConfigParams = {
   labelLayout?: 'vertical' | 'horizontal' | 'auto';
 };
 
+// === constants =====================================================
+
+const toastDuration = 3000;
+
 // === icons by dialog type ==========================================
 
 const icons = {
@@ -55,12 +59,11 @@ export class DialogsController extends AbstractDialogsController<
 > {
   static {
     // required components (just to prevent too much tree shaking)
-    void [Form, TextField, SlButton, SlDialog, SlIcon, SlInput];
+    void [Form, TextField, SlAlert, SlButton, SlDialog, SlIcon, SlInput];
   }
 
   readonly #requestUpdate: () => Promise<boolean>;
   readonly #localize: LocalizeController;
-  readonly #toasts: ToastsController;
   readonly #dialogRenderers = new Set<() => TemplateResult>();
 
   constructor(host: ReactiveControllerHost & HTMLElement) {
@@ -70,7 +73,6 @@ export class DialogsController extends AbstractDialogsController<
     });
 
     this.#localize = new LocalizeController(host);
-    this.#toasts = new ToastsController(host);
 
     this.#requestUpdate = () => {
       host.requestUpdate();
@@ -113,6 +115,7 @@ export class DialogsController extends AbstractDialogsController<
     emitResult: (result: unknown) => void
   ) {
     const formRef = createRef<Form>();
+    const alertRef = createRef<SlAlert>();
     let lastClickedButton: number = -1;
 
     const hasPrimaryButton = config.buttons.some(
@@ -144,12 +147,17 @@ export class DialogsController extends AbstractDialogsController<
       });
     };
 
-    const onFormInvalid = () => {
-      this.#toasts.error({
-        message: 'Invalid form data',
-        duration: 3000,
-        closeable: true
-      });
+    const onFormInvalid = async () => {
+      const alertElem = alertRef.value!;
+
+      if (alertElem.open) {
+        ++alertElem.duration;
+        alertElem.requestUpdate();
+        await alertElem.updateComplete;
+        alertElem.duration = toastDuration;
+      } else {
+        alertElem.toast();
+      }
     };
 
     const labelLayout =
@@ -212,7 +220,16 @@ export class DialogsController extends AbstractDialogsController<
           </div>
         </sl-dialog>
       </sx-form>
-      ${this.#toasts.render()}
+      <sl-alert
+        variant="danger"
+        duration=${toastDuration}
+        closable
+        ${ref(alertRef)}
+        style="user-select: none"
+      >
+        <sl-icon slot="icon" src=${errorIcon}></sl-icon>
+        Invalid form data
+      </sl-alert>
     `;
   }
 }
