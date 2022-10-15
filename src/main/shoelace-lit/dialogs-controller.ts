@@ -2,6 +2,12 @@ import { html } from 'lit';
 import { classMap } from 'lit/directives/class-map';
 import { createRef, ref } from 'lit/directives/ref';
 import { repeat } from 'lit/directives/repeat';
+
+import {
+  getAnimation,
+  setDefaultAnimation
+} from '@shoelace-style/shoelace/dist/utilities/animation-registry';
+
 import { LocalizeController } from '../shoelace/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { AbstractDialogsController } from '../shared/dialogs';
@@ -52,6 +58,19 @@ const icons = {
   prompt: promptIcon,
   input: inputIcon
 };
+
+// === animations ====================================================
+
+setDefaultAnimation('shoelaceWidgets.dialogs.vibrate', {
+  keyframes: [
+    { transform: 'scale(1)' },
+    { transform: 'scale(0.95)' },
+    { transform: 'scale(1)' },
+    { transform: 'scale(0.95)' },
+    { transform: 'scale(1)' }
+  ],
+  options: { duration: 600, easing: 'ease-out' }
+});
 
 export class DialogsController extends AbstractDialogsController<
   TemplateResult,
@@ -151,10 +170,24 @@ export class DialogsController extends AbstractDialogsController<
       const alertElem = alertRef.value!;
 
       if (alertElem.open) {
+        const { keyframes, options } = getAnimation(
+          alertElem,
+          'shoelaceWidgets.dialogs.vibrate',
+          {
+            dir: this.#localize.dir()
+          }
+        );
+
         ++alertElem.duration;
         alertElem.requestUpdate();
         await alertElem.updateComplete;
         alertElem.duration = toastDuration;
+        alertElem.requestUpdate();
+        await alertElem.updateComplete;
+
+        alertElem
+          .shadowRoot!.querySelector('[part=base]')!
+          .animate(keyframes, options);
       } else {
         alertElem.toast();
       }
