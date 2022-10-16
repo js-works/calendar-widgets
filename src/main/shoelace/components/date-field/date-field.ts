@@ -11,8 +11,10 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
 import { DatePicker } from '../date-picker/date-picker';
-import { FormFieldController } from '../../controllers/form-field-controller';
-import { FieldChecks, FieldValidator } from '../../misc/form-validation';
+import {
+  FormFieldController,
+  Validators
+} from '../../controllers/form-field-controller';
 
 // styles
 import dateFieldStyles from './date-field.styles';
@@ -97,15 +99,10 @@ export class DateField extends LitElement {
   private _inputRef = createRef<SlInput>();
   private _localize = new LocalizeController(this);
 
-  private _fieldValidator = new FieldValidator(
-    () => this.value,
-    () => this._localize.lang(),
-    [FieldChecks.required((value) => !this.required || !!value)]
-  );
-
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
-    validate: () => this._fieldValidator.validate()
+
+    validation: [Validators.required((value) => !this.required || !!value)]
   });
 
   private _onInputClick() {
@@ -135,7 +132,7 @@ export class DateField extends LitElement {
   };
 
   get validationMessage(): string {
-    return this._fieldValidator.validate() || '';
+    return this._formField.validate() || '';
   }
 
   focus() {

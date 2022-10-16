@@ -5,8 +5,11 @@ import { createRef, ref } from 'lit/directives/ref';
 import { when } from 'lit/directives/when';
 
 import { LocalizeController } from '../../i18n/i18n';
-import { FormFieldController } from '../../controllers/form-field-controller';
-import { FieldChecks, FieldValidator } from '../../misc/form-validation';
+
+import {
+  FormFieldController,
+  Validators
+} from '../../controllers/form-field-controller';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -58,15 +61,10 @@ class TextField extends LitElement {
   private _slInputRef = createRef<SlInput>();
   private _localize = new LocalizeController(this);
 
-  private _fieldValidator = new FieldValidator(
-    () => this.value,
-    () => this._localize.lang(),
-    [FieldChecks.required((value) => !this.required || !!value)]
-  );
-
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
-    validate: () => this._fieldValidator.validate()
+
+    validation: [Validators.required((value) => !this.required || !!value)]
   });
 
   focus() {
@@ -85,7 +83,7 @@ class TextField extends LitElement {
   }
 
   get validationMessage(): string {
-    return this._fieldValidator.validate() || '';
+    return this._formField.validate() || '';
   }
 
   private _onInput = () => this._formField.signalInput();

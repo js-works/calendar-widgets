@@ -44,7 +44,7 @@ type ExtraInputConfigParams = {
 
 // === constants =====================================================
 
-const toastDuration = 3000;
+const toastDuration = 2000;
 
 // === icons by dialog type ==========================================
 

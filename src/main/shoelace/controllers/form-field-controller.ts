@@ -8,9 +8,17 @@ import {
 
 // === exports =======================================================
 
-export { FormFieldController };
+export { FormFieldController, Validators };
+export type { Validator };
 
-// === local data ====================================================
+// === exported types ================================================
+
+type Validator<T> = (value: T) => string | null;
+
+// === local constants ===============================================
+
+const regexEmail =
+  /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
 
 const noop = () => {};
 
@@ -19,7 +27,7 @@ const noop = () => {};
 class FormFieldController<T> {
   #sendSignal: (type: FormFieldEvent.SignalType) => void = noop;
   #getValue: () => T;
-  #validate: () => null | string;
+  #validation: Validator<T>[];
   #errorMsg: string | null = null;
   #errorMsgDiv = document.createElement('div');
 
@@ -28,12 +36,13 @@ class FormFieldController<T> {
 
     params: {
       getValue: () => T;
-      validate: () => string | null;
+
+      validation: Validator<T> | Validator<T>[];
     }
   ) {
     let hasInitialized = false;
     this.#getValue = params.getValue;
-    this.#validate = params.validate;
+    this.#validation = [params.validation].flat();
 
     component.addController({
       hostDisconnected: () => {
@@ -58,7 +67,7 @@ class FormFieldController<T> {
               element: component,
               getName: () => component.name || '',
               getValue: this.#getValue,
-              validate: this.#validate,
+              validate: () => this.validate(),
 
               setErrorMsg: (errorMsg) => {
                 if (errorMsg === this.#errorMsg) {
@@ -128,4 +137,38 @@ class FormFieldController<T> {
   renderErrorMsg(): HTMLElement | null {
     return this.#errorMsgDiv;
   }
+
+  validate = (): string => {
+    for (const validator of this.#validation) {
+      const errorMsg = validator(this.#getValue());
+
+      if (errorMsg) {
+        return errorMsg;
+      }
+    }
+
+    return '';
+  };
+}
+
+const Validators = {
+  required: createValidatorFactory(
+    (isSatisfied?: (value: unknown) => boolean) => (value) => {
+      let valid = isSatisfied ? !!isSatisfied(value) : !!value;
+
+      return valid ? null : 'Field is mandatory'; // TODO!!!
+    }
+  ),
+
+  email: createValidatorFactory(() => (value) => {
+    let valid = typeof value === 'string' && regexEmail.test(value);
+
+    return valid ? null : 'Invalid email address'; // TODO!!!
+  })
+};
+
+function createValidatorFactory<T, F extends (...args: any[]) => Validator<T>>(
+  fn: F
+): F {
+  return fn;
 }
