@@ -2,6 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 import { DialogsController } from '../../main/shoelace-widgets-lit';
 import { TextField } from '../../main/shoelace/components/text-field/text-field';
+import { EmailField } from '../../main/shoelace/components/email-field/email-field';
 import { Form } from '../../main/shoelace-widgets';
 
 import './shared/shared-theme';
@@ -32,7 +33,7 @@ class DialogsDemo extends LitElement {
 
   static {
     // depenencies (to prevent too much tree shaking)
-    void [Form, TextField];
+    void [Form, EmailField, TextField];
   }
 
   private _dlg = new DialogsController(this);
@@ -127,6 +128,13 @@ class DialogsDemo extends LitElement {
           label="Last name"
           required
         ></sx-text-field>
+        <sx-email-field
+          name="email"
+          label="Email"
+          required
+          show-adjacent-days
+          fixed-day-count
+        ></sx-email-field>
         <sx-date-field
           name="dateOfBirth"
           label="Date of birth"
