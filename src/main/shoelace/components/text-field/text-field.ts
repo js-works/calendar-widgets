@@ -2,8 +2,6 @@ import { html, LitElement, PropertyValueMap } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
 import { createRef, ref } from 'lit/directives/ref';
-import { when } from 'lit/directives/when';
-
 import { LocalizeController } from '../../i18n/i18n';
 
 import {
@@ -63,7 +61,6 @@ class TextField extends LitElement {
 
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
-
     validation: [Validators.required((value) => !this.required || !!value)]
   });
 

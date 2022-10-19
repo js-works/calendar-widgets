@@ -1,6 +1,9 @@
 {
   "version": "0.2",
-  "words": [],
+  "words": [
+    "hbox", //
+    "vbox"
+  ],
   "ignorePaths": [
     "package.json",
     "package-lock.json",

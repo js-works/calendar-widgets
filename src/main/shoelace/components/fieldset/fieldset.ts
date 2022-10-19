@@ -1,6 +1,7 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
+import { when } from 'lit/directives/when';
 
 // styles
 import fieldsetStyles from './fieldset.styles';
@@ -15,6 +16,9 @@ export { Fieldset };
 class Fieldset extends LitElement {
   static styles = fieldsetStyles;
 
+  @property()
+  caption = '';
+
   @property({ attribute: 'label-layout' })
   labelLayout: 'vertical' | 'horizontal' | 'auto' = 'auto';
 
@@ -27,6 +31,10 @@ class Fieldset extends LitElement {
           'label-layout-horizontal': this.labelLayout === 'horizontal'
         })}
       >
+        ${when(
+          this.caption,
+          () => html`<legend class="caption">${this.caption}</legend>`
+        )}
         <slot></slot>
       </fieldset>
     `;

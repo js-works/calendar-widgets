@@ -1,8 +1,11 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 import { DialogsController } from '../../main/shoelace-widgets-lit';
-import { TextField } from '../../main/shoelace/components/text-field/text-field';
-import { EmailField } from '../../main/shoelace/components/email-field/email-field';
+import { TextField } from '../../main/shoelace-widgets';
+import { EmailField } from '../../main/shoelace-widgets';
+import { PasswordField } from '../../main/shoelace-widgets';
+import { Choice } from '../../main/shoelace-widgets';
+import { Fieldset } from '../../main/shoelace-widgets';
 import { Form } from '../../main/shoelace-widgets';
 
 import './shared/shared-theme';
@@ -33,7 +36,7 @@ class DialogsDemo extends LitElement {
 
   static {
     // depenencies (to prevent too much tree shaking)
-    void [Form, EmailField, TextField];
+    void [Choice, Fieldset, Form, EmailField, PasswordField, TextField];
   }
 
   private _dlg = new DialogsController(this);
@@ -114,34 +117,52 @@ class DialogsDemo extends LitElement {
   private _onInputClick = async () => {
     const data = await this._dlg.input({
       title: 'New user',
-      message: 'Please fill out the form to add the new user',
       labelLayout: 'horizontal',
 
       content: html`
-        <sx-text-field
-          name="firstName"
-          label="First name"
-          required
-        ></sx-text-field>
-        <sx-text-field
-          name="lastName"
-          label="Last name"
-          required
-        ></sx-text-field>
-        <sx-email-field
-          name="email"
-          label="Email"
-          required
-          show-adjacent-days
-          fixed-day-count
-        ></sx-email-field>
-        <sx-date-field
-          name="dateOfBirth"
-          label="Date of birth"
-          required
-          show-adjacent-days
-          fixed-day-count
-        ></sx-date-field>
+        <sx-hbox gap="medium" align-items="top">
+          <sx-fieldset caption="Name and address">
+            <sx-text-field
+              name="firstName"
+              label="First name"
+              required
+            ></sx-text-field>
+            <sx-text-field
+              name="lastName"
+              label="Last name"
+              required
+            ></sx-text-field>
+            <sx-choice
+              label="Salutation"
+              required
+              .options=${[
+                { text: 'Mrs', value: 'mrs' },
+                { text: 'Mr', value: 'mr' },
+                { text: 'Other', value: 'other' }
+              ]}
+            >
+            </sx-choice>
+          </sx-fieldset>
+          <sx-fieldset caption="Contact">
+            <sx-email-field
+              name="email"
+              label="Email"
+              required
+            ></sx-email-field>
+            <sx-password-field
+              name="password"
+              label="Password"
+              required
+            ></sx-password-field>
+            <sx-date-field
+              name="dateOfBirth"
+              label="Date of birth"
+              required
+              show-adjacent-days
+              fixed-day-count
+            ></sx-date-field>
+          </sx-fieldset>
+        </sx-hbox>
       `,
 
       okText: 'Add user'

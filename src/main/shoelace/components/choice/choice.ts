@@ -1,9 +1,8 @@
 import { html, LitElement, PropertyValueMap } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
-import { createRef, ref } from 'lit/directives/ref';
 import { when } from 'lit/directives/when';
-
+import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '../../i18n/i18n';
 
 import {
@@ -12,36 +11,41 @@ import {
 } from '../../controllers/form-field-controller';
 
 // custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
+import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 
 // styles
-import textFieldStyles from './email-field.styles';
-
-// icons
-import emailIcon from '../../icons/email.icon';
+import choiceStyles from './choice.styles';
 
 // === exports =======================================================
 
-export { EmailField };
+export { Choice };
 
 // === types =========================================================
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sx-email-field': EmailField;
+    'sx-choice': Choice;
   }
 }
 
-// === EmailField =====================================================
+declare namespace Choice {
+  export type Option = {
+    text: string;
+    value: string;
+  };
+}
 
-@customElement('sx-email-field')
-class EmailField extends LitElement {
-  static styles = textFieldStyles;
+// === Choice ========================================================
+
+@customElement('sx-choice')
+class Choice extends LitElement {
+  static styles = choiceStyles;
 
   static {
     // dependencies (to prevent too much tree shaking)
-    void [SlIcon, SlInput];
+    void [SlInput];
   }
 
   @property()
@@ -68,26 +72,8 @@ class EmailField extends LitElement {
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
 
-    validation: [
-      Validators.required((value) => !this.required || !!value),
-      Validators.email()
-    ]
+    validation: [Validators.required((value) => !this.required || !!value)]
   });
-
-  focus() {
-    this._slInputRef.value!.focus();
-  }
-
-  blur(): void {
-    this._slInputRef.value?.blur();
-  }
-
-  protected override firstUpdated() {
-    Object.defineProperty(this, 'value', {
-      get: () => this._slInputRef.value!.value,
-      set: (value: string) => void (this._slInputRef.value!.value = value)
-    });
-  }
 
   get validationMessage(): string {
     return this._formField.validate() || '';
@@ -109,18 +95,7 @@ class EmailField extends LitElement {
           invalid: this._formField.showsError()
         })}"
       >
-        <sl-input
-          class="sl-control"
-          size=${this.size}
-          ${ref(this._slInputRef)}
-          value=${this.value}
-          @keydown=${this._onKeyDown}
-          @sl-input=${this._onInput}
-          @sl-change=${this._onChange}
-          @focus=${this._onFocus}
-          @blur=${this._onBlur}
-        >
-          <sl-icon slot="suffix" src=${emailIcon}></sl-icon>
+        <sl-select value="xxx" class="sl-control">
           <span
             slot="label"
             class=${classMap({
@@ -130,7 +105,10 @@ class EmailField extends LitElement {
           >
             ${this.label}
           </span>
-        </sl-input>
+          <sl-menu-item>Option 1</sl-menu-item>
+          <sl-menu-item>Option 2</sl-menu-item>
+          <sl-menu-item>Option 3</sl-menu-item>
+        </sl-select>
         ${this._formField.renderErrorMsg()}
       </div>
     `;

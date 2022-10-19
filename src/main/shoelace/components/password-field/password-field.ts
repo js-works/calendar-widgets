@@ -2,8 +2,6 @@ import { html, LitElement, PropertyValueMap } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
 import { createRef, ref } from 'lit/directives/ref';
-import { when } from 'lit/directives/when';
-
 import { LocalizeController } from '../../i18n/i18n';
 
 import {
@@ -12,36 +10,32 @@ import {
 } from '../../controllers/form-field-controller';
 
 // custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 
 // styles
-import textFieldStyles from './email-field.styles';
-
-// icons
-import emailIcon from '../../icons/email.icon';
+import passwordFieldStyles from './password-field.styles';
 
 // === exports =======================================================
 
-export { EmailField };
+export { PasswordField };
 
 // === types =========================================================
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sx-email-field': EmailField;
+    'sx-password-field': PasswordField;
   }
 }
 
-// === EmailField =====================================================
+// === PasswordField =====================================================
 
-@customElement('sx-email-field')
-class EmailField extends LitElement {
-  static styles = textFieldStyles;
+@customElement('sx-password-field')
+class PasswordField extends LitElement {
+  static styles = passwordFieldStyles;
 
   static {
     // dependencies (to prevent too much tree shaking)
-    void [SlIcon, SlInput];
+    void [SlInput];
   }
 
   @property()
@@ -68,10 +62,7 @@ class EmailField extends LitElement {
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
 
-    validation: [
-      Validators.required((value) => !this.required || !!value),
-      Validators.email()
-    ]
+    validation: [Validators.required((value) => !this.required || !!value)]
   });
 
   focus() {
@@ -110,6 +101,8 @@ class EmailField extends LitElement {
         })}"
       >
         <sl-input
+          type="password"
+          password-toggle
           class="sl-control"
           size=${this.size}
           ${ref(this._slInputRef)}
@@ -120,7 +113,6 @@ class EmailField extends LitElement {
           @focus=${this._onFocus}
           @blur=${this._onBlur}
         >
-          <sl-icon slot="suffix" src=${emailIcon}></sl-icon>
           <span
             slot="label"
             class=${classMap({

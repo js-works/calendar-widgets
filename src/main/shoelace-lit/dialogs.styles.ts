@@ -16,6 +16,7 @@ export default css`
   }
 
   .dialog {
+    --width: auto;
     position: absolute;
     left: 0;
     top: 0;
@@ -28,6 +29,10 @@ export default css`
     --header-spacing: 0;
     --body-spacing: 0;
     --footer-spacing: 0;
+  }
+
+  .dialog::part(panel) {
+    min-width: 30rem;
   }
 
   .dialog::part(title) {
@@ -45,7 +50,7 @@ export default css`
     user-select: none;
     padding-bottom: 0.5rem;
     box-sizing: border-box;
-    margin: 0 2rem;
+    margin: 0 2rem 0.5rem 2rem;
   }
 
   .dialog::part(footer) {
@@ -96,7 +101,7 @@ export default css`
   .message {
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
-    padding: 0.5rem 0 1rem 0;
+    padding: 0.5rem 0;
   }
 
   .message:empty {
@@ -105,11 +110,6 @@ export default css`
 
   .content {
     flex-grow: 1;
-    padding: 0 2px;
-  }
-
-  .error-box {
-    box-sizing: border-box;
-    justify-self: flex-end;
+    padding: 0.5rem 2px 0 0;
   }
 `;
