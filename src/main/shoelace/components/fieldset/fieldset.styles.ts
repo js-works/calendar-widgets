@@ -15,11 +15,12 @@ export default css`
   .caption {
     width: 100%;
     margin-bottom: 1rem;
-    padding: 0 1rem;
-    border-bottom: 1px solid var(--sl-color-neutral-300);
+    padding: 1px 0.75em 3px 0.75em;
+    border-width: 0px;
+    background-color: var(--sl-color-neutral-100);
     box-sizing: border-box;
+    border-radius: 1px;
     font-size: 100%;
-    font-weight: 400;
-    color: #888;
+    color: var(--sl-color-neutral-800);
   }
 `;
