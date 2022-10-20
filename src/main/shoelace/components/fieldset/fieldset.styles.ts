@@ -14,7 +14,7 @@ export default css`
 
   .caption {
     width: 100%;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding: 1px 0.75em 3px 0.75em;
     border-width: 0px;
     background-color: var(--sl-color-neutral-100);
@@ -29,5 +29,10 @@ export default css`
     border-radius: 1px;
     font-size: 100%;
     color: var(--sl-color-neutral-800);
+  }
+
+  fieldset {
+    padding: 0;
+    margin: 0;
   }
 `;

@@ -1,5 +1,10 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
+
+// components
+import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
+import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
+import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
 import { DialogsController } from '../../main/shoelace-widgets-lit';
 import { TextField } from '../../main/shoelace-widgets';
 import { TextArea } from '../../main/shoelace-widgets';
@@ -35,7 +40,16 @@ class DialogsDemo extends LitElement {
 
   static {
     // depenencies (to prevent too much tree shaking)
-    void [Choice, Fieldset, Form, TextArea, TextField];
+    void [
+      Choice,
+      Fieldset,
+      Form,
+      TextArea,
+      TextField,
+      SlTab,
+      SlTabGroup,
+      SlTabPanel
+    ];
   }
 
   private _dlg = new DialogsController(this);
@@ -119,6 +133,13 @@ class DialogsDemo extends LitElement {
       labelLayout: 'horizontal',
 
       content: html`
+        <sl-tab-group placement="top">
+          <sl-tab slot="nav" panel="overview">Overview</sl-tab>
+          <sl-tab slot="nav" panel="remarks">Remarks</sl-tab>
+          <sl-tab slot="nav" panel="remarks">Misc.</sl-tab>
+          <sl-tab slot="nav" panel="remarks">Assignments</sl-tab>
+
+          <sl-tab-panel name="overview">
         <sx-hbox gap="medium" align-items="top">
           <sx-fieldset caption="Name and address">
             <sx-choice
@@ -172,8 +193,10 @@ class DialogsDemo extends LitElement {
           </sx-fieldset>
         </sx-hbox>
           <sx-fieldset caption="Remarks" label-layout="vertical">
-            <sx-text-area rows="2"></sx-text-area>
+            <sx-text-area rows="4"></sx-text-area>
           </sx-fieldset>
+          <sl-tab-panel>
+            <sl-tab-group>
       `,
 
       okText: 'Add user'
