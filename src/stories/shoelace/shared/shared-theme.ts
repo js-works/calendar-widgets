@@ -7,7 +7,7 @@ import {
 
 const sharedTheme = customizeTheme(
   ThemeModifiers.builder()
-    .colors(ColorSchemes.bostonBlue)
+    //.colors(ColorSchemes.orchid)
     .modern()
     .compact()
     //.dark(true)

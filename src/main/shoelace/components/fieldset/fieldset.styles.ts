@@ -18,6 +18,13 @@ export default css`
     padding: 1px 0.75em 3px 0.75em;
     border-width: 0px;
     background-color: var(--sl-color-neutral-100);
+
+    background: linear-gradient(
+      90deg,
+      var(--sl-color-neutral-100),
+      var(--sl-color-neutral-50) 50%
+    );
+
     box-sizing: border-box;
     border-radius: 1px;
     font-size: 100%;

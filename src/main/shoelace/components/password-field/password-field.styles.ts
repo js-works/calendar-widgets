@@ -7,7 +7,7 @@ export default css`
   ${controlStyles}
 
   .base.invalid sl-input::part(base) {
-    background-color: var(--sl-color-danger-50);
+    background-color: var(--sl-color-danger-100);
   }
 
   .base.invalid sl-input::part(base) {

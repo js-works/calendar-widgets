@@ -6,8 +6,8 @@ export default css`
   ${componentStyles}
   ${controlStyles}
 
-  .base.invalid sl-input::part(input) {
-    background-color: var(--sl-color-danger-50);
+  .base.invalid sl-input::part(base) {
+    background-color: var(--sl-color-danger-100);
   }
 
   .base.invalid sl-input::part(base) {

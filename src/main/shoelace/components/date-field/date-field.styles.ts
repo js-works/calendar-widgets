@@ -25,7 +25,8 @@ export default css`
 
   .popup-column-1 {
     color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-500);
+    background-color: var(--sl-color-primary-600);
+    opacity: 90%;
     padding: 1rem 1.25rem;
     box-sizing: border-box;
   }
@@ -66,8 +67,8 @@ export default css`
     display: block;
   }
 
-  .base.invalid sl-input::part(input) {
-    background-color: var(--sl-color-danger-50);
+  .base.invalid sl-input::part(base) {
+    background-color: var(--sl-color-danger-100);
   }
 
   .base.invalid sl-input::part(base) {
