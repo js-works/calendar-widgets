@@ -50,7 +50,7 @@ export default css`
     user-select: none;
     padding-bottom: 0.5rem;
     box-sizing: border-box;
-    margin: 0 2rem 0.5rem 2rem;
+    padding: 0 2rem 0.5rem 2rem;
   }
 
   .dialog::part(footer) {
