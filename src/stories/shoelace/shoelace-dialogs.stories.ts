@@ -142,16 +142,6 @@ class DialogsDemo extends LitElement {
           <sl-tab-panel name="overview">
             <sx-hbox gap="medium" align-items="top">
               <sx-fieldset caption="Name and address">
-                <sx-choice
-                  label="Salutation"
-                  required
-                  .options=${[
-                    { text: 'Mrs', value: 'mrs' },
-                    { text: 'Mr', value: 'mr' },
-                    { text: 'Other', value: 'other' }
-                  ]}
-                >
-                </sx-choice>
                 <sx-text-field
                   name="firstName"
                   label="First name"
@@ -162,13 +152,21 @@ class DialogsDemo extends LitElement {
                   label="Last name"
                   required
                 ></sx-text-field>
-                <sx-date-field
-                  name="dateOfBirth"
-                  label="Date of birth"
+                <sx-text-field
+                  name="city"
+                  label="City"
                   required
-                  show-adjacent-days
-                  fixed-day-count
-                ></sx-date-field>
+                ></sx-text-field>
+                <sx-choice
+                  label="User type"
+                  value="normal"
+                  required
+                  .options=${[
+                    { text: 'Normal', value: 'normal' },
+                    { text: 'Administrator', value: 'admin' }
+                  ]}
+                >
+                </sx-choice>
               </sx-fieldset>
 
               <sx-fieldset caption="Contact">
@@ -190,6 +188,13 @@ class DialogsDemo extends LitElement {
                   label="Email"
                   required
                 ></sx-text-field>
+                <sx-date-field
+                  name="dateOfBirth"
+                  label="Date of birth"
+                  required
+                  show-adjacent-days
+                  fixed-day-count
+                ></sx-date-field>
               </sx-fieldset>
             </sx-hbox>
             <sx-fieldset caption="Remarks" label-layout="vertical">

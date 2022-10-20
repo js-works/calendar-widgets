@@ -5,4 +5,8 @@ import controlStyles from '../../styles/control.styles';
 export default css`
   ${componentStyles}
   ${controlStyles}
+
+  .base {
+    margin-bottom: 0.75rem;
+  }
 `;

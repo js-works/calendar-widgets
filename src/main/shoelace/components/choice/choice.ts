@@ -1,6 +1,7 @@
 import { html, LitElement, PropertyValueMap } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
+import { repeat } from 'lit/directives/repeat';
 import { when } from 'lit/directives/when';
 import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '../../i18n/i18n';
@@ -11,9 +12,10 @@ import {
 } from '../../controllers/form-field-controller';
 
 // custom elements
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlRadio from '@shoelace-style/shoelace/dist/components/radio/radio';
+import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
 
 // styles
 import choiceStyles from './choice.styles';
@@ -45,7 +47,7 @@ class Choice extends LitElement {
 
   static {
     // dependencies (to prevent too much tree shaking)
-    void [SlInput];
+    void [SlSelect, SlMenuItem, SlRadio, SlRadioGroup];
   }
 
   @property()
@@ -57,6 +59,9 @@ class Choice extends LitElement {
   @property()
   label = '';
 
+  @property({ attribute: false })
+  options: Choice.Option[] = [];
+
   @property({ type: Boolean })
   disabled = false;
 
@@ -66,7 +71,6 @@ class Choice extends LitElement {
   @property()
   size: 'small' | 'medium' | 'large' = 'medium';
 
-  private _slInputRef = createRef<SlInput>();
   private _localize = new LocalizeController(this);
 
   private _formField = new FormFieldController(this, {
@@ -95,20 +99,54 @@ class Choice extends LitElement {
           invalid: this._formField.showsError()
         })}"
       >
-        <sl-select class="sl-control">
-          <span
-            slot="label"
-            class=${classMap({
-              'sl-control-label': true,
-              'sl-control-label--required': this.required
-            })}
-          >
-            ${this.label}
-          </span>
-          <sl-menu-item>Option 1</sl-menu-item>
-          <sl-menu-item>Option 2</sl-menu-item>
-          <sl-menu-item>Option 3</sl-menu-item>
-        </sl-select>
+        ${when(
+          false,
+          () => html`
+            <sl-select class="sl-control">
+              <span
+                slot="label"
+                class=${classMap({
+                  'sl-control-label': true,
+                  'sl-control-label--required': this.required
+                })}
+              >
+                ${this.label}
+              </span>
+
+              ${repeat(
+                this.options,
+                (option) => html`
+                  <sl-menu-item value=${option.value}
+                    >${option.text}</sl-menu-item
+                  >
+                `
+              )}
+            </sl-select>
+          `
+        )}
+        ${when(
+          true,
+          () => html`
+            <div class="form-control">
+              <div
+                class=${classMap({
+                  'form-control-label': true,
+                  'form-control-label--required': this.required
+                })}
+              >
+                ${this.label}
+              </div>
+              <sl-radio-group value=${this.value} class="form-control-input">
+                ${repeat(
+                  this.options,
+                  (option) => html`
+                    <sl-radio value=${option.value}>${option.text}</sl-radio>
+                  `
+                )}
+              </sl-radio-group>
+            </div>
+          `
+        )}
         ${this._formField.renderErrorMsg()}
       </div>
     `;
