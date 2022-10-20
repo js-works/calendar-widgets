@@ -16,8 +16,6 @@ export default css`
     width: 100%;
     margin-bottom: 0.5rem;
     padding: 1px 0.75em 3px 0.75em;
-    border-width: 0px;
-    background-color: var(--sl-color-neutral-100);
 
     background: linear-gradient(
       90deg,
