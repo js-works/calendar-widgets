@@ -22,7 +22,7 @@ export default css`
     background: linear-gradient(
       90deg,
       var(--sl-color-neutral-100),
-      var(--sl-color-neutral-50) 50%
+      var(--sl-color-neutral-50) 70%
     );
 
     box-sizing: border-box;
