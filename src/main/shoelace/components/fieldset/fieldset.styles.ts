@@ -8,7 +8,7 @@ export default css`
 
   .base {
     padding: 0;
-    margin: 0;
+    margin: 0 0 1rem 0;
     border: none;
   }
 

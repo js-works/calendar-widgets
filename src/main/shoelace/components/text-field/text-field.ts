@@ -1,6 +1,7 @@
-import { html, LitElement, PropertyValueMap } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
+import { when } from 'lit/directives/when';
 import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '../../i18n/i18n';
 
@@ -10,7 +11,13 @@ import {
 } from '../../controllers/form-field-controller';
 
 // custom elements
+import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+
+// icons
+import emailIcon from '../../icons/bootstrap/email.icon';
+import phoneIcon from '../../icons/bootstrap/phone.icon';
+import telephoneIcon from '../../icons/bootstrap/telephone.icon';
 
 // styles
 import textFieldStyles from './text-field.styles';
@@ -35,8 +42,11 @@ class TextField extends LitElement {
 
   static {
     // dependencies (to prevent too much tree shaking)
-    void [SlInput];
+    void [SlIcon, SlInput];
   }
+
+  @property()
+  type: 'text' | 'password' | 'email' | 'phone' | 'telephone' = 'text';
 
   @property()
   name = '';
@@ -61,7 +71,10 @@ class TextField extends LitElement {
 
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
-    validation: [Validators.required((value) => !this.required || !!value)]
+    validation: [
+      Validators.required((value) => !this.required || !!value),
+      (value) => (this.type !== 'email' ? null : Validators.email()(value))
+    ]
   });
 
   focus() {
@@ -92,6 +105,15 @@ class TextField extends LitElement {
     void (ev.key === 'Enter' && this._formField.signalSubmit());
 
   render() {
+    const icon =
+      this.type === 'email'
+        ? emailIcon
+        : this.type === 'phone'
+        ? phoneIcon
+        : this.type === 'telephone'
+        ? telephoneIcon
+        : null;
+
     return html`
       <div
         class="base ${classMap({
@@ -100,6 +122,8 @@ class TextField extends LitElement {
         })}"
       >
         <sl-input
+          type=${this.type === 'password' ? 'password' : 'text'}
+          ?password-toggle=${this.type === 'password'}
           class="sl-control"
           size=${this.size}
           ${ref(this._slInputRef)}
@@ -119,6 +143,10 @@ class TextField extends LitElement {
           >
             ${this.label}
           </span>
+          ${when(
+            icon,
+            () => html`<sl-icon slot="suffix" src=${icon}></sl-icon> `
+          )}
         </sl-input>
         ${this._formField.renderErrorMsg()}
       </div>

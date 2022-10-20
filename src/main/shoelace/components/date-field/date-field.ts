@@ -20,14 +20,14 @@ import {
 import dateFieldStyles from './date-field.styles';
 
 // icons
-import dateIcon from '../../icons/calendar3.icon';
-import datesIcon from '../../icons/calendar3.icon';
-import timeIcon from '../../icons/clock.icon';
-import dateTimeIcon from '../../icons/calendar3.icon';
-import dateRangeIcon from '../../icons/calendar-range.icon';
-import weekIcon from '../../icons/calendar.icon';
-import monthIcon from '../../icons/calendar.icon';
-import yearIcon from '../../icons/calendar.icon';
+import dateIcon from '../../icons/bootstrap/calendar3.icon';
+import datesIcon from '../../icons/bootstrap/calendar3.icon';
+import timeIcon from '../../icons/bootstrap/clock.icon';
+import dateTimeIcon from '../../icons/bootstrap/calendar3.icon';
+import dateRangeIcon from '../../icons/bootstrap//calendar-range.icon';
+import weekIcon from '../../icons/bootstrap/calendar.icon';
+import monthIcon from '../../icons/bootstrap/calendar.icon';
+import yearIcon from '../../icons/bootstrap/calendar.icon';
 
 // === types =========================================================
 

@@ -24,14 +24,14 @@ import { Form } from '../shoelace/components/form/form';
 import { TextField } from '../shoelace/components/text-field/text-field';
 
 // icons
-import infoIcon from '../shoelace/icons/info-circle.icon';
-import successIcon from '../shoelace/icons/check-circle.icon';
-import warningIcon from '../shoelace/icons/exclamation-circle.icon';
-import errorIcon from '../shoelace/icons/exclamation-triangle.icon';
-import confirmationIcon from '../shoelace/icons/question-circle.icon';
-import approvalIcon from '../shoelace/icons/question-diamond.icon';
-import promptIcon from '../shoelace/icons/keyboard.icon';
-import inputIcon from '../shoelace/icons/layers.icon';
+import infoIcon from '../shoelace/icons/bootstrap/info-circle.icon';
+import successIcon from '../shoelace/icons/bootstrap/check-circle.icon';
+import warningIcon from '../shoelace/icons/bootstrap/exclamation-circle.icon';
+import errorIcon from '../shoelace/icons/bootstrap/exclamation-triangle.icon';
+import confirmationIcon from '../shoelace/icons/bootstrap/question-circle.icon';
+import approvalIcon from '../shoelace/icons/bootstrap/question-diamond.icon';
+import promptIcon from '../shoelace/icons/bootstrap/keyboard.icon';
+import inputIcon from '../shoelace/icons/bootstrap/layers.icon';
 
 // styles
 import dialogsStyles from './dialogs.styles';

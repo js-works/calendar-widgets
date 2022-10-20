@@ -1,10 +1,9 @@
 export { Choice } from './shoelace/components/choice/choice';
-export { EmailField } from './shoelace/components/email-field/email-field';
 export { Fieldset } from './shoelace/components/fieldset/fieldset';
 export { Form } from './shoelace/components/form/form';
 export { DateField } from './shoelace/components/date-field/date-field';
 export { DatePicker } from './shoelace/components/date-picker/date-picker';
-export { PasswordField } from './shoelace/components/password-field/password-field';
 export { TextField } from './shoelace/components/text-field/text-field';
+export { TextArea } from './shoelace/components/text-area/text-area';
 export { HBox } from './shoelace/components/hbox/hbox';
 export { VBox } from './shoelace/components/vbox/vbox';

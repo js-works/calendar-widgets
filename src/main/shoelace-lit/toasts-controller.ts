@@ -10,10 +10,10 @@ import type { ToastConfig } from '../shared/toasts';
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 
 // icons
-import infoIcon from '../shoelace/icons/info-circle.icon';
-import successIcon from '../shoelace/icons/check-circle.icon';
-import warningIcon from '../shoelace/icons/exclamation-circle.icon';
-import errorIcon from '../shoelace/icons/exclamation-triangle.icon';
+import infoIcon from '../shoelace/icons/bootstrap/info-circle.icon';
+import successIcon from '../shoelace/icons/bootstrap/check-circle.icon';
+import warningIcon from '../shoelace/icons/bootstrap/exclamation-circle.icon';
+import errorIcon from '../shoelace/icons/bootstrap/exclamation-triangle.icon';
 
 // === exports =======================================================
 

@@ -1,9 +1,8 @@
-import { html, LitElement, PropertyValueMap } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
-import { createRef, ref } from 'lit/directives/ref';
 import { when } from 'lit/directives/when';
-
+import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '../../i18n/i18n';
 
 import {
@@ -12,36 +11,32 @@ import {
 } from '../../controllers/form-field-controller';
 
 // custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea';
 
 // styles
-import textFieldStyles from './email-field.styles';
-
-// icons
-import emailIcon from '../../icons/email.icon';
+import textFieldStyles from './text-area.styles';
 
 // === exports =======================================================
 
-export { EmailField };
+export { TextArea };
 
 // === types =========================================================
 
 declare global {
   interface HTMLElementTagNameMap {
-    'sx-email-field': EmailField;
+    'sx-text-area': TextArea;
   }
 }
 
-// === EmailField =====================================================
+// === TextArea ======================================================
 
-@customElement('sx-email-field')
-class EmailField extends LitElement {
+@customElement('sx-text-area')
+class TextArea extends LitElement {
   static styles = textFieldStyles;
 
   static {
     // dependencies (to prevent too much tree shaking)
-    void [SlIcon, SlInput];
+    void [SlTextarea];
   }
 
   @property()
@@ -59,33 +54,31 @@ class EmailField extends LitElement {
   @property({ type: Boolean })
   required = false;
 
+  @property({ type: Number })
+  rows = 4;
+
   @property()
   size: 'small' | 'medium' | 'large' = 'medium';
 
-  private _slInputRef = createRef<SlInput>();
-  private _localize = new LocalizeController(this);
+  private _slTextareaRef = createRef<SlTextarea>();
 
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
-
-    validation: [
-      Validators.required((value) => !this.required || !!value),
-      Validators.email()
-    ]
+    validation: [Validators.required((value) => !this.required || !!value)]
   });
 
   focus() {
-    this._slInputRef.value!.focus();
+    this._slTextareaRef.value!.focus();
   }
 
   blur(): void {
-    this._slInputRef.value?.blur();
+    this._slTextareaRef.value?.blur();
   }
 
   protected override firstUpdated() {
     Object.defineProperty(this, 'value', {
-      get: () => this._slInputRef.value!.value,
-      set: (value: string) => void (this._slInputRef.value!.value = value)
+      get: () => this._slTextareaRef.value!.value,
+      set: (value: string) => void (this._slTextareaRef.value!.value = value)
     });
   }
 
@@ -98,9 +91,6 @@ class EmailField extends LitElement {
   private _onFocus = () => this._formField.signalFocus();
   private _onBlur = () => this._formField.signalBlur();
 
-  private _onKeyDown = (ev: KeyboardEvent) =>
-    void (ev.key === 'Enter' && this._formField.signalSubmit());
-
   render() {
     return html`
       <div
@@ -109,18 +99,16 @@ class EmailField extends LitElement {
           invalid: this._formField.showsError()
         })}"
       >
-        <sl-input
+        <sl-textarea
           class="sl-control"
-          size=${this.size}
-          ${ref(this._slInputRef)}
+          ${ref(this._slTextareaRef)}
           value=${this.value}
-          @keydown=${this._onKeyDown}
+          rows=${this.rows}
           @sl-input=${this._onInput}
           @sl-change=${this._onChange}
           @focus=${this._onFocus}
           @blur=${this._onBlur}
         >
-          <sl-icon slot="suffix" src=${emailIcon}></sl-icon>
           <span
             slot="label"
             class=${classMap({
@@ -130,7 +118,7 @@ class EmailField extends LitElement {
           >
             ${this.label}
           </span>
-        </sl-input>
+        </sl-textarea>
         ${this._formField.renderErrorMsg()}
       </div>
     `;

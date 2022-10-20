@@ -2,8 +2,7 @@ import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 import { DialogsController } from '../../main/shoelace-widgets-lit';
 import { TextField } from '../../main/shoelace-widgets';
-import { EmailField } from '../../main/shoelace-widgets';
-import { PasswordField } from '../../main/shoelace-widgets';
+import { TextArea } from '../../main/shoelace-widgets';
 import { Choice } from '../../main/shoelace-widgets';
 import { Fieldset } from '../../main/shoelace-widgets';
 import { Form } from '../../main/shoelace-widgets';
@@ -36,7 +35,7 @@ class DialogsDemo extends LitElement {
 
   static {
     // depenencies (to prevent too much tree shaking)
-    void [Choice, Fieldset, Form, EmailField, PasswordField, TextField];
+    void [Choice, Fieldset, Form, TextArea, TextField];
   }
 
   private _dlg = new DialogsController(this);
@@ -122,16 +121,6 @@ class DialogsDemo extends LitElement {
       content: html`
         <sx-hbox gap="medium" align-items="top">
           <sx-fieldset caption="Name and address">
-            <sx-text-field
-              name="firstName"
-              label="First name"
-              required
-            ></sx-text-field>
-            <sx-text-field
-              name="lastName"
-              label="Last name"
-              required
-            ></sx-text-field>
             <sx-choice
               label="Salutation"
               required
@@ -142,18 +131,16 @@ class DialogsDemo extends LitElement {
               ]}
             >
             </sx-choice>
-          </sx-fieldset>
-          <sx-fieldset caption="Contact">
-            <sx-email-field
-              name="email"
-              label="Email"
+            <sx-text-field
+              name="firstName"
+              label="First name"
               required
-            ></sx-email-field>
-            <sx-password-field
-              name="password"
-              label="Password"
+            ></sx-text-field>
+            <sx-text-field
+              name="lastName"
+              label="Last name"
               required
-            ></sx-password-field>
+            ></sx-text-field>
             <sx-date-field
               name="dateOfBirth"
               label="Date of birth"
@@ -162,7 +149,31 @@ class DialogsDemo extends LitElement {
               fixed-day-count
             ></sx-date-field>
           </sx-fieldset>
+
+          <sx-fieldset caption="Contact">
+            <sx-text-field
+              type="telephone"
+              name="telephone"
+              label="Telephone"
+              required
+            ></sx-text-field>
+            <sx-text-field
+              type="phone"
+              name="mobilePhone"
+              label="Mobile phone"
+              required
+            ></sx-text-field>
+            <sx-text-field
+              type="email"
+              name="email"
+              label="Email"
+              required
+            ></sx-email-field>
+          </sx-fieldset>
         </sx-hbox>
+          <sx-fieldset caption="Remarks" label-layout="vertical">
+            <sx-text-area rows="2"></sx-text-area>
+          </sx-fieldset>
       `,
 
       okText: 'Add user'
