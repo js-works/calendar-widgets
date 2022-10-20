@@ -53,4 +53,15 @@ export default css`
 
     margin: 0 0 0 calc(var(--label-layout-width) + var(--label-layout-gap));
   }
+
+  .base.invalid sl-input::part(base),
+  .base.invalid sl-select::part(control) {
+    background-color: var(--sl-color-danger-50);
+  }
+
+  .base.invalid sl-input::part(base),
+  .base.invalid sl-select::part(control) {
+    border-color: var(--sl-color-danger-700);
+    --sl-input-focus-ring-color: var(--sl-color-danger-400);
+  }
 `;

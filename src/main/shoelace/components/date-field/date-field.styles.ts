@@ -66,13 +66,4 @@ export default css`
   sl-dropdown {
     display: block;
   }
-
-  .base.invalid sl-input::part(base) {
-    background-color: var(--sl-color-danger-100);
-  }
-
-  .base.invalid sl-input::part(base) {
-    border-color: var(--sl-color-danger-500);
-    --sl-input-focus-ring-color: var(--sl-color-danger-400);
-  }
 `;

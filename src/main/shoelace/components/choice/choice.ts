@@ -95,7 +95,7 @@ class Choice extends LitElement {
           invalid: this._formField.showsError()
         })}"
       >
-        <sl-select value="xxx" class="sl-control">
+        <sl-select class="sl-control">
           <span
             slot="label"
             class=${classMap({
