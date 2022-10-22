@@ -133,75 +133,48 @@ class DialogsDemo extends LitElement {
       labelLayout: 'horizontal',
 
       content: html`
-        <sl-tab-group placement="top">
-          <sl-tab slot="nav" panel="overview">Overview</sl-tab>
-          <sl-tab slot="nav" panel="remarks">Remarks</sl-tab>
-          <sl-tab slot="nav" panel="remarks">Misc.</sl-tab>
-          <sl-tab slot="nav" panel="remarks">Assignments</sl-tab>
-
-          <sl-tab-panel name="overview">
-            <sx-hbox gap="medium" align-items="top">
-              <sx-fieldset caption="Name and address">
-                <sx-text-field
-                  name="firstName"
-                  label="First name"
-                  required
-                ></sx-text-field>
-                <sx-text-field
-                  name="lastName"
-                  label="Last name"
-                  required
-                ></sx-text-field>
-                <sx-text-field
-                  name="city"
-                  label="City"
-                  required
-                ></sx-text-field>
-                <sx-choice
-                  label="User type"
-                  value="normal"
-                  required
-                  .options=${[
-                    { text: 'Normal', value: 'normal' },
-                    { text: 'Administrator', value: 'admin' }
-                  ]}
-                >
-                </sx-choice>
-              </sx-fieldset>
-
-              <sx-fieldset caption="Contact">
-                <sx-text-field
-                  type="telephone"
-                  name="telephone"
-                  label="Telephone"
-                  required
-                ></sx-text-field>
-                <sx-text-field
-                  type="phone"
-                  name="mobilePhone"
-                  label="Mobile phone"
-                  required
-                ></sx-text-field>
-                <sx-text-field
-                  type="email"
-                  name="email"
-                  label="Email"
-                  required
-                ></sx-text-field>
-                <sx-date-field
-                  name="dateOfBirth"
-                  label="Date of birth"
-                  required
-                  show-adjacent-days
-                  fixed-day-count
-                ></sx-date-field>
-              </sx-fieldset>
-            </sx-hbox>
-            <sx-fieldset caption="Remarks" label-layout="vertical">
-              <sx-text-area rows="4"></sx-text-area>
-            </sx-fieldset>
-          </sl-tab-panel>
-        </sl-tab-group>
+          <sx-fieldset caption="Name of user">
+            <sx-text-field
+              name="firstName"
+              label="First name"
+              required
+            ></sx-text-field>
+            <sx-text-field
+              name="lastName"
+              label="Last name"
+              required
+            ></sx-text-field>
+            </sx-choice>
+          </sx-fieldset>
+          <sx-fieldset caption="Address and contact">
+          <sx-hbox gap="small">
+            <sx-fieldset>
+             <sx-text-field label="Street" required></sx-text-field>
+             <sx-text-field label="City" required></sx-text-field>
+             <sx-choice label="Country" required></sx-choice>
+        </sx-fieldset>
+          <sx-fieldset>
+            <sx-text-field
+              type="telephone"
+              name="telephone"
+              label="Telephone"
+              required
+            ></sx-text-field>
+            <sx-text-field
+              type="phone"
+              name="mobilePhone"
+              label="Mobile phone"
+              required
+            ></sx-text-field>
+            <sx-text-field
+              type="email"
+              name="email"
+              label="Email"
+              required
+            ></sx-text-field>
+            <sx-hbox>
+          </sx-fieldset>
+        </sx-hbox>
       `,
 
       okText: 'Add user'

@@ -100,7 +100,7 @@ class Choice extends LitElement {
         })}"
       >
         ${when(
-          false,
+          true,
           () => html`
             <sl-select class="sl-control">
               <span
@@ -125,7 +125,7 @@ class Choice extends LitElement {
           `
         )}
         ${when(
-          true,
+          false,
           () => html`
             <div class="form-control">
               <div

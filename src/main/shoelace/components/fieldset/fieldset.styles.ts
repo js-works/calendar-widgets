@@ -13,7 +13,6 @@ export default css`
   }
 
   .caption {
-    width: 100%;
     margin-bottom: 0.5rem;
     padding: 1px 0.75em 3px 0.75em;
 
@@ -28,7 +27,7 @@ export default css`
     font-size: 100%;
     color: var(--sl-color-neutral-800);
     border: 1px solid var(--sl-color-neutral-200);
-    border-radius: 3px;
+    border-radius: 8px;
   }
 
   fieldset {
