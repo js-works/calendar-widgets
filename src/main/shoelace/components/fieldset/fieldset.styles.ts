@@ -18,7 +18,7 @@ export default css`
     padding: 1px 0.75em 3px 0.75em;
 
     background: linear-gradient(
-      90deg,
+      30deg,
       var(--sl-color-neutral-100),
       var(--sl-color-neutral-50) 70%
     );
@@ -27,6 +27,8 @@ export default css`
     border-radius: 1px;
     font-size: 100%;
     color: var(--sl-color-neutral-800);
+    border: 1px solid var(--sl-color-neutral-200);
+    border-radius: 3px;
   }
 
   fieldset {
