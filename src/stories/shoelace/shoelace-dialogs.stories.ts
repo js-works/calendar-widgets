@@ -129,15 +129,25 @@ class DialogsDemo extends LitElement {
 
   private _onInputClick = async () => {
     const data = await this._dlg.input({
-      title: 'New user',
+      title: 'Add new user',
       labelLayout: 'horizontal',
 
       content: html`
-          <sx-fieldset caption="Name of user">
+        <sl-tab-group>
+          <sl-tab slot="nav" panel="general">General</sl-tab>
+          <sl-tab slot="nav">Assignments</sl-tab>
+          <sl-tab slot="nav">Misc.</sl-tab>
+
+          <sl-tab-panel name="general">
+          <sx-fieldset caption="Name">
             <sx-text-field
               name="firstName"
               label="First name"
               required
+            ></sx-text-field>
+            <sx-text-field
+              name="middleName"
+              label="Middle name"
             ></sx-text-field>
             <sx-text-field
               name="lastName"
@@ -147,23 +157,22 @@ class DialogsDemo extends LitElement {
             </sx-choice>
           </sx-fieldset>
           <sx-fieldset caption="Address and contact">
-          <sx-hbox gap="small">
+            <sx-hbox gap="medium">
             <sx-fieldset>
              <sx-text-field label="Street" required></sx-text-field>
              <sx-text-field label="City" required></sx-text-field>
-             <sx-choice label="Country" required></sx-choice>
+             <sx-choice label="Country" required
+               .options=${[
+                 { value: 'gb', text: 'Great Britain' },
+                 { value: 'us', text: 'USA' }
+               ]}
+             ></sx-choice>
         </sx-fieldset>
           <sx-fieldset>
             <sx-text-field
               type="telephone"
               name="telephone"
-              label="Telephone"
-              required
-            ></sx-text-field>
-            <sx-text-field
-              type="phone"
-              name="mobilePhone"
-              label="Mobile phone"
+              label="Phone"
               required
             ></sx-text-field>
             <sx-text-field
@@ -172,9 +181,14 @@ class DialogsDemo extends LitElement {
               label="Email"
               required
             ></sx-text-field>
-            <sx-hbox>
+            <sx-date-field
+              name="dateOfBirth"
+              label="Date of birth"
+            ></sx-date-field>
+            </sx-hbox>
           </sx-fieldset>
         </sx-hbox>
+              </sl-tab-panel>
       `,
 
       okText: 'Add user'

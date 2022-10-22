@@ -69,7 +69,8 @@ class Form extends LitElement {
             break;
 
           case 'change':
-            detail.setErrorMsg(detail.validate());
+            // TODO!!!!!!!!!!
+            //detail.setErrorMsg(detail.validate());
             break;
 
           case 'submit':

@@ -141,9 +141,9 @@ const modifiers = {
     };
   },
 
-  modern() {
+  modern(veryProgressive = false) {
     return (tokens: Theme): Partial<Theme> => {
-      return {
+      let ret: Partial<Theme> = {
         'font-sans':
           "'Open Sans', -apple-system, BlinkMacSystemFont, 'Lato', 'Libre Sans', 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
         'font-weight-semibold': '600',
@@ -161,6 +161,18 @@ const modifiers = {
 
         'overlay-background-color': 'hsl(0 0% 0% / 60%)'
       };
+
+      if (veryProgressive) {
+        // TODO!!!
+        const additionalTokens: Partial<Theme> = {
+          'input-background-color': 'rgb(238, 238, 238)',
+          'input-border-color': 'rgb(230, 230, 230)'
+        };
+
+        Object.assign(ret, additionalTokens);
+      }
+
+      return ret;
     };
   },
 

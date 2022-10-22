@@ -23,7 +23,7 @@ class HBox extends LitElement {
   static styles = hboxStyles;
 
   @property({ attribute: 'align-items' })
-  alignItems: 'top' | 'center' | 'bottom' = 'center';
+  alignItems: 'top' | 'center' | 'bottom' = 'top';
 
   @property()
   gap: 'none' | 'tiny' | 'small' | 'medium' | 'large' | 'huge' = 'none';
