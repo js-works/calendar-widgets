@@ -63,7 +63,7 @@ export default css`
 
   .base.invalid sl-input::part(base),
   .base.invalid sl-select::part(control) {
-    background-color: var(--sl-color-danger-50);
+    background-color: var(--sl-color-danger-200);
   }
 
   .base.invalid sl-input::part(form-control-label),
@@ -73,7 +73,7 @@ export default css`
 
   .base.invalid sl-input::part(base),
   .base.invalid sl-select::part(control) {
-    border-color: var(--sl-color-danger-700);
+    border-color: var(--sl-color-danger-600);
     --sl-input-focus-ring-color: var(--sl-color-danger-400);
   }
 `;

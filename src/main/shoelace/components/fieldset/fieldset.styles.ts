@@ -18,17 +18,17 @@ export default css`
     padding: 1px 0.75em 3px 0.75em;
 
     background: linear-gradient(
-      30deg,
+      90deg,
       var(--sl-color-neutral-100),
-      var(--sl-color-neutral-50) 70%
+      var(--sl-color-neutral-50) 90%
     );
 
     box-sizing: border-box;
     border-radius: 1px;
-    font-size: 100%;
-    color: var(--sl-color-neutral-800);
-    border: 1px solid var(--sl-color-neutral-200);
+    color: var(--sl-color-neutral-900);
+    border: 1px solid var(--sl-color-neutral-100);
     border-radius: 3px;
+    font-size: calc(100% - 1px);
   }
 
   fieldset {
