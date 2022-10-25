@@ -152,39 +152,19 @@ class DialogsDemo extends LitElement {
               required
             ></sx-text-field>
           </sx-fieldset>
-          <sx-fieldset caption="Address and contact">
-            <sx-hbox gap="medium">
-              <sx-vbox>
-                <sx-text-field label="Street" required></sx-text-field>
-                <sx-text-field label="City" required></sx-text-field>
-                <sx-choice
-                  label="Country"
-                  required
-                  .options=${[
-                    { value: 'gb', text: 'Great Britain' },
-                    { value: 'us', text: 'USA' }
-                  ]}
-                ></sx-choice>
-              </sx-vbox>
-              <sx-vbox>
-                <sx-text-field
-                  type="telephone"
-                  name="telephone"
-                  label="Phone"
-                  required
-                ></sx-text-field>
-                <sx-text-field
-                  type="email"
-                  name="email"
-                  label="Email"
-                  required
-                ></sx-text-field>
-                <sx-date-field
-                  name="dateOfBirth"
-                  label="Date of birth"
-                ></sx-date-field>
-              </sx-vbox>
-            </sx-hbox>
+          <sx-fieldset caption="Address">
+            <sx-vbox>
+              <sx-text-field label="Street" required></sx-text-field>
+              <sx-text-field label="Zip code/City" required></sx-text-field>
+              <sx-choice
+                label="Country"
+                required
+                .options=${[
+                  { value: 'gb', text: 'Great Britain' },
+                  { value: 'us', text: 'USA' }
+                ]}
+              ></sx-choice>
+            </sx-vbox>
           </sx-fieldset>
         </sx-sidenav>
       `,

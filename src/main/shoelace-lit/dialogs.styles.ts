@@ -16,7 +16,7 @@ export default css`
   }
 
   .dialog {
-    --width: auto;
+    --width: 50rem; /* TODO!!! */
     position: absolute;
     left: 0;
     top: 0;

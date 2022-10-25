@@ -14,8 +14,12 @@ export default css`
     border-right: 1px solid var(--sl-color-neutral-200);
   }
 
+  .base > :nth-child(2) {
+    flex-grow: 1;
+  }
+
   .title {
-    color: var(--sl-color-neutral-800);
+    color: var(--sl-color-neutral-900);
     font-size: calc(100% - 1px);
   }
 
