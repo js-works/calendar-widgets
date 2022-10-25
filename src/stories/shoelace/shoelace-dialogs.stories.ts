@@ -11,6 +11,7 @@ import { TextArea } from '../../main/shoelace-widgets';
 import { Choice } from '../../main/shoelace-widgets';
 import { Fieldset } from '../../main/shoelace-widgets';
 import { Form } from '../../main/shoelace-widgets';
+import { Sidenav } from '../../main/shoelace-widgets';
 
 import './shared/shared-theme';
 
@@ -46,6 +47,7 @@ class DialogsDemo extends LitElement {
       Form,
       TextArea,
       TextField,
+      Sidenav,
       SlTab,
       SlTabGroup,
       SlTabPanel
@@ -133,12 +135,7 @@ class DialogsDemo extends LitElement {
       labelLayout: 'horizontal',
 
       content: html`
-        <sl-tab-group>
-          <sl-tab slot="nav" panel="general">General</sl-tab>
-          <sl-tab slot="nav">Assignments</sl-tab>
-          <sl-tab slot="nav">Misc.</sl-tab>
-
-          <sl-tab-panel name="general">
+        <sx-sidenav>
           <sx-fieldset caption="Name">
             <sx-text-field
               name="firstName"
@@ -154,41 +151,42 @@ class DialogsDemo extends LitElement {
               label="Last name"
               required
             ></sx-text-field>
-            </sx-choice>
           </sx-fieldset>
           <sx-fieldset caption="Address and contact">
             <sx-hbox gap="medium">
-            <sx-fieldset>
-             <sx-text-field label="Street" required></sx-text-field>
-             <sx-text-field label="City" required></sx-text-field>
-             <sx-choice label="Country" required
-               .options=${[
-                 { value: 'gb', text: 'Great Britain' },
-                 { value: 'us', text: 'USA' }
-               ]}
-             ></sx-choice>
-        </sx-fieldset>
-          <sx-fieldset>
-            <sx-text-field
-              type="telephone"
-              name="telephone"
-              label="Phone"
-              required
-            ></sx-text-field>
-            <sx-text-field
-              type="email"
-              name="email"
-              label="Email"
-              required
-            ></sx-text-field>
-            <sx-date-field
-              name="dateOfBirth"
-              label="Date of birth"
-            ></sx-date-field>
+              <sx-vbox>
+                <sx-text-field label="Street" required></sx-text-field>
+                <sx-text-field label="City" required></sx-text-field>
+                <sx-choice
+                  label="Country"
+                  required
+                  .options=${[
+                    { value: 'gb', text: 'Great Britain' },
+                    { value: 'us', text: 'USA' }
+                  ]}
+                ></sx-choice>
+              </sx-vbox>
+              <sx-vbox>
+                <sx-text-field
+                  type="telephone"
+                  name="telephone"
+                  label="Phone"
+                  required
+                ></sx-text-field>
+                <sx-text-field
+                  type="email"
+                  name="email"
+                  label="Email"
+                  required
+                ></sx-text-field>
+                <sx-date-field
+                  name="dateOfBirth"
+                  label="Date of birth"
+                ></sx-date-field>
+              </sx-vbox>
             </sx-hbox>
           </sx-fieldset>
-        </sx-hbox>
-              </sl-tab-panel>
+        </sx-sidenav>
       `,
 
       okText: 'Add user'
