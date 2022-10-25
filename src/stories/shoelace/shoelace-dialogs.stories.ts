@@ -133,6 +133,7 @@ class DialogsDemo extends LitElement {
     const data = await this._dlg.input({
       title: 'Add new user',
       labelLayout: 'horizontal',
+      width: '45rem',
 
       content: html`
         <sx-sidenav>

@@ -19,6 +19,7 @@ type DialogConfig<C, R> = {
   title: string | (() => string);
   message: string | (() => string);
   content: C | null;
+  width: string | null;
 
   buttons: {
     text: string | (() => string);
@@ -58,6 +59,7 @@ abstract class AbstractDialogsController<C, A = {}> {
   info(params: {
     message: string | (() => string);
     content?: C;
+    width?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
   }) {
@@ -67,6 +69,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       title: params.title || this.#translate('information'),
       message: params.message || '',
       content: params.content || null,
+      width: params.width ?? null,
 
       buttons: [
         {
@@ -80,6 +83,7 @@ abstract class AbstractDialogsController<C, A = {}> {
   success(params: {
     message: string | (() => string);
     content?: C;
+    width?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
   }) {
@@ -89,6 +93,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       title: params.title || this.#translate('success'),
       message: params.message || '',
       content: params.content || null,
+      width: params.width ?? null,
 
       buttons: [
         {
@@ -102,6 +107,7 @@ abstract class AbstractDialogsController<C, A = {}> {
   warn(params: {
     message: string | (() => string);
     content?: C;
+    width?: string;
     title?: string;
     okText?: string;
   }) {
@@ -111,6 +117,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       title: params.title || this.#translate('warning'),
       message: params.message || '',
       content: params.content || null,
+      width: params.width ?? null,
 
       buttons: [
         {
@@ -124,6 +131,7 @@ abstract class AbstractDialogsController<C, A = {}> {
   error(params: {
     message: string | (() => string);
     content?: C;
+    width?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
   }) {
@@ -133,6 +141,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       title: params.title || this.#translate('error'),
       message: params.message || '',
       content: params.content || null,
+      width: params.width ?? null,
 
       buttons: [
         {
@@ -146,6 +155,7 @@ abstract class AbstractDialogsController<C, A = {}> {
   confirm(params: {
     message: string | (() => string);
     content?: C;
+    width?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
     cancelText?: string | (() => string);
@@ -156,6 +166,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       title: params.title || this.#translate('confirmation'),
       message: params.message || '',
       content: params.content || null,
+      width: params.width ?? null,
       mapResult: ({ button }) => button === '1',
 
       buttons: [
@@ -173,6 +184,7 @@ abstract class AbstractDialogsController<C, A = {}> {
   approve(params: {
     message: string | (() => string);
     content?: C;
+    width?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
     cancelText?: string | (() => string);
@@ -183,6 +195,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       title: params.title || this.#translate('approval'),
       message: params.message || '',
       content: params.content || null,
+      width: params.width ?? null,
       mapResult: ({ button }) => button === '1',
 
       buttons: [
@@ -200,6 +213,7 @@ abstract class AbstractDialogsController<C, A = {}> {
   prompt(params: {
     message: string | (() => string);
     content?: C;
+    width?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
     cancelText?: string | (() => string);
@@ -211,6 +225,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       title: params.title || this.#translate('input'),
       message: params.message || '',
       content: params.content || null,
+      width: params.width ?? null,
 
       mapResult: ({ button, input }) => (button === '0' ? null : input),
 
@@ -230,6 +245,7 @@ abstract class AbstractDialogsController<C, A = {}> {
     params: {
       message?: string | (() => string);
       content?: C;
+      width?: string;
       title?: string | (() => string);
       okText?: string | (() => string);
       cancelText?: string | (() => string);
@@ -241,6 +257,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       title: params.title || this.#translate('input'),
       message: params.message || '',
       content: params.content || null,
+      width: params.width ?? null,
       mapResult: ({ button, input }) => (button === '0' ? null : input),
 
       buttons: [

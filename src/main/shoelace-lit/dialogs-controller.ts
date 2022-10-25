@@ -217,7 +217,11 @@ export class DialogsController extends AbstractDialogsController<
         @sx-form-invalid=${onFormInvalid}
         ${ref(formRef)}
       >
-        <sl-dialog ?open=${open} class="dialog">
+        <sl-dialog
+          ?open=${open}
+          class="dialog"
+          style="--width: ${config.width ?? 'initial'}"
+        >
           <div slot="label" class="header">
             <sl-icon
               class="icon ${config.type}"
