@@ -35,12 +35,26 @@ class CompoundField extends LitElement {
   @property()
   label = '';
 
+  @property({ attribute: 'column-widths' })
+  columnWidths: string = '';
+
   render() {
+    const hasWidths = /^[0-9]+%(?: +[0-9]+%)*$/.test(this.columnWidths);
+
+    const slotStyle = !hasWidths
+      ? null
+      : 'grid-template-columns: ' +
+        this.columnWidths
+          .split(' ')
+          .map((it) => `minmax(0, ${it})`)
+          .join(' ');
+
+    console.log(this.columnWidths, slotStyle);
     return html`
       <div class="base form-control">
         <label class="form-control-label">${this.label}</label>
         <div class="form-control-input">
-          <slot class="default-slot fields"></slot>
+          <slot class="default-slot fields" style=${slotStyle}></slot>
         </div>
       </div>
     `;

@@ -147,7 +147,7 @@ class DialogsDemo extends LitElement {
               label="Username"
               required
             ></sx-text-field>
-            <sx-compound-field label="First/Last name">
+            <sx-compound-field label="First / Last name">
               <sl-input name="firstName" required></sl-input>
               <sl-input name="lastName" required></sl-input>
             </sx-compound-field>
@@ -155,7 +155,7 @@ class DialogsDemo extends LitElement {
           <sx-fieldset caption="Address">
             <sx-vbox>
               <sx-text-field label="Street" required></sx-text-field>
-              <sx-compound-field label="Zip/City">
+              <sx-compound-field label="Zip / City" column-widths="30% 70%">
                 <sl-input name="zip" required></sl-input>
                 <sl-input name="city" required></sl-input>
               </sx-compound-field>
