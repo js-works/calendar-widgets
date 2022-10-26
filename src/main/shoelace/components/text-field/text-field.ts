@@ -134,15 +134,20 @@ class TextField extends LitElement {
           @focus=${this._onFocus}
           @blur=${this._onBlur}
         >
-          <span
-            slot="label"
-            class=${classMap({
-              'sl-control-label': true,
-              'sl-control-label--required': this.required
-            })}
-          >
-            ${this.label}
-          </span>
+          ${when(
+            this.label,
+            () => html`
+              <span
+                slot="label"
+                class=${classMap({
+                  'sl-control-label': true,
+                  'sl-control-label--required': this.required
+                })}
+              >
+                ${this.label}
+              </span>
+            `
+          )}
           ${when(
             icon,
             () => html`<sl-icon slot="suffix" src=${icon}></sl-icon> `

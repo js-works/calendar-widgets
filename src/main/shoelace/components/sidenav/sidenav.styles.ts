@@ -35,7 +35,7 @@ export default css`
 
   .item {
     padding: 0.5rem 1rem;
-    margin: 0.25rem;
+    margin: 0.125rem;
   }
 
   .item.active {

@@ -1,6 +1,7 @@
 export { Choice } from './shoelace/components/choice/choice';
 export { Fieldset } from './shoelace/components/fieldset/fieldset';
 export { Form } from './shoelace/components/form/form';
+export { CompoundField } from './shoelace/components/compound-field/compound-field';
 export { DateField } from './shoelace/components/date-field/date-field';
 export { DatePicker } from './shoelace/components/date-picker/date-picker';
 export { HBox } from './shoelace/components/hbox/hbox';

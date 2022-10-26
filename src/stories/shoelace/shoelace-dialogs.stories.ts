@@ -9,6 +9,7 @@ import { DialogsController } from '../../main/shoelace-widgets-lit';
 import { TextField } from '../../main/shoelace-widgets';
 import { TextArea } from '../../main/shoelace-widgets';
 import { Choice } from '../../main/shoelace-widgets';
+import { CompoundField } from '../../main/shoelace-widgets';
 import { Fieldset } from '../../main/shoelace-widgets';
 import { Form } from '../../main/shoelace-widgets';
 import { Sidenav } from '../../main/shoelace-widgets';
@@ -156,7 +157,12 @@ class DialogsDemo extends LitElement {
           <sx-fieldset caption="Address">
             <sx-vbox>
               <sx-text-field label="Street" required></sx-text-field>
-              <sx-text-field label="Zip code/City" required></sx-text-field>
+              <sx-compound-field label="Zip code / Code">
+                <sx-hbox style="width: 100px;max-width: 100px">
+                  <sl-input name="zip" required></sl-input>
+                  <sl-input name="city" required></sl-input>
+                </sx-hbox>
+              </sx-compound-field>
               <sx-choice
                 label="Country"
                 required
