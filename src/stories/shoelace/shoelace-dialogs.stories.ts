@@ -141,21 +141,16 @@ class DialogsDemo extends LitElement {
 
       content: html`
         <sx-sidenav>
-          <sx-fieldset caption="Name">
+          <sx-fieldset caption="Account">
             <sx-text-field
-              name="firstName"
-              label="First name"
+              name="username"
+              label="Username"
               required
             ></sx-text-field>
-            <sx-text-field
-              name="middleName"
-              label="Middle name"
-            ></sx-text-field>
-            <sx-text-field
-              name="lastName"
-              label="Last name"
-              required
-            ></sx-text-field>
+            <sx-compound-field label="First/Last name">
+              <sl-input name="firstName" required></sl-input>
+              <sl-input name="lastName" required></sl-input>
+            </sx-compound-field>
           </sx-fieldset>
           <sx-fieldset caption="Address">
             <sx-vbox>

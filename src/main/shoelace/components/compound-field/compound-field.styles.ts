@@ -9,8 +9,11 @@ export default css`
 
   .fields {
     display: grid;
+    grid-auto-columns: minmax(0, auto);
+    grid-auto-flow: column;
     grid-template-columns: minmax(0, 20%) minmax(0, 80%);
     box-sizing: border-box;
+    grid-rows: auto;
     gap: 0.25em;
   }
 
