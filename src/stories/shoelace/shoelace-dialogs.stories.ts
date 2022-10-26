@@ -141,7 +141,7 @@ class DialogsDemo extends LitElement {
 
       content: html`
         <sx-sidenav>
-          <sx-fieldset caption="Account">
+          <sx-form-section caption="Account">
             <sx-text-field
               name="username"
               label="Username"
@@ -151,8 +151,8 @@ class DialogsDemo extends LitElement {
               <sl-input name="firstName" required></sl-input>
               <sl-input name="lastName" required></sl-input>
             </sx-compound-field>
-          </sx-fieldset>
-          <sx-fieldset caption="Address">
+          </sx-form-section>
+          <sx-form-section caption="Address">
             <sx-vbox>
               <sx-text-field label="Street" required></sx-text-field>
               <sx-compound-field label="Zip / City" column-widths="30% 70%">
@@ -168,7 +168,7 @@ class DialogsDemo extends LitElement {
                 ]}
               ></sx-choice>
             </sx-vbox>
-          </sx-fieldset>
+          </sx-form-section>
         </sx-sidenav>
       `,
 

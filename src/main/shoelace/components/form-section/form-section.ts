@@ -21,7 +21,7 @@ class FormSection extends LitElement {
 
   render() {
     return html`
-      <fieldset class="base">
+      <fieldset class="base label-layout-vertical">
         <div class="columns">
           <div class="caption">${this.caption}</div>
           <div class="content">

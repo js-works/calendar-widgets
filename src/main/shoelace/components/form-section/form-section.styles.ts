@@ -26,17 +26,14 @@ export default css`
   }
 
   .content {
-    grow: 1;
+    width: 100%;
   }
 
   .fields {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    grow: 1;
+    display: grid;
+    grid-auto-rows: max-content;
   }
 
   .fields::slotted(*) {
-    align-self: flex-end;
   }
 `;
