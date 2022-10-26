@@ -12,6 +12,7 @@ import { Choice } from '../../main/shoelace-widgets';
 import { CompoundField } from '../../main/shoelace-widgets';
 import { Fieldset } from '../../main/shoelace-widgets';
 import { Form } from '../../main/shoelace-widgets';
+import { FormSection } from '../../main/shoelace-widgets';
 import { Sidenav } from '../../main/shoelace-widgets';
 
 import './shared/shared-theme';
@@ -43,9 +44,11 @@ class DialogsDemo extends LitElement {
   static {
     // depenencies (to prevent too much tree shaking)
     void [
+      CompoundField,
       Choice,
       Fieldset,
       Form,
+      FormSection,
       TextArea,
       TextField,
       Sidenav,
@@ -133,12 +136,12 @@ class DialogsDemo extends LitElement {
   private _onInputClick = async () => {
     const data = await this._dlg.input({
       title: 'Add new user',
-      labelLayout: 'horizontal',
+      //labelLayout: 'horizontal',
       width: '45rem',
 
       content: html`
         <sx-sidenav>
-          <sx-fieldset caption="Name">
+          <sx-form-section caption="Name">
             <sx-text-field
               name="firstName"
               label="First name"
@@ -153,16 +156,13 @@ class DialogsDemo extends LitElement {
               label="Last name"
               required
             ></sx-text-field>
-          </sx-fieldset>
-          <sx-fieldset caption="Address">
+          </sx-form-section>
+          <sx-form-section caption="Address">
             <sx-vbox>
               <sx-text-field label="Street" required></sx-text-field>
-              <sx-compound-field label="Zip code / Code">
-                <sx-hbox style="width: 100px;max-width: 100px">
-                  <sl-input name="zip" required></sl-input>
-                  <sl-input name="city" required></sl-input>
-                </sx-hbox>
-              </sx-compound-field>
+              <sx-vbox gap="small">
+                <sx-text-field label="Zip" name="zip" required></sx-text-field>
+              </sx-vbox>
               <sx-choice
                 label="Country"
                 required
@@ -172,7 +172,7 @@ class DialogsDemo extends LitElement {
                 ]}
               ></sx-choice>
             </sx-vbox>
-          </sx-fieldset>
+          </sx-form-section>
         </sx-sidenav>
       `,
 
