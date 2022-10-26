@@ -38,7 +38,7 @@ class CompoundField extends LitElement {
   render() {
     return html`
       <div class="base form-control">
-        <label class="form-control-label"> ${this.label} </label>
+        <label class="form-control-label">${this.label}</label>
         <div class="form-control-input">
           <slot class="default-slot fields"></slot>
         </div>

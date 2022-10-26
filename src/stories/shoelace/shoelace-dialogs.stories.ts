@@ -136,12 +136,12 @@ class DialogsDemo extends LitElement {
   private _onInputClick = async () => {
     const data = await this._dlg.input({
       title: 'Add new user',
-      //labelLayout: 'horizontal',
+      labelLayout: 'horizontal',
       width: '45rem',
 
       content: html`
         <sx-sidenav>
-          <sx-form-section caption="Name">
+          <sx-fieldset caption="Name">
             <sx-text-field
               name="firstName"
               label="First name"
@@ -156,13 +156,14 @@ class DialogsDemo extends LitElement {
               label="Last name"
               required
             ></sx-text-field>
-          </sx-form-section>
-          <sx-form-section caption="Address">
+          </sx-fieldset>
+          <sx-fieldset caption="Address">
             <sx-vbox>
               <sx-text-field label="Street" required></sx-text-field>
-              <sx-vbox gap="small">
-                <sx-text-field label="Zip" name="zip" required></sx-text-field>
-              </sx-vbox>
+              <sx-compound-field label="Zip/City">
+                <sl-input name="zip" required></sl-input>
+                <sl-input name="city" required></sl-input>
+              </sx-compound-field>
               <sx-choice
                 label="Country"
                 required
@@ -172,7 +173,7 @@ class DialogsDemo extends LitElement {
                 ]}
               ></sx-choice>
             </sx-vbox>
-          </sx-form-section>
+          </sx-fieldset>
         </sx-sidenav>
       `,
 

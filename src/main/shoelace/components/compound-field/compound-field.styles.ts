@@ -8,19 +8,13 @@ export default css`
 
 
   .fields {
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    gap: 0.5rem;
-    border: 1px solid blue;
+    display: grid;
+    grid-template-columns: minmax(0, 20%) minmax(0, 80%);
+    box-sizing: border-box;
+    gap: 0.25em;
   }
 
   ::slotted(*) {
-    border: 1px solid green;
-    justify-content: stretch;
-  }
-
-  .default-slot::slotted(*) {
-    width: 10%;
+    box-sizing: border-box;
   }
 `;
