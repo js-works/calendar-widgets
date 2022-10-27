@@ -21,8 +21,8 @@ class Sidenav extends LitElement {
         <div class="nav">
           <ul>
             <li class="item active">General</li>
-            <li class="item">Assignments</li>
-            <li class="item">Misc.</li>
+            <li class="item">Contact</li>
+            <li class="item">Notes</li>
           </ul>
         </div>
         <div>

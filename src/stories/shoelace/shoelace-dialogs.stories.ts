@@ -166,6 +166,12 @@ class DialogsDemo extends LitElement {
               name="lastName"
               required
             ></sx-text-field>
+            <sx-date-field
+              label="Day of birth"
+              name="dayOfBirth"
+              show-adjacent-days
+              fixed-day-count
+            ></sx-date-field>
           </sx-fieldset>
           <sx-fieldset caption="Address">
             <sx-vbox>

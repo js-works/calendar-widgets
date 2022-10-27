@@ -34,7 +34,7 @@ export default css`
   .popup-column-2 {
     display: flex;
     flex-direction: column;
-    width: 20rem;
+    width: 18rem;
   }
 
   .selection-info-1 {

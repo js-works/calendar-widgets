@@ -82,7 +82,7 @@ export default /*css*/ `
     align-items: stretch;
     flex-grow: 1;
     padding: 0.5em;
-    min-height: 13rem;
+    min-height: 11rem;
   }
 
   .cal-sheet--month {
