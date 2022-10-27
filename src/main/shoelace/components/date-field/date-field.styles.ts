@@ -34,7 +34,7 @@ export default css`
   .popup-column-2 {
     display: flex;
     flex-direction: column;
-    width: 18rem;
+    width: 21rem;
   }
 
   .selection-info-1 {
@@ -47,7 +47,7 @@ export default css`
   }
 
   .selection-info-3 {
-    font-size: 160%;
+    font-size: 140%;
   }
 
   .popup-footer {

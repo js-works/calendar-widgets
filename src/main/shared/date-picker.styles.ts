@@ -125,6 +125,7 @@ export default /*css*/ `
     padding: 0.25em 0.75em;
     box-sizing: border-box;
     text-transform: capitalize;
+    hyphens: auto;
   }
 
   .cal-cell--disabled {

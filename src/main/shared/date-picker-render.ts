@@ -334,7 +334,9 @@ function renderDatePicker(
         'data-year': getYearString(decadeData.firstYear),
         'data-subject': 'decade'
       },
-      i18n.getDecadeTitle(decadeData.firstYear, 10)
+      i18n
+        .getDecadeTitle(decadeData.firstYear, 10)
+        .replaceAll('\u2013', '\u2013\u200B')
     );
   }
 

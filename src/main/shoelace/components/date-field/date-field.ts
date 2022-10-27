@@ -204,7 +204,7 @@ export class DateField extends LitElement {
               <div class="selection-info-3">Dec 21</div>
               <div class="selection-info-1">2022</div>
             </div>
-            <div class="popup-column2">
+            <div class="popup-column-2">
               <sx-date-picker
                 class="date-picker"
                 .selectionMode=${this.selectionMode}
@@ -216,6 +216,7 @@ export class DateField extends LitElement {
                 .maxDate=${this.minDate}
                 .fixedDayCount=${this.fixedDayCount}
                 ${ref(this._pickerRef)}
+                lang="de"
               >
               </sx-date-picker>
               <div class="popup-footer">
