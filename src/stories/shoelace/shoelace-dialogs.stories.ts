@@ -141,10 +141,11 @@ class DialogsDemo extends LitElement {
 
       content: html`
         <sx-sidenav>
-          <sx-fieldset caption="Account">
+          <sx-fieldset caption="User">
             <sx-choice
               label="Salutation"
               type="horizontal-radios"
+              required
               .options=${[
                 { value: 'mrs', text: 'Mrs.' },
                 { value: 'mr', text: 'Mr.' },
