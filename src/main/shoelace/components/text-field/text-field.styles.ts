@@ -6,6 +6,13 @@ export default css`
   ${componentStyles}
   ${controlStyles}
 
-  .base {
+  :host {
+    display: inline-block;
+    min-width: 0;
+    width: 100%;
+  }
+
+  sl-input::part(input) {
+    width: 100%;
   }
 `;

@@ -13,7 +13,7 @@ export default css`
     grid-auto-columns: minmax(0, auto);
     box-sizing: border-box;
     grid-rows: auto;
-    gap: 0.25em;
+    gap: 0.325em;
   }
 
   ::slotted(*) {
