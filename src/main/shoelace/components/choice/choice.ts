@@ -59,6 +59,9 @@ class Choice extends LitElement {
   @property()
   label = '';
 
+  @property()
+  type: 'select' | 'radios' | 'horizontal-radios' = 'select';
+
   @property({ attribute: false })
   options: Choice.Option[] = [];
 
@@ -92,15 +95,20 @@ class Choice extends LitElement {
     void (ev.key === 'Enter' && this._formField.signalSubmit());
 
   render() {
+    const type = ['radios', 'horizontal-radios'].includes(this.type)
+      ? this.type
+      : 'select';
+
     return html`
       <div
         class="base ${classMap({
           required: this.required,
-          invalid: this._formField.showsError()
+          invalid: this._formField.showsError(),
+          [type]: true
         })}"
       >
         ${when(
-          true,
+          type !== 'radios' && type !== 'horizontal-radios',
           () => html`
             <sl-select class="sl-control">
               <span
@@ -125,7 +133,7 @@ class Choice extends LitElement {
           `
         )}
         ${when(
-          false,
+          this.type === 'radios' || this.type === 'horizontal-radios',
           () => html`
             <div class="form-control">
               <div
@@ -136,14 +144,14 @@ class Choice extends LitElement {
               >
                 ${this.label}
               </div>
-              <sl-radio-group value=${this.value} class="form-control-input">
+              <div class="form-control-input">
                 ${repeat(
                   this.options,
                   (option) => html`
                     <sl-radio value=${option.value}>${option.text}</sl-radio>
                   `
                 )}
-              </sl-radio-group>
+              </div>
             </div>
           `
         )}

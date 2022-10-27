@@ -7,6 +7,17 @@ export default css`
   ${controlStyles}
 
   .base {
-    margin-bottom: 0.75rem;
+  }
+
+  .base.radios .form-control-input {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .base.horizontal-radios .form-control-input {
+    height: 2em;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
   }
 `;

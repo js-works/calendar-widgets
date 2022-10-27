@@ -142,18 +142,29 @@ class DialogsDemo extends LitElement {
       content: html`
         <sx-sidenav>
           <sx-fieldset caption="Account">
+            <sx-choice
+              label="Salutation"
+              type="horizontal-radios"
+              .options=${[
+                { value: 'mrs', text: 'Mrs.' },
+                { value: 'mr', text: 'Mr.' },
+                { value: 'x', text: 'Other' }
+              ]}
+            ></sx-choice>
             <sx-text-field
-              name="username"
-              label="Username"
+              label="First name"
+              name="firstName"
               required
             ></sx-text-field>
-            <sx-compound-field
-              label="First / Last name"
-              column-widths="40% 60%"
-            >
-              <sx-text-field name="firstName" required></sx-text-field>
-              <sx-text-field name="lastName" required></sx-text-field>
-            </sx-compound-field>
+            <sx-text-field
+              label="Middle name"
+              name="middleName"
+            ></sx-text-field>
+            <sx-text-field
+              label="Last name"
+              name="lastName"
+              required
+            ></sx-text-field>
           </sx-fieldset>
           <sx-fieldset caption="Address">
             <sx-vbox>
