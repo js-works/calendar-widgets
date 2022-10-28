@@ -249,45 +249,58 @@ export class DialogsController extends AbstractDialogsController<
           </div>
           <div class="message">${config.message}</div>
           <div class="content">${content}</div>
-          <div slot="footer" class="buttons">
-            ${repeat(
-              config.buttons,
-              ({ text, action, variant = 'default' }, idx) => {
-                const autofocus =
-                  variant === 'primary' || (!hasPrimaryButton && idx === 0);
+          <div slot="footer">
+            <div
+              class=${classMap({
+                'error-box': true,
+                'error-box--closed': true
+              })}
+            >
+              <div class="error-box-content">
+                <sl-icon
+                  src=${errorIcon}
+                  class="error-box-error-icon"
+                ></sl-icon>
+                <div class="error-box-text">
+                  Invalid form entries - please correct
+                </div>
+                <sl-icon
+                  class="error-box-close-icon"
+                  library="system"
+                  name="x"
+                ></sl-icon>
+              </div>
+            </div>
+            <div class="buttons">
+              ${repeat(
+                config.buttons,
+                ({ text, action, variant = 'default' }, idx) => {
+                  const autofocus =
+                    variant === 'primary' || (!hasPrimaryButton && idx === 0);
 
-                const onClick = () => {
-                  lastClickedAction = action;
-                  formRef.value!.submit();
-                };
+                  const onClick = () => {
+                    lastClickedAction = action;
+                    formRef.value!.submit();
+                  };
 
-                return html`
-                  <sl-button
-                    type="submit"
-                    variant=${variant}
-                    value=${idx}
-                    class="button"
-                    ?autofocus=${autofocus}
-                    @click=${onClick}
-                  >
-                    ${text}
-                  </sl-button>
-                `;
-              }
-            )}
+                  return html`
+                    <sl-button
+                      type="submit"
+                      variant=${variant}
+                      value=${idx}
+                      class="button"
+                      ?autofocus=${autofocus}
+                      @click=${onClick}
+                    >
+                      ${text}
+                    </sl-button>
+                  `;
+                }
+              )}
+            </div>
           </div>
         </sl-dialog>
       </sx-form>
-      <sl-alert
-        variant="danger"
-        duration=${toastDuration}
-        closable
-        ${ref(alertRef)}
-        style="user-select: none"
-      >
-        <sl-icon slot="icon" src=${errorIcon}></sl-icon>
-        Invalid form data
-      </sl-alert>
     `;
   }
 }

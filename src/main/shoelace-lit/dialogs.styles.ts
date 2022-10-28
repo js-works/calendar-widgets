@@ -113,4 +113,41 @@ export default css`
     flex-grow: 1;
     padding: 0.5rem 2px 0 0;
   }
+
+  .error-box--closed {
+    visibility: hidden;
+    max-height: 0;
+    overflow: hidden;
+  }
+
+  .error-box-content {
+    display: flex;
+    align-items: center;
+    flex-wrap: nowrap;
+    margin: 0.5rem 0.75rem;
+    color: var(--sl-color-danger-900);
+    background-color: var(--sl-color-danger-200);
+    border: 1px solid var(--sl-color-danger-300);
+    box-sizing: border-box;
+  }
+
+  .error-box-error-icon {
+    font-size: var(--sl-font-size-large);
+    padding: 0 0.75rem;
+  }
+
+  .error-box-close-icon {
+    font-size: var(--sl-font-size-large);
+    padding: 0.25rem;
+    margin: 0 0.25rem;
+    cursor: pointer;
+  }
+
+  .error-box-text {
+    padding: 0.375rem 1rem;
+    text-align: start;
+    flex-grow: 1;
+    justify-self: stretch;
+    border-inline-start: 1px solid var(--sl-color-danger-300);
+  }
 `;
