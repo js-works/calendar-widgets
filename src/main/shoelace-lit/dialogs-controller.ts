@@ -169,7 +169,7 @@ export class DialogsController extends AbstractDialogsController<
       setTimeout(() => {
         data.action = lastClickedAction;
         dialogRef.value!.hide();
-        emitResult(config.mapResult?.(data));
+        emitResult(config.mapResult?.(lastClickedAction, data));
       });
     };
 

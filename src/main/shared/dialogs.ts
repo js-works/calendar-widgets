@@ -29,7 +29,7 @@ type DialogConfig<C, R> = {
 
   params: Record<string, any>; // TODO - mak this type safe
   defaultResult?: R;
-  mapResult?: (data: Record<string, string>) => R;
+  mapResult?: (action: string, data: Record<string, string>) => R;
 };
 
 type TranslationKey =
@@ -172,7 +172,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
-      mapResult: ({ action }) => action === 'ok',
+      mapResult: (action) => action === 'ok',
 
       buttons: [
         {
@@ -203,7 +203,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
-      mapResult: ({ action }) => action === 'ok',
+      mapResult: (action) => action === 'ok',
 
       buttons: [
         {
@@ -236,7 +236,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
 
-      mapResult: ({ action, input }) => (action === 'cancel' ? null : input),
+      mapResult: (action, { input }) => (action === 'cancel' ? null : input),
 
       buttons: [
         {
@@ -269,7 +269,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
-      mapResult: ({ action, input }) => (action === 'ok' ? null : input),
+      mapResult: (action, { input }) => (action === 'ok' ? null : input),
 
       buttons: [
         {
