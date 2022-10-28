@@ -49,7 +49,6 @@ class CompoundField extends LitElement {
           .map((it) => `minmax(0, ${it})`)
           .join(' ');
 
-    console.log(this.columnWidths, slotStyle);
     return html`
       <div class="base form-control">
         <label class="form-control-label">${this.label}</label>

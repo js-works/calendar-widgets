@@ -100,6 +100,7 @@ export class DialogsController extends AbstractDialogsController<
   }
 
   render(): TemplateResult {
+    console.log('Rendering ' + this.#dialogRenderers.size + ' renderers');
     return html`${repeat(this.#dialogRenderers, (it) => it())}`;
   }
 
@@ -110,10 +111,16 @@ export class DialogsController extends AbstractDialogsController<
     let open = false;
 
     const renderer = () =>
-      this.#renderDialog(config, open, (result) => {
-        this.#dialogRenderers.delete(renderer);
-        return emitResult(result);
-      });
+      this.#renderDialog(
+        config,
+        open,
+        () => {
+          this.#dialogRenderers.delete(renderer);
+        },
+        (result) => {
+          return emitResult(result);
+        }
+      );
 
     this.#dialogRenderers.add(renderer);
 
@@ -131,6 +138,7 @@ export class DialogsController extends AbstractDialogsController<
   #renderDialog<R = void>(
     config: DialogConfig<TemplateResult, R>,
     open: boolean,
+    onClose: () => void,
     emitResult: (result: unknown) => void
   ) {
     const formRef = createRef<Form>();
@@ -158,10 +166,9 @@ export class DialogsController extends AbstractDialogsController<
       ev.preventDefault();
       const data = { ...ev.detail.data };
 
-      console.log(data);
-
       setTimeout(() => {
         data.button = lastClickedButton.toString();
+        dialogRef.value!.hide();
         emitResult(config.mapResult?.(data));
       });
     };
@@ -202,6 +209,14 @@ export class DialogsController extends AbstractDialogsController<
         ? 'horizontal'
         : 'auto';
 
+    const dialogRef = createRef<SlDialog>();
+
+    const onAfterHide = (ev: Event) => {
+      if (ev.currentTarget === dialogRef.value) {
+        onClose();
+      }
+    };
+
     return html`
       <style>
         ${dialogsStyles}
@@ -221,6 +236,8 @@ export class DialogsController extends AbstractDialogsController<
           ?open=${open}
           class="dialog"
           style="--width: ${config.width ?? 'initial'}"
+          @sl-after-hide=${onAfterHide}
+          ${ref(dialogRef)}
         >
           <div slot="label" class="header">
             <sl-icon

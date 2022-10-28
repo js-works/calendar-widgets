@@ -63,12 +63,12 @@ export default css`
 
   .base.invalid sl-input::part(base),
   .base.invalid sl-select::part(control) {
-    background-color: var(--sl-color-danger-300);
+    background-color: var(--sl-color-danger-100);
   }
 
   .base.invalid sl-input::part(form-control-label),
   .base.invalid sl-select::part(form-control-label) {
-    xxxcolor: var(--sl-color-danger-700);
+    color: var(--sl-color-danger-700);
   }
 
   .base.invalid sl-input::part(base),

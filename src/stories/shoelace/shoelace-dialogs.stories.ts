@@ -127,6 +127,8 @@ class DialogsDemo extends LitElement {
     });
 
     if (name !== null) {
+      await pause(500);
+
       this._dlg.info({
         message: `Hello, ${name || 'stranger'}!`
       });
@@ -213,7 +215,7 @@ class DialogsDemo extends LitElement {
       });
 
       if (approved) {
-        this._dlg.error({
+        await this._dlg.error({
           message:
             'You are not allowed to destroy planets. ' +
             'Only Darth Vader is authorized.'
@@ -257,4 +259,10 @@ class DialogsDemo extends LitElement {
       ${this._dlg.render()}
     `;
   }
+}
+
+function pause(milliseconds: number) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, milliseconds);
+  });
 }

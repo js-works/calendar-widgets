@@ -138,16 +138,16 @@ class FormFieldController<T> {
     return this.#errorMsgDiv;
   }
 
-  validate = (): string => {
+  validate = (): string | null => {
     for (const validator of this.#validation) {
       const errorMsg = validator(this.#getValue());
 
-      if (errorMsg) {
+      if (errorMsg !== null) {
         return errorMsg;
       }
     }
 
-    return '';
+    return null;
   };
 }
 

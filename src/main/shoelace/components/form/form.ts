@@ -93,6 +93,7 @@ class Form extends LitElement {
     let hasErrors = false;
 
     for (const { validate } of this.#elementsMap.values()) {
+      console.log(validate());
       if (validate() !== null) {
         hasErrors = true;
         break;
