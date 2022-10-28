@@ -99,6 +99,8 @@ class DialogsDemo extends LitElement {
     });
 
     if (confirmed) {
+      await pause(200);
+
       this._dlg.info({
         message: "You've been logged out"
       });
@@ -127,7 +129,7 @@ class DialogsDemo extends LitElement {
     });
 
     if (name !== null) {
-      await pause(500);
+      await pause(200);
 
       this._dlg.info({
         message: `Hello, ${name || 'stranger'}!`
@@ -205,6 +207,8 @@ class DialogsDemo extends LitElement {
     });
 
     if (confirmed) {
+      await pause(200);
+
       const approved = await this._dlg.approve({
         message:
           'But this is such a lovely planet. ' +
@@ -215,6 +219,8 @@ class DialogsDemo extends LitElement {
       });
 
       if (approved) {
+        await pause(200);
+
         await this._dlg.error({
           message:
             'You are not allowed to destroy planets. ' +
