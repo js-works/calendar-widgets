@@ -22,6 +22,7 @@ type DialogConfig<C, R> = {
   width: string | null;
 
   buttons: {
+    action: string;
     text: string | (() => string);
     variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
   }[];
@@ -73,6 +74,7 @@ abstract class AbstractDialogsController<C, A = {}> {
 
       buttons: [
         {
+          action: 'value',
           variant: 'primary',
           text: params.okText || this.#translate('ok')
         }
@@ -97,6 +99,7 @@ abstract class AbstractDialogsController<C, A = {}> {
 
       buttons: [
         {
+          action: 'ok',
           variant: 'success',
           text: params.okText || this.#translate('ok')
         }
@@ -121,6 +124,7 @@ abstract class AbstractDialogsController<C, A = {}> {
 
       buttons: [
         {
+          action: 'ok',
           variant: 'warning',
           text: params.okText || this.#translate('ok')
         }
@@ -145,6 +149,7 @@ abstract class AbstractDialogsController<C, A = {}> {
 
       buttons: [
         {
+          action: 'ok',
           variant: 'danger',
           text: params.okText || this.#translate('ok')
         }
@@ -167,13 +172,15 @@ abstract class AbstractDialogsController<C, A = {}> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
-      mapResult: ({ button }) => button === '1',
+      mapResult: ({ action }) => action === 'ok',
 
       buttons: [
         {
+          action: 'cancel',
           text: params.cancelText || this.#translate('cancel')
         },
         {
+          action: 'ok',
           variant: 'primary',
           text: params.okText || this.#translate('ok')
         }
@@ -196,13 +203,15 @@ abstract class AbstractDialogsController<C, A = {}> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
-      mapResult: ({ button }) => button === '1',
+      mapResult: ({ action }) => action === 'ok',
 
       buttons: [
         {
+          action: 'cancel',
           text: params.cancelText || this.#translate('cancel')
         },
         {
+          action: 'ok',
           variant: 'danger',
           text: params.okText || this.#translate('ok')
         }
@@ -227,13 +236,15 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
 
-      mapResult: ({ button, input }) => (button === '0' ? null : input),
+      mapResult: ({ action, input }) => (action === 'cancel' ? null : input),
 
       buttons: [
         {
+          action: 'cancel',
           text: params.cancelText || this.#translate('cancel')
         },
         {
+          action: 'ok',
           variant: 'primary',
           text: params.okText || this.#translate('ok')
         }
@@ -258,13 +269,15 @@ abstract class AbstractDialogsController<C, A = {}> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
-      mapResult: ({ button, input }) => (button === '0' ? null : input),
+      mapResult: ({ action, input }) => (action === 'ok' ? null : input),
 
       buttons: [
         {
+          action: 'cancel',
           text: params.cancelText || this.#translate('cancel')
         },
         {
+          action: 'ok',
           variant: 'primary',
           text: params.okText || this.#translate('ok')
         }

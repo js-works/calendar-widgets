@@ -138,12 +138,12 @@ export class DialogsController extends AbstractDialogsController<
   #renderDialog<R = void>(
     config: DialogConfig<TemplateResult, R>,
     open: boolean,
-    onClose: () => void,
+    dismissDialog: () => void,
     emitResult: (result: unknown) => void
   ) {
     const formRef = createRef<Form>();
     const alertRef = createRef<SlAlert>();
-    let lastClickedButton: number = -1;
+    let lastClickedAction = '';
 
     const hasPrimaryButton = config.buttons.some(
       (it) => it.variant === 'primary'
@@ -167,7 +167,7 @@ export class DialogsController extends AbstractDialogsController<
       const data = { ...ev.detail.data };
 
       setTimeout(() => {
-        data.button = lastClickedButton.toString();
+        data.action = lastClickedAction;
         dialogRef.value!.hide();
         emitResult(config.mapResult?.(data));
       });
@@ -213,7 +213,8 @@ export class DialogsController extends AbstractDialogsController<
 
     const onAfterHide = (ev: Event) => {
       if (ev.currentTarget === dialogRef.value) {
-        onClose();
+        dismissDialog();
+        console.log('dialog dismissed');
       }
     };
 
@@ -249,28 +250,31 @@ export class DialogsController extends AbstractDialogsController<
           <div class="message">${config.message}</div>
           <div class="content">${content}</div>
           <div slot="footer" class="buttons">
-            ${repeat(config.buttons, ({ text, variant = 'default' }, idx) => {
-              const autofocus =
-                variant === 'primary' || (!hasPrimaryButton && idx === 0);
+            ${repeat(
+              config.buttons,
+              ({ text, action, variant = 'default' }, idx) => {
+                const autofocus =
+                  variant === 'primary' || (!hasPrimaryButton && idx === 0);
 
-              const onClick = () => {
-                lastClickedButton = idx;
-                formRef.value!.submit();
-              };
+                const onClick = () => {
+                  lastClickedAction = action;
+                  formRef.value!.submit();
+                };
 
-              return html`
-                <sl-button
-                  type="submit"
-                  variant=${variant}
-                  value=${idx}
-                  class="button"
-                  ?autofocus=${autofocus}
-                  @click=${onClick}
-                >
-                  ${text}
-                </sl-button>
-              `;
-            })}
+                return html`
+                  <sl-button
+                    type="submit"
+                    variant=${variant}
+                    value=${idx}
+                    class="button"
+                    ?autofocus=${autofocus}
+                    @click=${onClick}
+                  >
+                    ${text}
+                  </sl-button>
+                `;
+              }
+            )}
           </div>
         </sl-dialog>
       </sx-form>
