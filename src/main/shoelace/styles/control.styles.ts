@@ -55,7 +55,7 @@ export default css`
 
   .validation-error:not(:empty) {
     display: none; /* TODO!!! */
-    position: absolute;
+    xxxposition: absolute;
 
     font-size: 90%;
     color: var(--sl-color-danger-700);
@@ -66,7 +66,7 @@ export default css`
 
   .base.invalid sl-input::part(base),
   .base.invalid sl-select::part(control) {
-    background-color: var(--sl-color-danger-50);
+    background-color: var(--sl-color-danger-100);
   }
 
   .base.invalid sl-input::part(form-control-label),

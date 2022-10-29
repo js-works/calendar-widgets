@@ -115,7 +115,7 @@ export default css`
   }
 
   .error-box--closed {
-    visibility: hidden;
+    xxxvisibility: hidden;
     max-height: 0;
     overflow: hidden;
   }
@@ -124,10 +124,8 @@ export default css`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    margin: 0px;
-    color: var(--sl-color-danger-900);
-    background-color: var(--sl-color-danger-200);
-    border: 1px solid var(--sl-color-danger-300);
+    color: var(--sl-color-danger-100);
+    background-color: var(--sl-color-danger-700);
     box-sizing: border-box;
   }
 
@@ -138,16 +136,14 @@ export default css`
 
   .error-box-close-icon {
     font-size: var(--sl-font-size-large);
-    padding: 0.25rem;
-    margin: 0 0.25rem;
+    padding: 0 0.75rem;
     cursor: pointer;
   }
 
   .error-box-text {
-    padding: 0.375rem 1rem;
+    padding: 0.375rem 2rem 0.375rem 0;
     text-align: start;
     flex-grow: 1;
     justify-self: stretch;
-    border-inline-start: 1px solid var(--sl-color-danger-300);
   }
 `;
