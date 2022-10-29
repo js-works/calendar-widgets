@@ -14,6 +14,11 @@ import { AbstractDialogsController } from '../shared/dialogs';
 import type { DialogConfig } from '../shared/dialogs';
 import type { FormSubmitEvent } from '../shoelace/events/form-submit-event';
 
+import {
+  runCloseVerticalTransition,
+  runOpenVerticalTransition
+} from '../shoelace/misc/transitions';
+
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
@@ -123,6 +128,7 @@ export class DialogsController extends AbstractDialogsController<
         },
         dismissDialog: () => {
           this.#dialogRenderers.delete(renderer);
+          this.#requestUpdate();
         },
         emitResult(result) {
           return emitResult(result);
@@ -185,9 +191,9 @@ export class DialogsController extends AbstractDialogsController<
       ev.preventDefault();
       const data = { ...ev.detail.data };
 
-      setTimeout(() => {
+      setTimeout(async () => {
         data.action = lastClickedAction;
-        dialogRef.value!.hide();
+        await dialogRef.value!.hide();
         emitResult(config.mapResult?.(lastClickedAction, data));
       });
     };
@@ -204,7 +210,9 @@ export class DialogsController extends AbstractDialogsController<
 
         errorBoxRef.value!.animate(keyframes, options);
       } else {
-        setErrorBoxVisible(true);
+        runOpenVerticalTransition(errorBoxRef.value!).then(() =>
+          setErrorBoxVisible(true)
+        );
         this.#requestUpdate();
       }
     };
@@ -221,14 +229,17 @@ export class DialogsController extends AbstractDialogsController<
     const dialogRef = createRef<SlDialog>();
 
     const onAfterHide = (ev: Event) => {
-      if (ev.currentTarget === dialogRef.value) {
+      if (ev.target === dialogRef.value) {
         dismissDialog();
         console.log('dialog dismissed');
       }
     };
 
     const onCloseErrorBoxClick = () => {
-      setErrorBoxVisible(false);
+      runCloseVerticalTransition(errorBoxRef.value!).then(() =>
+        setErrorBoxVisible(false)
+      );
+
       this.#requestUpdate();
     };
 
