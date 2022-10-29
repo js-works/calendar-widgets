@@ -108,24 +108,31 @@ export class DialogsController extends AbstractDialogsController<
     config: DialogConfig<TemplateResult, R>
   ): Promise<R> => {
     let emitResult: (result: unknown) => void;
-    let open = false;
+    let dialogOpen = false;
+    let errorBoxVisible = false;
 
     const renderer = () =>
-      this.#renderDialog(
-        config,
-        open,
-        () => {
+      this.#renderDialog(config, {
+        isDialogOpen: () => dialogOpen,
+        isErrorBoxVisible: () => errorBoxVisible,
+        setErrorBoxVisible: (value: boolean) => {
+          if (errorBoxVisible !== value) {
+            errorBoxVisible = value;
+            this.#requestUpdate();
+          }
+        },
+        dismissDialog: () => {
           this.#dialogRenderers.delete(renderer);
         },
-        (result) => {
+        emitResult(result) {
           return emitResult(result);
         }
-      );
+      });
 
     this.#dialogRenderers.add(renderer);
 
     await this.#requestUpdate();
-    open = true;
+    dialogOpen = true;
     await this.#requestUpdate();
 
     return new Promise((resolve) => {
@@ -137,12 +144,24 @@ export class DialogsController extends AbstractDialogsController<
 
   #renderDialog<R = void>(
     config: DialogConfig<TemplateResult, R>,
-    open: boolean,
-    dismissDialog: () => void,
-    emitResult: (result: unknown) => void
+    params: {
+      isDialogOpen: () => boolean;
+      isErrorBoxVisible: () => boolean;
+      setErrorBoxVisible: (value: boolean) => void;
+      dismissDialog: () => void;
+      emitResult: (result: unknown) => void;
+    }
   ) {
+    const {
+      isDialogOpen: isOpen,
+      isErrorBoxVisible,
+      setErrorBoxVisible,
+      dismissDialog,
+      emitResult
+    } = params;
+
     const formRef = createRef<Form>();
-    const alertRef = createRef<SlAlert>();
+    const errorBoxRef = createRef<HTMLDivElement>();
     let lastClickedAction = '';
 
     const hasPrimaryButton = config.buttons.some(
@@ -174,29 +193,19 @@ export class DialogsController extends AbstractDialogsController<
     };
 
     const onFormInvalid = async () => {
-      const alertElem = alertRef.value!;
-
-      if (alertElem.open) {
+      if (isErrorBoxVisible()) {
         const { keyframes, options } = getAnimation(
-          alertElem,
+          errorBoxRef.value!,
           'shoelaceWidgets.dialogs.vibrate',
           {
             dir: this.#localize.dir()
           }
         );
 
-        ++alertElem.duration;
-        alertElem.requestUpdate();
-        await alertElem.updateComplete;
-        alertElem.duration = toastDuration;
-        alertElem.requestUpdate();
-        await alertElem.updateComplete;
-
-        alertElem
-          .shadowRoot!.querySelector('[part=base]')!
-          .animate(keyframes, options);
+        errorBoxRef.value!.animate(keyframes, options);
       } else {
-        alertElem.toast();
+        setErrorBoxVisible(true);
+        this.#requestUpdate();
       }
     };
 
@@ -218,6 +227,11 @@ export class DialogsController extends AbstractDialogsController<
       }
     };
 
+    const onCloseErrorBoxClick = () => {
+      setErrorBoxVisible(false);
+      this.#requestUpdate();
+    };
+
     return html`
       <style>
         ${dialogsStyles}
@@ -234,7 +248,7 @@ export class DialogsController extends AbstractDialogsController<
         ${ref(formRef)}
       >
         <sl-dialog
-          ?open=${open}
+          ?open=${isOpen()}
           class="dialog"
           style="--width: ${config.width ?? 'initial'}"
           @sl-after-hide=${onAfterHide}
@@ -253,8 +267,9 @@ export class DialogsController extends AbstractDialogsController<
             <div
               class=${classMap({
                 'error-box': true,
-                'error-box--closed': true
+                'error-box--closed': !isErrorBoxVisible()
               })}
+              ${ref(errorBoxRef)}
             >
               <div class="error-box-content">
                 <sl-icon
@@ -268,6 +283,7 @@ export class DialogsController extends AbstractDialogsController<
                   class="error-box-close-icon"
                   library="system"
                   name="x"
+                  @click=${onCloseErrorBoxClick}
                 ></sl-icon>
               </div>
             </div>
