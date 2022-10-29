@@ -74,7 +74,7 @@ setDefaultAnimation('shoelaceWidgets.dialogs.vibrate', {
     { transform: 'scale(0.95)' },
     { transform: 'scale(1)' }
   ],
-  options: { duration: 600, easing: 'ease-out' }
+  options: { duration: 600, easing: 'ease-in-out' }
 });
 
 export class DialogsController extends AbstractDialogsController<
