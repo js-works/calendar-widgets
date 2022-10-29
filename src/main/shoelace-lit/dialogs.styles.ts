@@ -124,13 +124,12 @@ export default css`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    color: var(--sl-color-danger-100);
+    color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-danger-700);
     box-sizing: border-box;
   }
 
   .error-box-error-icon {
-    font-size: var(--sl-font-size-large);
     padding: 0 0.75rem;
   }
 
