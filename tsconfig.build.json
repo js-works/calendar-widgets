@@ -22,7 +22,7 @@
     "typeRoots": ["node_modules/@types"],
     "types": []
   },
-  "files": ["src/main/js-widgets.ts"],
+  "files": ["src/main/shoelace-widgets.ts"],
   "include": ["src/main/**/*.ts", "src/main/**/*.tsx"],
   "exclude": ["node_modules"]
 }

@@ -10,8 +10,8 @@ import {
 
 import { LocalizeController } from '../shoelace/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
-import { AbstractDialogsController } from '../shared/dialogs';
-import type { DialogConfig } from '../shared/dialogs';
+import { AbstractDialogsController } from '../shoelace/controllers/vanilla/dialogs';
+import type { DialogConfig } from '../shoelace/controllers/vanilla/dialogs';
 import type { FormSubmitEvent } from '../shoelace/events/form-submit-event';
 
 import {

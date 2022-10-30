@@ -1,11 +1,11 @@
 {
-  "name": "js-widgets",
+  "name": "shoelace-widgets",
   "version": "0.0.1",
   "description": "",
   "type": "module",
-  "main": "./dist/js-widgets.cjs.js",
-  "module": "./dist/js-widgets.esm.js",
-  "types": "./dist/types/js-widgets.d.ts",
+  "main": "./dist/shoelace-widgets.cjs.js",
+  "module": "./dist/shoelace-widgets.esm.js",
+  "types": "./dist/types/shoelace-widgets.d.ts",
   "files": [
     "dist"
   ],
@@ -17,14 +17,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/js-works/js-widgets.git"
+    "url": "git+https://github.com/js-works/shoelace-widgets.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/js-works/js-widgets/issues"
+    "url": "https://github.com/js-works/shoelace-widgets/issues"
   },
-  "homepage": "https://github.com/js-works/js-widgets#readme",
+  "homepage": "https://github.com/js-works/shoelace-widgets#readme",
   "devDependencies": {
     "@babel/core": "^7.19.3",
     "@storybook/addon-actions": "^6.5.12",

@@ -3,8 +3,8 @@ import { createRef, ref } from 'lit/directives/ref';
 import type { Ref } from 'lit/directives/ref';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat';
-import { AbstractToastsController } from '../shared/toasts';
-import type { ToastConfig } from '../shared/toasts';
+import { AbstractToastsController } from '../shoelace/controllers/vanilla/toasts';
+import type { ToastConfig } from '../shoelace/controllers/vanilla/toasts';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';

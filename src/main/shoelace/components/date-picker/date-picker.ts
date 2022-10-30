@@ -3,11 +3,11 @@ import { customElement, property } from 'lit/decorators';
 import { unsafeHTML } from 'lit/directives/unsafe-html';
 import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '@shoelace-style/localize/dist/index';
-import { DatePickerController } from '../../../shared/date-picker-controller';
-import { renderDatePicker } from '../../../shared/date-picker-render';
-import { diff, renderToString } from '../../../shared/vdom';
-import type { VNode } from '../../../shared/vdom';
-import datePickerBaseStyles from '../../../shared/date-picker.styles';
+import { DatePickerController } from './vanilla/date-picker-controller';
+import { renderDatePicker } from './vanilla/date-picker-render';
+import { diff, renderToString } from './vanilla/vdom';
+import type { VNode } from './vanilla/vdom';
+import datePickerBaseStyles from './vanilla/date-picker.styles';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
 
 // === exports =======================================================
