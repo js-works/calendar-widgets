@@ -28,7 +28,7 @@ type ExtraParams = {
 // === variant by dialog type ========================================
 
 const variants = {
-  info: 'defaults',
+  info: 'primary',
   success: 'success',
   warning: 'warning',
   error: 'danger'

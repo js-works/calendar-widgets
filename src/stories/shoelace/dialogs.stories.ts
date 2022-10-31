@@ -144,7 +144,9 @@ class DialogsDemo extends LitElement {
       width: '45rem',
 
       content: html`
-        <sx-sidenav>
+        <sx-sidenav
+          .menu=${[{ text: 'General' }, { text: 'Contact' }, { text: 'Notes' }]}
+        >
           <sx-fieldset caption="User">
             <sx-choice
               label="Salutation"
