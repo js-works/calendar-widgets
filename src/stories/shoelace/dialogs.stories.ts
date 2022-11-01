@@ -146,12 +146,12 @@ class DialogsDemo extends LitElement {
       content: html`
         <sx-sidenav
           .menu=${[
-            { text: 'General', panel: 'general' },
-            { text: 'Contact', panel: 'text' },
-            { text: 'Notes', panel: 'notes' }
+            { text: 'General', tabId: 'general' },
+            { text: 'Contact', tabId: 'contact' },
+            { text: 'Notes', tabId: 'notes' }
           ]}
         >
-          <div data-panel-name="general">
+          <div data-tab="general">
             <sx-fieldset caption="User">
               <sx-choice
                 label="Salutation"
@@ -202,8 +202,58 @@ class DialogsDemo extends LitElement {
               </sx-vbox>
             </sx-fieldset>
           </div>
-          <div data-panel-name="contact">[Contacts]</div>
-          <div data-panel-name="notes">[Notes]</div>
+          <div data-tab="contact">
+            <sx-fieldset caption="Phone + email">
+              <sx-text-field
+                name="phone"
+                type="telephone"
+                label="Phone"
+                required
+              >
+              </sx-text-field>
+              <sx-text-field name="mobilePhone" type="phone" label="Mobile">
+              </sx-text-field>
+              <sx-text-field
+                name="email"
+                type="email"
+                label="Email address"
+                required
+              >
+              </sx-text-field>
+            </sx-fieldset>
+            <sx-fieldset caption="Company">
+              <sx-text-field name="company" label="Company" aria-required>
+              </sx-text-field>
+              <sx-text-field name="companyStreet" label="Street" aria-required>
+              </sx-text-field>
+              <sx-compound-field label="Zip / City" column-widths="30% 70%">
+                <sx-text-field name="companyPostalCode" aria-required>
+                </sx-text-field>
+                <sx-text-field name="companyCity" aria-required>
+                </sx-text-field>
+              </sx-compound-field>
+              <sx-choice
+                label="Country"
+                name="companyCountry"
+                required
+                .options=${[
+                  { value: 'gb', text: 'Great Britain' },
+                  { value: 'us', text: 'USA' }
+                ]}
+              ></sx-choice>
+            </sx-fieldset>
+          </div>
+          <div data-tab="notes">
+            <sx-fieldset caption="General notes" label-layout="horizontal">
+              <sx-text-area rows="5"></sx-text-area>
+            </sx-fieldset>
+            <sx-fieldset
+              caption="Additional comments"
+              label-layout="horizontal"
+            >
+              <sx-text-area rows="5"></sx-text-area>
+            </sx-fieldset>
+          </div>
         </sx-sidenav>
       `,
 

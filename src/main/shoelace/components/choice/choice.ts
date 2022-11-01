@@ -110,7 +110,7 @@ class Choice extends LitElement {
         ${when(
           type !== 'radios' && type !== 'horizontal-radios',
           () => html`
-            <sl-select class="sl-control">
+            <sl-select class="sl-control" hoist>
               <span
                 slot="label"
                 class=${classMap({

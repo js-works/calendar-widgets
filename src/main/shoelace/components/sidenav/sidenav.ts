@@ -16,9 +16,9 @@ export { Sidenav };
 
 namespace Sidenav {
   export type Menu = {
+    tabId: string;
     action?: string;
     text: string;
-    panel?: string;
   }[];
 }
 
@@ -29,23 +29,25 @@ class Sidenav extends LitElement {
   static styles = sidenavStyles;
 
   @state()
-  private _activePanel = 'general';
+  private _activeTabId = '';
 
   @property()
   menu: Sidenav.Menu = [];
 
-  private _setActiveTab(name: string) {
-    this._activePanel = name;
-    alert(name);
+  private _setActiveTab(tabId: string) {
+    this._activeTabId = tabId;
+    this.requestUpdate();
   }
 
   render() {
+    const activeTabId = this._activeTabId || this.menu[0]?.tabId;
+
     return html`
       ${when(
-        this._activePanel,
+        activeTabId,
         () => html`
           <style>
-            ::slotted([data-panel-name='${this._activePanel}']) {
+            ::slotted([data-tab='${activeTabId}']) {
               visibility: visible;
             }
           </style>
@@ -60,9 +62,9 @@ class Sidenav extends LitElement {
                 <li
                   class=${classMap({
                     item: true,
-                    active: idx === 0
+                    active: params.tabId && params.tabId === activeTabId
                   })}
-                  @click=${() => this._setActiveTab(params.panel!)}
+                  @click=${() => this._setActiveTab(params.tabId)}
                 >
                   ${params.text}
                 </li>

@@ -36,6 +36,7 @@ export default css`
   .item {
     padding: 0.5rem 1rem;
     margin: 0.125rem;
+    cursor: pointer;
   }
 
   .item.active {
