@@ -244,14 +244,9 @@ class DialogsDemo extends LitElement {
             </sx-fieldset>
           </div>
           <div data-tab="notes">
-            <sx-fieldset caption="General notes" label-layout="horizontal">
-              <sx-text-area rows="5"></sx-text-area>
-            </sx-fieldset>
-            <sx-fieldset
-              caption="Additional comments"
-              label-layout="horizontal"
-            >
-              <sx-text-area rows="5"></sx-text-area>
+            <sx-fieldset caption="Notes and comments" label-layout="vertical">
+              <sx-text-area label="General notes" rows="5"></sx-text-area>
+              <sx-text-area label="Comments" rows="5"></sx-text-area>
             </sx-fieldset>
           </div>
         </sx-sidenav>
