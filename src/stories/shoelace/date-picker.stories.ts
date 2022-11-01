@@ -116,6 +116,8 @@ class DatePickerDemo extends LitElement {
             <sl-menu-item value="es-ES">es-ES</sl-menu-item>
             <sl-menu-item value="fr-FR">fr-FR</sl-menu-item>
             <sl-menu-item value="de-DE">de-DE</sl-menu-item>
+            <sl-menu-item value="de-AT">de-AT</sl-menu-item>
+            <sl-menu-item value="de-CH">de-CH</sl-menu-item>
             <sl-menu-item value="it-IT">it-IT</sl-menu-item>
             <sl-menu-item value="ar-SA">ar-SA</sl-menu-item>
           </sl-select>

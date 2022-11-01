@@ -145,57 +145,65 @@ class DialogsDemo extends LitElement {
 
       content: html`
         <sx-sidenav
-          .menu=${[{ text: 'General' }, { text: 'Contact' }, { text: 'Notes' }]}
+          .menu=${[
+            { text: 'General', panel: 'general' },
+            { text: 'Contact', panel: 'text' },
+            { text: 'Notes', panel: 'notes' }
+          ]}
         >
-          <sx-fieldset caption="User">
-            <sx-choice
-              label="Salutation"
-              type="horizontal-radios"
-              required
-              .options=${[
-                { value: 'mrs', text: 'Mrs.' },
-                { value: 'mr', text: 'Mr.' },
-                { value: 'x', text: 'Other' }
-              ]}
-            ></sx-choice>
-            <sx-text-field
-              label="First name"
-              name="firstName"
-              required
-            ></sx-text-field>
-            <sx-text-field
-              label="Middle name"
-              name="middleName"
-            ></sx-text-field>
-            <sx-text-field
-              label="Last name"
-              name="lastName"
-              required
-            ></sx-text-field>
-            <sx-date-field
-              label="Day of birth"
-              name="dayOfBirth"
-              show-adjacent-days
-              fixed-day-count
-            ></sx-date-field>
-          </sx-fieldset>
-          <sx-fieldset caption="Address">
-            <sx-vbox>
-              <sx-text-field label="Street" required></sx-text-field>
-              <sx-compound-field label="Zip / City" column-widths="30% 70%">
-                <sx-text-field name="zip" required></sx-text-field>
-                <sx-text-field name="city" required></sx-text-field>
-              </sx-compound-field>
+          <div data-panel-name="general">
+            <sx-fieldset caption="User">
               <sx-choice
-                label="Country"
+                label="Salutation"
+                type="horizontal-radios"
                 required
                 .options=${[
-                  { value: 'gb', text: 'Great Britain' },
-                  { value: 'us', text: 'USA' }
+                  { value: 'mrs', text: 'Mrs.' },
+                  { value: 'mr', text: 'Mr.' },
+                  { value: 'x', text: 'Other' }
                 ]}
               ></sx-choice>
-            </sx-vbox>
-          </sx-fieldset>
+              <sx-text-field
+                label="First name"
+                name="firstName"
+                required
+              ></sx-text-field>
+              <sx-text-field
+                label="Middle name"
+                name="middleName"
+              ></sx-text-field>
+              <sx-text-field
+                label="Last name"
+                name="lastName"
+                required
+              ></sx-text-field>
+              <sx-date-field
+                label="Day of birth"
+                name="dayOfBirth"
+                show-adjacent-days
+                fixed-day-count
+              ></sx-date-field>
+            </sx-fieldset>
+            <sx-fieldset caption="Address">
+              <sx-vbox>
+                <sx-text-field label="Street" required></sx-text-field>
+                <sx-compound-field label="Zip / City" column-widths="30% 70%">
+                  <sx-text-field name="zip" required></sx-text-field>
+                  <sx-text-field name="city" required></sx-text-field>
+                </sx-compound-field>
+                <sx-choice
+                  label="Country"
+                  required
+                  .options=${[
+                    { value: 'gb', text: 'Great Britain' },
+                    { value: 'us', text: 'USA' }
+                  ]}
+                ></sx-choice>
+              </sx-vbox>
+            </sx-fieldset>
+          </div>
+          <div data-panel-name="contact">[Contacts]</div>
+          <div data-panel-name="notes">[Notes]</div>
         </sx-sidenav>
       `,
 

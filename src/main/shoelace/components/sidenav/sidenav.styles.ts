@@ -44,4 +44,19 @@ export default css`
     border-radius: 6px;
     font-weight: 600;
   }
+
+  .base {
+    position: relative;
+  }
+
+  .panels {
+    display: inline-grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+  }
+
+  ::slotted(*) {
+    grid-area: 1 / 1 / 1 / 1;
+    visibility: hidden;
+  }
 `;
