@@ -118,6 +118,10 @@ class FormFieldController<T> {
   readonly signalBlur = () => this.#sendSignal!('blur');
   readonly signalSubmit = () => this.#sendSignal!('submit');
 
+  getValidationMode(): 'default' | 'inline' {
+    return 'default';
+  }
+
   getShownErrorMsg(): string | null {
     return this.#errorMsg;
   }

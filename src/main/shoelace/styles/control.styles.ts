@@ -54,7 +54,6 @@ export default css`
   /* -------------------------------------------------------------- */
 
   .validation-error:not(:empty) {
-    display: none; /* TODO!!! */
     xxxposition: absolute;
 
     font-size: 90%;

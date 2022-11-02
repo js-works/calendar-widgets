@@ -91,8 +91,16 @@ class Choice extends LitElement {
   private _onFocus = () => this._formField.signalFocus();
   private _onBlur = () => this._formField.signalBlur();
 
-  private _onKeyDown = (ev: KeyboardEvent) =>
-    void (ev.key === 'Enter' && this._formField.signalSubmit());
+  private _onKeyDown = (ev: KeyboardEvent) => {
+    if (ev.key === 'Escape') {
+      console.log(ev, ev.currentTarget, ev.target);
+      ev.stopPropagation(); // TODO!!!!
+    }
+
+    if (ev.key === 'Enter') {
+      this._formField.signalSubmit();
+    }
+  };
 
   render() {
     const type = ['radios', 'horizontal-radios'].includes(this.type)
@@ -110,7 +118,7 @@ class Choice extends LitElement {
         ${when(
           type !== 'radios' && type !== 'horizontal-radios',
           () => html`
-            <sl-select class="sl-control" hoist>
+            <sl-select class="sl-control" hoist @keydown=${this._onKeyDown}>
               <span
                 slot="label"
                 class=${classMap({
@@ -155,7 +163,9 @@ class Choice extends LitElement {
             </div>
           `
         )}
-        ${this._formField.renderErrorMsg()}
+        ${when(this._formField.getValidationMode() === 'inline', () =>
+          this._formField.renderErrorMsg()
+        )}
       </div>
     `;
   }

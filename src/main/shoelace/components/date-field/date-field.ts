@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
+import { when } from 'lit/directives/when';
 import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '@shoelace-style/localize';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
@@ -11,6 +12,7 @@ import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/icon-button';
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
 import { DatePicker } from '../date-picker/date-picker';
+
 import {
   FormFieldController,
   Validators
@@ -244,7 +246,9 @@ export class DateField extends LitElement {
             </div>
           </div>
         </sl-dropdown>
-        ${this._formField.renderErrorMsg()}
+        ${when(this._formField.getValidationMode() === 'inline', () =>
+          this._formField.renderErrorMsg()
+        )}
       </div>
     `;
   }

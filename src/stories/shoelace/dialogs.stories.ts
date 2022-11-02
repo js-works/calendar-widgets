@@ -35,6 +35,16 @@ const styles = css`
     width: 9rem;
     margin: 4px 2px;
   }
+
+  h4 {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-primary-600);
+    xborder: 1px solid var(--sl-color-neutral-300);
+    padding: 0.1rem 0.5rem;
+    margin: 0 0 0.5rem 0;
+    font-weight: 500;
+    font-size: var(--sl-font-size-medium);
+  }
 `;
 
 @customElement('dialogs-demo')
@@ -151,58 +161,61 @@ class DialogsDemo extends LitElement {
             { text: 'Notes', tabId: 'notes' }
           ]}
         >
-          <div data-tab="general">
-            <sx-fieldset caption="User">
-              <sx-choice
-                label="Salutation"
-                type="horizontal-radios"
-                required
-                .options=${[
-                  { value: 'mrs', text: 'Mrs.' },
-                  { value: 'mr', text: 'Mr.' },
-                  { value: 'x', text: 'Other' }
-                ]}
-              ></sx-choice>
-              <sx-text-field
-                label="First name"
-                name="firstName"
-                required
-              ></sx-text-field>
-              <sx-text-field
-                label="Middle name"
-                name="middleName"
-              ></sx-text-field>
-              <sx-text-field
-                label="Last name"
-                name="lastName"
-                required
-              ></sx-text-field>
-              <sx-date-field
-                label="Day of birth"
-                name="dayOfBirth"
-                show-adjacent-days
-                fixed-day-count
-              ></sx-date-field>
-            </sx-fieldset>
-            <sx-fieldset caption="Address">
-              <sx-vbox>
-                <sx-text-field label="Street" required></sx-text-field>
-                <sx-compound-field label="Zip / City" column-widths="30% 70%">
-                  <sx-text-field name="zip" required></sx-text-field>
-                  <sx-text-field name="city" required></sx-text-field>
-                </sx-compound-field>
+          <div>
+            <h4>General</h4>
+              <sx-fieldset caption="User">
                 <sx-choice
-                  label="Country"
+                  label="Salutation"
+                  type="horizontal-radios"
                   required
                   .options=${[
-                    { value: 'gb', text: 'Great Britain' },
-                    { value: 'us', text: 'USA' }
+                    { value: 'mrs', text: 'Mrs.' },
+                    { value: 'mr', text: 'Mr.' },
+                    { value: 'x', text: 'Other' }
                   ]}
                 ></sx-choice>
-              </sx-vbox>
-            </sx-fieldset>
+                <sx-text-field
+                  label="First name"
+                  name="firstName"
+                  required
+                ></sx-text-field>
+                <sx-text-field
+                  label="Middle name"
+                  name="middleName"
+                ></sx-text-field>
+                <sx-text-field
+                  label="Last name"
+                  name="lastName"
+                  required
+                ></sx-text-field>
+                <sx-date-field
+                  label="Day of birth"
+                  name="dayOfBirth"
+                  show-adjacent-days
+                  fixed-day-count
+                ></sx-date-field>
+              </sx-fieldset>
+              <sx-fieldset caption="Address">
+                <sx-vbox>
+                  <sx-text-field label="Street" required></sx-text-field>
+                  <sx-compound-field label="Zip / City" column-widths="30% 70%">
+                    <sx-text-field name="zip" required></sx-text-field>
+                    <sx-text-field name="city" required></sx-text-field>
+                  </sx-compound-field>
+                  <sx-choice
+                    label="Country"
+                    required
+                    .options=${[
+                      { value: 'gb', text: 'Great Britain' },
+                      { value: 'us', text: 'USA' }
+                    ]}
+                  ></sx-choice>
+                </sx-vbox>
+              </sx-fieldset>
+            </sx-hbox>
           </div>
           <div data-tab="contact">
+            <h4>Contact</h4>
             <sx-fieldset caption="Phone + email">
               <sx-text-field
                 name="phone"
@@ -244,6 +257,7 @@ class DialogsDemo extends LitElement {
             </sx-fieldset>
           </div>
           <div data-tab="notes">
+            <h4>Notes</h4>
             <sx-fieldset caption="Notes and comments" label-layout="vertical">
               <sx-text-area label="General notes" rows="5"></sx-text-area>
               <sx-text-area label="Comments" rows="5"></sx-text-area>

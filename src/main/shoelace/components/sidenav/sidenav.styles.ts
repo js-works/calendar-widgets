@@ -51,13 +51,13 @@ export default css`
   }
 
   .panels {
-    display: inline-grid;
+    xdisplay: inline-grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
   }
 
   ::slotted(*) {
     grid-area: 1 / 1 / 1 / 1;
-    visibility: hidden;
+    xvisibility: hidden;
   }
 `;

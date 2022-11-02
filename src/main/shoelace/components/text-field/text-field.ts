@@ -153,7 +153,9 @@ class TextField extends LitElement {
             () => html`<sl-icon slot="suffix" src=${icon}></sl-icon> `
           )}
         </sl-input>
-        ${this._formField.renderErrorMsg()}
+        ${when(this._formField.getValidationMode() === 'inline', () =>
+          this._formField.renderErrorMsg()
+        )}
       </div>
     `;
   }
