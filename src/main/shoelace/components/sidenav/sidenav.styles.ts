@@ -58,6 +58,6 @@ export default css`
 
   ::slotted(*) {
     grid-area: 1 / 1 / 1 / 1;
-    xvisibility: hidden;
+    display: none;
   }
 `;

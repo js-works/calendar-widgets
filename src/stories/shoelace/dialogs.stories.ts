@@ -153,6 +153,7 @@ class DialogsDemo extends LitElement {
       title: 'Add new user',
       labelLayout: 'horizontal',
       width: '50rem',
+      height: '35rem',
 
       content: html`
         <sx-sidenav
@@ -162,7 +163,7 @@ class DialogsDemo extends LitElement {
             { text: 'Notes', tabId: 'notes' }
           ]}
         >
-          <div>
+          <div data-tab="general">
             <h4>General</h4>
               <sx-fieldset caption="User">
                 <sx-choice
@@ -179,10 +180,6 @@ class DialogsDemo extends LitElement {
                   label="First name"
                   name="firstName"
                   required
-                ></sx-text-field>
-                <sx-text-field
-                  label="Middle name"
-                  name="middleName"
                 ></sx-text-field>
                 <sx-text-field
                   label="Last name"

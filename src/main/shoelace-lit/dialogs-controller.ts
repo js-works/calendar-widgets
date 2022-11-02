@@ -245,6 +245,14 @@ export class DialogsController extends AbstractDialogsController<
 
     return html`
       <style>
+        .dialog {
+          --width: ${config.width ?? 'initial'}
+        }
+
+        .dialog::part(panel) {
+          height: ${config.height ? config.height : 'auto'}
+        }
+
         ${dialogsStyles}
       </style>
       <sx-form
@@ -261,7 +269,6 @@ export class DialogsController extends AbstractDialogsController<
         <sl-dialog
           ?open=${isOpen()}
           class="dialog"
-          style="--width: ${config.width ?? 'initial'}"
           @sl-after-hide=${onAfterHide}
           ${ref(dialogRef)}
         >

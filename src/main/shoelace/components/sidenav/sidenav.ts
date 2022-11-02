@@ -49,6 +49,7 @@ class Sidenav extends LitElement {
           <style>
             ::slotted([data-tab='${activeTabId}']) {
               visibility: visible;
+              display: block;
             }
           </style>
         `
