@@ -37,11 +37,12 @@ const styles = css`
   }
 
   h4 {
-    color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-600);
-    xborder: 1px solid var(--sl-color-neutral-300);
-    padding: 0.1rem 0.5rem;
-    margin: 0 0 0.5rem 0;
+    color: var(--sl-color-primary-950);
+    background-color: var(--sl-color-neutral-100);
+    border: 0px solid var(--sl-color-neutral-300);
+    border-width: 0 0 1px 0;
+    padding: 0.25rem 0.5rem;
+    margin: 0 0 0.75rem 0;
     font-weight: 500;
     font-size: var(--sl-font-size-medium);
   }
@@ -151,7 +152,7 @@ class DialogsDemo extends LitElement {
     const data = await this._dlg.input({
       title: 'Add new user',
       labelLayout: 'horizontal',
-      width: '45rem',
+      width: '50rem',
 
       content: html`
         <sx-sidenav
