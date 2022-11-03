@@ -119,7 +119,7 @@ class FormFieldController<T> {
   readonly signalSubmit = () => this.#sendSignal!('submit');
 
   getValidationMode(): 'default' | 'inline' {
-    return 'default';
+    return 'inline';
   }
 
   getShownErrorMsg(): string | null {

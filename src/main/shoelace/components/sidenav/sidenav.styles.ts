@@ -40,7 +40,7 @@ export default css`
   }
 
   .item.active {
-    color: var(--sl-color-primary-600);
+    color: var(--sl-color-primary-700);
     background-color: var(--sl-color-primary-100);
     border-radius: 6px;
     font-weight: 600;
@@ -58,6 +58,6 @@ export default css`
 
   ::slotted(*) {
     grid-area: 1 / 1 / 1 / 1;
-    display: none;
+    xxxdisplay: none;
   }
 `;

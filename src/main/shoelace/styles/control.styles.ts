@@ -65,7 +65,14 @@ export default css`
 
   .base.invalid sl-input::part(base),
   .base.invalid sl-select::part(control) {
-    background-color: var(--sl-color-danger-50);
+    background-color: var(--sl-color-neutral-0);
+  }
+
+  .form-control-label,
+  .validation-error:not(:empty),
+  sl-input::part(form-control-label),
+  sl-select::part(form-control-label) {
+    xxxfont-weight: 600;
   }
 
   .base.invalid sl-input::part(form-control-label),
@@ -75,7 +82,7 @@ export default css`
 
   .base.invalid sl-input::part(base),
   .base.invalid sl-select::part(control) {
-    border-color: var(--sl-color-danger-600);
+    border-color: var(--sl-color-danger-700);
     --sl-input-focus-ring-color: var(--sl-color-danger-400);
   }
 `;

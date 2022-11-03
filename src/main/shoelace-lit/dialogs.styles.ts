@@ -124,8 +124,8 @@ export default css`
     display: flex;
     align-items: center;
     flex-wrap: nowrap;
-    color: var(--sl-color-danger-950);
-    background-color: var(--sl-color-danger-300);
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-danger-600);
     box-sizing: border-box;
   }
 
