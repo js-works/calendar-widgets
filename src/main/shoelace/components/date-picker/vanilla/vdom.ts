@@ -147,11 +147,13 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
 
 function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
   const childPatches: Patch[] = [];
+
   oldVChildren.forEach((oldVChild, i) => {
     childPatches.push(diff(oldVChild, newVChildren[i]));
   });
 
   const additionalPatches: Patch[] = [];
+
   for (const additionalVChild of newVChildren.slice(oldVChildren.length)) {
     additionalPatches.push(($node) => {
       $node.appendChild(renderNode(additionalVChild));
@@ -176,6 +178,19 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 }
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
+  // TODO!!!!!!!!!!!!!!!!!!
+  // Unfortunately, the diff algorithm is currently
+  // quite buggy and we replace it with a simple (and slow)
+  // full node replacement temporary until the diff bugs
+  // will be fixed.
+  if (true) {
+    return ($vnode) => {
+      const content = renderNode(newVTree);
+      $vnode.replaceWith(content);
+      return content;
+    };
+  }
+
   // TODO!!! ???
   if (oldVTree == null) {
     return ($node) => {
