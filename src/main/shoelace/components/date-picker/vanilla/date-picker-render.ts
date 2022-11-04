@@ -70,14 +70,14 @@ function renderDatePicker(
   });
 
   function render() {
-    const scene = datePicker.getScene();
+    const view = datePicker.getView();
 
     const sheet =
-      scene === 'century'
+      view === 'century'
         ? renderCenturySheet()
-        : scene === 'decade'
+        : view === 'decade'
         ? renderDecadeSheet()
-        : scene === 'year'
+        : view === 'year'
         ? renderYearSheet()
         : renderMonthSheet();
 
@@ -140,21 +140,21 @@ function renderDatePicker(
   }
 
   function renderTitle() {
-    const scene = datePicker.getScene();
+    const view = datePicker.getView();
     const activeYear = datePicker.getActiveYear();
 
     const title =
-      scene === 'century'
+      view === 'century'
         ? i18n.getCenturyTitle(activeYear, 12)
-        : scene === 'decade'
+        : view === 'decade'
         ? i18n.getDecadeTitle(activeYear, 12)
-        : scene === 'year'
+        : view === 'year'
         ? i18n.getYearTitle(activeYear)
         : i18n.getMonthTitle(activeYear, datePicker.getActiveMonth());
 
     const disabled =
-      datePicker.getScene() === 'century' ||
-      (datePicker.getScene() === 'decade' && !props.enableCenturyView);
+      datePicker.getView() === 'century' ||
+      (datePicker.getView() === 'decade' && !props.enableCenturyView);
 
     return div(
       {

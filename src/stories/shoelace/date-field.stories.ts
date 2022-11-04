@@ -13,9 +13,10 @@ export const dateFields = () => '<date-field-demo></date-field-demo>';
 
 const styles = css`
   .base {
+    display: block;
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
-    width: 30rem;
+    max-width: 30rem;
   }
 `;
 

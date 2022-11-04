@@ -21,7 +21,7 @@ namespace DatePickerController {
     | 'year'
     | 'years';
 
-  export type Scene = 'month' | 'year' | 'decade' | 'century' | 'time';
+  export type View = 'month' | 'year' | 'decade' | 'century' | 'time';
 }
 
 class DatePickerController {
@@ -32,7 +32,7 @@ class DatePickerController {
   readonly #onChange: (() => void) | null;
   readonly #getNode: () => HTMLElement | ShadowRoot;
 
-  #_scene: DatePickerController.Scene = 'month';
+  #_view: DatePickerController.View = 'month';
   #activeYear = new Date().getFullYear();
   #activeMonth = new Date().getMonth();
   #activeHour = new Date().getHours();
@@ -48,13 +48,13 @@ class DatePickerController {
     return this.#_selection;
   }
 
-  get #scene() {
+  get #view() {
     this.#checkSelectionMode();
-    return this.#_scene;
+    return this.#_view;
   }
 
-  set #scene(value: DatePickerController.Scene) {
-    this.#_scene = value;
+  set #view(value: DatePickerController.View) {
+    this.#_view = value;
   }
 
   constructor(
@@ -73,8 +73,8 @@ class DatePickerController {
     setTimeout(() => this.#addEventListeners());
   }
 
-  getScene(): DatePickerController.Scene {
-    return this.#scene;
+  getView(): DatePickerController.View {
+    return this.#view;
   }
 
   isTimeVisible(): boolean {
@@ -330,7 +330,7 @@ class DatePickerController {
   };
 
   #clickPrevOrNext = (signum: number) => {
-    switch (this.#scene) {
+    switch (this.#view) {
       case 'month': {
         let n = this.#activeYear * 12 + this.#activeMonth + signum;
 
@@ -368,28 +368,28 @@ class DatePickerController {
     switch (selectionMode) {
       case 'year':
       case 'years':
-        this.#scene = 'decade';
+        this.#view = 'decade';
         break;
 
       case 'month':
       case 'months':
-        this.#scene = 'year';
+        this.#view = 'year';
         break;
 
       case 'time':
-        this.#scene = 'time';
+        this.#view = 'time';
         break;
 
       default:
-        this.#scene = 'month';
+        this.#view = 'month';
     }
 
     this.#requestUpdate();
     return selectionMode;
   };
 
-  #setScene = (scene: DatePickerController.Scene) => {
-    this.#scene = scene;
+  #setView = (view: DatePickerController.View) => {
+    this.#view = view;
     this.#requestUpdate();
   };
 
@@ -405,17 +405,17 @@ class DatePickerController {
 
   #clickTitle = () => {
     if (
-      this.#scene !== 'month' &&
-      this.#scene !== 'year' &&
-      this.#scene !== 'decade'
+      this.#view !== 'month' &&
+      this.#view !== 'year' &&
+      this.#view !== 'decade'
     ) {
       return;
     }
 
-    this.#setScene(
-      this.#scene === 'month'
+    this.#setView(
+      this.#view === 'month'
         ? 'year'
-        : this.#scene === 'year'
+        : this.#view === 'year'
         ? 'decade'
         : 'century'
     );
@@ -446,7 +446,7 @@ class DatePickerController {
     if (this.#selectionMode !== 'month' && this.#selectionMode !== 'months') {
       this.#activeYear = year;
       this.#activeMonth = month;
-      this.#scene = 'month';
+      this.#view = 'month';
     } else {
       const monthString = getYearMonthString(year, month);
 
@@ -467,7 +467,7 @@ class DatePickerController {
   #clickYear = (year: number) => {
     if (this.#selectionMode !== 'year' && this.#selectionMode !== 'years') {
       this.#activeYear = year;
-      this.#scene = 'year';
+      this.#view = 'year';
     } else {
       const yearString = getYearString(year);
 
@@ -488,7 +488,7 @@ class DatePickerController {
   #clickDecade = (firstYear: number) => {
     console.log(111);
     this.#activeYear = firstYear;
-    this.#scene = 'decade';
+    this.#view = 'decade';
     this.#requestUpdate();
   };
 }

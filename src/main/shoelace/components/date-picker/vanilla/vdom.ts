@@ -183,7 +183,7 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
   // quite buggy and we replace it with a simple (and slow)
   // full node replacement temporary until the diff bugs
   // will be fixed.
-  if (true) {
+  if (1 + 1 === 2) {
     return ($vnode) => {
       const content = renderNode(newVTree);
       $vnode.replaceWith(content);
