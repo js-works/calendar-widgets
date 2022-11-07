@@ -8,12 +8,15 @@ export { ColorSchemes };
 
 const ColorSchemes = Object.freeze({
   default: {
-    primaryColor: '#2899e2'
-    //primaryColor: '#0077cB'
+    primaryColor: '#1C73E8',
+    // primaryColor: '#2899e2',
+    //primaryColor: '#0077cB',
+    dangerColor: '#f15f41'
   },
 
   blue: {
-    primaryColor: '#00B0FF'
+    primaryColor: '#00B0FF',
+    dangerColor: '#f15f41'
   },
 
   orange: {

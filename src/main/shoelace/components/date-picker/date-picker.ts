@@ -66,11 +66,11 @@ class DatePicker extends LitElement {
 
   @property({ type: String })
   get value() {
-    return this._datePicker.getValue();
+    return this._datePickerCtrl.getValue();
   }
 
   set value(value: string) {
-    this._datePicker.setValue(value);
+    this._datePickerCtrl.setValue(value);
   }
 
   @property({ type: String, attribute: 'selection-mode' })
@@ -112,7 +112,7 @@ class DatePicker extends LitElement {
   @property({ type: String, reflect: true })
   dir = '';
 
-  private _datePicker: DatePickerController;
+  private _datePickerCtrl: DatePickerController;
   private _pickerVNode: VNode = null;
   private _containerRef = createRef<HTMLDivElement>();
   private _localize = new LocalizeController(this);
@@ -120,7 +120,7 @@ class DatePicker extends LitElement {
   constructor() {
     super();
 
-    this._datePicker = new DatePickerController(this, {
+    this._datePickerCtrl = new DatePickerController(this, {
       requestUpdate: () => this.requestUpdate(),
       getSelectionMode: () => this.selectionMode,
       onChange: this._onChange
@@ -132,13 +132,14 @@ class DatePicker extends LitElement {
   };
 
   shouldUpdate() {
+    console.log('should update');
     const oldPickerVNode = this._pickerVNode;
 
     this._pickerVNode = renderDatePicker(
       this._localize.lang(),
       this._localize.dir() === 'rtl' ? 'rtl' : 'ltr',
       this,
-      this._datePicker
+      this._datePickerCtrl
     );
 
     if (!this.hasUpdated) {
@@ -154,6 +155,7 @@ class DatePicker extends LitElement {
   }
 
   render() {
+    console.log('rendering picker...');
     return html`
       <div class="base" ${ref(this._containerRef)}>
         ${unsafeHTML(renderToString(this._pickerVNode))}

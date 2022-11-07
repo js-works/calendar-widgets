@@ -52,7 +52,7 @@ function renderDatePicker(
   locale: string,
   direction: 'ltr' | 'rtl',
   props: DatePickerProps,
-  datePicker: DatePickerController
+  datePickerCtrl: DatePickerController
 ) {
   const i18n = new CalendarLocalizer({
     locale,
@@ -70,7 +70,8 @@ function renderDatePicker(
   });
 
   function render() {
-    const view = datePicker.getView();
+    console.log('rendering...');
+    const view = datePickerCtrl.getView();
 
     const sheet =
       view === 'century'
@@ -122,7 +123,7 @@ function renderDatePicker(
             input({
               'type': 'range',
               'class': 'cal-hour-slider',
-              'value': datePicker.getActiveHour(),
+              'value': datePickerCtrl.getActiveHour(),
               'min': 0,
               'max': 23,
               'data-subject': 'hours'
@@ -130,7 +131,7 @@ function renderDatePicker(
             input({
               'type': 'range',
               'class': 'cal-minute-slider',
-              'value': datePicker.getActiveMinute(),
+              'value': datePickerCtrl.getActiveMinute(),
               'min': 0,
               'max': 59,
               'data-subject': 'minutes'
@@ -140,8 +141,8 @@ function renderDatePicker(
   }
 
   function renderTitle() {
-    const view = datePicker.getView();
-    const activeYear = datePicker.getActiveYear();
+    const view = datePickerCtrl.getView();
+    const activeYear = datePickerCtrl.getActiveYear();
 
     const title =
       view === 'century'
@@ -150,11 +151,11 @@ function renderDatePicker(
         ? i18n.getDecadeTitle(activeYear, 12)
         : view === 'year'
         ? i18n.getYearTitle(activeYear)
-        : i18n.getMonthTitle(activeYear, datePicker.getActiveMonth());
+        : i18n.getMonthTitle(activeYear, datePickerCtrl.getActiveMonth());
 
     const disabled =
-      datePicker.getView() === 'century' ||
-      (datePicker.getView() === 'decade' && !props.enableCenturyView);
+      datePickerCtrl.getView() === 'century' ||
+      (datePickerCtrl.getView() === 'decade' && !props.enableCenturyView);
 
     return div(
       {
@@ -170,8 +171,8 @@ function renderDatePicker(
 
   function renderMonthSheet() {
     const view = calendar.getMonthView(
-      datePicker.getActiveYear(),
-      datePicker.getActiveMonth()
+      datePickerCtrl.getActiveYear(),
+      datePickerCtrl.getActiveMonth()
     );
 
     return div(
@@ -219,7 +220,7 @@ function renderDatePicker(
       dayData.weekNumber // TODO!!!!!!!
     );
 
-    const selected = datePicker.hasSelectedDay(
+    const selected = datePickerCtrl.hasSelectedDay(
       dayData.year,
       dayData.month,
       dayData.day,
@@ -250,7 +251,7 @@ function renderDatePicker(
   }
 
   function renderYearSheet() {
-    const view = calendar.getYearView(datePicker.getActiveYear());
+    const view = calendar.getYearView(datePickerCtrl.getActiveYear());
 
     return div(
       { class: 'cal-sheet cal-sheet--year' },
@@ -259,7 +260,7 @@ function renderDatePicker(
   }
 
   function renderMonthCell(monthData: Calendar.MonthData) {
-    const selected = datePicker.hasSelectedMonth(
+    const selected = datePickerCtrl.hasSelectedMonth(
       monthData.year,
       monthData.month
     );
@@ -283,7 +284,7 @@ function renderDatePicker(
   }
 
   function renderDecadeSheet() {
-    const view = calendar.getDecadeView(datePicker.getActiveYear());
+    const view = calendar.getDecadeView(datePickerCtrl.getActiveYear());
 
     return div(
       { class: 'cal-sheet cal-sheet--decade' },
@@ -292,7 +293,7 @@ function renderDatePicker(
   }
 
   function renderYearCell(yearData: Calendar.YearData) {
-    const selected = datePicker.hasSelectedYear(yearData.year);
+    const selected = datePickerCtrl.hasSelectedYear(yearData.year);
     const currentHighlighted = props.highlightToday && yearData.current;
 
     return div(
@@ -312,7 +313,7 @@ function renderDatePicker(
   }
 
   function renderCenturySheet() {
-    const view = calendar.getCenturyView(datePicker.getActiveYear());
+    const view = calendar.getCenturyView(datePickerCtrl.getActiveYear());
 
     return div(
       { class: 'cal-sheet cal-sheet--century' },
@@ -345,8 +346,8 @@ function renderDatePicker(
       1970,
       0,
       1,
-      datePicker.getActiveHour(),
-      datePicker.getActiveMinute()
+      datePickerCtrl.getActiveHour(),
+      datePickerCtrl.getActiveMinute()
     );
     let time = '';
     let dayPeriod = '';

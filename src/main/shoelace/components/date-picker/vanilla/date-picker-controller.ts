@@ -356,9 +356,12 @@ class DatePickerController {
   };
 
   #checkSelectionMode = () => {
+    console.log('check selection mode');
     const selectionMode = this.#getSelectionMode();
 
     if (selectionMode === this.#oldSelectionMode) {
+      this.#requestUpdate();
+      console.log('requested update');
       return selectionMode;
     }
 
