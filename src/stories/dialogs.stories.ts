@@ -5,15 +5,15 @@ import { customElement } from 'lit/decorators';
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
-import { DialogsController } from '../../main/shoelace-widgets-lit';
-import { TextField } from '../../main/shoelace-widgets';
-import { TextArea } from '../../main/shoelace-widgets';
-import { Choice } from '../../main/shoelace-widgets';
-import { CompoundField } from '../../main/shoelace-widgets';
-import { Fieldset } from '../../main/shoelace-widgets';
-import { Form } from '../../main/shoelace-widgets';
-import { FormSection } from '../../main/shoelace-widgets';
-import { Sidenav } from '../../main/shoelace-widgets';
+import { DialogsController } from '../main/shoelace-widgets-lit';
+import { TextField } from '../main/shoelace-widgets';
+import { TextArea } from '../main/shoelace-widgets';
+import { Choice } from '../main/shoelace-widgets';
+import { CompoundField } from '../main/shoelace-widgets';
+import { Fieldset } from '../main/shoelace-widgets';
+import { Form } from '../main/shoelace-widgets';
+import { FormSection } from '../main/shoelace-widgets';
+import { Sidenav } from '../main/shoelace-widgets';
 
 import './shared/shared-theme';
 

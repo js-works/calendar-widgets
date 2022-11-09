@@ -6,8 +6,8 @@ import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkb
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 
-import { DatePicker } from '../../main/shoelace-widgets';
-import { DateField } from '../../main/shoelace-widgets';
+import { DatePicker } from '../main/shoelace-widgets';
+import { DateField } from '../main/shoelace-widgets';
 
 import './shared/shared-theme';
 

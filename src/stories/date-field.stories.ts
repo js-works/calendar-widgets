@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
-import { DateField } from '../../main/shoelace/components/date-field/date-field';
-import { Fieldset } from '../../main/shoelace/components/fieldset/fieldset';
+import { DateField } from '../main/shoelace/components/date-field/date-field';
+import { Fieldset } from '../main/shoelace/components/fieldset/fieldset';
 
 import './shared/shared-theme';
 

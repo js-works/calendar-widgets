@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
     "allowJs": false,
-    "target": "ES2019",
-    "module": "ES2022",
-    "moduleResolution": "node",
+    "target": "ES2022",
+    "module": "ES2020",
+    "moduleResolution": "Node",
     "strict": true,
     "noImplicitAny": true,
     "exactOptionalPropertyTypes": true,
@@ -25,6 +25,6 @@
     "typeRoots": ["node_modules/@types"],
     "types": []
   },
-  "include": ["./src/main/**/*.*", "./src/stories/**/*.*"],
+  "include": ["./src/main/**/*.*", "./src/demo/**/*.*"],
   "exclude": ["node_modules"]
 }

@@ -3,7 +3,7 @@ import {
   loadTheme,
   ColorSchemes,
   ThemeModifiers
-} from '../../../main/shoelace-themes';
+} from '../../main/shoelace-themes';
 
 const sharedTheme = customizeTheme(
   ThemeModifiers.builder()
@@ -14,4 +14,4 @@ const sharedTheme = customizeTheme(
     .build()
 );
 
-loadTheme(sharedTheme, '#root,.sl-toast-stack');
+loadTheme(sharedTheme, '#app,#root,.sl-toast-stack');
