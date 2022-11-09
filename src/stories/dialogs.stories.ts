@@ -15,8 +15,6 @@ import { Form } from '../main/shoelace-widgets';
 import { FormSection } from '../main/shoelace-widgets';
 import { Sidenav } from '../main/shoelace-widgets';
 
-import './shared/shared-theme';
-
 export default {
   title: 'shoelace-widgets'
 };

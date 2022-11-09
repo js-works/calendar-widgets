@@ -9,8 +9,6 @@ import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-
 import { DatePicker } from '../main/shoelace-widgets';
 import { DateField } from '../main/shoelace-widgets';
 
-import './shared/shared-theme';
-
 export default {
   title: 'shoelace-widgets'
 };

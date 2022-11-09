@@ -2,9 +2,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   server: {
-    open: '/src/demo/index.html'
+    open: '/src/stories/demo/demo.html'
   },
-  esbuild: {},
   resolve: {
     alias: {
       'lit/decorators': '../../node_modules/lit/decorators.js',
