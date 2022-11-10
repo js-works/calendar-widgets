@@ -356,12 +356,10 @@ class DatePickerController {
   };
 
   #checkSelectionMode = () => {
-    console.log('check selection mode');
     const selectionMode = this.#getSelectionMode();
 
     if (selectionMode === this.#oldSelectionMode) {
       this.#requestUpdate();
-      console.log('requested update');
       return selectionMode;
     }
 
@@ -489,7 +487,6 @@ class DatePickerController {
   };
 
   #clickDecade = (firstYear: number) => {
-    console.log(111);
     this.#activeYear = firstYear;
     this.#view = 'decade';
     this.#requestUpdate();

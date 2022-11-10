@@ -93,7 +93,6 @@ class Choice extends LitElement {
 
   private _onKeyDown = (ev: KeyboardEvent) => {
     if (ev.key === 'Escape') {
-      console.log(ev, ev.currentTarget, ev.target);
       ev.stopPropagation(); // TODO!!!!
     }
 

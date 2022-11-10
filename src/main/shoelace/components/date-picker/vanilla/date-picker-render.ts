@@ -70,7 +70,6 @@ function renderDatePicker(
   });
 
   function render() {
-    console.log('rendering...');
     const view = datePickerCtrl.getView();
 
     const sheet =

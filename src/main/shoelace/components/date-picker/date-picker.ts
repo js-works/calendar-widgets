@@ -132,7 +132,6 @@ class DatePicker extends LitElement {
   };
 
   shouldUpdate() {
-    console.log('should update');
     const oldPickerVNode = this._pickerVNode;
 
     this._pickerVNode = renderDatePicker(
@@ -155,7 +154,6 @@ class DatePicker extends LitElement {
   }
 
   render() {
-    console.log('rendering picker...');
     return html`
       <div class="base" ${ref(this._containerRef)}>
         ${unsafeHTML(renderToString(this._pickerVNode))}

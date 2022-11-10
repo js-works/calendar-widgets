@@ -105,7 +105,6 @@ export class DialogsController extends AbstractDialogsController<
   }
 
   render(): TemplateResult {
-    console.log('Rendering ' + this.#dialogRenderers.size + ' renderers');
     return html`${repeat(this.#dialogRenderers, (it) => it())}`;
   }
 
@@ -231,7 +230,6 @@ export class DialogsController extends AbstractDialogsController<
     const onAfterHide = (ev: Event) => {
       if (ev.target === dialogRef.value) {
         dismissDialog();
-        console.log('dialog dismissed');
       }
     };
 
