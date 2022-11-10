@@ -42,6 +42,26 @@ export default css`
     flex-grow: 1;
   }
 
+  .theme-selector {
+    width: 15em;
+  }
+
+  .label-on-left::part(form-control) {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .label-on-left::part(form-control-label) {
+    flex: 0 0 auto;
+    width: 60px;
+    text-align: right;
+  }
+
+  .label-on-left::part(form-control-input) {
+    flex: 1 1 auto;
+  }
+
   .content {
     padding: 2rem 1rem;
     overflow: auto;

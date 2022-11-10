@@ -1915,6 +1915,11 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
+shoelace-themes@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/shoelace-themes/-/shoelace-themes-0.0.3.tgz#266f6aac1b5b61d4294595051df76c93276ae91e"
+  integrity sha512-GcAG0T0AOuFkxvkDcyl+qjL3anoph17ts+426scHls7NBP3NK0Cr7Ww4i324N05NzNYNjS06SGh7c6LR/1L6eA==
+
 simple-swizzle@^0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"

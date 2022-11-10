@@ -35,6 +35,7 @@
     "lit-html": "^2.4.0",
     "preact": "^10.11.2",
     "prettier": "^2.7.1",
+    "shoelace-themes": "^0.0.3",
     "terser": "^5.15.1",
     "typescript": "4.8.4",
     "vite": "^3.2.3"

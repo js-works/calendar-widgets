@@ -6,12 +6,15 @@ import { dateFields } from '../date-field.stories';
 import { dialogs } from '../dialogs.stories';
 import { toasts } from '../toasts.stories';
 
+import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
+import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
 import SlRadioButton from '@shoelace-style/shoelace/dist/components/radio-button/radio-button';
 import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
+import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 
 import demoStyles from './demo.styles';
 import demoIcon from './demo.icon';
@@ -27,7 +30,17 @@ class DemoApp extends LitElement {
 
   static {
     // required components (to prevent too much tree-shaking)
-    void [SlIcon, SlRadioButton, SlRadioGroup, SlTab, SlTabGroup, SlTabPanel];
+    void [
+      SlDivider,
+      SlIcon,
+      SlMenuItem,
+      SlRadioButton,
+      SlRadioGroup,
+      SlSelect,
+      SlTab,
+      SlTabGroup,
+      SlTabPanel
+    ];
   }
 
   private _activeTab: string;
@@ -77,14 +90,19 @@ class DemoApp extends LitElement {
         <div class="header">
           <sl-icon src=${demoIcon} class="header-icon"></sl-icon>
           <div class="header-title">Shoelace Widgets - Demo</div>
-          <sl-radio-group
-            id="theme-selector"
+          <sl-select
+            class="theme-selector label-on-left"
+            label="Theme"
+            size="small"
             value=${this._theme}
             @sl-change=${this._onThemeChange}
           >
-            <sl-radio-button size="small" value="light">Light</sl-radio-button>
-            <sl-radio-button size="small" value="dark">Dark</sl-radio-button>
-          </sl-radio-group>
+            <sl-menu-item value="light">Light</sl-menu-item>
+            <sl-menu-item value="dark">Dark</sl-menu-item>
+            <sl-divider></sl-divider>
+            <sl-menu-item value="custom-dark">Custom (light)</sl-menu-item>
+            <sl-menu-item value="custom-dark">Custom (dark)</sl-menu-item>
+          </sl-select>
         </div>
         <sl-tab-group placement="start" class="content">
           <sl-tab
