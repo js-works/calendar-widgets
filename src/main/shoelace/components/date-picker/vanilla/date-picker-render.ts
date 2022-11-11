@@ -36,12 +36,11 @@ type DatePickerProps = {
   selectionMode: DatePickerController.SelectionMode;
   elevateNavigation: boolean;
   showWeekNumbers: boolean;
-  showAdjacentDays: boolean;
+  daysMode: 'default' | 'minimal' | 'maximal';
   highlightToday: boolean;
   highlightWeekends: boolean;
   disableWeekends: boolean;
   enableCenturyView: boolean;
-  fixedDayCount: boolean;
   minDate: Date | null;
   maxDate: Date | null;
 };
@@ -64,7 +63,7 @@ function renderDatePicker(
     weekendDays: i18n.getWeekendDays(),
     getWeekNumber: (date: Date) => i18n.getWeekNumber(date),
     disableWeekends: props.disableWeekends,
-    alwaysShow42Days: props.fixedDayCount && props.showAdjacentDays,
+    alwaysShow42Days: props.daysMode === 'maximal',
     minDate: props.minDate,
     maxDate: props.maxDate
   });
@@ -206,7 +205,7 @@ function renderDatePicker(
     const currentHighlighted = props.highlightToday && dayData.current;
     const highlighted = props.highlightWeekends && dayData.weekend;
 
-    if (!props.showAdjacentDays && dayData.adjacent) {
+    if (props.daysMode === 'minimal' && dayData.adjacent) {
       return div({
         class: classMap({
           'cal-cell--highlighted': highlighted

@@ -373,7 +373,6 @@ class DatePickerController {
     const selectionMode = this.#getSelectionMode();
 
     if (selectionMode === this.#oldSelectionMode) {
-      this.#requestUpdate();
       return selectionMode;
     }
 

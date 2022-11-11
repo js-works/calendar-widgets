@@ -55,9 +55,8 @@ class DatePickerDemo extends LitElement {
   private _highlightWeekends = true;
   private _disableWeekends = false;
   private _showWeekNumbers = true;
-  private _showAdjacentDays = true;
+  private _daysMode: 'default' | 'minimal' | 'maximal' = 'default';
   private _enableCenturyView = false;
-  private _fixedDayCount = true;
 
   private _onChange = (ev: Event) => {
     const target: any = ev.target;
@@ -73,6 +72,8 @@ class DatePickerDemo extends LitElement {
       this._selectionValue = target.value;
     } else if (subject === 'selectionMode') {
       this._selectionMode = target.value;
+    } else if (subject === 'daysMode') {
+      this._daysMode = target.value;
     } else {
       Object.assign(this, {
         [`_${subject}`]: target.checked
@@ -93,14 +94,13 @@ class DatePickerDemo extends LitElement {
           <sx-date-picker
             data-subject="datePicker"
             selection-mode=${this._selectionMode}
+            days-mode=${this._daysMode}
             ?elevate-navigation=${this._elevateNavigation}
             ?highlight-today=${this._highlightToday}
             ?highlight-weekends=${this._highlightWeekends}
             ?disable-weekends=${this._disableWeekends}
             ?show-week-numbers=${this._showWeekNumbers}
-            ?show-adjacent-days=${this._showAdjacentDays}
             ?enable-century-view=${this._enableCenturyView}
-            ?fixed-day-count=${this._fixedDayCount}
             lang=${this._locale}
             dir=${this._locale === 'ar-SA' ? 'rtl' : 'ltr'}
           ></sx-date-picker>
@@ -147,17 +147,20 @@ class DatePickerDemo extends LitElement {
               'weeks'
             ].includes(this._selectionMode),
             () => html`
+              <sl-select
+                label="Days mode"
+                data-subject="daysMode"
+                value=${this._daysMode}
+              >
+                <sl-menu-item value="default">default</sl-menu-item>
+                <sl-menu-item value="minimal">minimal</sl-menu-item>
+                <sl-menu-item value="maximal">maximal</sl-menu-item>
+              </sl-select>
               <sl-checkbox
                 data-subject="elevateNavigation"
                 ?checked=${this._elevateNavigation}
               >
                 elevate navigation
-              </sl-checkbox>
-              <sl-checkbox
-                data-subject="showAdjacentDays"
-                ?checked=${this._showAdjacentDays}
-              >
-                show adjacent days
               </sl-checkbox>
               <sl-checkbox
                 data-subject="highlightToday"
@@ -189,24 +192,8 @@ class DatePickerDemo extends LitElement {
               >
                 enable century view
               </sl-checkbox>
-              <sl-checkbox
-                data-subject="fixedDayCount"
-                ?checked=${this._fixedDayCount}
-              >
-                fixed day count
-              </sl-checkbox>
-              <sx-date-field
-                label="Min. date"
-                show-adjacent-days
-                show-week-numbers
-              >
-              </sx-date-field>
-              <sx-date-field
-                label="Max. date"
-                show-adjacent-days
-                show-week-numbers
-              >
-              </sx-date-field>
+              <sx-date-field label="Min. date"> </sx-date-field>
+              <sx-date-field label="Max. date"> </sx-date-field>
             `
           )}
         </div>

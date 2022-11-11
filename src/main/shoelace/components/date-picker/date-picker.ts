@@ -82,8 +82,8 @@ class DatePicker extends LitElement {
   @property({ type: Boolean, attribute: 'show-week-numbers' })
   showWeekNumbers = false;
 
-  @property({ type: Boolean, attribute: 'show-adjacent-days' })
-  showAdjacentDays = false;
+  @property({ type: String, attribute: 'days-mode' })
+  daysMode: 'default' | 'minimal' | 'maximal' = 'default';
 
   @property({ type: Boolean, attribute: 'highlight-today' })
   highlightToday = false;
@@ -96,9 +96,6 @@ class DatePicker extends LitElement {
 
   @property({ type: Boolean, attribute: 'enable-century-view' })
   enableCenturyView = false;
-
-  @property({ type: Boolean, attribute: 'fixed-day-count' })
-  fixedDayCount = false; // will be ignored if showAdjacentDays is false
 
   @property({ converter: dateAttributeConverter, attribute: 'min-date' })
   minDate: Date | null = null;
