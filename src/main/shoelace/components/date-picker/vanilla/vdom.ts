@@ -1,7 +1,7 @@
 // Code is based on this article here - many thanks to Jason Yu:
 // https://dev.to/ycmjason/building-a-simple-virtual-dom-from-scratch-3d05
 
-export { h, diff, renderElem as render, renderToString };
+export { h, diff, renderVElement as render, renderToString };
 export type { VElement, VNode };
 
 type Attrs = Record<string, string | number | null | undefined>;
@@ -23,7 +23,7 @@ function h(
   return {
     tagName,
     attrs,
-    children: children.flat()
+    children: children.flat().filter((it) => it != null && it !== '')
   };
 }
 
@@ -72,7 +72,7 @@ function renderToString(vnode: VNode): string {
   return tokens.join('');
 }
 
-function renderElem({ tagName, attrs, children }: VElement): HTMLElement {
+function renderVElement({ tagName, attrs, children }: VElement): HTMLElement {
   const elem = document.createElement(tagName);
 
   if (attrs) {
@@ -85,30 +85,34 @@ function renderElem({ tagName, attrs, children }: VElement): HTMLElement {
 
   for (const child of children.flat()) {
     if (child !== null && child !== '') {
-      elem.append(renderNode(child));
+      elem.append(renderVNode(child));
     }
   }
 
   return elem;
 }
 
-function renderNode(vnode: VNode): HTMLElement | Text {
-  if (vnode == null) {
-    return document.createTextNode('');
-  } else if (typeof vnode === 'string' || typeof vnode === 'number') {
-    return document.createTextNode(String(vnode));
-  }
-
-  return renderElem(vnode);
+function renderVNode(vnode: VNode): HTMLElement | Text {
+  return vnode == null
+    ? document.createTextNode('')
+    : typeof vnode !== 'object'
+    ? document.createTextNode(String(vnode))
+    : renderVElement(vnode);
 }
 
 function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
   const patches: Patch[] = [];
 
   for (const [k, v] of Object.entries(newAttrs)) {
-    if (v !== null) {
+    if (v !== oldAttrs[k]) {
       patches.push(($node) => {
-        $node instanceof Element && $node.setAttribute(k, String(v));
+        if ($node instanceof Element) {
+          if (v == null) {
+            $node.removeAttribute(k);
+          } else {
+            $node.setAttribute(k, String(v));
+          }
+        }
       });
     }
   }
@@ -116,7 +120,9 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
   for (const k in oldAttrs) {
     if (!(k in newAttrs)) {
       patches.push(($node) => {
-        $node instanceof Element && $node.removeAttribute(k);
+        if ($node instanceof Element) {
+          $node.removeAttribute(k);
+        }
       });
     }
   }
@@ -135,7 +141,7 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 
   for (const additionalVChild of newVChildren.slice(oldVChildren.length)) {
     additionalPatches.push(($node) => {
-      $node.appendChild(renderNode(additionalVChild));
+      $node.appendChild(renderVNode(additionalVChild));
     });
   }
 
@@ -162,7 +168,7 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
   if (oldVTree == null) {
     return ($node) => {
-      const content = renderNode(newVTree);
+      const content = renderVNode(newVTree);
       $node.replaceWith(content);
       return content;
     };
@@ -179,12 +185,12 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
     typeof newVTree === 'number'
   ) {
     return oldVTree !== newVTree
-      ? ($node) => $node.replaceWith(renderNode(newVTree))
+      ? ($node) => $node.replaceWith(renderVNode(newVTree))
       : () => {};
   }
 
   if (oldVTree.tagName !== newVTree.tagName) {
-    return ($node) => $node.replaceWith(renderElem(newVTree));
+    return ($node) => $node.replaceWith(renderVElement(newVTree));
   }
 
   const patchAttrs = diffAttrs(oldVTree.attrs || {}, newVTree.attrs || {});
