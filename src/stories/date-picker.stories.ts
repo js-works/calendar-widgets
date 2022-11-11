@@ -55,7 +55,7 @@ class DatePickerDemo extends LitElement {
   private _highlightWeekends = true;
   private _disableWeekends = false;
   private _showWeekNumbers = true;
-  private _daysMode: 'default' | 'minimal' | 'maximal' = 'default';
+  private _daysAmount: 'default' | 'minimal' | 'maximal' = 'default';
   private _enableCenturyView = false;
 
   private _onChange = (ev: Event) => {
@@ -72,8 +72,8 @@ class DatePickerDemo extends LitElement {
       this._selectionValue = target.value;
     } else if (subject === 'selectionMode') {
       this._selectionMode = target.value;
-    } else if (subject === 'daysMode') {
-      this._daysMode = target.value;
+    } else if (subject === 'daysAmount') {
+      this._daysAmount = target.value;
     } else {
       Object.assign(this, {
         [`_${subject}`]: target.checked
@@ -94,7 +94,7 @@ class DatePickerDemo extends LitElement {
           <sx-date-picker
             data-subject="datePicker"
             selection-mode=${this._selectionMode}
-            days-mode=${this._daysMode}
+            days-amount=${this._daysAmount}
             ?elevate-navigation=${this._elevateNavigation}
             ?highlight-today=${this._highlightToday}
             ?highlight-weekends=${this._highlightWeekends}
@@ -148,9 +148,9 @@ class DatePickerDemo extends LitElement {
             ].includes(this._selectionMode),
             () => html`
               <sl-select
-                label="Days mode"
-                data-subject="daysMode"
-                value=${this._daysMode}
+                label="Days amount"
+                data-subject="daysAmount"
+                value=${this._daysAmount}
               >
                 <sl-menu-item value="default">default</sl-menu-item>
                 <sl-menu-item value="minimal">minimal</sl-menu-item>
