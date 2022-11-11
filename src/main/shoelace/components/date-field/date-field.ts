@@ -218,7 +218,6 @@ export class DateField extends LitElement {
                 .maxDate=${this.minDate}
                 .fixedDayCount=${this.fixedDayCount}
                 ${ref(this._pickerRef)}
-                lang="de"
               >
               </sx-date-picker>
               <div class="popup-footer">

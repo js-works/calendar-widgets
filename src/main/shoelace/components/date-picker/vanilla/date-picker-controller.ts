@@ -65,9 +65,23 @@ class DatePickerController {
       onChange?: () => void;
     }
   ) {
+    let updateRequested = false;
+
+    this.#requestUpdate = () => {
+      if (updateRequested) {
+        return;
+      }
+
+      updateRequested = true;
+
+      setTimeout(() => {
+        updateRequested = false;
+        params.requestUpdate();
+      }, 50);
+    };
+
     this.#oldSelectionMode = params.getSelectionMode();
     this.#getSelectionMode = params.getSelectionMode;
-    this.#requestUpdate = params.requestUpdate;
     this.#getNode = () => element.shadowRoot || element;
     this.#onChange = params.onChange || null;
     setTimeout(() => this.#addEventListeners());

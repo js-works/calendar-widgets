@@ -178,19 +178,6 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 }
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
-  // TODO!!!!!!!!!!!!!!!!!!
-  // Unfortunately, the diff algorithm is currently
-  // quite buggy and we replace it with a simple (and slow)
-  // full node replacement temporary until the diff bugs
-  // will be fixed.
-  if (1 + 1 === 2) {
-    return ($vnode) => {
-      const content = renderNode(newVTree);
-      $vnode.replaceWith(content);
-      return content;
-    };
-  }
-
   // TODO!!! ???
   if (oldVTree == null) {
     return ($node) => {
