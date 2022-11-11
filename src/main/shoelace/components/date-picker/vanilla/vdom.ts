@@ -1,11 +1,11 @@
 // Code is based on this article here - many thanks to Jason Yu:
 // https://dev.to/ycmjason/building-a-simple-virtual-dom-from-scratch-3d05
 
-export { h, diff, render, renderToString };
+export { h, diff, renderElem as render, renderToString };
 export type { VElement, VNode };
 
 type Attrs = Record<string, string | number | null | undefined>;
-type Patch = (elem: Element) => Element | Text;
+type Patch = (elem: Element | Text) => void;
 
 type VElement = {
   tagName: string;
@@ -72,10 +72,6 @@ function renderToString(vnode: VNode): string {
   return tokens.join('');
 }
 
-function render(velem: VElement): HTMLElement {
-  return renderElem(velem);
-}
-
 function renderElem({ tagName, attrs, children }: VElement): HTMLElement {
   const elem = document.createElement(tagName);
 
@@ -106,24 +102,13 @@ function renderNode(vnode: VNode): HTMLElement | Text {
   return renderElem(vnode);
 }
 
-function zip<T1, T2>(xs: T1[], ys: T2[]): [T1, T2][] {
-  const zipped: [T1, T2][] = [];
-
-  for (let i = 0; i < Math.min(xs.length, ys.length); i++) {
-    zipped.push([xs[i], ys[i]]);
-  }
-
-  return zipped;
-}
-
 function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
   const patches: Patch[] = [];
 
   for (const [k, v] of Object.entries(newAttrs)) {
     if (v !== null) {
       patches.push(($node) => {
-        $node.setAttribute(k, String(v));
-        return $node;
+        $node instanceof Element && $node.setAttribute(k, String(v));
       });
     }
   }
@@ -131,45 +116,38 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
   for (const k in oldAttrs) {
     if (!(k in newAttrs)) {
       patches.push(($node) => {
-        $node.removeAttribute(k);
-        return $node;
+        $node instanceof Element && $node.removeAttribute(k);
       });
     }
   }
 
-  return ($node) => {
-    for (const patch of patches) {
-      patch($node);
-    }
-    return $node;
-  };
+  return ($node) => patches.forEach((patch) => patch($node));
 }
 
 function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
   const childPatches: Patch[] = [];
 
-  oldVChildren.forEach((oldVChild, i) => {
-    childPatches.push(diff(oldVChild, newVChildren[i]));
-  });
+  oldVChildren.forEach((oldVChild, i) =>
+    childPatches.push(diff(oldVChild, newVChildren[i]))
+  );
 
   const additionalPatches: Patch[] = [];
 
   for (const additionalVChild of newVChildren.slice(oldVChildren.length)) {
     additionalPatches.push(($node) => {
       $node.appendChild(renderNode(additionalVChild));
-      return $node;
     });
   }
 
   return ($parent) => {
-    const len = Math.min(childPatches.length, $parent.childNodes.length);
+    const length = Math.min(childPatches.length, $parent.childNodes.length);
     const childNodes: Node[] = [];
 
-    for (let i = 0; i < len; ++i) {
+    for (let i = 0; i < length; ++i) {
       childNodes.push($parent.childNodes[i]);
     }
 
-    for (let i = 0; i < len; ++i) {
+    for (let i = 0; i < length; ++i) {
       const patch = childPatches[i];
       const $child = childNodes[i];
       patch($child as any);
@@ -178,12 +156,10 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
     for (const patch of additionalPatches) {
       patch($parent);
     }
-    return $parent;
   };
 }
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
-  // TODO!!! ???
   if (oldVTree == null) {
     return ($node) => {
       const content = renderNode(newVTree);
@@ -193,10 +169,7 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
   }
 
   if (newVTree == null) {
-    return ($node) => {
-      $node.remove();
-      return document.createTextNode(''); // TODO!!!
-    };
+    return ($node) => $node.remove();
   }
 
   if (
@@ -205,23 +178,13 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
     typeof newVTree === 'string' ||
     typeof newVTree === 'number'
   ) {
-    if (oldVTree !== newVTree) {
-      return ($node) => {
-        const $newNode = renderNode(newVTree);
-        $node.replaceWith($newNode);
-        return $newNode;
-      };
-    } else {
-      return ($node) => $node;
-    }
+    return oldVTree !== newVTree
+      ? ($node) => $node.replaceWith(renderNode(newVTree))
+      : () => {};
   }
 
   if (oldVTree.tagName !== newVTree.tagName) {
-    return ($node) => {
-      const $newNode = render(newVTree);
-      $node.replaceWith($newNode);
-      return $newNode;
-    };
+    return ($node) => $node.replaceWith(renderElem(newVTree));
   }
 
   const patchAttrs = diffAttrs(oldVTree.attrs || {}, newVTree.attrs || {});
@@ -230,7 +193,6 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
   return ($node) => {
     patchAttrs($node);
     patchChildren($node);
-    return $node;
   };
 }
 
