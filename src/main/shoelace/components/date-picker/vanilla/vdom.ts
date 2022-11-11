@@ -162,12 +162,17 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
   }
 
   return ($parent) => {
-    for (const [patch, $child] of zip(
-      childPatches,
-      $parent.childNodes as any
-    )) {
-      // TODO!!!
-      patch($child as any); // TODO!!!
+    const len = Math.min(childPatches.length, $parent.childNodes.length);
+    const childNodes: Node[] = [];
+
+    for (let i = 0; i < len; ++i) {
+      childNodes.push($parent.childNodes[i]);
+    }
+
+    for (let i = 0; i < len; ++i) {
+      const patch = childPatches[i];
+      const $child = childNodes[i];
+      patch($child as any);
     }
 
     for (const patch of additionalPatches) {
