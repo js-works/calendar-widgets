@@ -1,10 +1,19 @@
 import { css, html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
+import { repeat } from 'lit/directives/repeat';
 import { unsafeHTML } from 'lit/directives/unsafe-html';
 import { datePicker } from '../date-picker.stories';
 import { dateFields } from '../date-field.stories';
 import { dialogs } from '../dialogs.stories';
 import { toasts } from '../toasts.stories';
+
+import {
+  convertThemeToCss,
+  customizeTheme,
+  ColorSchemes,
+  ThemeModifiers,
+  Theme
+} from 'shoelace-themes';
 
 import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -23,6 +32,31 @@ import demoIcon from './demo.icon';
 import lightTheme from '@shoelace-style/shoelace/dist/themes/light.styles';
 // @ts-ignore
 import darkTheme from '@shoelace-style/shoelace/dist/themes/dark.styles';
+
+const customThemes: Record<string, { name: string; theme: Theme }> = {
+  'custom-light': {
+    name: 'Custom (light)',
+    theme: customizeTheme(
+      ThemeModifiers.builder()
+        .colors(ColorSchemes.teal)
+        .modern()
+        .compact()
+        .build()
+    )
+  },
+
+  'custom-dark': {
+    name: 'Custom (dark)',
+    theme: customizeTheme(
+      ThemeModifiers.builder()
+        .colors(ColorSchemes.teal)
+        .modern()
+        .compact()
+        .dark()
+        .build()
+    )
+  }
+};
 
 @customElement('demo-app')
 class DemoApp extends LitElement {
@@ -44,7 +78,7 @@ class DemoApp extends LitElement {
   }
 
   private _activeTab: string;
-  private _theme: 'light' | 'dark';
+  private _activeTheme: string;
 
   constructor() {
     super();
@@ -53,34 +87,42 @@ class DemoApp extends LitElement {
       ? location.hash.substring(1).split('/')[0] || ''
       : '';
 
-    this._theme =
-      (location.hash
-        ? location.hash.substring(1).split('/')[1] || 'light'
-        : 'light') === 'dark'
-        ? 'dark'
-        : 'light';
+    let activeTheme = location.hash
+      ? location.hash.substring(1).split('/')[1] || ''
+      : '';
+
+    if (!customThemes.hasOwnProperty(activeTheme) && activeTheme !== 'dark') {
+      activeTheme = 'light';
+    }
+
+    this._activeTheme = activeTheme;
 
     this._updateTheme();
   }
 
   private _updateTheme = () => {
-    const theme = this._theme === 'dark' ? darkTheme : lightTheme;
+    const theme = customThemes.hasOwnProperty(this._activeTheme)
+      ? convertThemeToCss(customThemes[this._activeTheme].theme, ':root')
+      : this._activeTheme === 'dark'
+      ? darkTheme.toString().replace(':host', ':root')
+      : lightTheme.toString();
+
     const styleElem = document.createElement('style');
 
     document.getElementById('shoelace-theme')?.remove();
     styleElem.id = 'shoelace-theme';
-    styleElem.innerText = theme.toString().replace(':host', ':root');
+    styleElem.innerText = theme;
     document.head.append(styleElem);
   };
 
   private _onTabShow = (ev: { detail: { name: string } }) => {
     this._activeTab = ev.detail.name;
-    location.hash = `${this._activeTab}/${this._theme}`;
+    location.hash = `${this._activeTab}/${this._activeTheme}`;
   };
 
   private _onThemeChange = (ev: any) => {
-    this._theme = ev.target.value;
-    location.hash = `${this._activeTab}/${this._theme}`;
+    this._activeTheme = ev.target.value;
+    location.hash = `${this._activeTab}/${this._activeTheme}`;
     this._updateTheme();
   };
 
@@ -94,14 +136,18 @@ class DemoApp extends LitElement {
             class="theme-selector label-on-left"
             label="Theme"
             size="small"
-            value=${this._theme}
+            value=${this._activeTheme}
             @sl-change=${this._onThemeChange}
           >
-            <sl-menu-item value="light">Light</sl-menu-item>
-            <sl-menu-item value="dark">Dark</sl-menu-item>
+            <sl-menu-item value="light">Standard (light)</sl-menu-item>
+            <sl-menu-item value="dark">Standard (dark)</sl-menu-item>
             <sl-divider></sl-divider>
-            <sl-menu-item value="custom-dark">Custom (light)</sl-menu-item>
-            <sl-menu-item value="custom-dark">Custom (dark)</sl-menu-item>
+            ${repeat(
+              Object.entries(customThemes),
+              ([key, { name }]) => html`
+                <sl-menu-item value=${key}>${name}</sl-menu-item>
+              `
+            )}
           </sl-select>
         </div>
         <sl-tab-group placement="start" class="content">

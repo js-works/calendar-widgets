@@ -11,15 +11,14 @@ export default css`
   }
 
   .base {
-    position: absolute;
-    width: 100%;
-    max-height: 100%;
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-rows: min-content auto;
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-normal);
     color: var(--sl-color-neutral-1000);
     background-color: var(--sl-color-neutral-0);
+    height: 100%;
+    max-height: 100%;
   }
 
   .header {
@@ -27,7 +26,7 @@ export default css`
     align-items: center;
     gap: 0.75rem;
     margin: 0;
-    padding: 0.75rem 1rem;
+    padding: 0.675rem 1rem;
     border: 0 solid var(--sl-color-neutral-200);
     border-bottom-width: 1px;
     box-shadow: var(--sl-shadow-x-large);
@@ -67,7 +66,6 @@ export default css`
     overflow: auto;
     box-sizing: border-box;
     flex-grow: 1;
-    min-height: 100%;
   }
 
   sl-tab-panel {
