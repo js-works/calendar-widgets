@@ -23,7 +23,7 @@ function h(
   return {
     tagName,
     attrs,
-    children: children.flat().filter((it) => it != null && it !== '')
+    children: children.flat(100)
   };
 }
 
@@ -133,9 +133,13 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
 function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
   const childPatches: Patch[] = [];
 
-  oldVChildren.forEach((oldVChild, i) =>
-    childPatches.push(diff(oldVChild, newVChildren[i]))
-  );
+  oldVChildren.forEach((oldVChild, i) => {
+    if (i < newVChildren.length) {
+      childPatches.push(diff(oldVChild, newVChildren[i]));
+    } else {
+      childPatches.push(($node) => $node.remove());
+    }
+  });
 
   const additionalPatches: Patch[] = [];
 
@@ -167,15 +171,11 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
   if (oldVTree == null) {
-    return ($node) => {
-      const content = renderVNode(newVTree);
-      $node.replaceWith(content);
-      return content;
-    };
+    return ($node) => $node.replaceWith(renderVNode(newVTree));
   }
 
   if (newVTree == null) {
-    return ($node) => $node.remove();
+    return ($node) => $node.replaceWith(document.createTextNode(''));
   }
 
   if (
