@@ -72,20 +72,20 @@ function renderToString(vnode: VNode): string {
   return tokens.join('');
 }
 
-function renderVElement({ tagName, attrs, children }: VElement): HTMLElement {
-  const elem = document.createElement(tagName);
+function renderVElement(velem: VElement): HTMLElement {
+  const elem = document.createElement(velem.tagName);
 
-  if (attrs) {
-    for (const [k, v] of Object.entries(attrs)) {
+  if (velem.attrs) {
+    for (const [k, v] of Object.entries(velem.attrs)) {
       if (v != null) {
         elem.setAttribute(k, String(v));
       }
     }
   }
 
-  for (const child of children.flat()) {
-    if (child !== null && child !== '') {
-      elem.append(renderVNode(child));
+  for (const vchild of velem.children.flat()) {
+    if (vchild !== null && vchild !== '') {
+      elem.append(renderVNode(vchild));
     }
   }
 
@@ -105,12 +105,12 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
 
   for (const [k, v] of Object.entries(newAttrs)) {
     if (v !== oldAttrs[k]) {
-      patches.push(($node) => {
-        if ($node instanceof Element) {
+      patches.push((node) => {
+        if (node instanceof Element) {
           if (v == null) {
-            $node.removeAttribute(k);
+            node.removeAttribute(k);
           } else {
-            $node.setAttribute(k, String(v));
+            node.setAttribute(k, String(v));
           }
         }
       });
@@ -119,15 +119,15 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
 
   for (const k in oldAttrs) {
     if (!(k in newAttrs)) {
-      patches.push(($node) => {
-        if ($node instanceof Element) {
-          $node.removeAttribute(k);
+      patches.push((node) => {
+        if (node instanceof Element) {
+          node.removeAttribute(k);
         }
       });
     }
   }
 
-  return ($node) => patches.forEach((patch) => patch($node));
+  return (node) => patches.forEach((patch) => patch(node));
 }
 
 function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
@@ -137,45 +137,43 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
     if (i < newVChildren.length) {
       childPatches.push(diff(oldVChild, newVChildren[i]));
     } else {
-      childPatches.push(($node) => $node.remove());
+      childPatches.push((node) => node.remove());
     }
   });
 
   const additionalPatches: Patch[] = [];
 
   for (const additionalVChild of newVChildren.slice(oldVChildren.length)) {
-    additionalPatches.push(($node) => {
-      $node.appendChild(renderVNode(additionalVChild));
+    additionalPatches.push((node) => {
+      node.appendChild(renderVNode(additionalVChild));
     });
   }
 
-  return ($parent) => {
-    const length = Math.min(childPatches.length, $parent.childNodes.length);
+  return (parent) => {
+    const length = Math.min(childPatches.length, parent.childNodes.length);
     const childNodes: Node[] = [];
 
     for (let i = 0; i < length; ++i) {
-      childNodes.push($parent.childNodes[i]);
+      childNodes.push(parent.childNodes[i]);
     }
 
     for (let i = 0; i < length; ++i) {
-      const patch = childPatches[i];
-      const $child = childNodes[i];
-      patch($child as any);
+      childPatches[i](childNodes[i] as any);
     }
 
     for (const patch of additionalPatches) {
-      patch($parent);
+      patch(parent);
     }
   };
 }
 
 function diff(oldVTree: VNode, newVTree: VNode): Patch {
   if (oldVTree == null) {
-    return ($node) => $node.replaceWith(renderVNode(newVTree));
+    return (node) => node.replaceWith(renderVNode(newVTree));
   }
 
   if (newVTree == null) {
-    return ($node) => $node.replaceWith(document.createTextNode(''));
+    return (node) => node.replaceWith(document.createTextNode(''));
   }
 
   if (
@@ -185,21 +183,21 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
     typeof newVTree === 'number'
   ) {
     return oldVTree !== newVTree
-      ? ($node) => $node.replaceWith(renderVNode(newVTree))
+      ? (node) => node.replaceWith(renderVNode(newVTree))
       : () => {};
   }
 
   if (oldVTree.tagName !== newVTree.tagName) {
-    return ($node) => $node.replaceWith(renderVElement(newVTree));
+    return (node) => node.replaceWith(renderVElement(newVTree));
   }
 
   const patchAttrs = diffAttrs(oldVTree.attrs || {}, newVTree.attrs || {});
   const patchChildren = diffChildren(oldVTree.children, newVTree.children);
 
-  return ($node) => {
-    patchAttrs($node);
-    patchChildren($node);
+  return (node) => {
+    patchAttrs(node);
+    patchChildren(node);
   };
 }
 
-// cSpell:words velem vnode
+// cSpell:words vchild vchildren velem vnode

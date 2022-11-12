@@ -172,6 +172,7 @@ function renderDatePicker(
       datePickerCtrl.getActiveYear(),
       datePickerCtrl.getActiveMonth()
     );
+    console.log(111, view);
 
     return div(
       {
