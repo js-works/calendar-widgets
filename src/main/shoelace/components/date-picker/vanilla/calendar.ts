@@ -5,10 +5,12 @@ export { Calendar };
 // === exported types ================================================
 
 namespace Calendar {
+  export type CalendarWeek = { year: number; week: number };
+
   export type Options = Readonly<{
     firstDayOfWeek: number;
     weekendDays: readonly number[];
-    getWeekNumber: (date: Date, firstDayOfWeek: number) => number;
+    getCalendarWeek: (date: Date, firstDayOfWeek: number) => CalendarWeek;
     minDate: Date | null;
     maxDate: Date | null;
     disableWeekends: boolean;
@@ -19,7 +21,7 @@ namespace Calendar {
     year: number;
     month: number;
     day: number;
-    weekNumber: number;
+    calendarWeek: CalendarWeek;
     current: boolean; // true if today, else false
     weekend: boolean; // true if weekend day, else false
     disabled: boolean;
@@ -168,7 +170,7 @@ class Calendar {
         adjacent,
         weekend,
 
-        weekNumber: options.getWeekNumber(
+        calendarWeek: options.getCalendarWeek(
           new Date(cellYear, cellMonth, cellDay),
           firstDayOfWeek
         ),

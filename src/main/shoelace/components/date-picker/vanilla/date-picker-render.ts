@@ -61,7 +61,7 @@ function renderDatePicker(
   const calendar = new Calendar({
     firstDayOfWeek: i18n.getFirstDayOfWeek(),
     weekendDays: i18n.getWeekendDays(),
-    getWeekNumber: (date: Date) => i18n.getWeekNumber(date),
+    getCalendarWeek: (date: Date) => i18n.getCalendarWeek(date),
     disableWeekends: props.disableWeekends,
     alwaysShow42Days: props.daysAmount === 'maximal',
     minDate: props.minDate,
@@ -172,7 +172,6 @@ function renderDatePicker(
       datePickerCtrl.getActiveYear(),
       datePickerCtrl.getActiveMonth()
     );
-    console.log(111, view);
 
     return div(
       {
@@ -194,7 +193,7 @@ function renderDatePicker(
           : [
               div(
                 { class: 'cal-week-number' },
-                i18n.formatWeekNumber(dayData.weekNumber)
+                i18n.formatWeekNumber(dayData.calendarWeek.week)
               ),
               cell
             ];
@@ -215,8 +214,8 @@ function renderDatePicker(
     }
 
     const weekString = getYearWeekString(
-      dayData.year, // TODO!!!!!!!!!!!!!
-      dayData.weekNumber // TODO!!!!!!!
+      dayData.calendarWeek.year,
+      dayData.calendarWeek.week
     );
 
     const selected = datePickerCtrl.hasSelectedDay(

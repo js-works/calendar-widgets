@@ -2,7 +2,7 @@ import {
   formatDay,
   formatWeekNumber,
   formatYear,
-  getWeekNumber,
+  getCalendarWeek,
   getFirstDayOfWeek,
   getMonthName,
   getWeekdayName,
@@ -11,21 +11,27 @@ import {
 
 export { CalendarLocalizer };
 
+namespace CalendarLocalizer {
+  export type CalendarWeek = { year: number; week: number };
+}
+
+type CalendarWeek = CalendarLocalizer.CalendarWeek;
+
 class CalendarLocalizer {
   readonly #locale: string;
   readonly #direction: 'ltr' | 'rtl';
-  readonly #getWeekNumber: (date: Date) => number;
+  readonly #getCalendarWeek: (date: Date) => CalendarWeek;
 
   constructor(params: {
     locale: string;
     direction: 'ltr' | 'rtl';
-    getWeekNumber?: ((date: Date) => number) | null;
+    getCalendarWeek?: ((date: Date) => CalendarWeek) | null;
   }) {
     this.#locale = params.locale;
     this.#direction = params.direction;
 
-    this.#getWeekNumber =
-      params.getWeekNumber || ((date) => getWeekNumber(this.#locale, date));
+    this.#getCalendarWeek =
+      params.getCalendarWeek || ((date) => getCalendarWeek(this.#locale, date));
   }
 
   getLocale(): string {
@@ -36,8 +42,8 @@ class CalendarLocalizer {
     return this.#direction;
   }
 
-  getWeekNumber(date: Date) {
-    return this.#getWeekNumber(date);
+  getCalendarWeek(date: Date) {
+    return this.#getCalendarWeek(date);
   }
 
   getFirstDayOfWeek(): number {

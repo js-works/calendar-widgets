@@ -9,7 +9,7 @@ export {
   getMonthName,
   getWeekdayName,
   getWeekendDays,
-  getWeekNumber,
+  getCalendarWeek,
   getYearMonthDayString,
   getYearMonthString,
   getYearString,
@@ -79,10 +79,17 @@ function getLocaleInfo(locale: string): LocaleInfo {
   return info!;
 }
 
-function getWeekNumber(locale: string, date: Date) {
+function getCalendarWeek(
+  locale: string,
+  date: Date
+): {
+  year: number;
+  week: number;
+} {
   // Code is based on this solution here:
   // https://stackoverflow.com/questions/23781366/date-get-week-number-for-custom-week-start-day
   // TODO - check algorithm
+  // fyi: here's another algorithm: https://weeknumber.com/how-to/javascript
 
   const weekstart = getFirstDayOfWeek(locale);
   const target = new Date(date);
@@ -97,7 +104,14 @@ function getWeekNumber(locale: string, date: Date) {
     target.setMonth(0, 1 + ((4 - target.getDay() + 7) % 7));
   }
 
-  return 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const week = 1 + Math.ceil((firstThursday - target.valueOf()) / 604800000);
+
+  return {
+    year: month === 0 && week > 5 ? year - 1 : year,
+    week
+  };
 }
 
 function getFirstDayOfWeek(locale: string): number {
