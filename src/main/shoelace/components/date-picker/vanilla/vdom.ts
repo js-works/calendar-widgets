@@ -107,10 +107,8 @@ function renderVElement(velem: VElement): HTMLElement {
     }
   }
 
-  for (const vchild of velem.children.flat()) {
-    if (vchild !== null && vchild !== '') {
-      elem.append(renderVNode(vchild));
-    }
+  for (const vchild of velem.children) {
+    elem.append(renderVNode(vchild));
   }
 
   return elem;
