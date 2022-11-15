@@ -5,8 +5,7 @@ import { createRef, ref } from 'lit/directives/ref';
 import { LocalizeController } from '@shoelace-style/localize/dist/index';
 import { DatePickerController } from './vanilla/date-picker-controller';
 import { renderDatePicker } from './vanilla/date-picker-render';
-import { diff, renderToString } from './vanilla/vdom';
-import type { VNode } from './vanilla/vdom';
+import { render, renderToString } from './vanilla/vdom';
 import datePickerBaseStyles from './vanilla/date-picker.styles';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
 
@@ -110,7 +109,6 @@ class DatePicker extends LitElement {
   dir = '';
 
   private _datePickerCtrl: DatePickerController;
-  private _pickerVNode: VNode = null;
   private _containerRef = createRef<HTMLDivElement>();
   private _localize = new LocalizeController(this);
 
@@ -128,32 +126,27 @@ class DatePicker extends LitElement {
     this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   };
 
-  shouldUpdate() {
-    const oldPickerVNode = this._pickerVNode;
-
-    this._pickerVNode = renderDatePicker(
+  private _getPickerVElem = () =>
+    renderDatePicker(
       this._localize.lang(),
       this._localize.dir() === 'rtl' ? 'rtl' : 'ltr',
       this,
       this._datePickerCtrl
     );
 
+  shouldUpdate() {
     if (!this.hasUpdated) {
       return true;
     }
 
-    diff(
-      oldPickerVNode,
-      this._pickerVNode
-    )(this._containerRef.value!.firstElementChild!);
-
+    render(this._containerRef.value!, this._getPickerVElem());
     return false;
   }
 
   render() {
     return html`
       <div class="base" ${ref(this._containerRef)}>
-        ${unsafeHTML(renderToString(this._pickerVNode))}
+        ${unsafeHTML(renderToString(this._getPickerVElem()))}
       </div>
     `;
   }

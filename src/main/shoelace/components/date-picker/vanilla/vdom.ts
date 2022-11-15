@@ -1,11 +1,15 @@
 // Code is based on this article here - many thanks to Jason Yu:
 // https://dev.to/ycmjason/building-a-simple-virtual-dom-from-scratch-3d05
 
-export { h, diff, renderVElement as render, renderToString };
+// === exports =======================================================
+
+export { h, render, renderToString };
 export type { VElement, VNode };
 
+// === types =========================================================
+
 type Attrs = Record<string, string | number | null | undefined>;
-type Patch = (elem: Element | Text) => void;
+type Patch = (node: Element | Text) => void;
 
 type VElement = {
   tagName: string;
@@ -14,6 +18,19 @@ type VElement = {
 };
 
 type VNode = string | number | VElement | null | undefined;
+
+// === local constants ===============================================
+
+const symbolVElem = Symbol('velem');
+const encodedEntities = /["&<]/g;
+
+const entityReplacements: Record<string, string> = {
+  '"': '&quot;',
+  '&': '&amp;',
+  '<': '&lt;'
+};
+
+// === exported functions ============================================
 
 function h(
   tagName: string,
@@ -30,13 +47,6 @@ function h(
 function renderToString(vnode: VNode): string {
   const tokens: string[] = [];
   const push = tokens.push.bind(tokens);
-  const encodedEntities = /["&<]/g;
-
-  const entityReplacements: Record<string, string> = {
-    '"': '&quot;',
-    '&': '&amp;',
-    '<': '&lt;'
-  };
 
   const encodeEntities = (s: string) =>
     s.replaceAll(encodedEntities, (ch) => entityReplacements[ch]);
@@ -71,6 +81,20 @@ function renderToString(vnode: VNode): string {
 
   return tokens.join('');
 }
+
+function render(container: Element, velem: VElement) {
+  const oldVElem = (container as any)[symbolVElem];
+
+  if (!oldVElem) {
+    container.replaceChildren(renderVElement(velem));
+  } else {
+    diff(oldVElem, velem)(container.firstElementChild!);
+  }
+
+  (container as any)[symbolVElem] = velem;
+}
+
+// === local functions ===============================================
 
 function renderVElement(velem: VElement): HTMLElement {
   const elem = document.createElement(velem.tagName);
