@@ -202,6 +202,7 @@ export default /*css*/ `
     font-size: 60%;
     width: 2em;
     text-align: left;
+    margin-left: 4px;
   }
 
   /* time sliders */

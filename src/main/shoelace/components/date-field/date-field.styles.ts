@@ -17,24 +17,21 @@ export default css`
 
   .popup-content {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     box-shadow: var(--sl-shadow-large);
     border-radius: 0 0 4px 4px;
     background-color: var(--sl-color-neutral-0);
+    width: 21rem;
   }
 
-  .popup-column-1 {
+  .popup-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-primary-600);
-    opacity: 90%;
-    padding: 1rem 1.25rem;
+    padding: 0.5rem 1rem;
     box-sizing: border-box;
-  }
-
-  .popup-column-2 {
-    display: flex;
-    flex-direction: column;
-    width: 21rem;
   }
 
   .selection-info-1 {

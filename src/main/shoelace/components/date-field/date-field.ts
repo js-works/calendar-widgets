@@ -75,17 +75,14 @@ export class DateField extends LitElement {
   @property({ type: Boolean, attribute: 'show-week-numbers' })
   showWeekNumbers = false;
 
-  @property({ type: Boolean, attribute: 'show-adjacent-days' })
-  showAdjacentDays = false;
+  @property({ type: String, attribute: 'days-amount' })
+  daysAmount: 'default' | 'minimal' | 'maximal' = 'default';
 
   @property({ type: Boolean, attribute: 'highlight-weekends' })
   highlightWeekends = false;
 
   @property({ type: Boolean, attribute: 'disable-weekends' })
   disableWeekends = false;
-
-  @property({ type: Boolean, attribute: 'fixed-day-count' })
-  fixedDayCount = false; // will be ignored if showAdjacentDays is false
 
   @property({ converter: dateAttributeConverter, attribute: 'min-date' })
   minDate: Date | null = null;
@@ -201,47 +198,43 @@ export class DateField extends LitElement {
             </span>
           </sl-input>
           <div class="popup-content">
-            <div class="popup-column-1">
-              <div class="selection-info-2">Mon</div>
-              <div class="selection-info-3">Dec 21</div>
-              <div class="selection-info-1">2022</div>
+            <div class="popup-header">
+              <sl-icon src=${icon}></sl-icon>
+              Mon, Nov 21, 2022
             </div>
-            <div class="popup-column-2">
-              <sx-date-picker
-                class="date-picker"
-                .selectionMode=${this.selectionMode}
-                .showAdjacentDays=${this.showAdjacentDays}
-                .showWeekNumbers=${this.showWeekNumbers}
-                .highlightWeekends=${this.highlightWeekends}
-                .disableWeekends=${this.disableWeekends}
-                .minDate=${this.minDate}
-                .maxDate=${this.minDate}
-                .fixedDayCount=${this.fixedDayCount}
-                ${ref(this._pickerRef)}
+            <sx-date-picker
+              class="date-picker"
+              .selectionMode=${this.selectionMode}
+              .daysAmount=${this.daysAmount}
+              .showWeekNumbers=${this.showWeekNumbers}
+              .highlightWeekends=${this.highlightWeekends}
+              .disableWeekends=${this.disableWeekends}
+              .minDate=${this.minDate}
+              .maxDate=${this.minDate}
+              ${ref(this._pickerRef)}
+            >
+            </sx-date-picker>
+            <div class="popup-footer">
+              <sl-button
+                variant="text"
+                class="button"
+                @click=${this._onClearClick}
+                >Clear</sl-button
               >
-              </sx-date-picker>
-              <div class="popup-footer">
-                <sl-button
-                  variant="text"
-                  class="button"
-                  @click=${this._onClearClick}
-                  >Clear</sl-button
-                >
-                <sl-button
-                  variant="text"
-                  class="button"
-                  @click=${this._onCancelClick}
-                >
-                  Cancel
-                </sl-button>
-                <sl-button
-                  variant="text"
-                  class="button"
-                  @click=${this._onOkClick}
-                >
-                  OK
-                </sl-button>
-              </div>
+              <sl-button
+                variant="text"
+                class="button"
+                @click=${this._onCancelClick}
+              >
+                Cancel
+              </sl-button>
+              <sl-button
+                variant="text"
+                class="button"
+                @click=${this._onOkClick}
+              >
+                OK
+              </sl-button>
             </div>
           </div>
         </sl-dropdown>
