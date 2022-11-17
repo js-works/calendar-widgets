@@ -191,7 +191,7 @@ export default /*css*/ `
     grid-column: 1;
     grid-row: 1 / span 2;
     align-self: center;
-    font-size: 125%;
+    font-size: 115%;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic,
       var(--cal-font-family);
     text-align: center;
