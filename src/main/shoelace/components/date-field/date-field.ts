@@ -49,7 +49,14 @@ export class DateField extends LitElement {
   static styles = dateFieldStyles;
 
   @property({ type: String, attribute: 'selection-mode' })
-  selectionMode: 'date' | 'dateTime' | 'dateRange' | 'time' = 'date';
+  selectionMode:
+    | 'date'
+    | 'dateTime'
+    | 'dateRange'
+    | 'time'
+    | 'week'
+    | 'month'
+    | 'year' = 'date';
 
   @property()
   name = '';
@@ -103,6 +110,13 @@ export class DateField extends LitElement {
 
     validation: [Validators.required((value) => !this.required || !!value)]
   });
+
+  private _getPopupTitle() {
+    return logicBySelectionMode[this.selectionMode].getPopupTitle(
+      this._pickerRef.value?.value || '',
+      this._localize.lang()
+    );
+  }
 
   private _onInputClick() {
     this._inputRef.value!.focus();
@@ -204,7 +218,7 @@ export class DateField extends LitElement {
           <div class="popup-content">
             <div class="popup-header">
               <sl-icon src=${icon}></sl-icon>
-              <div class="popup-title"></div>
+              <div class="popup-title">${this._getPopupTitle()}</div>
               <sl-icon-button
                 class="popup-close-button"
                 library="system"
@@ -221,7 +235,10 @@ export class DateField extends LitElement {
               .disableWeekends=${this.disableWeekends}
               .minDate=${this.minDate}
               .maxDate=${this.minDate}
+              .lang=${this._localize.lang()}
+              .dir=${this._localize.dir()}
               ${ref(this._pickerRef)}
+              @change=${() => this.requestUpdate()}
             >
             </sx-date-picker>
             <div class="popup-footer">
@@ -255,3 +272,80 @@ export class DateField extends LitElement {
     `;
   }
 }
+
+const logicBySelectionMode: Record<
+  DateField['selectionMode'],
+  {
+    getPopupTitle(value: string, locale: string): string;
+  }
+> = {
+  date: {
+    getPopupTitle(value, locale) {
+      if (!value) {
+        return '';
+      }
+
+      return Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      }).format(new Date(value));
+    }
+  },
+
+  dateRange: {
+    getPopupTitle(value) {
+      return value; // TODO!!!
+    }
+  },
+
+  dateTime: {
+    getPopupTitle(value, locale) {
+      if (!value) {
+        return '';
+      }
+
+      return Intl.DateTimeFormat(locale, {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(new Date(value));
+    }
+  },
+
+  time: {
+    getPopupTitle(value, locale) {
+      return '';
+    }
+  },
+
+  week: {
+    getPopupTitle(value) {
+      if (!value) {
+        return '';
+      }
+
+      return value.replace('-W', '/');
+    }
+  },
+
+  month: {
+    getPopupTitle(value, locale) {
+      if (!value) {
+        return '';
+      }
+
+      return Intl.DateTimeFormat(locale, {
+        year: 'numeric',
+        month: 'long'
+      }).format(new Date(value));
+    }
+  },
+  year: {
+    getPopupTitle(value) {
+      return value;
+    }
+  }
+};

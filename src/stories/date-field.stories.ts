@@ -30,23 +30,20 @@ class DatePickerDemo extends LitElement {
   render() {
     return html`
       <sx-fieldset label-layout="horizontal" class="base">
-        <sx-date-field label="Date" show-adjacent-days></sx-date-field>
+        <sx-date-field label="Date"></sx-date-field>
         <sx-date-field
           label="Date and time"
           selection-mode="dateTime"
-          show-adjacent-days
         ></sx-date-field>
         <sx-date-field label="Time" selection-mode="time"></sx-date-field>
         <sx-date-field
           label="Date range"
           selection-mode="dateRange"
-          show-adjacent-days
         ></sx-date-field>
         <sx-date-field
           label="Week"
           selection-mode="week"
           show-week-numbers
-          show-adjacent-days
         ></sx-date-field>
         <sx-date-field label="Month" selection-mode="month"></sx-date-field>
         <sx-date-field label="Year" selection-mode="year"></sx-date-field>
