@@ -372,7 +372,12 @@ function renderDatePicker(
     }
 
     return div(
-      { class: 'cal-time' },
+      {
+        class: classMap({
+          'cal-time': true,
+          'cal-time--has-day-period': !!dayPeriod
+        })
+      },
       time,
       !dayPeriod ? null : span({ class: 'cal-day-period' }, dayPeriod)
     );

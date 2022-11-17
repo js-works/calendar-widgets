@@ -45,9 +45,14 @@ export default css`
   .popup-close-button::part(base) {
     color: var(--sl-color-neutral-0);
     padding: 0.25rem;
+    border-radius: 0;
   }
 
   .popup-close-button:hover::part(base) {
+    background-color: var(--sl-color-primary-600);
+  }
+
+  .popup-close-button:active::part(base) {
     background-color: var(--sl-color-primary-700);
   }
 

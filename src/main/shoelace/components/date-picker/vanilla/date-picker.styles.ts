@@ -194,15 +194,19 @@ export default /*css*/ `
     font-size: 115%;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic,
       var(--cal-font-family);
-    text-align: center;
+    text-align: start;
+    min-width: 3em;
+  }
+
+  .cal-time--has-day-period {
+    min-width: 4em;
   }
 
   .cal-day-period {
     display: inline-block;
     font-size: 60%;
-    width: 2em;
     text-align: left;
-    margin-left: 4px;
+    margin-inline-start: 0.5em;
   }
 
   /* time sliders */
