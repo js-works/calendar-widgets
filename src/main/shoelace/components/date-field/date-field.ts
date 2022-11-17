@@ -130,6 +130,10 @@ export class DateField extends LitElement {
     this._dropdownRef.value!.hide();
   };
 
+  private _onClosePopupClick = () => {
+    this._dropdownRef.value!.hide();
+  };
+
   get validationMessage(): string {
     return this._formField.validate() || '';
   }
@@ -200,7 +204,13 @@ export class DateField extends LitElement {
           <div class="popup-content">
             <div class="popup-header">
               <sl-icon src=${icon}></sl-icon>
-              Mon, Nov 21, 2022
+              <div class="popup-title"></div>
+              <sl-icon-button
+                class="popup-close-button"
+                library="system"
+                name="x"
+                @click=${this._onClosePopupClick}
+              ></sl-icon-button>
             </div>
             <sx-date-picker
               class="date-picker"

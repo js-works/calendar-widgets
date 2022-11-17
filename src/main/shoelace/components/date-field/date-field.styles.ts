@@ -27,11 +27,28 @@ export default css`
   .popup-header {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
     color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-primary-600);
-    padding: 0.5rem 1rem;
+    padding: 0 0 0 0.75rem;
     box-sizing: border-box;
+  }
+
+  .popup-title {
+    flex-grow: 1;
+  }
+
+  .popup-close-button {
+    font-size: 150%;
+  }
+
+  .popup-close-button::part(base) {
+    color: var(--sl-color-neutral-0);
+    padding: 0.25rem;
+  }
+
+  .popup-close-button:hover::part(base) {
+    background-color: var(--sl-color-primary-700);
   }
 
   .selection-info-1 {

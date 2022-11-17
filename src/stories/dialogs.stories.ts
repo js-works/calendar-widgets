@@ -33,17 +33,6 @@ const styles = css`
     width: 9rem;
     margin: 4px 2px;
   }
-
-  h4 {
-    color: var(--sl-color-primary-950);
-    background-color: var(--sl-color-neutral-100);
-    border: 0px solid var(--sl-color-neutral-300);
-    border-width: 0 0 1px 0;
-    padding: 0.25rem 0.5rem;
-    margin: 0 0 0.75rem 0;
-    font-weight: 500;
-    font-size: var(--sl-font-size-medium);
-  }
 `;
 
 @customElement('dialogs-demo')
@@ -162,7 +151,6 @@ class DialogsDemo extends LitElement {
           ]}
         >
           <div data-tab="general">
-            <h4>General</h4>
               <sx-fieldset caption="User">
                 <sx-choice
                   label="Salutation"
@@ -211,7 +199,6 @@ class DialogsDemo extends LitElement {
             </sx-hbox>
           </div>
           <div data-tab="contact">
-            <h4>Contact</h4>
             <sx-fieldset caption="Phone + email">
               <sx-text-field
                 name="phone"
@@ -253,7 +240,6 @@ class DialogsDemo extends LitElement {
             </sx-fieldset>
           </div>
           <div data-tab="notes">
-            <h4>Notes</h4>
             <sx-fieldset caption="Notes and comments" label-layout="vertical">
               <sx-text-area label="General notes" rows="5"></sx-text-area>
               <sx-text-area label="Comments" rows="5"></sx-text-area>
