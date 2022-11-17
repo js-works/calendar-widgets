@@ -143,6 +143,10 @@ class DatePicker extends LitElement {
     return false;
   }
 
+  resetView() {
+    this._datePickerCtrl.resetView();
+  }
+
   render() {
     return html`
       <div class="base" ${ref(this._containerRef)}>

@@ -188,6 +188,7 @@ export class DateField extends LitElement {
           .containingElement=${this}
           hoist
           ${ref(this._dropdownRef)}
+          @sl-after-hide=${() => this._pickerRef.value?.resetView()}
         >
           <sl-input
             slot="trigger"

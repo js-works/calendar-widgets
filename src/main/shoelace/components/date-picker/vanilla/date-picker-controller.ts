@@ -87,6 +87,23 @@ class DatePickerController {
     setTimeout(() => this.#addEventListeners());
   }
 
+  resetView() {
+    const selectionMode = this.#selectionMode;
+
+    this.#view =
+      this.#selectionMode === 'year'
+        ? 'decade'
+        : this.#selectionMode === 'month'
+        ? 'year'
+        : 'month';
+
+    this.#activeYear = new Date().getFullYear();
+    this.#activeMonth = new Date().getMonth();
+    this.#activeHour = new Date().getHours();
+    this.#activeMinute = new Date().getMinutes();
+    this.#requestUpdate();
+  }
+
   getView(): DatePickerController.View {
     return this.#view;
   }
