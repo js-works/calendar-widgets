@@ -202,7 +202,7 @@ class Calendar {
     const months: Calendar.MonthData[] = [];
     const now = new Date();
     const currYear = now.getFullYear();
-    const cellMonth = now.getMonth();
+    const currMonth = now.getMonth();
 
     const minMonth = options.minDate
       ? options.minDate.getFullYear() * 100 + options.minDate.getMonth()
@@ -222,7 +222,7 @@ class Calendar {
       months.push({
         year,
         month: cellMonth,
-        current: year === currYear && cellMonth === cellMonth,
+        current: year === currYear && cellMonth === currMonth,
         outOfMinMaxRange,
         disabled: outOfMinMaxRange
       });
@@ -271,9 +271,15 @@ class Calendar {
     const endYear = startYear + 119;
     const currYear = new Date().getFullYear();
     const decades: Calendar.DecadeData[] = [];
-    const minYear = options.minDate ? options.minDate.getFullYear() : null;
-    const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
 
+    const minYear = options.minDate
+      ? Math.floor(options.minDate.getFullYear() / 10) * 10
+      : null;
+
+    const maxYear = options.maxDate
+      ? Math.floor(options.maxDate.getFullYear() / 10) * 10 + 9
+      : null;
+    console.log(minYear, maxYear);
     for (let cellYear = startYear; cellYear <= endYear; cellYear += 10) {
       const outOfMinMaxRange = !inNumberRange(cellYear, minYear, maxYear);
 
@@ -295,22 +301,6 @@ class Calendar {
 }
 
 // === helpers =======================================================
-
-function startOfDay(date: Date) {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-
-  return new Date(year, month, day);
-}
-
-function endOfDay(date: Date) {
-  const year = date.getFullYear();
-  const month = date.getMonth();
-  const day = date.getDate();
-
-  return new Date(year, month, day, 23, 59, 59, 999);
-}
 
 function inNumberRange(
   value: number,

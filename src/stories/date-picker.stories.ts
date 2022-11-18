@@ -111,6 +111,7 @@ class DatePickerDemo extends LitElement {
           <sl-select label="Locale" data-subject="locale" value=${this._locale}>
             <sl-menu-item value="en-US">en-US</sl-menu-item>
             <sl-menu-item value="en-GB">en-GB</sl-menu-item>
+            <sl-menu-item value="en-GB-u-hc-h12">en-GB-u-hc-h12</sl-menu-item>
             <sl-menu-item value="es-ES">es-ES</sl-menu-item>
             <sl-menu-item value="fr-FR">fr-FR</sl-menu-item>
             <sl-menu-item value="de-DE">de-DE</sl-menu-item>
