@@ -10,6 +10,7 @@ export default css`
   }
 
   .base > :first-child {
+    display: none; /* TODO!!! */
     padding-right: 0.5rem;
     border-right: 1px solid var(--sl-color-neutral-200);
   }

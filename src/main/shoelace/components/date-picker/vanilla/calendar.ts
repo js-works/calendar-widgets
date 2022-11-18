@@ -33,12 +33,14 @@ namespace Calendar {
     year: number;
     month: number; // 0 -> january, ..., 11 -> december
     current: boolean; // true if current month, else false
+    outOfMinMaxRange: boolean;
     disabled: boolean;
   }>;
 
   export type YearData = Readonly<{
     year: number;
     current: boolean; // true if current year, else false
+    outOfMinMaxRange: boolean;
     disabled: boolean;
   }>;
 
@@ -46,6 +48,7 @@ namespace Calendar {
     firstYear: number;
     lastYear: number;
     current: boolean; // true if current decade, else false
+    outOfMinMaxRange: boolean;
     disabled: boolean;
   }>;
 
@@ -87,10 +90,6 @@ class Calendar {
 
   constructor(options: Calendar.Options) {
     this.#options = options;
-  }
-
-  vary(options: Partial<Calendar.Options>): Calendar {
-    return new Calendar({ ...this.#options, ...options });
   }
 
   getMonthView(year: number, month: number): Calendar.MonthView {
@@ -199,16 +198,33 @@ class Calendar {
   }
 
   getYearView(year: number): Calendar.YearView {
+    const options = this.#options;
     const months: Calendar.MonthData[] = [];
-    const currYear = new Date().getFullYear();
-    const currMonth = new Date().getMonth();
+    const now = new Date();
+    const currYear = now.getFullYear();
+    const cellMonth = now.getMonth();
 
-    for (let month = 0; month < 12; ++month) {
+    const minMonth = options.minDate
+      ? options.minDate.getFullYear() * 100 + options.minDate.getMonth()
+      : null;
+
+    const maxMonth = options.maxDate
+      ? options.maxDate.getFullYear() * 100 + options.maxDate.getMonth()
+      : null;
+
+    for (let cellMonth = 0; cellMonth < 12; ++cellMonth) {
+      const outOfMinMaxRange = !inNumberRange(
+        currYear * 100 + cellMonth,
+        minMonth,
+        maxMonth
+      );
+
       months.push({
         year,
-        month,
-        current: year === currYear && month === currMonth,
-        disabled: false // TODO!!!
+        month: cellMonth,
+        current: year === currYear && cellMonth === cellMonth,
+        outOfMinMaxRange,
+        disabled: outOfMinMaxRange
       });
     }
 
@@ -221,16 +237,22 @@ class Calendar {
   }
 
   getDecadeView(year: number): Calendar.DecadeView {
+    const options = this.#options;
     const startYear = year - (year % 10);
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
     const years: Calendar.YearData[] = [];
+    const minYear = options.minDate ? options.minDate.getFullYear() : null;
+    const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
 
     for (let cellYear = startYear; cellYear <= endYear; ++cellYear) {
+      const outOfMinMaxRange = !inNumberRange(cellYear, minYear, maxYear);
+
       years.push({
         current: cellYear === currYear,
         year: cellYear,
-        disabled: false // TODO!!!!!!!!!
+        outOfMinMaxRange,
+        disabled: outOfMinMaxRange
       });
     }
 
@@ -244,18 +266,23 @@ class Calendar {
   }
 
   getCenturyView(year: number): Calendar.CenturyView {
+    const options = this.#options;
     const startYear = year - (year % 100);
     const endYear = startYear + 119;
-
     const currYear = new Date().getFullYear();
     const decades: Calendar.DecadeData[] = [];
+    const minYear = options.minDate ? options.minDate.getFullYear() : null;
+    const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
 
     for (let cellYear = startYear; cellYear <= endYear; cellYear += 10) {
+      const outOfMinMaxRange = !inNumberRange(cellYear, minYear, maxYear);
+
       decades.push({
         current: cellYear <= currYear && cellYear + 10 > currYear,
         firstYear: cellYear,
         lastYear: cellYear + 9,
-        disabled: false // TODO!!!!!!!!!
+        outOfMinMaxRange,
+        disabled: outOfMinMaxRange
       });
     }
 
@@ -269,7 +296,41 @@ class Calendar {
 
 // === helpers =======================================================
 
-function inDateRange(date: Date, start: Date | null, end: Date | null) {
+function startOfDay(date: Date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+
+  return new Date(year, month, day);
+}
+
+function endOfDay(date: Date) {
+  const year = date.getFullYear();
+  const month = date.getMonth();
+  const day = date.getDate();
+
+  return new Date(year, month, day, 23, 59, 59, 999);
+}
+
+function inNumberRange(
+  value: number,
+  start: number | null,
+  end: number | null
+) {
+  if (start === null && end === null) {
+    return true;
+  }
+
+  if (start === null) {
+    return value <= end!;
+  } else if (end === null) {
+    return value >= start;
+  } else {
+    return value >= start && value <= end;
+  }
+}
+
+function inDateRange(value: Date, start: Date | null, end: Date | null) {
   if (start === null && end === null) {
     return true;
   }
@@ -277,7 +338,7 @@ function inDateRange(date: Date, start: Date | null, end: Date | null) {
   const toNumber = (date: Date) =>
     date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
 
-  const val = toNumber(date);
+  const val = toNumber(value);
 
   if (start === null) {
     return val <= toNumber(end!);
