@@ -103,6 +103,8 @@ class DatePickerDemo extends LitElement {
             ?enable-century-view=${this._enableCenturyView}
             lang=${this._locale}
             dir=${this._locale === 'ar-SA' ? 'rtl' : 'ltr'}
+            .minDate=${new Date(2022, 10, 10)}
+            .maxDate=${new Date(2022, 10, 20)}
           ></sx-date-picker>
           <div>Selection:</div>
           <div>${this._selectionValue.replaceAll(',', ', ')}</div>

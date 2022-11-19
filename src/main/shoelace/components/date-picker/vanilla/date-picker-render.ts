@@ -218,12 +218,13 @@ function renderDatePicker(
       dayData.calendarWeek.week
     );
 
-    const selected = datePickerCtrl.hasSelectedDay(
-      dayData.year,
-      dayData.month,
-      dayData.day,
-      weekString
-    );
+    const selected =
+      datePickerCtrl.hasSelectedDay(
+        dayData.year,
+        dayData.month,
+        dayData.day,
+        weekString
+      ) && !dayData.disabled;
 
     return div(
       {
