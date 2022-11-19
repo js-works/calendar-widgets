@@ -98,11 +98,17 @@ export class DateField extends LitElement {
   @property({ type: Boolean, attribute: 'disable-weekends' })
   disableWeekends = false;
 
+  @property({ type: Boolean, attribute: 'enable-century-view' })
+  enableCenturyView = false;
+
   @property({ converter: dateAttributeConverter, attribute: 'min-date' })
   minDate: Date | null = null;
 
   @property({ converter: dateAttributeConverter, attribute: 'max-date' })
   maxDate: Date | null = null;
+
+  @property()
+  lang = '';
 
   @state()
   private _value = '';
@@ -255,6 +261,7 @@ export class DateField extends LitElement {
               ?show-week-numbers=${this.showWeekNumbers}
               ?highlight-weekends=${this.highlightWeekends}
               ?disable-weekends=${this.disableWeekends}
+              ?enable-century-view=${this.enableCenturyView}
               .minDate=${this.minDate}
               .maxDate=${this.minDate}
               lang=${this._localize.lang()}
@@ -374,7 +381,14 @@ const logicBySelectionMode: Record<
         return '';
       }
 
-      return localize.date(new Date('2000-01-01T' + value), {
+      const date = new Date();
+      const timeTokens = value.split(':');
+      date.setHours(parseInt(timeTokens[0], 10));
+      date.setMinutes(parseInt(timeTokens[1], 10));
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+
+      return localize.date(date, {
         hour: '2-digit',
         minute: '2-digit'
       });

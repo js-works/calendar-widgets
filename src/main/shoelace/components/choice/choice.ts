@@ -87,7 +87,13 @@ class Choice extends LitElement {
   }
 
   private _onInput = () => this._formField.signalInput();
-  private _onChange = () => this._formField.signalChange();
+
+  private _onChange = (ev: any) => {
+    this.value = ev.target.value;
+    this._formField.signalChange();
+    this.dispatchEvent(new Event('change', { bubbles: true }));
+  };
+
   private _onFocus = () => this._formField.signalFocus();
   private _onBlur = () => this._formField.signalBlur();
 
@@ -117,7 +123,13 @@ class Choice extends LitElement {
         ${when(
           type !== 'radios' && type !== 'horizontal-radios',
           () => html`
-            <sl-select class="sl-control" hoist @keydown=${this._onKeyDown}>
+            <sl-select
+              class="sl-control"
+              hoist
+              @sl-change=${this._onChange}
+              @keydown=${this._onKeyDown}
+              value=${this.value}
+            >
               <span
                 slot="label"
                 class=${classMap({

@@ -34,7 +34,7 @@ const styles = css`
   }
 
   .mode-selector {
-    min-width: 12rem;
+    min-width: 17rem;
   }
 `;
 
@@ -162,10 +162,10 @@ class DatePickerDemo extends LitElement {
                 value=${this._daysAmount}
               >
                 <sl-menu-item value="default">
-                  default (incl. adjacent days)
+                  default (with adjacent days)
                 </sl-menu-item>
                 <sl-menu-item value="minimal">
-                  minimal (excl. adjacent days)
+                  minimal (without adjacent days)
                 </sl-menu-item>
                 <sl-menu-item value="maximal">
                   maximal (always 42 days)
