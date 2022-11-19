@@ -431,7 +431,7 @@ const logicBySelectionMode: Record<
     },
 
     getPopupTitle(value, localize) {
-      logicBySelectionMode.timeRange.formatValue(value, localize);
+      return logicBySelectionMode.timeRange.formatValue(value, localize);
     }
   },
 
