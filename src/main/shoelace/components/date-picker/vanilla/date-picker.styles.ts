@@ -122,7 +122,7 @@ export default /*css*/ `
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    padding: 0.25em 0.75em;
+    padding: 0.125em 0.75em;
     box-sizing: border-box;
     text-transform: capitalize;
     hyphens: auto;

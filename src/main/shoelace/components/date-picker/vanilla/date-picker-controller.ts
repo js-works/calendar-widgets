@@ -167,7 +167,11 @@ class DatePickerController {
   }
 
   setValue(value: string) {
-    throw 'TODO'; // TODO!!!
+    if (value === '') {
+      this.#selection.clear();
+    } else {
+      // TODO!!!!
+    }
   }
 
   #clearSelection() {

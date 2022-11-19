@@ -57,6 +57,8 @@ class DatePickerDemo extends LitElement {
   private _showWeekNumbers = true;
   private _daysAmount: 'default' | 'minimal' | 'maximal' = 'default';
   private _enableCenturyView = false;
+  private _minDate: Date | null = null;
+  private _maxDate: Date | null = null;
 
   private _onChange = (ev: Event) => {
     const target: any = ev.target;
@@ -74,6 +76,10 @@ class DatePickerDemo extends LitElement {
       this._selectionMode = target.value;
     } else if (subject === 'daysAmount') {
       this._daysAmount = target.value;
+    } else if (subject === 'minDate') {
+      this._minDate = target.value ? new Date(target.value) : null;
+    } else if (subject === 'maxDate') {
+      this._maxDate = target.value ? new Date(target.value) : null;
     } else {
       Object.assign(this, {
         [`_${subject}`]: target.checked
@@ -103,8 +109,8 @@ class DatePickerDemo extends LitElement {
             ?enable-century-view=${this._enableCenturyView}
             lang=${this._locale}
             dir=${this._locale === 'ar-SA' ? 'rtl' : 'ltr'}
-            .minDate=${new Date(2022, 10, 10)}
-            .maxDate=${new Date(2022, 10, 20)}
+            .minDate=${this._minDate}
+            .maxDate=${this._maxDate}
           ></sx-date-picker>
           <div>Selection:</div>
           <div>${this._selectionValue.replaceAll(',', ', ')}</div>
@@ -201,8 +207,10 @@ class DatePickerDemo extends LitElement {
               >
                 enable century view
               </sl-checkbox>
-              <sx-date-field label="Min. date"> </sx-date-field>
-              <sx-date-field label="Max. date"> </sx-date-field>
+              <sx-date-field label="Min. date" data-subject="minDate">
+              </sx-date-field>
+              <sx-date-field label="Max. date" data-subject="maxDate">
+              </sx-date-field>
             `
           )}
         </div>

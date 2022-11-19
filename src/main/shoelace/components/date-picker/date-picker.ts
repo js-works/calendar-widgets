@@ -41,9 +41,11 @@ const datePickerCustomStyles = css`
     --cal-cell-adjacent-color: var(--sl-color-neutral-400);
     --cal-cell-adjacent-disabled-color: var(--sl-color-neutral-200);
     --cal-cell-adjacent-selected-color: var(--sl-color-neutral-800);
+
     --cal-cell-current-highlighted-background-color: var(
       --sl-color-neutral-200
     );
+
     --cal-cell-selected-color: var(--sl-color-neutral-0);
     --cal-cell-selected-background-color: var(--sl-color-primary-600);
     --cal-cell-selected-hover-background-color: var(--sl-color-primary-500);
@@ -63,8 +65,8 @@ const datePickerCustomStyles = css`
 class DatePicker extends LitElement {
   static styles = [unsafeCSS(datePickerBaseStyles), datePickerCustomStyles];
 
-  @property({ type: String })
-  get value() {
+  @property()
+  get value(): string {
     return this._datePickerCtrl.getValue();
   }
 
@@ -102,10 +104,10 @@ class DatePicker extends LitElement {
   @property({ converter: dateAttributeConverter, attribute: 'max-date' })
   maxDate: Date | null = null;
 
-  @property({ type: String, reflect: true })
+  @property()
   lang = '';
 
-  @property({ type: String, reflect: true })
+  @property()
   dir = '';
 
   private _datePickerCtrl: DatePickerController;
