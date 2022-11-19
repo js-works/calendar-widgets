@@ -243,7 +243,7 @@ function renderDatePicker(
           dayData.day
         ),
         'data-week': weekString,
-        'data-subject': 'day'
+        'data-subject': dayData.disabled ? null : 'day'
       },
       i18n.formatDay(dayData.day)
     );
@@ -276,7 +276,7 @@ function renderDatePicker(
           'cal-cell--selected': selected
         }),
         'data-month': getYearMonthString(monthData.year, monthData.month),
-        'data-subject': 'month'
+        'data-subject': monthData.disabled ? null : 'month'
       },
       i18n.getMonthName(monthData.month, 'short')
     );
@@ -305,7 +305,7 @@ function renderDatePicker(
           'cal-cell--selected': selected
         }),
         'data-year': getYearString(yearData.year),
-        'data-subject': 'year'
+        'data-subject': yearData.disabled ? null : 'year'
       },
       i18n.formatYear(yearData.year)
     );
@@ -332,7 +332,7 @@ function renderDatePicker(
           'cal-cell--current-highlighted': currentHighlighted
         }),
         'data-year': getYearString(decadeData.firstYear),
-        'data-subject': 'decade'
+        'data-subject': decadeData.disabled ? null : 'decade'
       },
       i18n
         .getDecadeTitle(decadeData.firstYear, 10)

@@ -277,7 +277,7 @@ class DatePickerController {
 
       const subject = target.getAttribute('data-subject');
 
-      if (!subject || target.classList.contains('cal-cell--disabled')) {
+      if (!subject) {
         return;
       }
 
