@@ -408,21 +408,30 @@ const logicBySelectionMode: Record<
         return '';
       }
 
-      const date = new Date();
-      const timeTokens = value.split(':');
-      date.setHours(parseInt(timeTokens[0], 10));
-      date.setMinutes(parseInt(timeTokens[1], 10));
-      date.setSeconds(0);
-      date.setMilliseconds(0);
+      const values = value.split('|');
+      const arr: string[] = [];
 
-      return localize.date(date, {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+      for (let i = 0; i < 2; ++i) {
+        const date = new Date();
+        const timeTokens = values[i].split(':');
+        date.setHours(parseInt(timeTokens[0], 10));
+        date.setMinutes(parseInt(timeTokens[1], 10));
+        date.setSeconds(0);
+        date.setMilliseconds(0);
+
+        arr.push(
+          localize.date(date, {
+            hour: '2-digit',
+            minute: '2-digit'
+          })
+        );
+      }
+
+      return arr.join(' - ');
     },
 
-    getPopupTitle() {
-      return '';
+    getPopupTitle(value, localize) {
+      logicBySelectionMode.timeRange.formatValue(value, localize);
     }
   },
 

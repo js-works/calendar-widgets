@@ -122,7 +122,9 @@ function renderDatePicker(
         ? null
         : div(
             null,
-            div({ class: 'cal-time-selector-headline' }, 'From'),
+            props.selectionMode !== 'timeRange'
+              ? null
+              : div({ class: 'cal-time-selector-headline' }, 'From'),
             div(
               { class: 'cal-time-selector' },
               div({ class: 'cal-time' }, renderTime()),
@@ -152,11 +154,11 @@ function renderDatePicker(
             div({ class: 'cal-time-selector-headline' }, 'To'),
             div(
               { class: 'cal-time-selector' },
-              div({ class: 'cal-time' }, renderTime()),
+              div({ class: 'cal-time' }, renderTime(2)),
               input({
                 'type': 'range',
                 'class': 'cal-hour-slider',
-                'value': datePickerCtrl.getActiveHour(),
+                'value': datePickerCtrl.getActiveHour2(),
                 'min': 0,
                 'max': 23,
                 'data-subject': 'hours2'
@@ -164,7 +166,7 @@ function renderDatePicker(
               input({
                 'type': 'range',
                 'class': 'cal-minute-slider',
-                'value': datePickerCtrl.getActiveMinute(),
+                'value': datePickerCtrl.getActiveMinute2(),
                 'min': 0,
                 'max': 59,
                 'data-subject': 'minutes2'
@@ -376,13 +378,17 @@ function renderDatePicker(
     );
   }
 
-  function renderTime() {
+  function renderTime(timeSelectorNumber: 1 | 2 = 1) {
     const date = new Date(
       1970,
       0,
       1,
-      datePickerCtrl.getActiveHour(),
-      datePickerCtrl.getActiveMinute()
+      timeSelectorNumber !== 2
+        ? datePickerCtrl.getActiveHour()
+        : datePickerCtrl.getActiveHour2(),
+      timeSelectorNumber !== 2
+        ? datePickerCtrl.getActiveMinute()
+        : datePickerCtrl.getActiveMinute2()
     );
     let time = '';
     let dayPeriod = '';

@@ -38,6 +38,8 @@ class DatePickerController {
   #activeMonth = new Date().getMonth();
   #activeHour = new Date().getHours();
   #activeMinute = new Date().getMinutes();
+  #activeHour2 = new Date().getHours();
+  #activeMinute2 = new Date().getMinutes();
   #notifyTimeoutId: unknown = null;
 
   get #selectionMode() {
@@ -129,6 +131,14 @@ class DatePickerController {
     return this.#activeMinute;
   }
 
+  getActiveHour2() {
+    return this.#activeHour2;
+  }
+
+  getActiveMinute2() {
+    return this.#activeMinute2;
+  }
+
   hasSelectedYear(year: number) {
     return this.#selection.has(getYearString(year));
   }
@@ -162,6 +172,12 @@ class DatePickerController {
       return !dateString ? '' : `${dateString}T${timeString}`;
     } else if (this.#selectionMode === 'time') {
       return getHourMinuteString(this.#activeHour, this.#activeMinute);
+    } else if (this.#selectionMode === 'timeRange') {
+      return (
+        getHourMinuteString(this.#activeHour, this.#activeMinute) +
+        '|' +
+        getHourMinuteString(this.#activeHour2, this.#activeMinute2)
+      );
     } else {
       return Array.from(this.#selection).sort().join(',');
     }
@@ -241,6 +257,28 @@ class DatePickerController {
 
         case 'minutes':
           this.#setActiveMinutes(
+            parseInt(
+              String((target as unknown as { value: string | number }).value),
+              10
+            )
+          );
+
+          this.#notifyChange();
+          break;
+
+        case 'hours2':
+          this.#setActiveHours2(
+            parseInt(
+              String((target as unknown as { value: string | number }).value),
+              10
+            )
+          );
+
+          this.#notifyChange();
+          break;
+
+        case 'minutes2':
+          this.#setActiveMinutes2(
             parseInt(
               String((target as unknown as { value: string | number }).value),
               10
@@ -436,6 +474,16 @@ class DatePickerController {
 
   #setActiveMinutes = (minute: number) => {
     this.#activeMinute = minute;
+    this.#requestUpdate();
+  };
+
+  #setActiveHours2 = (hour: number) => {
+    this.#activeHour2 = hour;
+    this.#requestUpdate();
+  };
+
+  #setActiveMinutes2 = (minute: number) => {
+    this.#activeMinute2 = minute;
     this.#requestUpdate();
   };
 
