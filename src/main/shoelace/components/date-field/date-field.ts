@@ -25,8 +25,9 @@ import dateFieldStyles from './date-field.styles';
 import dateIcon from '../../icons/bootstrap/calendar3.icon';
 import datesIcon from '../../icons/bootstrap/calendar3.icon';
 import timeIcon from '../../icons/bootstrap/clock.icon';
+import timeRangeIcon from '../../icons/bootstrap/clock.icon';
 import dateTimeIcon from '../../icons/bootstrap/calendar3.icon';
-import dateRangeIcon from '../../icons/bootstrap//calendar-range.icon';
+import dateRangeIcon from '../../icons/bootstrap/calendar-range.icon';
 import weekIcon from '../../icons/bootstrap/calendar.icon';
 import monthIcon from '../../icons/bootstrap/calendar.icon';
 import yearIcon from '../../icons/bootstrap/calendar.icon';
@@ -54,6 +55,7 @@ export class DateField extends LitElement {
     | 'dateTime'
     | 'dateRange'
     | 'time'
+    | 'timeRange'
     | 'week'
     | 'month'
     | 'year' = 'date';
@@ -190,6 +192,7 @@ export class DateField extends LitElement {
       dateRange: dateRangeIcon,
       dateTime: dateTimeIcon,
       time: timeIcon,
+      timeRange: timeRangeIcon,
       week: weekIcon,
       month: monthIcon,
       year: yearIcon
@@ -376,6 +379,30 @@ const logicBySelectionMode: Record<
   },
 
   time: {
+    formatValue(value, localize) {
+      if (!value) {
+        return '';
+      }
+
+      const date = new Date();
+      const timeTokens = value.split(':');
+      date.setHours(parseInt(timeTokens[0], 10));
+      date.setMinutes(parseInt(timeTokens[1], 10));
+      date.setSeconds(0);
+      date.setMilliseconds(0);
+
+      return localize.date(date, {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    },
+
+    getPopupTitle() {
+      return '';
+    }
+  },
+
+  timeRange: {
     formatValue(value, localize) {
       if (!value) {
         return '';

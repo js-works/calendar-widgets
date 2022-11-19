@@ -80,6 +80,7 @@ function renderDatePicker(
         ? renderYearSheet()
         : renderMonthSheet();
 
+    // TODO!!!
     const typeSnakeCase = props.selectionMode.replace(
       /[A-Z]/g,
       (it) => `-${it.toLowerCase()}`
@@ -87,7 +88,7 @@ function renderDatePicker(
 
     return div(
       { class: `cal-base cal-base--type-${typeSnakeCase}` },
-      props.selectionMode === 'time'
+      props.selectionMode === 'time' || props.selectionMode === 'timeRange'
         ? null
         : div(
             {
@@ -112,28 +113,63 @@ function renderDatePicker(
               i18n.getDirection() === 'ltr' ? '\u{1F862}' : '\u{1F860}'
             )
           ),
-      props.selectionMode === 'time' ? null : sheet,
-      props.selectionMode !== 'dateTime' && props.selectionMode !== 'time'
+      props.selectionMode === 'time' || props.selectionMode === 'timeRange'
+        ? null
+        : sheet,
+      props.selectionMode !== 'dateTime' &&
+        props.selectionMode !== 'time' &&
+        props.selectionMode !== 'timeRange'
         ? null
         : div(
-            { class: 'cal-time-selector' },
-            div({ class: 'cal-time' }, renderTime()),
-            input({
-              'type': 'range',
-              'class': 'cal-hour-slider',
-              'value': datePickerCtrl.getActiveHour(),
-              'min': 0,
-              'max': 23,
-              'data-subject': 'hours'
-            }),
-            input({
-              'type': 'range',
-              'class': 'cal-minute-slider',
-              'value': datePickerCtrl.getActiveMinute(),
-              'min': 0,
-              'max': 59,
-              'data-subject': 'minutes'
-            })
+            null,
+            div({ class: 'cal-time-selector-headline' }, 'From'),
+            div(
+              { class: 'cal-time-selector' },
+              div({ class: 'cal-time' }, renderTime()),
+              input({
+                'type': 'range',
+                'class': 'cal-hour-slider',
+                'value': datePickerCtrl.getActiveHour(),
+                'min': 0,
+                'max': 23,
+                'data-subject': 'hours'
+              }),
+              input({
+                'type': 'range',
+                'class': 'cal-minute-slider',
+                'value': datePickerCtrl.getActiveMinute(),
+                'min': 0,
+                'max': 59,
+                'data-subject': 'minutes'
+              })
+            )
+          ),
+      props.selectionMode !== 'timeRange'
+        ? null
+        : div(
+            null,
+            div({ class: 'cal-time-range-arrow' }, '\u{1F863}'),
+            div({ class: 'cal-time-selector-headline' }, 'To'),
+            div(
+              { class: 'cal-time-selector' },
+              div({ class: 'cal-time' }, renderTime()),
+              input({
+                'type': 'range',
+                'class': 'cal-hour-slider',
+                'value': datePickerCtrl.getActiveHour(),
+                'min': 0,
+                'max': 23,
+                'data-subject': 'hours2'
+              }),
+              input({
+                'type': 'range',
+                'class': 'cal-minute-slider',
+                'value': datePickerCtrl.getActiveMinute(),
+                'min': 0,
+                'max': 59,
+                'data-subject': 'minutes2'
+              })
+            )
           )
     );
   }

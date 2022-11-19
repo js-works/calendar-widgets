@@ -139,6 +139,7 @@ class DatePickerDemo extends LitElement {
             <sl-menu-item value="dateRange">dateRange</sl-menu-item>
             <sl-menu-item value="dateTime">dateTime</sl-menu-item>
             <sl-menu-item value="time">time</sl-menu-item>
+            <sl-menu-item value="timeRange">timeRange</sl-menu-item>
             <sl-menu-item value="week">week</sl-menu-item>
             <sl-menu-item value="weeks">weeks</sl-menu-item>
             <sl-menu-item value="month">month</sl-menu-item>

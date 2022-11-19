@@ -174,6 +174,17 @@ export default /*css*/ `
     justify-content: center;
   }
 
+  .cal-time-range-arrow {
+    font-size: 125%;
+    margin: -0.75em 1rem -0.25em 1.25em;
+    padding: 0;
+  }
+
+  .cal-time-selector-headline {
+    margin: 0.75em 0 -0.75em 0.9em;
+    font-size: 110%;
+  }
+
   .cal-time-selector {
     display: grid;
     grid-template-columns: auto 1fr;

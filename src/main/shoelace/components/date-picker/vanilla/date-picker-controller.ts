@@ -14,6 +14,7 @@ namespace DatePickerController {
     | 'time'
     | 'dateTime'
     | 'dateRange'
+    | 'timeRange'
     | 'week'
     | 'weeks'
     | 'month'
