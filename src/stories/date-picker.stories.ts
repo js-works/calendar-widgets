@@ -155,9 +155,15 @@ class DatePickerDemo extends LitElement {
                 data-subject="daysAmount"
                 value=${this._daysAmount}
               >
-                <sl-menu-item value="default">default</sl-menu-item>
-                <sl-menu-item value="minimal">minimal</sl-menu-item>
-                <sl-menu-item value="maximal">maximal</sl-menu-item>
+                <sl-menu-item value="default">
+                  default (incl. adjacent days)
+                </sl-menu-item>
+                <sl-menu-item value="minimal">
+                  minimal (excl. adjacent days)
+                </sl-menu-item>
+                <sl-menu-item value="maximal">
+                  maximal (always 42 days)
+                </sl-menu-item>
               </sl-select>
               <sl-checkbox
                 data-subject="elevateNavigation"
