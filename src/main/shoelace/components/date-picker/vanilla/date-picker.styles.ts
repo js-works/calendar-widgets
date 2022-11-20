@@ -110,11 +110,13 @@ export default /*css*/ `
     justify-content: center;
     font-size: 85%;
     text-transform: capitalize;
+    margin: 0 0 0.25rem 0;
   }
 
   .cal-week-number {
     font-size: 70%;
     opacity: 75%;
+    margin: 0 0.75em 0 0;
   }
 
   .cal-cell {
