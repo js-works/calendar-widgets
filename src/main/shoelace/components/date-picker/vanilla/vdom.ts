@@ -129,11 +129,7 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
     if (v !== oldAttrs[k]) {
       patches.push((node) => {
         if (node instanceof Element) {
-          if (v == null) {
-            node.removeAttribute(k);
-          } else {
-            node.setAttribute(k, String(v));
-          }
+          updateAttribute(node, k, v);
         }
       });
     }
@@ -220,6 +216,24 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
     patchAttrs(node);
     patchChildren(node);
   };
+}
+
+// === local helpers =================================================
+
+function updateAttribute(
+  elem: Element,
+  attrName: string,
+  value: string | number | null | undefined
+) {
+  if (value == null) {
+    elem.removeAttribute(attrName);
+  } else {
+    elem.setAttribute(attrName, String(value));
+
+    if (elem.tagName === 'INPUT' && attrName === 'value') {
+      (elem as HTMLInputElement).value = String(value);
+    }
+  }
 }
 
 // cSpell:words vchild vchildren velem vnode

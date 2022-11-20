@@ -471,23 +471,43 @@ class DatePickerController {
     this.#activeHour = hour;
     this.#activeHour2 = Math.max(this.#activeHour, this.#activeHour2);
 
-    console.log(this.#activeHour, this.#activeHour2);
+    if (this.#activeHour === this.#activeHour2) {
+      this.#activeMinute2 = Math.max(this.#activeMinute, this.#activeMinute2);
+    }
+
     this.#requestUpdate();
   };
 
   #setActiveMinutes = (minute: number) => {
     this.#activeMinute = minute;
+    this.#activeHour2 = Math.max(this.#activeHour, this.#activeHour2);
+
+    if (this.#activeHour === this.#activeHour2) {
+      this.#activeMinute2 = Math.max(this.#activeMinute, this.#activeMinute2);
+    }
+
     this.#requestUpdate();
   };
 
   #setActiveHours2 = (hour: number) => {
     this.#activeHour2 = hour;
     this.#activeHour = Math.min(this.#activeHour, this.#activeHour2);
+
+    if (this.#activeHour === this.#activeHour2) {
+      this.#activeMinute = Math.min(this.#activeMinute, this.#activeMinute2);
+    }
+
     this.#requestUpdate();
   };
 
   #setActiveMinutes2 = (minute: number) => {
     this.#activeMinute2 = minute;
+    this.#activeHour = Math.min(this.#activeHour, this.#activeHour2);
+
+    if (this.#activeHour === this.#activeHour2) {
+      this.#activeMinute = Math.min(this.#activeMinute, this.#activeMinute2);
+    }
+
     this.#requestUpdate();
   };
 
