@@ -320,8 +320,8 @@ const logicBySelectionMode: Record<
 
       return localize.date(value, {
         year: 'numeric',
-        month: '2-digit',
-        day: '2-digit'
+        month: 'numeric',
+        day: 'numeric'
       });
     },
 
@@ -355,11 +355,11 @@ const logicBySelectionMode: Record<
       }
 
       return localize.date(value, {
-        day: '2-digit',
-        month: '2-digit',
+        day: 'numeric',
+        month: 'numeric',
         year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+        hour: 'numeric',
+        minute: 'numeric'
       });
     },
 
@@ -372,8 +372,8 @@ const logicBySelectionMode: Record<
         day: 'numeric',
         month: 'short',
         year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+        hour: 'numeric',
+        minute: 'numeric'
       });
     }
   },
@@ -392,8 +392,8 @@ const logicBySelectionMode: Record<
       date.setMilliseconds(0);
 
       return localize.date(date, {
-        hour: '2-digit',
-        minute: '2-digit'
+        hour: 'numeric',
+        minute: 'numeric'
       });
     },
 
@@ -422,8 +422,8 @@ const logicBySelectionMode: Record<
       }
 
       const ret = new Intl.DateTimeFormat(localize.lang(), {
-        hour: '2-digit',
-        minute: '2-digit'
+        hour: 'numeric',
+        minute: 'numeric'
       }).formatRange(dates[0], dates[1]);
 
       return ret;
