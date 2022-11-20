@@ -15,7 +15,7 @@ export default css`
   .caption {
     width: 100%;
     margin-bottom: 0.5rem;
-    padding: 1px 0.75em 3px 0.75em;
+    padding: 2px 0.75em 4px 0.75em;
 
     /*
     background: linear-gradient(
@@ -25,8 +25,8 @@ export default css`
     );
     */
 
-    background-color: var(--sl-color-neutral-100);
-    border: 1px solid var(--sl-color-neutral-100);
+    background-color: var(--sl-color-neutral-50);
+    border-bottom: 1px solid var(--sl-color-neutral-200);
     border-radius: 1px;
     box-sizing: border-box;
     border-radius: 1px;

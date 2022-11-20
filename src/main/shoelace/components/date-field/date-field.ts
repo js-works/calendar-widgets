@@ -409,25 +409,24 @@ const logicBySelectionMode: Record<
       }
 
       const values = value.split('|');
-      const arr: string[] = [];
+      const dates: Date[] = [];
 
       for (let i = 0; i < 2; ++i) {
         const date = new Date();
-        const timeTokens = values[i].split(':');
-        date.setHours(parseInt(timeTokens[0], 10));
-        date.setMinutes(parseInt(timeTokens[1], 10));
+        const [hours, minutes] = values[i].split(':');
+        date.setHours(parseInt(hours, 10));
+        date.setMinutes(parseInt(minutes, 10));
         date.setSeconds(0);
         date.setMilliseconds(0);
-
-        arr.push(
-          localize.date(date, {
-            hour: '2-digit',
-            minute: '2-digit'
-          })
-        );
+        dates.push(date);
       }
 
-      return arr.join(' - ');
+      const ret = new Intl.DateTimeFormat(localize.lang(), {
+        hour: '2-digit',
+        minute: '2-digit'
+      }).formatRange(dates[0], dates[1]);
+
+      return ret;
     },
 
     getPopupTitle(value, localize) {

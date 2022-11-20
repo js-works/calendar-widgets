@@ -469,6 +469,9 @@ class DatePickerController {
 
   #setActiveHours = (hour: number) => {
     this.#activeHour = hour;
+    this.#activeHour2 = Math.max(this.#activeHour, this.#activeHour2);
+
+    console.log(this.#activeHour, this.#activeHour2);
     this.#requestUpdate();
   };
 
@@ -479,6 +482,7 @@ class DatePickerController {
 
   #setActiveHours2 = (hour: number) => {
     this.#activeHour2 = hour;
+    this.#activeHour = Math.min(this.#activeHour, this.#activeHour2);
     this.#requestUpdate();
   };
 
