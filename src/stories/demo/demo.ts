@@ -6,6 +6,7 @@ import { datePicker } from '../date-picker.stories';
 import { dateFields } from '../date-field.stories';
 import { dialogs } from '../dialogs.stories';
 import { toasts } from '../toasts.stories';
+import { preactDemo } from '../preact.demo';
 
 import {
   convertThemeToCss,
@@ -57,6 +58,10 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
     )
   }
 };
+
+function demo(content: string | Element) {
+  return typeof content === 'string' ? unsafeHTML(content) : content;
+}
 
 @customElement('demo-app')
 class DemoApp extends LitElement {
@@ -179,14 +184,24 @@ class DemoApp extends LitElement {
           >
             Toasts
           </sl-tab>
+          <sl-tab
+            slot="nav"
+            panel="preact-demo"
+            ?active=${this._activeTab === 'preact-demo'}
+          >
+            Preact
+          </sl-tab>
           <sl-tab-panel name="date-picker">
-            ${unsafeHTML(datePicker())}
+            ${demo(datePicker())}
           </sl-tab-panel>
           <sl-tab-panel name="date-fields">
-            ${unsafeHTML(dateFields())}
+            ${demo(dateFields())}
           </sl-tab-panel>
-          <sl-tab-panel name="dialogs">${unsafeHTML(dialogs())}</sl-tab-panel>
-          <sl-tab-panel name="toasts">${unsafeHTML(toasts())}</sl-tab-panel>
+          <sl-tab-panel name="dialogs">${demo(dialogs())}</sl-tab-panel>
+          <sl-tab-panel name="toasts">${demo(toasts())}</sl-tab-panel>
+          <sl-tab-panel name="preact-demo">
+            ${demo(preactDemo())}
+          </sl-tab-panel>
         </sl-tab-group>
       </div>
     `;

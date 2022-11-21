@@ -4,7 +4,7 @@ import labelLayoutStyles from '../shoelace/styles/label-layout.styles';
 export default css`
   ${labelLayoutStyles}
 
-  .base {
+  .xxxbase {
     position: absolute;
     width: 0;
     max-width: 0;
