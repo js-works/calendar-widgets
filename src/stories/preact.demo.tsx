@@ -1,7 +1,7 @@
 import { h, render as mount, Ref, ComponentChild, VNode } from 'preact';
 
-import { useContext, useEffect, useState, useRef } from 'preact/hooks';
-import { html, render, ReactiveController, ReactiveControllerHost } from 'lit';
+import { useEffect, useState } from 'preact/hooks';
+import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { AbstractDialogsController } from '../main/shoelace/controllers/vanilla/dialogs';
 import { LocalizeController } from '@shoelace-style/localize';
 
@@ -43,7 +43,7 @@ class DialogsController extends AbstractDialogsController<
           );
 
         this.#renderers.add(renderer);
-
+        forceUpdate();
         return Promise.resolve() as any;
       }
     });
@@ -53,9 +53,8 @@ class DialogsController extends AbstractDialogsController<
     setRenderer(() =>
       h(
         'span',
-        { style: { border: '1px solid red' } },
-        //[...this.#renderers].map((it) => it())
-        this.#renderers.size
+        null,
+        [...this.#renderers].map((it) => it())
       )
     );
   }
@@ -107,7 +106,7 @@ function useDialogs(): [DialogsController, () => VNode] {
       const dialogCtrl = new DialogsController(
         proxy,
         (renderer) => (renderDialogs = renderer),
-        () => {} //TODO!!!!
+        forceUpdate
       );
 
       return [dialogCtrl, renderDialogs!];
@@ -125,7 +124,7 @@ function Demo() {
   const [dialogs, renderDialogs] = useDialogs();
 
   const onOpenDialogClick = () => {
-    dialogs.error({ message: 'Juhu' });
+    dialogs.error({ message: 'File could not be deleted' });
   };
 
   return h(
