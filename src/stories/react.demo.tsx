@@ -1,28 +1,27 @@
-// @jsx h
-import {
-  createContext,
-  h,
-  render as mount,
-  Ref,
-  ComponentChild,
-  VNode
-} from 'preact';
-import { createPortal } from 'preact/compat';
-import { useContext, useEffect, useState, useRef } from 'preact/hooks';
+// @jsx createElement
+import { createContext, createElement, Ref, ReactNode } from 'react';
+
+import React from 'react';
+
+import { createRoot } from 'react-dom/client';
+import { createPortal } from 'react-dom';
+
+import { useContext, useEffect, useState, useRef } from 'react';
 import { html, render, ReactiveController, ReactiveControllerHost } from 'lit';
 import { DialogsController } from '../main/shoelace-widgets-lit';
 
-export const preactDemo = () => {
+export const reactDemo = () => {
   const container = document.createElement('div');
 
-  mount(<Demo />, container);
+  const root = createRoot(container);
+  root.render(<Demo />);
 
   return container;
 };
 
 const LangCtx = createContext('de-CH');
 
-function useDialogs(): [DialogsController, () => VNode] {
+function useDialogs(): [DialogsController, () => JSX.Element] {
   const [, setToggle] = useState(false);
   const forceUpdate = () => setToggle((it) => !it);
 
@@ -50,7 +49,7 @@ function useDialogs(): [DialogsController, () => VNode] {
 
   const proxy = new Proxy(dialogsContainer, {
     get(target, prop) {
-      return Object.hasOwn(host, prop)
+      return host.hasOwnProperty(prop)
         ? (host as any)[prop]
         : (target as any)[prop];
     }
@@ -76,7 +75,7 @@ function useDialogs(): [DialogsController, () => VNode] {
     }
 
     //render(html`${dialogsContainer} ${dialogCtrl.render()}`, elem);
-    mount(<ShowLang />, elem);
+    // TODO!!! // (<ShowLang />, elem);
     controllers.forEach((it) => it.hostUpdated?.());
   });
 
@@ -111,12 +110,12 @@ function ShowLang() {
 type Adjust<T> = {
   [K in keyof T]: Partial<Omit<T[K], 'children'>> & {
     ref?: Ref<T[K]>;
-    children?: ComponentChild;
+    children?: ReactNode;
   };
 };
 
 declare global {
-  namespace preact.JSX {
+  namespace JSX {
     interface IntrinsicElements extends Adjust<HTMLElementTagNameMap> {}
   }
 }

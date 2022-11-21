@@ -6,6 +6,7 @@ import { datePicker } from '../date-picker.stories';
 import { dateFields } from '../date-field.stories';
 import { dialogs } from '../dialogs.stories';
 import { toasts } from '../toasts.stories';
+import { reactDemo } from '../react.demo';
 import { preactDemo } from '../preact.demo';
 
 import {
@@ -186,6 +187,13 @@ class DemoApp extends LitElement {
           </sl-tab>
           <sl-tab
             slot="nav"
+            panel="react-demo"
+            ?active=${this._activeTab === 'react-demo'}
+          >
+            React
+          </sl-tab>
+          <sl-tab
+            slot="nav"
             panel="preact-demo"
             ?active=${this._activeTab === 'preact-demo'}
           >
@@ -199,6 +207,7 @@ class DemoApp extends LitElement {
           </sl-tab-panel>
           <sl-tab-panel name="dialogs">${demo(dialogs())}</sl-tab-panel>
           <sl-tab-panel name="toasts">${demo(toasts())}</sl-tab-panel>
+          <sl-tab-panel name="react-demo"> ${demo(reactDemo())} </sl-tab-panel>
           <sl-tab-panel name="preact-demo">
             ${demo(preactDemo())}
           </sl-tab-panel>
