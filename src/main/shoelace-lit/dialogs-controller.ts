@@ -1,4 +1,5 @@
-import { html } from 'lit';
+import { html, LitElement } from 'lit';
+import { customElement, property, state } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
 import { createRef, ref } from 'lit/directives/ref';
 import { repeat } from 'lit/directives/repeat';
@@ -47,10 +48,6 @@ type ExtraInputConfigParams = {
   labelLayout?: 'vertical' | 'horizontal' | 'auto';
 };
 
-// === constants =====================================================
-
-const toastDuration = 2000;
-
 // === icons by dialog type ==========================================
 
 const icons = {
@@ -76,6 +73,208 @@ setDefaultAnimation('shoelaceWidgets.dialogs.vibrate', {
   ],
   options: { duration: 600, easing: 'ease-in-out' }
 });
+
+@customElement('dyn-dialog')
+class DynDialog extends LitElement {
+  @property({ attribute: false })
+  config!: DialogConfig<unknown, ExtraInputConfigParams>;
+
+  @property({ attribute: false })
+  dismissDialog!: () => void;
+
+  @property({ attribute: false })
+  emitResult!: (result: unknown) => void;
+
+  @property()
+  lang: string = '';
+
+  @property()
+  dir: string = '';
+
+  @state()
+  private _dialogOpen = false;
+
+  @state()
+  private _errorBoxVisible = false;
+
+  private _localize = new LocalizeController(this);
+  private _dialogRef = createRef<SlDialog>();
+  private _errorBoxRef = createRef<HTMLElement>();
+  private _formRef = createRef<Form>();
+
+  private _lastClickedAction = '';
+
+  private _onFormSubmit = (ev: FormSubmitEvent) => {
+    ev.preventDefault();
+    const data = { ...ev.detail.data };
+
+    setTimeout(async () => {
+      data.action = this._lastClickedAction;
+      await this._dialogRef.value!.hide();
+      this.emitResult(this.config.mapResult?.(this._lastClickedAction, data));
+    });
+  };
+
+  private _onFormInvalid = async () => {
+    if (this._errorBoxVisible) {
+      const { keyframes, options } = getAnimation(
+        this._errorBoxRef.value!,
+        'shoelaceWidgets.dialogs.vibrate',
+        {
+          dir: this._localize.dir()
+        }
+      );
+
+      this._errorBoxRef.value!.animate(keyframes, options);
+    } else {
+      runOpenVerticalTransition(this._errorBoxRef.value!).then(
+        () => (this._errorBoxVisible = true)
+      );
+      this.requestUpdate();
+    }
+  };
+
+  render() {
+    let additionalContent: TemplateResult = html``;
+
+    const hasPrimaryButton = this.config.buttons.some(
+      (it) => it.variant === 'primary'
+    );
+
+    if (this.config.type === 'prompt') {
+      const value =
+        this.config.params.value === 'string' ? this.config.params.value : '';
+
+      additionalContent = html`
+        <sx-text-field name="input" size="small" autofocus value=${value}>
+        </sx-text-field>
+      `;
+    }
+
+    const labelLayout =
+      this.config.type !== 'input'
+        ? 'auto'
+        : this.config.params.labelLayout === 'vertical'
+        ? 'vertical'
+        : this.config.params.labelLayout === 'horizontal'
+        ? 'horizontal'
+        : 'auto';
+
+    const dialogRef = createRef<SlDialog>();
+
+    const onAfterHide = (ev: Event) => {
+      if (ev.target === dialogRef.value) {
+        this.dismissDialog();
+      }
+    };
+
+    const onCloseErrorBoxClick = () => {
+      runCloseVerticalTransition(this._errorBoxRef.value!).then(
+        () => (this._errorBoxVisible = false)
+      );
+
+      this.requestUpdate();
+    };
+
+    return html`
+      <style>
+        .dialog {
+          --width: ${this.config.width ?? 'initial'}
+        }
+
+        .dialog::part(panel) {
+          height: ${this.config.height ? this.config.height : 'auto'}
+        }
+
+        ${dialogsStyles}
+      </style>
+      <sx-form
+        class=${classMap({
+          'form': true,
+          'label-layout-vertical': labelLayout === 'vertical',
+          'label-layout-horizontal': labelLayout === 'horizontal'
+        })}
+        dir=${this._localize.dir()}
+        @sx-form-submit=${this._onFormSubmit}
+        @sx-form-invalid=${this._onFormInvalid}
+        ${ref(this._formRef)}
+      >
+        <sl-dialog
+          ?opxen=${this._dialogOpen}
+          open
+          class="dialog"
+          @sl-after-hide=${onAfterHide}
+          ${ref(dialogRef)}
+        >
+          <div slot="label" class="header">
+            <sl-icon
+              class="icon ${this.config.type}"
+              src=${icons[this.config.type]}
+            ></sl-icon>
+            <div class="title">${this.config.title}</div>
+          </div>
+          <div class="message">${this.config.message}</div>
+          <div class="content">
+            <slot></slot>
+            ${additionalContent}
+          </div>
+          <div slot="footer">
+            <div
+              class=${classMap({
+                'error-box': true,
+                'error-box--closed': !this._errorBoxVisible
+              })}
+              ${ref(this._errorBoxRef)}
+            >
+              <div class="error-box-content">
+                <sl-icon
+                  src=${errorIcon}
+                  class="error-box-error-icon"
+                ></sl-icon>
+                <div class="error-box-text">
+                  Invalid form entries - please correct
+                </div>
+                <sl-icon
+                  class="error-box-close-icon"
+                  library="system"
+                  name="x"
+                  @click=${onCloseErrorBoxClick}
+                ></sl-icon>
+              </div>
+            </div>
+            <div class="buttons">
+              ${repeat(
+                this.config.buttons,
+                ({ text, action, variant = 'default' }, idx) => {
+                  const autofocus =
+                    variant === 'primary' || (!hasPrimaryButton && idx === 0);
+
+                  const onClick = () => {
+                    this._lastClickedAction = action;
+                    this._formRef.value!.submit();
+                  };
+
+                  return html`
+                    <sl-button
+                      type="submit"
+                      variant=${variant}
+                      value=${idx}
+                      class="button"
+                      ?autofocus=${autofocus}
+                      @click=${onClick}
+                    >
+                      ${text}
+                    </sl-button>
+                  `;
+                }
+              )}
+            </div>
+          </div>
+        </sl-dialog>
+      </sx-form>
+    `;
+  }
+}
 
 export class DialogsController extends AbstractDialogsController<
   TemplateResult,
@@ -112,32 +311,27 @@ export class DialogsController extends AbstractDialogsController<
     config: DialogConfig<TemplateResult, R>
   ): Promise<R> => {
     let emitResult: (result: unknown) => void;
-    let dialogOpen = false;
-    let errorBoxVisible = false;
 
     const renderer = () =>
-      this.#renderDialog(config, {
-        isDialogOpen: () => dialogOpen,
-        isErrorBoxVisible: () => errorBoxVisible,
-        setErrorBoxVisible: (value: boolean) => {
-          if (errorBoxVisible !== value) {
-            errorBoxVisible = value;
+      html`
+        <dyn-dialog
+          .config=${config}
+          .dismissDialog=${() => {
+            this.#dialogRenderers.delete(renderer);
             this.#requestUpdate();
-          }
-        },
-        dismissDialog: () => {
-          this.#dialogRenderers.delete(renderer);
-          this.#requestUpdate();
-        },
-        emitResult(result) {
-          return emitResult(result);
-        }
-      });
+          }}
+          .emitResult=${(result: any) => {
+            return emitResult(result);
+          }}
+        >
+          ${config.content}
+        </dyn-dialog>
+      `;
 
     this.#dialogRenderers.add(renderer);
 
     await this.#requestUpdate();
-    dialogOpen = true;
+    // dialogOpen = true;
     await this.#requestUpdate();
 
     return new Promise((resolve) => {
@@ -146,193 +340,4 @@ export class DialogsController extends AbstractDialogsController<
       };
     });
   };
-
-  #renderDialog<R = void>(
-    config: DialogConfig<TemplateResult, R>,
-    params: {
-      isDialogOpen: () => boolean;
-      isErrorBoxVisible: () => boolean;
-      setErrorBoxVisible: (value: boolean) => void;
-      dismissDialog: () => void;
-      emitResult: (result: unknown) => void;
-    }
-  ) {
-    const {
-      isDialogOpen: isOpen,
-      isErrorBoxVisible,
-      setErrorBoxVisible,
-      dismissDialog,
-      emitResult
-    } = params;
-
-    const formRef = createRef<Form>();
-    const errorBoxRef = createRef<HTMLDivElement>();
-    let lastClickedAction = '';
-
-    const hasPrimaryButton = config.buttons.some(
-      (it) => it.variant === 'primary'
-    );
-
-    let content: TemplateResult | null = null;
-
-    if (config.type === 'prompt') {
-      const value = config.params.value === 'string' ? config.params.value : '';
-
-      content = html`
-        <sx-text-field name="input" size="small" autofocus value=${value}>
-        </sx-text-field>
-      `;
-    } else if (config.type === 'input') {
-      content = (config as any).content;
-    }
-
-    const onFormSubmit = (ev: FormSubmitEvent) => {
-      ev.preventDefault();
-      const data = { ...ev.detail.data };
-
-      setTimeout(async () => {
-        data.action = lastClickedAction;
-        await dialogRef.value!.hide();
-        emitResult(config.mapResult?.(lastClickedAction, data));
-      });
-    };
-
-    const onFormInvalid = async () => {
-      if (isErrorBoxVisible()) {
-        const { keyframes, options } = getAnimation(
-          errorBoxRef.value!,
-          'shoelaceWidgets.dialogs.vibrate',
-          {
-            dir: this.#localize.dir()
-          }
-        );
-
-        errorBoxRef.value!.animate(keyframes, options);
-      } else {
-        runOpenVerticalTransition(errorBoxRef.value!).then(() =>
-          setErrorBoxVisible(true)
-        );
-        this.#requestUpdate();
-      }
-    };
-
-    const labelLayout =
-      config.type !== 'input'
-        ? 'auto'
-        : config.params.labelLayout === 'vertical'
-        ? 'vertical'
-        : config.params.labelLayout === 'horizontal'
-        ? 'horizontal'
-        : 'auto';
-
-    const dialogRef = createRef<SlDialog>();
-
-    const onAfterHide = (ev: Event) => {
-      if (ev.target === dialogRef.value) {
-        dismissDialog();
-      }
-    };
-
-    const onCloseErrorBoxClick = () => {
-      runCloseVerticalTransition(errorBoxRef.value!).then(() =>
-        setErrorBoxVisible(false)
-      );
-
-      this.#requestUpdate();
-    };
-
-    return html`
-      <style>
-        .dialog {
-          --width: ${config.width ?? 'initial'}
-        }
-
-        .dialog::part(panel) {
-          height: ${config.height ? config.height : 'auto'}
-        }
-
-        ${dialogsStyles}
-      </style>
-      <sx-form
-        class=${classMap({
-          'form': true,
-          'label-layout-vertical': labelLayout === 'vertical',
-          'label-layout-horizontal': labelLayout === 'horizontal'
-        })}
-        dir=${this.#localize.dir()}
-        @sx-form-submit=${onFormSubmit}
-        @sx-form-invalid=${onFormInvalid}
-        ${ref(formRef)}
-      >
-        <sl-dialog
-          ?open=${isOpen()}
-          class="dialog"
-          @sl-after-hide=${onAfterHide}
-          ${ref(dialogRef)}
-        >
-          <div slot="label" class="header">
-            <sl-icon
-              class="icon ${config.type}"
-              src=${icons[config.type]}
-            ></sl-icon>
-            <div class="title">${config.title}</div>
-          </div>
-          <div class="message">${config.message}</div>
-          <div class="content">${content}</div>
-          <div slot="footer">
-            <div
-              class=${classMap({
-                'error-box': true,
-                'error-box--closed': !isErrorBoxVisible()
-              })}
-              ${ref(errorBoxRef)}
-            >
-              <div class="error-box-content">
-                <sl-icon
-                  src=${errorIcon}
-                  class="error-box-error-icon"
-                ></sl-icon>
-                <div class="error-box-text">
-                  Invalid form entries - please correct
-                </div>
-                <sl-icon
-                  class="error-box-close-icon"
-                  library="system"
-                  name="x"
-                  @click=${onCloseErrorBoxClick}
-                ></sl-icon>
-              </div>
-            </div>
-            <div class="buttons">
-              ${repeat(
-                config.buttons,
-                ({ text, action, variant = 'default' }, idx) => {
-                  const autofocus =
-                    variant === 'primary' || (!hasPrimaryButton && idx === 0);
-
-                  const onClick = () => {
-                    lastClickedAction = action;
-                    formRef.value!.submit();
-                  };
-
-                  return html`
-                    <sl-button
-                      type="submit"
-                      variant=${variant}
-                      value=${idx}
-                      class="button"
-                      ?autofocus=${autofocus}
-                      @click=${onClick}
-                    >
-                      ${text}
-                    </sl-button>
-                  `;
-                }
-              )}
-            </div>
-          </div>
-        </sl-dialog>
-      </sx-form>
-    `;
-  }
 }
