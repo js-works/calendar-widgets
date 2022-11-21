@@ -1,82 +1,120 @@
-// @jsx h
-import {
-  createContext,
-  h,
-  render as mount,
-  Ref,
-  ComponentChild,
-  VNode
-} from 'preact';
-import { createPortal } from 'preact/compat';
+import { h, render as mount, Ref, ComponentChild, VNode } from 'preact';
+
 import { useContext, useEffect, useState, useRef } from 'preact/hooks';
 import { html, render, ReactiveController, ReactiveControllerHost } from 'lit';
-import { DialogsController } from '../main/shoelace-widgets-lit';
+import { AbstractDialogsController } from '../main/shoelace/controllers/vanilla/dialogs';
+import { LocalizeController } from '@shoelace-style/localize';
+
+type ExtraInputConfigParams = {
+  labelLayout?: 'vertical' | 'horizontal' | 'auto';
+};
+
+class DialogsController extends AbstractDialogsController<
+  VNode,
+  ExtraInputConfigParams
+> {
+  #localize: LocalizeController;
+  #renderers = new Set<() => VNode>();
+
+  constructor(
+    host: HTMLElement & ReactiveControllerHost,
+    setRenderer: (renderer: () => VNode) => void,
+    forceUpdate: () => void
+  ) {
+    super({
+      translate: (key) => this.#localize.term(`shoelaceWidgets.dialogs/${key}`),
+      showDialog: (config) => {
+        const renderer = () =>
+          h(
+            'dyn-dialog' as any,
+            {
+              config,
+
+              dismissDialog: () => {
+                this.#renderers.delete(renderer);
+                forceUpdate();
+              },
+
+              emitResult: (result: any) => {
+                //return emitResult(result);
+              }
+            },
+            config.content
+          );
+
+        this.#renderers.add(renderer);
+
+        return Promise.resolve() as any;
+      }
+    });
+
+    this.#localize = new LocalizeController(host);
+
+    setRenderer(() =>
+      h(
+        'span',
+        { style: { border: '1px solid red' } },
+        //[...this.#renderers].map((it) => it())
+        this.#renderers.size
+      )
+    );
+  }
+}
 
 export const preactDemo = () => {
   const container = document.createElement('div');
 
-  mount(<Demo />, container);
+  mount(h(Demo, null), container);
 
   return container;
 };
 
-const LangCtx = createContext('de-CH');
-
 function useDialogs(): [DialogsController, () => VNode] {
   const [, setToggle] = useState(false);
   const forceUpdate = () => setToggle((it) => !it);
+  const [controllers] = useState(() => new Set<ReactiveController>());
 
-  const dialogsContainer = document.createElement('span');
-  dialogsContainer.attachShadow({ mode: 'open' });
-  const controllers = new Set<ReactiveController>();
+  const [[dialogCtrl, renderDialogs]] = useState(
+    (): [DialogsController, () => VNode] => {
+      let renderDialogs: () => VNode;
 
-  const host: ReactiveControllerHost = {
-    addController(controller) {
-      controllers.add(controller);
-    },
+      const host: ReactiveControllerHost = {
+        addController(controller) {
+          controllers.add(controller);
+        },
 
-    removeController(controller) {
-      controllers.delete(controller);
-    },
+        removeController(controller) {
+          controllers.delete(controller);
+        },
 
-    requestUpdate: () => forceUpdate(),
+        requestUpdate: () => forceUpdate(),
 
-    get updateComplete() {
-      return new Promise<boolean>((resolve) => {
-        setTimeout(() => resolve(true), 100);
-      });
+        get updateComplete() {
+          return new Promise<boolean>((resolve) => {
+            setTimeout(() => resolve(true), 100);
+          });
+        }
+      };
+
+      const proxy = new Proxy(document.createElement('div'), {
+        get(target, prop) {
+          return host.hasOwnProperty(prop)
+            ? (host as any)[prop]
+            : (target as any)[prop];
+        }
+      }) as unknown as HTMLElement & ReactiveControllerHost;
+
+      const dialogCtrl = new DialogsController(
+        proxy,
+        (renderer) => (renderDialogs = renderer),
+        () => {} //TODO!!!!
+      );
+
+      return [dialogCtrl, renderDialogs!];
     }
-  };
-
-  const proxy = new Proxy(dialogsContainer, {
-    get(target, prop) {
-      return Object.hasOwn(host, prop)
-        ? (host as any)[prop]
-        : (target as any)[prop];
-    }
-  }) as unknown as HTMLElement & ReactiveControllerHost;
-
-  const [dialogCtrl] = useState(() => {
-    return new DialogsController(proxy);
-  });
-
-  const elemRef = useRef<HTMLSpanElement>(null);
-  const renderDialogs = () => (
-    <div>
-      <span ref={elemRef}></span>
-      {createPortal(<ShowLang />, document.createElement('div'))}
-    </div>
   );
 
   useEffect(() => {
-    const elem = elemRef.current!;
-
-    if (!elem.shadowRoot) {
-      //elem.attachShadow({ mode: 'open' });
-    }
-
-    //render(html`${dialogsContainer} ${dialogCtrl.render()}`, elem);
-    mount(<ShowLang />, elem);
     controllers.forEach((it) => it.hostUpdated?.());
   });
 
@@ -90,20 +128,13 @@ function Demo() {
     dialogs.error({ message: 'Juhu' });
   };
 
-  return (
-    <div>
-      <h3>Dialogs</h3>
-      <LangCtx.Provider value="xxx">
-        <sl-button onclick={onOpenDialogClick}>Open dialog</sl-button>
-        {renderDialogs()}
-      </LangCtx.Provider>
-    </div>
+  return h(
+    'div',
+    null,
+    h('h3', null, 'Dialogs'),
+    h('sl-button', { onClick: onOpenDialogClick }, 'Open dialog'),
+    renderDialogs()
   );
-}
-
-function ShowLang() {
-  const lang = useContext(LangCtx);
-  return <div>{lang}</div>;
 }
 
 // TODO!!!
