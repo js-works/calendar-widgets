@@ -154,8 +154,8 @@ class DialogsDemo extends LitElement {
     });
   };
 
-  private _onDataFormClick = async () => {
-    const data = await this._dlg.dataForm({
+  private _onInput2Click = async () => {
+    const data = await this._dlg.input({
       title: 'Add new user',
       labelLayout: 'horizontal',
       width: '34rem',
@@ -308,7 +308,7 @@ class DialogsDemo extends LitElement {
           <sl-button @click=${this._onInputClick}>Input</sl-button>
         </div>
         <div>
-          <sl-button @click=${this._onDataFormClick}>Data form</sl-button>
+          <sl-button @click=${this._onInput2Click}>Input 2</sl-button>
         </div>
         <br />
         <sl-button @click=${this._onDestroyPlanet}>

@@ -50,8 +50,7 @@ const icons = {
   confirmation: confirmationIcon,
   approval: approvalIcon,
   prompt: promptIcon,
-  input: inputIcon,
-  dataForm: inputIcon
+  input: inputIcon
 };
 
 // === animations ====================================================
@@ -126,7 +125,7 @@ class DynDialog extends LitElement {
     }
 
     const labelLayout =
-      this.config.type !== 'input' && this.config.type !== 'dataForm'
+      this.config.type !== 'input'
         ? 'auto'
         : this.config.params.labelLayout === 'vertical'
         ? 'vertical'
@@ -169,8 +168,8 @@ class DynDialog extends LitElement {
           ?opTODOen=${this._dialogOpen}
           open
           class=${classMap({
-            'dialog': true,
-            'data-form': this.config.type === 'dataForm'
+            dialog: true,
+            [`dialog--${this.config.type}`]: true
           })}
           @sl-after-hide=${onAfterHide}
           ${ref(dialogRef)}

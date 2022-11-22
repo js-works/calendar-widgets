@@ -70,33 +70,44 @@ export default css`
     font-size: 140%;
   }
 
-  .icon.info,
-  .icon.question,
-  .icon.confirmation,
-  .icon.prompt,
-  .icon.input {
-    color: var(--sl-color-primary-500);
-  }
-
-  .icon.success {
-    color: var(--sl-color-success-500);
-  }
-
-  .icon.warning {
-    color: var(--sl-color-warning-500);
-  }
-
-  .icon.error,
-  .icon.approval {
-    color: var(--sl-color-danger-500);
-  }
-
   .header {
     display: flex;
     align-items: center;
     gap: 0.7rem;
     font-size: calc(1.2 * var(--sl-font-size-medium));
     padding: 0.75rem 1.25rem;
+  }
+
+  .dialog--info .header,
+  .dialog--info::part(close-button__base),
+  .dialog--confirmation .header,
+  .dialog--confirmation::part(close-button__base),
+  .dialog--prompt .header,
+  .dialog--prompt::part(close-button__base),
+  .dialog--input .header,
+  .dialog--input::part(close-button__base) {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-primary-600);
+  }
+
+  .dialog--success .header,
+  .dialog--success::part(close-button__base) {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-success-600);
+  }
+
+  .dialog--warning .header,
+  .dialog--warning::part(close-button__base) {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-warning-600);
+  }
+
+  .dialog--error .header,
+  .dialog--error::part(close-button__base),
+  .dialog--approval .header,
+  .dialog--approval::part(close-button__base) {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-danger-700);
   }
 
   .message {
@@ -121,7 +132,7 @@ export default css`
   }
 
   .header {
-    font-size: calc(var(--sl-font-size-medium) + 1px);
+    font-size: calc(var(--sl-font-size-medium) + 2px);
   }
 
   .dialog::part(body) {
@@ -137,20 +148,15 @@ export default css`
   }
 
   .dialog::part(close-button__base) {
-    color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-700);
     height: 2.125rem;
     box-sizing: border-box;
     border-radius: 0;
   }
 
   .dialog::part(close-button__base):hover {
-    background-color: var(--sl-color-primary-800);
   }
 
   .dialog .header {
-    color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-700);
     padding: 0.3rem 0.75rem;
     height: 2.125rem;
     box-sizing: border-box;
