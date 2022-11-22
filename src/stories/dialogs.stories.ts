@@ -160,7 +160,7 @@ class DialogsDemo extends LitElement {
       labelLayout: 'horizontal',
       width: '36rem',
       height: '34rem',
-      padding: '0.5rem 1rem',
+      padding: '0.25rem 1rem',
 
       content: html`
         <sx-fieldset caption="User">

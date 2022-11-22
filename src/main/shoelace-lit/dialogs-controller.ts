@@ -4,6 +4,7 @@ import { classMap } from 'lit/directives/class-map';
 import { styleMap } from 'lit/directives/style-map';
 import { createRef, ref } from 'lit/directives/ref';
 import { repeat } from 'lit/directives/repeat';
+import { when } from 'lit/directives/when';
 
 import {
   getAnimation,
@@ -188,7 +189,16 @@ class DynDialog extends LitElement {
                 'padding' in this.config ? (this.config as any).padding : null
             })}
           >
-            <div class="message">${this.config.message}</div>
+            ${when(
+              this.config.message,
+              () => html` <div class="message">
+                ${textToResultTemplate(
+                  typeof this.config.message === 'function'
+                    ? this.config.message()
+                    : this.config.message
+                )}
+              </div>`
+            )}
             <div class="content">
               <slot></slot>
               ${additionalContent}
@@ -290,4 +300,14 @@ export class DialogsController extends AbstractDialogsController<TemplateResult>
       };
     });
   };
+}
+
+function textToResultTemplate(text: string | null): TemplateResult | null {
+  if (!text) {
+    return null;
+  }
+
+  const lines = text.split(/$/gm);
+
+  return html`${repeat(lines, (line) => html`${line}<br />`)}`;
 }
