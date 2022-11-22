@@ -26,11 +26,11 @@ import { Form } from '../shoelace/components/form/form';
 import { TextField } from '../shoelace/components/text-field/text-field';
 
 // icons
-import infoIcon from '../shoelace/icons/bootstrap/info-circle.icon';
-import successIcon from '../shoelace/icons/bootstrap/check-circle.icon';
-import warningIcon from '../shoelace/icons/bootstrap/exclamation-circle.icon';
+import infoIcon from '../shoelace/icons/bootstrap/info-lg.icon';
+import successIcon from '../shoelace/icons/bootstrap/check-lg.icon';
+import warningIcon from '../shoelace/icons/bootstrap/exclamation-diamond.icon';
 import errorIcon from '../shoelace/icons/bootstrap/exclamation-triangle.icon';
-import confirmationIcon from '../shoelace/icons/bootstrap/question-circle.icon';
+import confirmationIcon from '../shoelace/icons/bootstrap/question-diamond.icon';
 import approvalIcon from '../shoelace/icons/bootstrap/question-diamond.icon';
 import promptIcon from '../shoelace/icons/bootstrap/keyboard.icon';
 import inputIcon from '../shoelace/icons/bootstrap/layers.icon';
@@ -48,7 +48,7 @@ const icons = {
   warning: warningIcon,
   error: errorIcon,
   confirmation: confirmationIcon,
-  approval: errorIcon,
+  approval: approvalIcon,
   prompt: promptIcon,
   input: inputIcon
 };

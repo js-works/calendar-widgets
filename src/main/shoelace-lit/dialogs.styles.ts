@@ -78,20 +78,6 @@ export default css`
     padding: 0.75rem 1.25rem;
   }
 
-  .dialog .header,
-  .dialog::part(close-button__base) {
-    color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-neutral-600);
-  }
-
-  .dialog::part(close-button__base):hover {
-    background-color: var(--sl-color-neutral-700);
-  }
-
-  .dialog::part(close-button__base):active {
-    background-color: var(--sl-color-neutral-800);
-  }
-
   .message {
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
@@ -123,7 +109,6 @@ export default css`
 
   .dialog .main {
     padding: 1rem 1.75rem;
-    min-height: 4rem;
   }
 
   .dialog .icon {
@@ -136,54 +121,102 @@ export default css`
     border-radius: 0;
   }
 
-  .dialog::part(close-button__base):hover {
-  }
-
-  .dialog .header {
+  .dialog:not(.dialog--input) .header {
     padding: 0.3rem 0.75rem;
     height: 2.125rem;
     box-sizing: border-box;
   }
 
-  .dialog .header,
-  .dialog::part(close-button__base) {
+  .dialog:not(.dialog--input) .header,
+  .dialog:not(.dialog--input)::part(close-button__base) {
     color: var(--sl-color-neutral-1000);
     background-color: var(--sl-color-neutral-0);
   }
 
-  .header,
-  .dialog::part(close-button__base) {
+  .dialog:not(.dialog--input) .header,
+  .dialog:not(.dialog--input)::part(close-button__base) {
     background-color: transparent !important;
   }
 
-  .dialog::part(close-button__base) {
+  .dialog:not(.dialog--input)::part(close-button__base) {
     font-size: 125%;
     margin-top: 0.4em;
     margin-right: 0.25rem;
   }
 
-  .main {
-    padding: 0.5em 3em 1em 5.4em !important;
+  dialog::not(dialog--input).main {
+    padding: 0.5em 3em 1em 4.6em !important;
   }
 
   .message {
     font-size: calc(100%);
   }
 
-  .dialog .title {
+  .dialog:not(.dialog--input) .title {
     font-size: 115%;
     padding-top: 1.5em;
-    padding-left: 0.5em;
+    padding-left: 0.25em;
   }
 
-  .dialog .icon {
-    color: var(--sl-color-danger-600);
-    background-color: var(--sl-color-danger-100);
+  .dialog:not(.dialog--input) .icon {
     border-radius: 50%;
     box-sizing: border-box;
     padding: 0.4em;
-    font-size: 150%;
+    font-size: 125%;
     margin-left: 0.25em;
     margin-top: 1.5em;
+  }
+
+  .dialog--info .icon,
+  .dialog--confirmation .icon,
+  .dialog--prompt .icon {
+    color: var(--sl-color-primary-600);
+    background-color: var(--sl-color-primary-100);
+  }
+
+  .dialog--success .icon {
+    color: var(--sl-color-success-600);
+    background-color: var(--sl-color-success-100);
+  }
+
+  .dialog--warning .icon,
+  .dialog--error .icon,
+  .dialog--approval .icon {
+    color: var(--sl-color-danger-600);
+    background-color: var(--sl-color-danger-100);
+  }
+
+  .dialog--input .header {
+    padding: 0 1rem;
+    margin: 0;
+    height: 2.25rem;
+  }
+
+  .dialog--input::part(close-button__base) {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: var(--sl-font-size-medium);
+  }
+
+  .dialog--input .header,
+  .dialog--input::part(close-button__base) {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-primary-600);
+  }
+
+  .dialog--input::part(close-button__base) {
+    font-size: 150%;
+  }
+
+  .dialog--input::part(close-button__base):hover {
+    background-color: var(--sl-color-primary-700);
+  }
+
+  .dialog--input::part(close-button__base):active {
+    background-color: var(--sl-color-primary-800);
+  }
+
+  .dialog--input .main {
+    padding: 1rem;
   }
 `;

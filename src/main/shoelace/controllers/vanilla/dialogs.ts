@@ -26,7 +26,7 @@ type DialogConfig<C, R> = {
   buttons: {
     action: string;
     text: string | (() => string);
-    variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
+    variant?: 'default' | 'primary' | 'success' | 'danger';
   }[];
 
   params: Record<string, any>;
@@ -139,7 +139,7 @@ abstract class AbstractDialogsController<C> {
       buttons: [
         {
           action: 'ok',
-          variant: 'warning',
+          variant: 'danger',
           text: params.okText || this.#translate('ok')
         }
       ]

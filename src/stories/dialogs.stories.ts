@@ -58,7 +58,7 @@ class DialogsDemo extends LitElement {
 
   private _onInfoClick = () => {
     this._dlg.info({
-      message: 'Your question has been submitted successfully',
+      message: 'Your question has been submitted successfully.',
       title: 'Submit',
       okText: 'Thanks :-)'
     });
@@ -74,19 +74,15 @@ class DialogsDemo extends LitElement {
 
   private _onWarnClick = () => {
     this._dlg.warn({
-      message: 'This is your last warning',
+      message: 'This is your last warning.',
       title: 'Important!!!',
       okText: 'OK - I understand'
     });
   };
 
   private _onErrorClick = () => {
-    this._dlg.approve({
-      message:
-        'Are you sure that you want to deactivate the account?\nAll data will be deleted.',
-      title: 'Deactivate account',
-      okText: 'Deactivate',
-      width: '20rem'
+    this._dlg.error({
+      message: 'File "logs.txt" does not exist.'
     });
   };
 
@@ -107,9 +103,11 @@ class DialogsDemo extends LitElement {
 
   private _onApproveClick = async () => {
     const approved = await this._dlg.approve({
-      message: 'Do you really want to delete the project?',
-      title: 'Are you sure?',
-      okText: 'Delete project'
+      message:
+        'Are you really sure that you want to deactivate the account?\nAll data will be deleted.',
+      title: 'Deactivate account',
+      okText: 'Deactivate',
+      width: '20rem'
     });
 
     if (approved) {
@@ -160,7 +158,7 @@ class DialogsDemo extends LitElement {
     const data = await this._dlg.input({
       title: 'Add new user',
       labelLayout: 'horizontal',
-      width: '34rem',
+      width: '36rem',
       height: '34rem',
       padding: '0.5rem 1rem',
 
@@ -187,7 +185,7 @@ class DialogsDemo extends LitElement {
             required
           ></sx-text-field>
           <sx-date-field
-            label="Day of birth"
+            label="Date of birth"
             name="dayOfBirth"
             show-adjacent-days
             fixed-day-count
