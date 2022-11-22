@@ -57,7 +57,7 @@ export default css`
     xxxposition: absolute;
 
     font-size: 90%;
-    color: var(--sl-color-danger-700);
+    color: var(--sl-color-danger-800);
     padding: 0 0.5rem 0.375rem 0;
 
     margin: 0 0 0 calc(var(--label-layout-width) + var(--label-layout-gap));
@@ -82,7 +82,7 @@ export default css`
 
   .base.invalid sl-input::part(base),
   .base.invalid sl-select::part(control) {
-    border-color: var(--sl-color-danger-700);
+    border-color: var(--sl-color-danger-800);
     background-color: var(--sl-color-danger-50);
     --sl-input-focus-ring-color: var(--sl-color-danger-400);
   }

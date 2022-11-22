@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
 import { classMap } from 'lit/directives/class-map';
+import { styleMap } from 'lit/directives/style-map';
 import { createRef, ref } from 'lit/directives/ref';
 import { repeat } from 'lit/directives/repeat';
 
@@ -14,11 +15,6 @@ import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { AbstractDialogsController } from '../shoelace/controllers/vanilla/dialogs';
 import type { DialogConfig } from '../shoelace/controllers/vanilla/dialogs';
 import type { FormSubmitEvent } from '../shoelace/events/form-submit-event';
-
-import {
-  runCloseVerticalTransition,
-  runOpenVerticalTransition
-} from '../shoelace/misc/transitions';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
@@ -45,6 +41,7 @@ import dialogsStyles from './dialogs.styles';
 // === types =========================================================
 
 type ExtraInputConfigParams = {
+  padding?: string;
   labelLayout?: 'vertical' | 'horizontal' | 'auto';
 };
 
@@ -94,12 +91,8 @@ class DynDialog extends LitElement {
   @state()
   private _dialogOpen = false;
 
-  @state()
-  private _errorBoxVisible = false;
-
   private _localize = new LocalizeController(this);
   private _dialogRef = createRef<SlDialog>();
-  private _errorBoxRef = createRef<HTMLElement>();
   private _formRef = createRef<Form>();
 
   private _lastClickedAction = '';
@@ -116,22 +109,7 @@ class DynDialog extends LitElement {
   };
 
   private _onFormInvalid = async () => {
-    if (this._errorBoxVisible) {
-      const { keyframes, options } = getAnimation(
-        this._errorBoxRef.value!,
-        'shoelaceWidgets.dialogs.vibrate',
-        {
-          dir: this._localize.dir()
-        }
-      );
-
-      this._errorBoxRef.value!.animate(keyframes, options);
-    } else {
-      runOpenVerticalTransition(this._errorBoxRef.value!).then(
-        () => (this._errorBoxVisible = true)
-      );
-      this.requestUpdate();
-    }
+    // TODO!!!
   };
 
   render() {
@@ -168,14 +146,6 @@ class DynDialog extends LitElement {
       }
     };
 
-    const onCloseErrorBoxClick = () => {
-      runCloseVerticalTransition(this._errorBoxRef.value!).then(
-        () => (this._errorBoxVisible = false)
-      );
-
-      this.requestUpdate();
-    };
-
     return html`
       <style>
         .dialog {
@@ -200,7 +170,7 @@ class DynDialog extends LitElement {
         ${ref(this._formRef)}
       >
         <sl-dialog
-          ?opxen=${this._dialogOpen}
+          ?opTODOen=${this._dialogOpen}
           open
           class="dialog"
           @sl-after-hide=${onAfterHide}
@@ -213,35 +183,20 @@ class DynDialog extends LitElement {
             ></sl-icon>
             <div class="title">${this.config.title}</div>
           </div>
-          <div class="message">${this.config.message}</div>
-          <div class="content">
-            <slot></slot>
-            ${additionalContent}
+          <div
+            class="main"
+            style=${styleMap({
+              padding:
+                'padding' in this.config ? (this.config as any).padding : null
+            })}
+          >
+            <div class="message">${this.config.message}</div>
+            <div class="content">
+              <slot></slot>
+              ${additionalContent}
+            </div>
           </div>
           <div slot="footer">
-            <div
-              class=${classMap({
-                'error-box': true,
-                'error-box--closed': !this._errorBoxVisible
-              })}
-              ${ref(this._errorBoxRef)}
-            >
-              <div class="error-box-content">
-                <sl-icon
-                  src=${errorIcon}
-                  class="error-box-error-icon"
-                ></sl-icon>
-                <div class="error-box-text">
-                  Invalid form entries - please correct
-                </div>
-                <sl-icon
-                  class="error-box-close-icon"
-                  library="system"
-                  name="x"
-                  @click=${onCloseErrorBoxClick}
-                ></sl-icon>
-              </div>
-            </div>
             <div class="buttons">
               ${repeat(
                 this.config.buttons,

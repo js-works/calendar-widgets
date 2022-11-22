@@ -1,5 +1,4 @@
 import { h, render as mount, Ref, ComponentChild, VNode } from 'preact';
-
 import { useEffect, useState } from 'preact/hooks';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { AbstractDialogsController } from '../main/shoelace/controllers/vanilla/dialogs';
@@ -63,7 +62,7 @@ class DialogsController extends AbstractDialogsController<
 export const preactDemo = () => {
   const container = document.createElement('div');
 
-  mount(h(Demo, null), container);
+  mount(<Demo />, container);
 
   return container;
 };

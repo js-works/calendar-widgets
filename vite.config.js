@@ -10,6 +10,8 @@ export default defineConfig({
       'lit/decorators': '../../node_modules/lit/decorators.js',
       'lit/directives/class-map':
         '../../node_modules/lit/directives/class-map.js',
+      'lit/directives/style-map':
+        '../../node_modules/lit/directives/style-map.js',
       'lit/directives/ref': '../../node_modules/lit/directives/ref.js',
       'lit/directives/repeat': '../../node_modules/lit/directives/repeat.js',
       'lit/directives/unsafe-html':

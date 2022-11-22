@@ -51,7 +51,7 @@ export default css`
     user-select: none;
     padding-bottom: 0.5rem;
     box-sizing: border-box;
-    padding: 0 2rem 0.5rem 2rem;
+    padding: 0.5rem 2rem 0.5rem 2rem;
   }
 
   .dialog::part(footer) {
@@ -67,7 +67,7 @@ export default css`
   }
 
   .icon {
-    font-size: var(--sl-font-size-x-large);
+    font-size: 140%;
   }
 
   .icon.info,
@@ -120,29 +120,38 @@ export default css`
     overflow: hidden;
   }
 
-  .error-box-content {
-    display: flex;
-    align-items: center;
-    flex-wrap: nowrap;
-    color: var(--sl-color-color-1000);
-    background-color: var(--sl-color-danger-200);
-    box-sizing: border-box;
+  /* experimental */
+
+  .dialog::part(body) {
+    padding: 0;
   }
 
-  .error-box-error-icon {
-    padding: 0 0.75rem;
+  .main {
+    padding: 1rem 2rem;
   }
 
-  .error-box-close-icon {
-    font-size: var(--sl-font-size-large);
-    padding: 0 0.75rem;
-    cursor: pointer;
+  .icon,
+  .icon::part(base) {
+    color: white !important;
   }
 
-  .error-box-text {
-    padding: 0.375rem 2rem 0.375rem 0;
-    text-align: start;
-    flex-grow: 1;
-    justify-self: stretch;
+  .dialog::part(close-button) {
+    color: red !important; /* TODO!!! */
+  }
+
+  .icon {
+    font-size: 110%;
+  }
+
+  .dialog::part(close-button) {
+    background-color: var(--sl-color-primary-700);
+    padding: 0;
+    color: white !important;
+  }
+
+  .header {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-primary-700);
+    padding: 0.5rem 0.75rem;
   }
 `;

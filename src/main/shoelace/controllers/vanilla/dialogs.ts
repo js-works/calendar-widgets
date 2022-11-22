@@ -21,6 +21,7 @@ type DialogConfig<C, R> = {
   content: C | null;
   width: string | null;
   height: string | null;
+  padding: string | null;
 
   buttons: {
     action: string;
@@ -63,6 +64,7 @@ abstract class AbstractDialogsController<C, A = {}> {
     content?: C;
     width?: string;
     height?: string;
+    padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
   }) {
@@ -74,6 +76,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
       height: params.height ?? null,
+      padding: params.padding ?? null,
 
       buttons: [
         {
@@ -90,6 +93,7 @@ abstract class AbstractDialogsController<C, A = {}> {
     content?: C;
     width?: string;
     height?: string;
+    padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
   }) {
@@ -101,6 +105,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
       height: params.height ?? null,
+      padding: params.padding ?? null,
 
       buttons: [
         {
@@ -117,6 +122,7 @@ abstract class AbstractDialogsController<C, A = {}> {
     content?: C;
     width?: string;
     height?: string;
+    padding?: string;
     title?: string;
     okText?: string;
   }) {
@@ -128,6 +134,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
       height: params.height ?? null,
+      padding: params.padding ?? null,
 
       buttons: [
         {
@@ -144,6 +151,7 @@ abstract class AbstractDialogsController<C, A = {}> {
     content?: C;
     width?: string;
     height?: string;
+    padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
   }) {
@@ -155,6 +163,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
       height: params.height ?? null,
+      padding: params.padding ?? null,
 
       buttons: [
         {
@@ -171,6 +180,7 @@ abstract class AbstractDialogsController<C, A = {}> {
     content?: C;
     width?: string;
     height?: string;
+    padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
     cancelText?: string | (() => string);
@@ -183,6 +193,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
       height: params.height ?? null,
+      padding: params.padding ?? null,
       mapResult: (action) => action === 'ok',
 
       buttons: [
@@ -204,6 +215,7 @@ abstract class AbstractDialogsController<C, A = {}> {
     content?: C;
     width?: string;
     height?: string;
+    padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
     cancelText?: string | (() => string);
@@ -216,6 +228,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
       height: params.height ?? null,
+      padding: params.padding ?? null,
       mapResult: (action) => action === 'ok',
 
       buttons: [
@@ -237,6 +250,7 @@ abstract class AbstractDialogsController<C, A = {}> {
     content?: C;
     width?: string;
     height?: string;
+    padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
     cancelText?: string | (() => string);
@@ -250,6 +264,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
       height: params.height ?? null,
+      padding: params.padding ?? null,
 
       mapResult: (action, { input }) => (action === 'cancel' ? null : input),
 
@@ -273,6 +288,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content?: C;
       width?: string;
       height?: string;
+      padding?: string;
       title?: string | (() => string);
       okText?: string | (() => string);
       cancelText?: string | (() => string);
@@ -286,6 +302,7 @@ abstract class AbstractDialogsController<C, A = {}> {
       content: params.content || null,
       width: params.width ?? null,
       height: params.height ?? null,
+      padding: params.padding ?? null,
       mapResult: (action, { input }) => (action === 'ok' ? null : input),
 
       buttons: [
