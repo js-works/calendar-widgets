@@ -48,7 +48,7 @@ const icons = {
   warning: warningIcon,
   error: errorIcon,
   confirmation: confirmationIcon,
-  approval: approvalIcon,
+  approval: errorIcon,
   prompt: promptIcon,
   input: inputIcon
 };

@@ -144,4 +144,46 @@ export default css`
     height: 2.125rem;
     box-sizing: border-box;
   }
+
+  .dialog .header,
+  .dialog::part(close-button__base) {
+    color: var(--sl-color-neutral-1000);
+    background-color: var(--sl-color-neutral-0);
+  }
+
+  .header,
+  .dialog::part(close-button__base) {
+    background-color: transparent !important;
+  }
+
+  .dialog::part(close-button__base) {
+    font-size: 125%;
+    margin-top: 0.4em;
+    margin-right: 0.25rem;
+  }
+
+  .main {
+    padding: 0.5em 3em 1em 5.4em !important;
+  }
+
+  .message {
+    font-size: calc(100%);
+  }
+
+  .dialog .title {
+    font-size: 115%;
+    padding-top: 1.5em;
+    padding-left: 0.5em;
+  }
+
+  .dialog .icon {
+    color: var(--sl-color-danger-600);
+    background-color: var(--sl-color-danger-100);
+    border-radius: 50%;
+    box-sizing: border-box;
+    padding: 0.4em;
+    font-size: 150%;
+    margin-left: 0.25em;
+    margin-top: 1.5em;
+  }
 `;

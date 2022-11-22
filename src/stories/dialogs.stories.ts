@@ -81,10 +81,12 @@ class DialogsDemo extends LitElement {
   };
 
   private _onErrorClick = () => {
-    this._dlg.error({
-      message: 'The form could not be submitted',
-      title: 'Form error',
-      okText: 'OK - I understand'
+    this._dlg.approve({
+      message:
+        'Are you sure that you want to deactivate the account?\nAll data will be deleted.',
+      title: 'Deactivate account',
+      okText: 'Deactivate',
+      width: '20rem'
     });
   };
 

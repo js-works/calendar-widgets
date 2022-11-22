@@ -29,7 +29,7 @@ type DialogConfig<C, R> = {
     variant?: 'default' | 'primary' | 'success' | 'warning' | 'danger';
   }[];
 
-  params: Record<string, any>; // TODO - mak this type safe
+  params: Record<string, any>;
   defaultResult?: R;
   mapResult?: (action: string, data: Record<string, string>) => R;
 };
