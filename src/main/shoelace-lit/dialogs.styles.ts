@@ -87,19 +87,19 @@ export default css`
   .dialog--input .header,
   .dialog--input::part(close-button__base) {
     color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-600);
+    background-color: var(--sl-color-neutral-600);
   }
 
   .dialog--success .header,
   .dialog--success::part(close-button__base) {
     color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-success-600);
+    background-color: var(--sl-color-neutral-700);
   }
 
   .dialog--warning .header,
   .dialog--warning::part(close-button__base) {
     color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-warning-600);
+    background-color: var(--sl-color-neutral-700);
   }
 
   .dialog--error .header,
@@ -107,7 +107,7 @@ export default css`
   .dialog--approval .header,
   .dialog--approval::part(close-button__base) {
     color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-danger-700);
+    background-color: var(--sl-color-neutral-700);
   }
 
   .message {
@@ -132,7 +132,7 @@ export default css`
   }
 
   .header {
-    font-size: calc(var(--sl-font-size-medium) + 2px);
+    font-size: calc(var(--sl-font-size-medium) + 1px);
   }
 
   .dialog::part(body) {
