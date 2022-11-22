@@ -12,7 +12,7 @@ import { preactDemo } from '../preact.demo';
 import {
   convertThemeToCss,
   customizeTheme,
-  ColorSchemes,
+  ColorSetups,
   ThemeModifiers,
   Theme
 } from 'shoelace-themes';
@@ -40,7 +40,7 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
     name: 'Custom (light)',
     theme: customizeTheme(
       ThemeModifiers.builder()
-        .colors(ColorSchemes.bostonBlue)
+        .colors(ColorSetups.bostonBlue)
         .modern()
         .compact()
         .build()
@@ -51,7 +51,7 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
     name: 'Custom (dark)',
     theme: customizeTheme(
       ThemeModifiers.builder()
-        .colors(ColorSchemes.pink)
+        .colors(ColorSetups.bostonBlue)
         .modern()
         .compact()
         .dark()

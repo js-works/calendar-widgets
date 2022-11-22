@@ -193,6 +193,11 @@
   resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-3.0.1.tgz#a6eda8ae29ac32fb59df50f3db14652a23f492c9"
   integrity sha512-nmv1syJ3ormbGq29GsuxGRK6BFq7Jhx+kVFyuuozz0Pckkvk1SGk2vpZZcdnj2vRZCETvlVB7KYgakUwgGmn+A==
 
+"@shoelace-style/localize@^3.0.2":
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-3.0.2.tgz#139f7c3bd1668e96a7fdb7cd0a4feba6ad900c3c"
+  integrity sha512-fy0jd6v1Hy8ESltwSqp1wUsY6x4n78wMmXzQ3xWSKfbnxQLf4q4hFktgm0Mm7Ur/O0v7pz8+imzj/E5Qah38Og==
+
 "@shoelace-style/shoelace@^2.0.0-beta.83":
   version "2.0.0-beta.83"
   resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.83.tgz#9ea923e969a2cfc7c0b8ad46c81822b04a1c1520"
@@ -2113,10 +2118,10 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shoelace-themes@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/shoelace-themes/-/shoelace-themes-0.0.5.tgz#99dccb717b72a7b44db5cbee132997d534caee83"
-  integrity sha512-boPP3aLN6clOrKnSVKlnTmUXmNj2cHYGqRlskvK2x4soB0E9sapSVt/8HwN2hCsqHbeuW1vhOlmUTqdL217MBA==
+shoelace-themes@^0.0.8:
+  version "0.0.8"
+  resolved "https://registry.yarnpkg.com/shoelace-themes/-/shoelace-themes-0.0.8.tgz#7096e9d83d84d19858694a46208e5d21b83a0ad4"
+  integrity sha512-4bSsicTw/RYhbtNyK3htxAZxcv4NBkCaXlngNtJZB82msB6J0UTx9WUyHmsnI+Ha+m9pTOxCceORvSSUttlB4Q==
 
 simple-swizzle@^0.2.2:
   version "0.2.2"

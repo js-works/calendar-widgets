@@ -78,36 +78,18 @@ export default css`
     padding: 0.75rem 1.25rem;
   }
 
-  .dialog--info .header,
-  .dialog--info::part(close-button__base),
-  .dialog--confirmation .header,
-  .dialog--confirmation::part(close-button__base),
-  .dialog--prompt .header,
-  .dialog--prompt::part(close-button__base),
-  .dialog--input .header,
-  .dialog--input::part(close-button__base) {
+  .dialog .header,
+  .dialog::part(close-button__base) {
     color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-neutral-600);
   }
 
-  .dialog--success .header,
-  .dialog--success::part(close-button__base) {
-    color: var(--sl-color-neutral-0);
+  .dialog::part(close-button__base):hover {
     background-color: var(--sl-color-neutral-700);
   }
 
-  .dialog--warning .header,
-  .dialog--warning::part(close-button__base) {
-    color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-neutral-700);
-  }
-
-  .dialog--error .header,
-  .dialog--error::part(close-button__base),
-  .dialog--approval .header,
-  .dialog--approval::part(close-button__base) {
-    color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-neutral-700);
+  .dialog::part(close-button__base):active {
+    background-color: var(--sl-color-neutral-800);
   }
 
   .message {
@@ -141,6 +123,7 @@ export default css`
 
   .dialog .main {
     padding: 1rem 1.75rem;
+    min-height: 4rem;
   }
 
   .dialog .icon {
