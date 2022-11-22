@@ -27,8 +27,8 @@ import { Form } from '../shoelace/components/form/form';
 import { TextField } from '../shoelace/components/text-field/text-field';
 
 // icons
-import infoIcon from '../shoelace/icons/bootstrap/info-lg.icon';
-import successIcon from '../shoelace/icons/bootstrap/check-lg.icon';
+import infoIcon from '../shoelace/icons/bootstrap/info-square.icon';
+import successIcon from '../shoelace/icons/bootstrap/check2-square.icon';
 import warningIcon from '../shoelace/icons/bootstrap/exclamation-diamond.icon';
 import errorIcon from '../shoelace/icons/bootstrap/exclamation-triangle.icon';
 import confirmationIcon from '../shoelace/icons/bootstrap/question-diamond.icon';

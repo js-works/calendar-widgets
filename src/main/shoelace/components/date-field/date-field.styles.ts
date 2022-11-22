@@ -29,7 +29,7 @@ export default css`
     align-items: center;
     gap: 0.75rem;
     color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-500);
+    background-color: var(--sl-color-primary-600);
     padding: 0 0 0 0.75rem;
     box-sizing: border-box;
   }
@@ -49,11 +49,11 @@ export default css`
   }
 
   .popup-close-button:hover::part(base) {
-    background-color: var(--sl-color-primary-600);
+    background-color: var(--sl-color-primary-700);
   }
 
   .popup-close-button:active::part(base) {
-    background-color: var(--sl-color-primary-700);
+    background-color: var(--sl-color-primary-800);
   }
 
   .selection-info-1 {

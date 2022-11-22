@@ -32,7 +32,7 @@ const datePickerCustomStyles = css`
     --cal-nav-hover-background-color: var(--sl-color-primary-300);
     --cal-nav-active-background-color: var(--sl-color-primary-400);
     --cal-nav-elevated-color: var(--sl-color-neutral-0);
-    --cal-nav-elevated-background-color: var(--sl-color-primary-500);
+    --cal-nav-elevated-background-color: var(--sl-color-primary-600);
     --cal-nav-elevated-hover-background-color: var(--sl-color-primary-600);
     --cal-nav-elevated-active-background-color: var(--sl-color-primary-700);
     --cal-cell-hover-background-color: var(--sl-color-primary-100);
