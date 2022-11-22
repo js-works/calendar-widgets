@@ -40,11 +40,6 @@ import dialogsStyles from './dialogs.styles';
 
 // === types =========================================================
 
-type ExtraInputConfigParams = {
-  padding?: string;
-  labelLayout?: 'vertical' | 'horizontal' | 'auto';
-};
-
 // === icons by dialog type ==========================================
 
 const icons = {
@@ -55,7 +50,8 @@ const icons = {
   confirmation: confirmationIcon,
   approval: approvalIcon,
   prompt: promptIcon,
-  input: inputIcon
+  input: inputIcon,
+  dataForm: inputIcon
 };
 
 // === animations ====================================================
@@ -74,7 +70,7 @@ setDefaultAnimation('shoelaceWidgets.dialogs.vibrate', {
 @customElement('dyn-dialog')
 class DynDialog extends LitElement {
   @property({ attribute: false })
-  config!: DialogConfig<unknown, ExtraInputConfigParams>;
+  config!: DialogConfig<unknown, unknown>;
 
   @property({ attribute: false })
   dismissDialog!: () => void;
@@ -130,7 +126,7 @@ class DynDialog extends LitElement {
     }
 
     const labelLayout =
-      this.config.type !== 'input'
+      this.config.type !== 'input' && this.config.type !== 'dataForm'
         ? 'auto'
         : this.config.params.labelLayout === 'vertical'
         ? 'vertical'
@@ -172,7 +168,10 @@ class DynDialog extends LitElement {
         <sl-dialog
           ?opTODOen=${this._dialogOpen}
           open
-          class="dialog"
+          class=${classMap({
+            'dialog': true,
+            'data-form': this.config.type === 'dataForm'
+          })}
           @sl-after-hide=${onAfterHide}
           ${ref(dialogRef)}
         >
@@ -231,10 +230,7 @@ class DynDialog extends LitElement {
   }
 }
 
-export class DialogsController extends AbstractDialogsController<
-  TemplateResult,
-  ExtraInputConfigParams
-> {
+export class DialogsController extends AbstractDialogsController<TemplateResult> {
   static {
     // required components (just to prevent too much tree shaking)
     void [Form, TextField, SlAlert, SlButton, SlDialog, SlIcon, SlInput];

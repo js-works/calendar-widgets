@@ -14,7 +14,8 @@ type DialogConfig<C, R> = {
     | 'confirmation'
     | 'approval'
     | 'prompt'
-    | 'input';
+    | 'input'
+    | 'dataForm';
 
   title: string | (() => string);
   message: string | (() => string);
@@ -47,7 +48,7 @@ type TranslationKey =
 
 // --- functions -----------------------------------------------------
 
-abstract class AbstractDialogsController<C, A = {}> {
+abstract class AbstractDialogsController<C> {
   #showDialog: <R = void>(config: DialogConfig<C, R>) => Promise<R>;
   #translate: (key: TranslationKey) => string;
 
@@ -282,20 +283,55 @@ abstract class AbstractDialogsController<C, A = {}> {
     });
   }
 
-  input(
-    params: {
-      message?: string | (() => string);
-      content?: C;
-      width?: string;
-      height?: string;
-      padding?: string;
-      title?: string | (() => string);
-      okText?: string | (() => string);
-      cancelText?: string | (() => string);
-    } & A
-  ) {
+  input(params: {
+    message?: string | (() => string);
+    content?: C;
+    width?: string;
+    height?: string;
+    padding?: string;
+    labelLayout?: 'auto' | 'vertical' | 'horizontal';
+    title?: string | (() => string);
+    okText?: string | (() => string);
+    cancelText?: string | (() => string);
+  }) {
     return this.#showDialog({
       type: 'input',
+      params,
+      title: params.title || this.#translate('input'),
+      message: params.message || '',
+      content: params.content || null,
+      width: params.width ?? null,
+      height: params.height ?? null,
+      padding: params.padding ?? null,
+      mapResult: (action, { input }) => (action === 'ok' ? null : input),
+
+      buttons: [
+        {
+          action: 'cancel',
+          text: params.cancelText || this.#translate('cancel')
+        },
+        {
+          action: 'ok',
+          variant: 'primary',
+          text: params.okText || this.#translate('ok')
+        }
+      ]
+    });
+  }
+
+  dataForm(params: {
+    message?: string | (() => string);
+    content?: C;
+    width?: string;
+    height?: string;
+    padding?: string;
+    labelLayout?: 'auto' | 'vertical' | 'horizontal';
+    title?: string | (() => string);
+    okText?: string | (() => string);
+    cancelText?: string | (() => string);
+  }) {
+    return this.#showDialog({
+      type: 'dataForm',
       params,
       title: params.title || this.#translate('input'),
       message: params.message || '',

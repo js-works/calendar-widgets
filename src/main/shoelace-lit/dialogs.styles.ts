@@ -116,34 +116,38 @@ export default css`
 
   /* experimental */
 
-  .dialog::part(body) {
+  .dialog.data-form::part(body) {
     padding: 0;
   }
 
-  .main {
-    padding: 1rem 1.25rem;
+  .dialog.data-form .main {
+    padding: 1rem 1.75rem;
   }
 
-  .icon,
-  .icon::part(base) {
+  .dialog.data-form .icon,
+  .dialog.data-form.icon::part(base) {
     color: white !important;
   }
 
-  .dialog::part(close-button) {
+  .dialog.data-form::part(close-button) {
     color: red !important; /* TODO!!! */
   }
 
-  .icon {
+  .dialog.data-form .icon {
     font-size: 110%;
   }
 
-  .dialog::part(close-button) {
+  .dialog.data-form::part(close-button) {
     background-color: var(--sl-color-primary-700);
     padding: 0;
     color: white !important;
   }
 
-  .header {
+  .dialog.data-form::part(close-button_base) {
+    color: white !important;
+  }
+
+  .dialog.data-form .header {
     color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-primary-700);
     padding: 0.5rem 0.75rem;
