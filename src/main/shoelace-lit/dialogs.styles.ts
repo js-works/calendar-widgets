@@ -116,40 +116,43 @@ export default css`
 
   /* experimental */
 
-  .dialog.data-form::part(body) {
+  .dialog .icon {
+    color: var(--sl-color-neutral-0);
+  }
+
+  .header {
+    font-size: calc(var(--sl-font-size-medium) + 1px);
+  }
+
+  .dialog::part(body) {
     padding: 0;
   }
 
-  .dialog.data-form .main {
+  .dialog .main {
     padding: 1rem 1.75rem;
   }
 
-  .dialog.data-form .icon,
-  .dialog.data-form.icon::part(base) {
-    color: white !important;
+  .dialog .icon {
+    font-size: calc(100% + 2px);
   }
 
-  .dialog.data-form::part(close-button) {
-    color: red !important; /* TODO!!! */
-  }
-
-  .dialog.data-form .icon {
-    font-size: 110%;
-  }
-
-  .dialog.data-form::part(close-button) {
-    background-color: var(--sl-color-primary-700);
-    padding: 0;
-    color: white !important;
-  }
-
-  .dialog.data-form::part(close-button_base) {
-    color: white !important;
-  }
-
-  .dialog.data-form .header {
+  .dialog::part(close-button__base) {
     color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-primary-700);
-    padding: 0.5rem 0.75rem;
+    height: 2.125rem;
+    box-sizing: border-box;
+    border-radius: 0;
+  }
+
+  .dialog::part(close-button__base):hover {
+    background-color: var(--sl-color-primary-800);
+  }
+
+  .dialog .header {
+    color: var(--sl-color-neutral-0);
+    background-color: var(--sl-color-primary-700);
+    padding: 0.3rem 0.75rem;
+    height: 2.125rem;
+    box-sizing: border-box;
   }
 `;
