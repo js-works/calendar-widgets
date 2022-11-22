@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import { css, unsafeCSS } from 'lit';
 import labelLayoutStyles from '../shoelace/styles/label-layout.styles';
 
 export default css`
@@ -96,7 +96,8 @@ export default css`
   /* experimental */
 
   .dialog .icon {
-    color: var(--sl-color-neutral-0);
+    color: var(--dialog--light, var(--sl-color-neutral-0))
+      var(--dialog--dark, var(--sl-color-neutral-1000));
   }
 
   .header {
@@ -161,7 +162,7 @@ export default css`
   .dialog:not(.dialog--input) .icon {
     border-radius: 50%;
     box-sizing: border-box;
-    padding: 0.4em;
+    padding: 0.5em;
     font-size: 125%;
     margin-left: 0.25em;
     margin-top: 1.5em;
@@ -171,19 +172,25 @@ export default css`
   .dialog--confirmation .icon,
   .dialog--prompt .icon {
     color: var(--sl-color-primary-600);
-    background-color: var(--sl-color-primary-100);
+
+    background-color: var(--dialog--light, var(--sl-color-primary-100))
+      var(--dialog--dark, var(--sl-color-neutral-100));
   }
 
   .dialog--success .icon {
     color: var(--sl-color-success-600);
-    background-color: var(--sl-color-success-100);
+
+    background-color: var(--dialog--light, var(--sl-color-success-100))
+      var(--dialog--dark, var(--sl-color-neutral-100));
   }
 
   .dialog--warning .icon,
   .dialog--error .icon,
   .dialog--approval .icon {
     color: var(--sl-color-danger-600);
-    background-color: var(--sl-color-danger-100);
+
+    background-color: var(--dialog--light, var(--sl-color-danger-100))
+      var(--dialog--dark, var(--sl-color-neutral-100));
   }
 
   .dialog--input .header {
@@ -200,8 +207,11 @@ export default css`
 
   .dialog--input .header,
   .dialog--input::part(close-button__base) {
-    color: var(--sl-color-neutral-0);
-    background-color: var(--sl-color-primary-600);
+    color: var(--dialog--light, var(--sl-color-neutral-0))
+      var(--dialog--dark, var(--sl-color-neutral-1000));
+
+    background-color: var(--dialog--light, var(--sl-color-primary-600))
+      var(--dialog--dark, var(--sl-color-neutral-100));
   }
 
   .dialog--input::part(close-button__base) {
@@ -209,11 +219,13 @@ export default css`
   }
 
   .dialog--input::part(close-button__base):hover {
-    background-color: var(--sl-color-primary-700);
+    background-color: var(--dialog--light, var(--sl-color-primary-700))
+      var(--dialog--dark, var(--sl-color-neutral-200));
   }
 
   .dialog--input::part(close-button__base):active {
-    background-color: var(--sl-color-primary-800);
+    background-color: var(--dialog--light, var(--sl-color-primary-800))
+      var(--dialog--dark, var(--sl-color-neutral-300));
   }
 
   .dialog--input .main {

@@ -108,6 +108,18 @@ class DynDialog extends LitElement {
     // TODO!!!
   };
 
+  override willUpdate() {
+    const colorScheme = getComputedStyle(this).colorScheme;
+
+    if (colorScheme === 'dark') {
+      this.style.setProperty('--dialog--light', ' ');
+      this.style.setProperty('--dialog--dark', 'initial');
+    } else {
+      this.style.setProperty('--dialog--light', 'initial');
+      this.style.setProperty('--dialog--dark', ' ');
+    }
+  }
+
   render() {
     let additionalContent: TemplateResult = html``;
 
