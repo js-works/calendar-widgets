@@ -114,12 +114,6 @@ export default css`
     padding: 0.5rem 2px 0 0;
   }
 
-  .error-box--closed {
-    xxxvisibility: hidden;
-    max-height: 0;
-    overflow: hidden;
-  }
-
   /* experimental */
 
   .dialog::part(body) {
@@ -127,7 +121,7 @@ export default css`
   }
 
   .main {
-    padding: 1rem 2rem;
+    padding: 1rem 1.25rem;
   }
 
   .icon,
