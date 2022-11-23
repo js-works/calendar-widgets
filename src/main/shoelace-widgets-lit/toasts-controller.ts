@@ -1,4 +1,4 @@
-import { html, LitElement, PropertyValueMap } from 'lit';
+import { html, render, LitElement } from 'lit';
 import { createRef, ref } from 'lit/directives/ref';
 import { customElement, property, state } from 'lit/decorators';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
@@ -45,8 +45,11 @@ class DynToast extends LitElement {
   @property({ attribute: false })
   config!: ToastConfig<unknown>;
 
+  @property({ attribute: false })
+  contentElement!: HTMLElement;
+
   static {
-    // required components (just to prevent too much tree shaking)
+    // required components (to prevent too much tree shaking)
     void SlAlert;
   }
 
@@ -79,7 +82,7 @@ class DynToast extends LitElement {
         <sl-icon slot="icon" src=${icon}></sl-icon>
         <strong>${title}</strong>
         <div>${message}</div>
-        <div>${config.content}</div>
+        <div>${this.contentElement}</div>
       </sl-alert>
     `;
   }
@@ -110,6 +113,16 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
   }
 
   #renderToast(config: ToastConfig<TemplateResult>) {
-    return html`<dyn-toast .config=${config}></dyn-toast>`;
+    let contentElem: HTMLElement | null = null;
+
+    if (config.content) {
+      contentElem = document.createElement('div');
+      render(config.content, contentElem);
+    }
+
+    return html`<dyn-toast
+      .config=${config}
+      .contentElement=${contentElem}
+    ></dyn-toast>`;
   }
 }

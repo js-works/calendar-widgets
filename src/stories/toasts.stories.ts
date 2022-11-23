@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, render, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 
 // controllers
@@ -33,7 +33,8 @@ class toastsDemo extends LitElement {
   private _onInfoClick = () => {
     this._toasts.info({
       message: 'Your next meeting starts in 15 minutes',
-      title: 'Info'
+      title: 'Info',
+      duration: 100000
     });
   };
 

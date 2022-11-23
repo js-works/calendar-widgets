@@ -1,37 +1,31 @@
-import { h, VNode } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shoelace-widgets/controllers/vanilla/dialogs';
-import { LocalizeController } from '@shoelace-style/localize';
+import { h, render, VNode } from 'preact';
+import { useState } from 'preact/hooks';
+import { AbstractToastsController } from '../shoelace-widgets/controllers/vanilla/toasts';
 
-export { useDialogs };
+export { useToasts };
 
-class DialogsController extends AbstractDialogsController<VNode> {
-  #localize: LocalizeController;
+class ToastsController extends AbstractToastsController<VNode> {
   #renderers = new Set<() => VNode>();
 
   constructor(
-    host: HTMLElement & ReactiveControllerHost,
     setRenderer: (renderer: () => VNode) => void,
     forceUpdate: () => void
   ) {
     super({
-      translate: (key) => this.#localize.term(`shoelaceWidgets.dialogs/${key}`),
-      showDialog: (config) => {
+      showToast: (config) => {
+        let contentElement: HTMLElement | null;
+
+        if (config.content) {
+          contentElement = document.createElement('div');
+          render(config.content, contentElement);
+        }
+
         const renderer = () =>
           h(
-            'dyn-dialog' as any,
+            'dyn-toast' as any,
             {
               config,
-
-              dismissDialog: () => {
-                this.#renderers.delete(renderer);
-                forceUpdate();
-              },
-
-              emitResult: (result: any) => {
-                //return emitResult(result);
-              }
+              contentElement
             },
             config.content
           );
@@ -41,8 +35,6 @@ class DialogsController extends AbstractDialogsController<VNode> {
         return Promise.resolve() as any;
       }
     });
-
-    this.#localize = new LocalizeController(host);
 
     setRenderer(() =>
       h(
@@ -54,54 +46,22 @@ class DialogsController extends AbstractDialogsController<VNode> {
   }
 }
 
-function useDialogs(): [DialogsController, () => VNode] {
+function useToasts(): [ToastsController, () => VNode] {
   const [, setToggle] = useState(false);
   const forceUpdate = () => setToggle((it) => !it);
-  const [controllers] = useState(() => new Set<ReactiveController>());
 
-  const [[dialogCtrl, renderDialogs]] = useState(
-    (): [DialogsController, () => VNode] => {
+  const [[toastsCtrl, renderToasts]] = useState(
+    (): [ToastsController, () => VNode] => {
       let renderDialogs: () => VNode;
 
-      const host: ReactiveControllerHost = {
-        addController(controller) {
-          controllers.add(controller);
-        },
-
-        removeController(controller) {
-          controllers.delete(controller);
-        },
-
-        requestUpdate: () => forceUpdate(),
-
-        get updateComplete() {
-          return new Promise<boolean>((resolve) => {
-            setTimeout(() => resolve(true), 100);
-          });
-        }
-      };
-
-      const proxy = new Proxy(document.createElement('div'), {
-        get(target, prop) {
-          return host.hasOwnProperty(prop)
-            ? (host as any)[prop]
-            : (target as any)[prop];
-        }
-      }) as unknown as HTMLElement & ReactiveControllerHost;
-
-      const dialogCtrl = new DialogsController(
-        proxy,
+      const toastsCtrl = new ToastsController(
         (renderer) => (renderDialogs = renderer),
         forceUpdate
       );
 
-      return [dialogCtrl, renderDialogs!];
+      return [toastsCtrl, renderDialogs!];
     }
   );
 
-  useEffect(() => {
-    controllers.forEach((it) => it.hostUpdated?.());
-  });
-
-  return [dialogCtrl, renderDialogs];
+  return [toastsCtrl, renderToasts];
 }
