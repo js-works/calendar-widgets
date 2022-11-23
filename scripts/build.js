@@ -18,6 +18,7 @@ async function build() {
 
   for (const pkg of [
     'shoelace-widgets',
+    'shoelace-widgets-lit',
     'shoelace-widgets-react',
     'shoelace-widgets-preact'
   ]) {
@@ -61,7 +62,7 @@ async function build() {
     '.',
     './dist/source/source.zip',
     ['*', '.*'],
-    ['src', 'scripts', '.storybook']
+    ['src', 'scripts']
   );
 }
 // === helpers =======================================================

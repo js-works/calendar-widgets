@@ -10,8 +10,3 @@ export { Sidenav } from './shoelace-widgets/components/sidenav/sidenav';
 export { TextField } from './shoelace-widgets/components/text-field/text-field';
 export { TextArea } from './shoelace-widgets/components/text-area/text-area';
 export { VBox } from './shoelace-widgets/components/vbox/vbox';
-
-export type { ToastType, ToastConfig } from './shoelace-widgets/toasts/toasts';
-
-export { DialogsController } from './shoelace-widgets/dialogs/dialogs-controller';
-export { ToastsController } from './shoelace-widgets/toasts/toasts-controller';

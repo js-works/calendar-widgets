@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client';
 import { useDialogs } from '../main/shoelace-widgets-react';
 import { SlButton, SlButtonGroup } from '@shoelace-style/shoelace/dist/react';
 import { useToasts, Fieldset, TextField } from '../main/shoelace-widgets-react';
-import type { ToastType } from '../main/shoelace-widgets';
+import type { ToastType } from '../main/shoelace-widgets-react';
 
 export const reactDemo = () => {
   const container = document.createElement('div');

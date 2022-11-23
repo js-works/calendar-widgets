@@ -1,6 +1,10 @@
-import { h, render, Ref, ComponentChild, Fragment, VNode } from 'preact';
-import { ToastConfig, ToastType } from '../main/shoelace-widgets';
-import { useDialogs, useToasts } from '../main/shoelace-widgets-preact';
+import { h, render, Ref, ComponentChild, Fragment } from 'preact';
+
+import {
+  useDialogs,
+  useToasts,
+  ToastType
+} from '../main/shoelace-widgets-preact';
 
 export const preactDemo = () => {
   const container = document.createElement('div');

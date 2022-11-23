@@ -2,7 +2,7 @@ import { css, html, render, LitElement } from 'lit';
 import { customElement } from 'lit/decorators';
 
 // controllers
-import { ToastsController } from '../main/shoelace-widgets';
+import { ToastsController } from '../main/shoelace-widgets-lit';
 
 export default {
   title: 'shoelace-widgets'
