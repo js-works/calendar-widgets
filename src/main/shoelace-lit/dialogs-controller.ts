@@ -34,7 +34,6 @@ import errorIcon from '../shoelace/icons/bootstrap/exclamation-triangle.icon';
 import confirmationIcon from '../shoelace/icons/bootstrap/question-diamond.icon';
 import approvalIcon from '../shoelace/icons/bootstrap/question-diamond.icon';
 import promptIcon from '../shoelace/icons/bootstrap/keyboard.icon';
-import inputIcon from '../shoelace/icons/bootstrap/layers.icon';
 
 // styles
 import dialogsStyles from './dialogs.styles';
@@ -51,7 +50,7 @@ const icons = {
   confirmation: confirmationIcon,
   approval: approvalIcon,
   prompt: promptIcon,
-  input: inputIcon
+  input: null
 };
 
 // === animations ====================================================
@@ -188,10 +187,13 @@ class DynDialog extends LitElement {
           ${ref(dialogRef)}
         >
           <div slot="label" class="header">
-            <sl-icon
-              class="icon ${this.config.type}"
-              src=${icons[this.config.type]}
-            ></sl-icon>
+            ${when(
+              icons[this.config.type],
+              () => html` <sl-icon
+                class="icon ${this.config.type}"
+                src=${icons[this.config.type]}
+              ></sl-icon>`
+            )}
             <div class="title">${this.config.title}</div>
           </div>
           <div

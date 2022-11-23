@@ -40,7 +40,7 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
     name: 'Custom (light)',
     theme: customizeTheme(
       ThemeModifiers.builder()
-        .colors(ColorSetups.bostonBlue)
+        .colors(ColorSetups.skyBlue)
         .modern()
         .compact()
         .build()
@@ -51,7 +51,7 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
     name: 'Custom (dark)',
     theme: customizeTheme(
       ThemeModifiers.builder()
-        //.colors(ColorSetups.bostonBlue)
+        .colors(ColorSetups.bostonBlue)
         .modern()
         .compact()
         .dark()

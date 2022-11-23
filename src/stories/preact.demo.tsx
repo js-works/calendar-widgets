@@ -8,10 +8,7 @@ type ExtraInputConfigParams = {
   labelLayout?: 'vertical' | 'horizontal' | 'auto';
 };
 
-class DialogsController extends AbstractDialogsController<
-  VNode,
-  ExtraInputConfigParams
-> {
+class DialogsController extends AbstractDialogsController<VNode> {
   #localize: LocalizeController;
   #renderers = new Set<() => VNode>();
 
