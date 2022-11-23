@@ -1,5 +1,6 @@
 import { createElement as h, ReactNode } from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { AbstractDialogsController } from '../shoelace-widgets/controllers/vanilla/dialogs';
 import { LocalizeController } from '@shoelace-style/localize';
@@ -20,7 +21,7 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
       showDialog: (config) => {
         const renderer = () =>
           h(
-            'dyn-dialog' as any,
+            DynDialog,
             {
               config,
 
@@ -104,4 +105,21 @@ function useDialogs(): [DialogsController, () => ReactNode] {
   });
 
   return [dialogCtrl, renderDialogs];
+}
+
+function DynDialog(props: {
+  config: any;
+  dismissDialog: any;
+  emitResult: any;
+}) {
+  const elemRef = useRef<any>();
+
+  useEffect(() => {
+    const dynDialog = elemRef.current!;
+    dynDialog.config = props.config;
+    dynDialog.dismissDialog = props.dismissDialog;
+    dynDialog.emitResult = props.emitResult;
+  }, []);
+
+  return h('dyn-dialog', { ref: elemRef }, props.config.content);
 }

@@ -18,7 +18,7 @@ export default defineConfig({
         '../../node_modules/lit/directives/unsafe-html.js',
       'lit/directives/when': '../../node_modules/lit/directives/when.js',
       '@shoelace-style/shoelace/dist/react':
-        '../../node_modules/@shoelace-style/shoelace/dist/react.js'
+        '../../node_modules/@shoelace-style/shoelace/dist/react/index.js'
     }
   }
 });

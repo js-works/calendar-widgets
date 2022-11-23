@@ -3,6 +3,8 @@ import { createElement, Ref, ReactNode, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useDialogs } from '../main/shoelace-widgets-react';
 import { SlButton } from '@shoelace-style/shoelace/dist/react';
+import { Fieldset } from '../main/shoelace-widgets-react';
+import { TextField } from '../main/shoelace-widgets-react';
 
 export const reactDemo = () => {
   const container = document.createElement('div');
@@ -16,13 +18,27 @@ function Demo() {
 
   const onOpenDialogClick = () => {
     dialogs.input({
-      title: 'Switch user',
+      title: 'Add user',
       labelLayout: 'horizontal',
       width: '25rem',
+      padding: '0 0.5rem',
 
       content: (
         <>
-          <div>Juhu</div>
+          <Fieldset caption="User">
+            <TextField name="firstName" label="First name" required />
+            <TextField name="lastName" label="Last name" required />
+            <TextField type="email" name="email" label="Email" required />
+          </Fieldset>
+          <Fieldset caption="Account">
+            <TextField label="Username" name="username" required />
+            <TextField
+              type="password"
+              label="Password"
+              name="password"
+              required
+            />
+          </Fieldset>
         </>
       )
     });
