@@ -1,5 +1,5 @@
 import { TemplateResult } from 'lit';
-import { ToastConfig, ToastType } from './shoelace-widgets/toasts/toasts';
+import { ToastConfig, ToastType } from './shared/toasts/toasts';
 
 // classes
 export { DialogsController } from './shoelace-widgets-lit/dialogs-controller';

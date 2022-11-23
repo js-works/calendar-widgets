@@ -1,6 +1,6 @@
-export { nextFreeTagName };
+export { generateUniqueTagName };
 
-function nextFreeTagName(baseName: string) {
+function generateUniqueTagName(baseName: string) {
   // TODO
   return baseName + '-' + Math.floor(Math.random() * 10000000);
 }

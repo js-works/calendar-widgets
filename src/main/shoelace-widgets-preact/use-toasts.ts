@@ -1,8 +1,8 @@
 import { h, render } from 'preact';
 import type { VNode } from 'preact';
 import { useState } from 'preact/hooks';
-import { AbstractToastsController } from '../shoelace-widgets/toasts/toasts';
-import { DynamicToast } from '../shoelace-widgets/toasts/dynamic-toast';
+import { AbstractToastsController } from '../shared/toasts/toasts';
+import { DynamicToast } from '../shared/toasts/dynamic-toast';
 
 // === exports =======================================================
 

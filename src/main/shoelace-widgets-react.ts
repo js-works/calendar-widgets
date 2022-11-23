@@ -4,7 +4,7 @@ import { createComponent } from '@lit-labs/react';
 import {
   ToastConfig as GenericToastConfig,
   ToastType
-} from './shoelace-widgets/toasts/toasts';
+} from './shared/toasts/toasts';
 
 import { Fieldset as SxFieldset } from './shoelace-widgets/components/fieldset/fieldset';
 import { TextField as SxTextField } from './shoelace-widgets/components/text-field/text-field';

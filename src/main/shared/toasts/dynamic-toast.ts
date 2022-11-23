@@ -1,16 +1,16 @@
 import { html, LitElement } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement, property } from 'lit/decorators.js';
-import type { ToastConfig, ToastType } from '../toasts/toasts';
-import { nextFreeTagName } from '../misc/utils';
+import type { ToastConfig, ToastType } from './toasts';
+import { generateUniqueTagName } from '../../shoelace-widgets/misc/utils';
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 
 // icons
-import infoIcon from '../icons/bootstrap/info-circle.icon';
-import successIcon from '../icons/bootstrap/check-circle.icon';
-import warningIcon from '../icons/bootstrap/exclamation-circle.icon';
-import errorIcon from '../icons/bootstrap/exclamation-triangle.icon';
+import infoIcon from '../../shoelace-widgets/icons/bootstrap/info-circle.icon';
+import successIcon from '../../shoelace-widgets/icons/bootstrap/check-circle.icon';
+import warningIcon from '../../shoelace-widgets/icons/bootstrap/exclamation-circle.icon';
+import errorIcon from '../../shoelace-widgets/icons/bootstrap/exclamation-triangle.icon';
 
 // === exports =======================================================
 
@@ -38,7 +38,7 @@ const icons = {
 
 // === local classes =================================================
 
-const tagName = nextFreeTagName('dynamic-toast--internal');
+const tagName = generateUniqueTagName('dynamic-toast--internal');
 
 @customElement(tagName)
 class DynamicToast extends LitElement {

@@ -1,15 +1,15 @@
 import { render } from 'lit';
 import { html, unsafeStatic } from 'lit/static-html.js';
-import { AbstractToastsController } from '../shoelace-widgets/toasts/toasts';
+import { AbstractToastsController } from '../shared/toasts/toasts';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import type { ToastConfig, ToastType } from '../shoelace-widgets/toasts/toasts';
+import type { ToastConfig, ToastType } from '../shared/toasts/toasts';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
-import { DynamicToast } from '../shoelace-widgets/toasts/dynamic-toast';
+import { DynamicToast } from '../shared/toasts/dynamic-toast';
 
 // icons
 import infoIcon from '../shoelace-widgets/icons/bootstrap/info-circle.icon';

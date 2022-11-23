@@ -1,8 +1,8 @@
 import { createElement as h, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AbstractToastsController } from '../shoelace-widgets/toasts/toasts';
-import { DynamicToast } from '../shoelace-widgets/toasts/dynamic-toast';
+import { AbstractToastsController } from '../shared/toasts/toasts';
+import { DynamicToast } from '../shared/toasts/dynamic-toast';
 
 export { useToasts };
 

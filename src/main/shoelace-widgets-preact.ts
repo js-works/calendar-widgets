@@ -3,7 +3,7 @@ import { VNode } from 'preact';
 import {
   ToastConfig as GenericToastConfig,
   ToastType
-} from './shoelace-widgets/toasts/toasts';
+} from './shared/toasts/toasts';
 
 // hooks
 export { useDialogs } from './shoelace-widgets-preact/use-dialogs';

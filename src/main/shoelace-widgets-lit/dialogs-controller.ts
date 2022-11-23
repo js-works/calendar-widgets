@@ -13,8 +13,8 @@ import {
 
 import { LocalizeController } from '../shoelace-widgets/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
-import { AbstractDialogsController } from '../shoelace-widgets/dialogs/dialogs';
-import type { DialogConfig } from '../shoelace-widgets/dialogs/dialogs';
+import { AbstractDialogsController } from '../shared/dialogs/dialogs';
+import type { DialogConfig } from '../shared/dialogs/dialogs';
 import type { FormSubmitEvent } from '../shoelace-widgets/events/form-submit-event';
 
 // components
@@ -36,7 +36,7 @@ import approvalIcon from '../shoelace-widgets/icons/bootstrap/question-diamond.i
 import promptIcon from '../shoelace-widgets/icons/bootstrap/keyboard.icon';
 
 // styles
-import dialogsStyles from '../shoelace-widgets/dialogs/dialogs.styles';
+import dialogsStyles from '../shared/dialogs/dialogs.styles';
 
 // === types =========================================================
 
