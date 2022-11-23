@@ -1,1 +1,1 @@
-export { useDialogs } from './shoelace-preact/use-dialogs';
+export { useDialogs } from './shoelace-widgets-preact/use-dialogs';

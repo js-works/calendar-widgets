@@ -7,18 +7,11 @@ import {
   Fragment
 } from 'preact';
 
-import { useEffect, useState } from 'preact/hooks';
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../main/shoelace-widgets/controllers/vanilla/dialogs';
-import { LocalizeController } from '@shoelace-style/localize';
-
 import { useDialogs } from '../main/shoelace-widgets-preact';
 
 export const preactDemo = () => {
   const container = document.createElement('div');
-
   mount(<Demo />, container);
-
   return container;
 };
 

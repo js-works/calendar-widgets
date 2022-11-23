@@ -16,7 +16,9 @@ export default defineConfig({
       'lit/directives/repeat': '../../node_modules/lit/directives/repeat.js',
       'lit/directives/unsafe-html':
         '../../node_modules/lit/directives/unsafe-html.js',
-      'lit/directives/when': '../../node_modules/lit/directives/when.js'
+      'lit/directives/when': '../../node_modules/lit/directives/when.js',
+      '@shoelace-style/shoelace/dist/react':
+        '../../node_modules/@shoelace-style/shoelace/dist/react.js'
     }
   }
 });

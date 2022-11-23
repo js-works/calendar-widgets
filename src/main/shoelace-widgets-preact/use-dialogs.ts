@@ -1,5 +1,4 @@
-/* @jsx h */
-import { h, render as mount, Ref, ComponentChild, VNode } from 'preact';
+import { h, render as mount, Ref, VNode } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { AbstractDialogsController } from '../shoelace-widgets/controllers/vanilla/dialogs';
