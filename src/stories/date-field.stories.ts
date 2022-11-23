@@ -1,8 +1,8 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators';
-import { Choice } from '../main/shoelace/components/choice/choice';
-import { DateField } from '../main/shoelace/components/date-field/date-field';
-import { Fieldset } from '../main/shoelace/components/fieldset/fieldset';
+import { Choice } from '../main/shoelace-widgets/components/choice/choice';
+import { DateField } from '../main/shoelace-widgets/components/date-field/date-field';
+import { Fieldset } from '../main/shoelace-widgets/components/fieldset/fieldset';
 
 export default {
   title: 'shoelace-widgets'

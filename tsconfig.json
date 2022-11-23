@@ -16,6 +16,7 @@
     "sourceMap": true,
     "jsx": "react",
     "jsxFactory": "h",
+    "jsxFragmentFactory": "Fragment",
     "lib": ["ES2022", "dom"],
     "esModuleInterop": true,
     "baseUrl": ".",

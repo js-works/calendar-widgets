@@ -1,2 +1,2 @@
-export { DialogsController } from './shoelace-lit/dialogs-controller';
-export { ToastsController } from './shoelace-lit/toasts-controller';
+export { DialogsController } from './shoelace-widgets-lit/dialogs-controller';
+export { ToastsController } from './shoelace-widgets-lit/toasts-controller';

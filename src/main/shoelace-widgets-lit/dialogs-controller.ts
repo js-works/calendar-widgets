@@ -11,11 +11,11 @@ import {
   setDefaultAnimation
 } from '@shoelace-style/shoelace/dist/utilities/animation-registry';
 
-import { LocalizeController } from '../shoelace/i18n/i18n';
+import { LocalizeController } from '../shoelace-widgets/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
-import { AbstractDialogsController } from '../shoelace/controllers/vanilla/dialogs';
-import type { DialogConfig } from '../shoelace/controllers/vanilla/dialogs';
-import type { FormSubmitEvent } from '../shoelace/events/form-submit-event';
+import { AbstractDialogsController } from '../shoelace-widgets/controllers/vanilla/dialogs';
+import type { DialogConfig } from '../shoelace-widgets/controllers/vanilla/dialogs';
+import type { FormSubmitEvent } from '../shoelace-widgets/events/form-submit-event';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
@@ -23,17 +23,17 @@ import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-import { Form } from '../shoelace/components/form/form';
-import { TextField } from '../shoelace/components/text-field/text-field';
+import { Form } from '../shoelace-widgets/components/form/form';
+import { TextField } from '../shoelace-widgets/components/text-field/text-field';
 
 // icons
-import infoIcon from '../shoelace/icons/bootstrap/info-square.icon';
-import successIcon from '../shoelace/icons/bootstrap/check2-square.icon';
-import warningIcon from '../shoelace/icons/bootstrap/exclamation-diamond.icon';
-import errorIcon from '../shoelace/icons/bootstrap/exclamation-triangle.icon';
-import confirmationIcon from '../shoelace/icons/bootstrap/question-diamond.icon';
-import approvalIcon from '../shoelace/icons/bootstrap/question-diamond.icon';
-import promptIcon from '../shoelace/icons/bootstrap/keyboard.icon';
+import infoIcon from '../shoelace-widgets/icons/bootstrap/info-square.icon';
+import successIcon from '../shoelace-widgets/icons/bootstrap/check2-square.icon';
+import warningIcon from '../shoelace-widgets/icons/bootstrap/exclamation-diamond.icon';
+import errorIcon from '../shoelace-widgets/icons/bootstrap/exclamation-triangle.icon';
+import confirmationIcon from '../shoelace-widgets/icons/bootstrap/question-diamond.icon';
+import approvalIcon from '../shoelace-widgets/icons/bootstrap/question-diamond.icon';
+import promptIcon from '../shoelace-widgets/icons/bootstrap/keyboard.icon';
 
 // styles
 import dialogsStyles from './dialogs.styles';

@@ -3,17 +3,17 @@ import { createRef, ref } from 'lit/directives/ref';
 import type { Ref } from 'lit/directives/ref';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat';
-import { AbstractToastsController } from '../shoelace/controllers/vanilla/toasts';
-import type { ToastConfig } from '../shoelace/controllers/vanilla/toasts';
+import { AbstractToastsController } from '../shoelace-widgets/controllers/vanilla/toasts';
+import type { ToastConfig } from '../shoelace-widgets/controllers/vanilla/toasts';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 
 // icons
-import infoIcon from '../shoelace/icons/bootstrap/info-circle.icon';
-import successIcon from '../shoelace/icons/bootstrap/check-circle.icon';
-import warningIcon from '../shoelace/icons/bootstrap/exclamation-circle.icon';
-import errorIcon from '../shoelace/icons/bootstrap/exclamation-triangle.icon';
+import infoIcon from '../shoelace-widgets/icons/bootstrap/info-circle.icon';
+import successIcon from '../shoelace-widgets/icons/bootstrap/check-circle.icon';
+import warningIcon from '../shoelace-widgets/icons/bootstrap/exclamation-circle.icon';
+import errorIcon from '../shoelace-widgets/icons/bootstrap/exclamation-triangle.icon';
 
 // === exports =======================================================
 

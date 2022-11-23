@@ -16,11 +16,7 @@ build().catch((e) => {
 async function build() {
   await rm('./dist', { recursive: true, force: true });
 
-  for (const pkg of [
-    'shoelace-widgets',
-    'shoelace-widgets-lit',
-    'shoelace-themes'
-  ]) {
+  for (const pkg of ['shoelace-widgets', 'shoelace-widgets-lit']) {
     for (const format of ['esm', 'cjs']) {
       const outfile = `./dist/${pkg}.${format}.js`;
 
