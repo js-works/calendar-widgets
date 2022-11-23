@@ -1,6 +1,6 @@
-import { html } from 'lit';
+import { html, LitElement, PropertyValueMap } from 'lit';
 import { createRef, ref } from 'lit/directives/ref';
-import type { Ref } from 'lit/directives/ref';
+import { customElement, property, state } from 'lit/decorators';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat';
 import { AbstractToastsController } from '../shoelace-widgets/controllers/vanilla/toasts';
@@ -21,10 +21,6 @@ export { ToastsController };
 
 // === local types ===================================================
 
-type ExtraParams = {
-  closeable?: boolean;
-};
-
 // === variant by dialog type ========================================
 
 const variants = {
@@ -42,18 +38,56 @@ const icons = {
   warning: warningIcon,
   error: errorIcon
 };
+// === local classes =================================================
 
-// === exported classes ==============================================
+@customElement('dyn-toast')
+class DynToast extends LitElement {
+  @property({ attribute: false })
+  config!: ToastConfig<unknown>;
 
-class ToastsController extends AbstractToastsController<
-  TemplateResult,
-  ExtraParams
-> {
   static {
     // required components (just to prevent too much tree shaking)
     void SlAlert;
   }
 
+  private readonly _alertRef = createRef<SlAlert>();
+
+  protected override firstUpdated() {
+    this._alertRef.value!.toast();
+  }
+
+  render() {
+    const config = this.config;
+    const duration = config.duration ?? 3000;
+    const variant = variants[config.type];
+    const icon = icons[config.type];
+
+    const title =
+      typeof config.title === 'function' ? config.title() : config.title;
+
+    const message =
+      typeof config.message === 'function' ? config.message() : config.message;
+
+    return html`
+      <sl-alert
+        variant=${variant}
+        duration=${duration}
+        ?closable=${config.closable ?? false}
+        ${ref(this._alertRef)}
+        style="user-select: none"
+      >
+        <sl-icon slot="icon" src=${icon}></sl-icon>
+        <strong>${title}</strong>
+        <div>${message}</div>
+        <div>${config.content}</div>
+      </sl-alert>
+    `;
+  }
+}
+
+// === exported classes ==============================================
+
+class ToastsController extends AbstractToastsController<TemplateResult> {
   readonly #host: ReactiveControllerHost;
   readonly #toastRenderers = new Set<() => TemplateResult>();
 
@@ -69,42 +103,13 @@ class ToastsController extends AbstractToastsController<
     return html`${repeat(this.#toastRenderers, (it) => it())}`;
   }
 
-  #showToast = async (config: ToastConfig<TemplateResult, ExtraParams>) => {
-    let alertRef = createRef<SlAlert>();
-    const renderer = () => this.#renderToast(config, alertRef);
+  #showToast(config: ToastConfig<TemplateResult>) {
+    const renderer = () => this.#renderToast(config);
     this.#toastRenderers.add(renderer);
     this.#host.requestUpdate();
-    await this.#host.updateComplete;
-    alertRef.value!.toast();
-  };
+  }
 
-  #renderToast(
-    config: ToastConfig<TemplateResult, ExtraParams>,
-    alertRef: Ref<SlAlert>
-  ) {
-    const duration = config.duration ?? 3000;
-    const variant = variants[config.type];
-    const icon = icons[config.type];
-
-    const title =
-      typeof config.title === 'function' ? config.title() : config.title;
-
-    const message =
-      typeof config.message === 'function' ? config.message() : config.message;
-
-    return html`
-      <sl-alert
-        variant=${variant}
-        duration=${duration}
-        ?closable=${config.closeable ?? false}
-        ${ref(alertRef)}
-        style="user-select: none"
-      >
-        <sl-icon slot="icon" src=${icon}></sl-icon>
-        <strong>${title}</strong>
-        <div>${message}</div>
-        <div>${config.content}</div>
-      </sl-alert>
-    `;
+  #renderToast(config: ToastConfig<TemplateResult>) {
+    return html`<dyn-toast .config=${config}></dyn-toast>`;
   }
 }

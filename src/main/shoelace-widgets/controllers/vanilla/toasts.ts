@@ -7,51 +7,49 @@ export type { ToastConfig };
 
 type ToastType = 'info' | 'success' | 'warning' | 'error';
 
-type ToastParams<C, E extends Record<string, any> = {}> = {
+type ToastParams<C> = {
   title?: string | (() => string);
   message?: string | (() => string);
   content?: C;
   duration?: number;
-} & E;
+  closable?: boolean;
+};
 
-type ToastConfig<C, E extends Record<string, unknown> = {}> = {
+type ToastConfig<C> = {
   type: ToastType;
-} & ToastParams<C, E>;
+} & ToastParams<C>;
 
 // === exported classes ==============================================
 
-abstract class AbstractToastsController<
-  C,
-  E extends Record<string, unknown> = {}
-> {
-  #showToast: (config: ToastConfig<C, E>) => void;
+abstract class AbstractToastsController<C> {
+  #showToast: (config: ToastConfig<C>) => void;
 
-  constructor(params: { showToast: (config: ToastConfig<C, E>) => void }) {
+  constructor(params: { showToast: (config: ToastConfig<C>) => void }) {
     this.#showToast = params.showToast;
   }
 
-  info(params: ToastParams<C, E>) {
+  info(params: ToastParams<C>) {
     return this.#showToast({
       type: 'info',
       ...params
     });
   }
 
-  success(params: ToastParams<C, E>) {
+  success(params: ToastParams<C>) {
     return this.#showToast({
       type: 'success',
       ...params
     });
   }
 
-  warn(params: ToastParams<C, E>) {
+  warn(params: ToastParams<C>) {
     return this.#showToast({
       type: 'warning',
       ...params
     });
   }
 
-  error(params: ToastParams<C, E>) {
+  error(params: ToastParams<C>) {
     return this.#showToast({
       type: 'error',
       ...params

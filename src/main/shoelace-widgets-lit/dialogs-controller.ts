@@ -155,10 +155,6 @@ class DynDialog extends LitElement {
 
     return html`
       <style>
-        .dialog {
-          --width: initial;
-        }
-
         .dialog::part(panel) {
           width: ${this.config.width ? this.config.width : 'auto'};
           max-width: ${this.config.maxWidth ? this.config.maxWidth : 'auto'};

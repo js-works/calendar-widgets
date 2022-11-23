@@ -16,11 +16,12 @@ export const reactDemo = () => {
 function Demo() {
   const [dialogs, renderDialogs] = useDialogs();
 
-  const onOpenDialogClick = () => {
-    dialogs.input({
-      title: 'Add user',
+  const onOpenDialogClick = async () => {
+    const formData = await dialogs.input({
+      title: 'New user',
+      okText: 'Add user',
       labelLayout: 'horizontal',
-      width: '28rem',
+      width: '34rem',
       padding: '0 0.5rem',
 
       content: (
@@ -42,6 +43,13 @@ function Demo() {
         </>
       )
     });
+
+    /*
+    dialogs.info({
+      title: 'Form data',
+      message: JSON.stringify(formData, null, 2)
+    });
+    */
   };
 
   return (
