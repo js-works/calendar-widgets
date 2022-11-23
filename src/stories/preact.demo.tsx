@@ -34,15 +34,15 @@ function Demo() {
     });
   };
 
-  const showToast = (type: string) => {
+  const showToast = (type: 'info' | 'success' | 'warning' | 'error') => {
     const now = new Date();
     const hours = now.getHours().toString().padStart(2, '0');
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const seconds = now.getSeconds().toString().padStart(2, '0');
     const time = `${hours}:${minutes}:${seconds}`;
 
-    toasts.info({
-      title: type,
+    (toasts as any)[type === 'warning' ? 'warn' : type]({
+      title: type[0].toUpperCase() + type.substring(1),
       message: 'Toast was opened at ' + time
     });
   };
@@ -52,7 +52,12 @@ function Demo() {
       <h3>Dialogs</h3>
       <sl-button onclick={onOpenDialogClick}>Open dialog</sl-button>
       <h3>Toasts</h3>
-      <sl-button onclick={() => showToast('info')}>Info Toast</sl-button>
+      <sl-button-group>
+        <sl-button onclick={() => showToast('info')}>Info</sl-button>
+        <sl-button onclick={() => showToast('success')}>Success</sl-button>
+        <sl-button onclick={() => showToast('warning')}>Warning</sl-button>
+        <sl-button onclick={() => showToast('error')}>Error</sl-button>
+      </sl-button-group>
       {renderDialogs()}
       {renderToasts()}
     </div>

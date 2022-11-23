@@ -4,6 +4,7 @@ import { Fieldset as SxFieldset } from './shoelace-widgets/components/fieldset/f
 import { TextField as SxTextField } from './shoelace-widgets/components/text-field/text-field';
 
 export { useDialogs } from './shoelace-widgets-react/use-dialogs';
+export { useToasts } from './shoelace-widgets-react/use-toasts';
 
 export const Fieldset = createComponent({
   elementClass: SxFieldset,

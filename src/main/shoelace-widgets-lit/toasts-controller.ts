@@ -43,10 +43,10 @@ const icons = {
 @customElement('dyn-toast')
 class DynToast extends LitElement {
   @property({ attribute: false })
-  config!: ToastConfig<unknown>;
+  config!: ToastConfig<unknown> | null;
 
   @property({ attribute: false })
-  contentElement!: HTMLElement;
+  contentElement!: HTMLElement | null;
 
   static {
     // required components (to prevent too much tree shaking)
@@ -54,12 +54,21 @@ class DynToast extends LitElement {
   }
 
   private readonly _alertRef = createRef<SlAlert>();
+  private _toastPerformed = false;
 
-  protected override firstUpdated() {
-    this._alertRef.value!.toast();
+  protected override updated() {
+    if (this._alertRef.value && !this._toastPerformed) {
+      this._toastPerformed = true;
+      this._alertRef.value!.toast();
+    }
   }
 
   render() {
+    console.log('render', this.config);
+    if (!this.config) {
+      return null;
+    }
+
     const config = this.config;
     const duration = config.duration ?? 3000;
     const variant = variants[config.type];

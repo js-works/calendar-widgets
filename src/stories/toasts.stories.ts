@@ -33,8 +33,7 @@ class toastsDemo extends LitElement {
   private _onInfoClick = () => {
     this._toasts.info({
       message: 'Your next meeting starts in 15 minutes',
-      title: 'Info',
-      duration: 100000
+      title: 'Info'
     });
   };
 
