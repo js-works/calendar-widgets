@@ -16,7 +16,7 @@ import { DatePicker } from '../date-picker/date-picker';
 import {
   FormFieldController,
   Validators
-} from '../../controllers/form-field-controller';
+} from '../../form-fields/form-field-controller';
 
 // styles
 import dateFieldStyles from './date-field.styles';

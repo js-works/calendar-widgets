@@ -5,7 +5,7 @@ import { customElement } from 'lit/decorators';
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
-import { DialogsController } from '../main/shoelace-widgets-lit';
+import { DialogsController } from '../main/shoelace-widgets';
 import { TextField } from '../main/shoelace-widgets';
 import { TextArea } from '../main/shoelace-widgets';
 import { Choice } from '../main/shoelace-widgets';

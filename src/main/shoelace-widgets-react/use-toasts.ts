@@ -1,7 +1,7 @@
 import { createElement as h, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AbstractToastsController } from '../shoelace-widgets/controllers/vanilla/toasts';
+import { AbstractToastsController } from '../shoelace-widgets/toasts/toasts';
 
 export { useToasts };
 

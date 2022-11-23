@@ -16,7 +16,11 @@ build().catch((e) => {
 async function build() {
   await rm('./dist', { recursive: true, force: true });
 
-  for (const pkg of ['shoelace-widgets', 'shoelace-widgets-lit']) {
+  for (const pkg of [
+    'shoelace-widgets',
+    'shoelace-widgets-react',
+    'shoelace-widgets-preact'
+  ]) {
     for (const format of ['esm', 'cjs']) {
       const outfile = `./dist/${pkg}.${format}.js`;
 
@@ -32,7 +36,10 @@ async function build() {
         external: [
           'lit',
           '@shoelace-style/localize',
-          '@shoelace-style/shoelace/*'
+          '@shoelace-style/shoelace/*',
+          'react',
+          'react-dom/*',
+          'preact'
         ],
         define: {
           'process.env.NODE_ENV': '"production"'

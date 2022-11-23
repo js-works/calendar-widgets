@@ -8,7 +8,7 @@ import { LocalizeController } from '../../i18n/i18n';
 import {
   FormFieldController,
   Validators
-} from '../../controllers/form-field-controller';
+} from '../../form-fields/form-field-controller';
 
 // custom elements
 import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea';

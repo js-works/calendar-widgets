@@ -1,5 +1,5 @@
-import { css, unsafeCSS } from 'lit';
-import labelLayoutStyles from '../shoelace-widgets/styles/label-layout.styles';
+import { css } from 'lit';
+import labelLayoutStyles from '../styles/label-layout.styles';
 
 export default css`
   ${labelLayoutStyles}

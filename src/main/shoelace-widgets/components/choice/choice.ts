@@ -9,7 +9,7 @@ import { LocalizeController } from '../../i18n/i18n';
 import {
   FormFieldController,
   Validators
-} from '../../controllers/form-field-controller';
+} from '../../form-fields/form-field-controller';
 
 // custom elements
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';

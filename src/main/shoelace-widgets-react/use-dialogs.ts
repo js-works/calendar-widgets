@@ -2,7 +2,7 @@ import { createElement as h, ReactNode } from 'react';
 import { useEffect, useState, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shoelace-widgets/controllers/vanilla/dialogs';
+import { AbstractDialogsController } from '../shoelace-widgets/dialogs/dialogs';
 import { LocalizeController } from '@shoelace-style/localize';
 
 export { useDialogs };
