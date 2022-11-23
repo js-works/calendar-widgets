@@ -1,17 +1,10 @@
-import {
-  h,
-  render as mount,
-  Ref,
-  ComponentChild,
-  VNode,
-  Fragment
-} from 'preact';
-
+import { h, render, Ref, ComponentChild, Fragment, VNode } from 'preact';
+import { ToastConfig, ToastType } from '../main/shoelace-widgets';
 import { useDialogs, useToasts } from '../main/shoelace-widgets-preact';
 
 export const preactDemo = () => {
   const container = document.createElement('div');
-  mount(<Demo />, container);
+  render(<Demo />, container);
   return container;
 };
 
@@ -34,16 +27,17 @@ function Demo() {
     });
   };
 
-  const showToast = (type: 'info' | 'success' | 'warning' | 'error') => {
+  const showToast = (type: ToastType, title: string) => {
     const now = new Date();
-    const hours = now.getHours().toString().padStart(2, '0');
-    const minutes = now.getMinutes().toString().padStart(2, '0');
-    const seconds = now.getSeconds().toString().padStart(2, '0');
-    const time = `${hours}:${minutes}:${seconds}`;
 
-    (toasts as any)[type === 'warning' ? 'warn' : type]({
-      title: type[0].toUpperCase() + type.substring(1),
-      message: 'Toast was opened at ' + time
+    const time = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+      .toISOString()
+      .substring(11, 19);
+
+    toasts.show(type, {
+      title,
+      message: 'Toast was opened at ' + time,
+      content: <strong>Some extra content ...</strong>
     });
   };
 
@@ -53,10 +47,14 @@ function Demo() {
       <sl-button onclick={onOpenDialogClick}>Open dialog</sl-button>
       <h3>Toasts</h3>
       <sl-button-group>
-        <sl-button onclick={() => showToast('info')}>Info</sl-button>
-        <sl-button onclick={() => showToast('success')}>Success</sl-button>
-        <sl-button onclick={() => showToast('warning')}>Warning</sl-button>
-        <sl-button onclick={() => showToast('error')}>Error</sl-button>
+        <sl-button onclick={() => showToast('info', 'Info')}>Info</sl-button>
+        <sl-button onclick={() => showToast('success', 'Success')}>
+          Success
+        </sl-button>
+        <sl-button onclick={() => showToast('warning', 'Warning')}>
+          Warning
+        </sl-button>
+        <sl-button onclick={() => showToast('error', 'Error')}>Error</sl-button>
       </sl-button-group>
       {renderDialogs()}
       {renderToasts()}

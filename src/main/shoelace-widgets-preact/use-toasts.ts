@@ -1,18 +1,23 @@
-import { h, render, VNode } from 'preact';
+import { h, render } from 'preact';
+import type { VNode } from 'preact';
 import { useState } from 'preact/hooks';
 import { AbstractToastsController } from '../shoelace-widgets/controllers/vanilla/toasts';
 
+// === exports =======================================================
+
 export { useToasts };
 
+// === local classes =================================================
+
 class ToastsController extends AbstractToastsController<VNode> {
-  #renderers = new Set<() => VNode>();
+  #toastRenderers = new Set<() => VNode>();
 
   constructor(
     setRenderer: (renderer: () => VNode) => void,
     forceUpdate: () => void
   ) {
     super({
-      showToast: (config) => {
+      showToast: (type, config) => {
         let contentElement: HTMLElement | null;
 
         if (config.content) {
@@ -21,16 +26,13 @@ class ToastsController extends AbstractToastsController<VNode> {
         }
 
         const renderer = () =>
-          h(
-            'dyn-toast' as any,
-            {
-              config,
-              contentElement
-            },
-            config.content
-          );
+          h('dyn-toast' as any, {
+            type,
+            config,
+            contentElement
+          });
 
-        this.#renderers.add(renderer);
+        this.#toastRenderers.add(renderer);
         forceUpdate();
         return Promise.resolve() as any;
       }
@@ -40,11 +42,13 @@ class ToastsController extends AbstractToastsController<VNode> {
       h(
         'span',
         null,
-        [...this.#renderers].map((it) => it())
+        [...this.#toastRenderers].map((it) => it())
       )
     );
   }
 }
+
+// === exported hooks ================================================
 
 function useToasts(): [ToastsController, () => VNode] {
   const [, setToggle] = useState(false);

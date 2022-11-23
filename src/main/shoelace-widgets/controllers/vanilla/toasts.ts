@@ -1,13 +1,13 @@
 // === exports =======================================================
 
 export { AbstractToastsController };
-export type { ToastConfig };
+export type { ToastConfig, ToastType };
 
 // === local types ===================================================
 
 type ToastType = 'info' | 'success' | 'warning' | 'error';
 
-type ToastParams<C> = {
+type ToastConfig<C> = {
   title?: string | (() => string);
   message?: string | (() => string);
   content?: C;
@@ -15,44 +15,30 @@ type ToastParams<C> = {
   closable?: boolean;
 };
 
-type ToastConfig<C> = {
-  type: ToastType;
-} & ToastParams<C>;
-
 // === exported classes ==============================================
 
 abstract class AbstractToastsController<C> {
-  #showToast: (config: ToastConfig<C>) => void;
+  readonly show: (type: ToastType, params: ToastConfig<C>) => void;
 
-  constructor(params: { showToast: (config: ToastConfig<C>) => void }) {
-    this.#showToast = params.showToast;
+  constructor(params: {
+    showToast: (type: ToastType, params: ToastConfig<C>) => void;
+  }) {
+    this.show = params.showToast;
   }
 
-  info(params: ToastParams<C>) {
-    return this.#showToast({
-      type: 'info',
-      ...params
-    });
+  info(params: ToastConfig<C>) {
+    return this.show('info', params);
   }
 
-  success(params: ToastParams<C>) {
-    return this.#showToast({
-      type: 'success',
-      ...params
-    });
+  success(params: ToastConfig<C>) {
+    return this.show('success', params);
   }
 
-  warn(params: ToastParams<C>) {
-    return this.#showToast({
-      type: 'warning',
-      ...params
-    });
+  warn(params: ToastConfig<C>) {
+    return this.show('warning', params);
   }
 
-  error(params: ToastParams<C>) {
-    return this.#showToast({
-      type: 'error',
-      ...params
-    });
+  error(params: ToastConfig<C>) {
+    return this.show('error', params);
   }
 }

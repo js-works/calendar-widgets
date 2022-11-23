@@ -13,7 +13,7 @@ class ToastsController extends AbstractToastsController<ReactNode> {
     forceUpdate: () => void
   ) {
     super({
-      showToast: (config) => {
+      showToast: (type, config) => {
         let contentElement: HTMLElement | null;
 
         if (config.content) {
@@ -22,7 +22,7 @@ class ToastsController extends AbstractToastsController<ReactNode> {
           root.render(config.content);
         }
 
-        const renderer = () => h(DynToast, { config });
+        const renderer = () => h(DynToast, { type, config });
 
         this.#renderers.add(renderer);
         forceUpdate();
@@ -60,7 +60,8 @@ function useToasts(): [ToastsController, () => ReactNode] {
   return [toastsCtrl, renderToasts];
 }
 
-function DynToast(props: { config: any }) {
+function DynToast(props: { type: any; config: any }) {
+  // TODO
   const elemRef = useRef<any>();
 
   useEffect(() => {
@@ -72,9 +73,10 @@ function DynToast(props: { config: any }) {
       root.render(props.config.content);
     }
 
+    elemRef.current!.type = props.type;
     elemRef.current!.config = props.config;
     elemRef.current!.contentElement = contentElement;
   }, []);
 
-  return h('dyn-toast', { ref: elemRef, config: props.config });
+  return h('dyn-toast', { ref: elemRef });
 }

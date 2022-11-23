@@ -4,7 +4,11 @@ import { customElement, property, state } from 'lit/decorators';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat';
 import { AbstractToastsController } from '../shoelace-widgets/controllers/vanilla/toasts';
-import type { ToastConfig } from '../shoelace-widgets/controllers/vanilla/toasts';
+
+import type {
+  ToastConfig,
+  ToastType
+} from '../shoelace-widgets/controllers/vanilla/toasts';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
@@ -38,15 +42,19 @@ const icons = {
   warning: warningIcon,
   error: errorIcon
 };
+
 // === local classes =================================================
 
 @customElement('dyn-toast')
 class DynToast extends LitElement {
   @property({ attribute: false })
-  config!: ToastConfig<unknown> | null;
+  type: ToastType | null = null;
 
   @property({ attribute: false })
-  contentElement!: HTMLElement | null;
+  config: ToastConfig<unknown> | null = null;
+
+  @property({ attribute: false })
+  contentElement: HTMLElement | null = null;
 
   static {
     // required components (to prevent too much tree shaking)
@@ -64,15 +72,14 @@ class DynToast extends LitElement {
   }
 
   render() {
-    console.log('render', this.config);
     if (!this.config) {
       return null;
     }
 
     const config = this.config;
     const duration = config.duration ?? 3000;
-    const variant = variants[config.type];
-    const icon = icons[config.type];
+    const variant = variants[this.type!];
+    const icon = icons[this.type!];
 
     const title =
       typeof config.title === 'function' ? config.title() : config.title;
@@ -91,7 +98,7 @@ class DynToast extends LitElement {
         <sl-icon slot="icon" src=${icon}></sl-icon>
         <strong>${title}</strong>
         <div>${message}</div>
-        <div>${this.contentElement}</div>
+        <slot>${this.contentElement}</slot>
       </sl-alert>
     `;
   }
@@ -105,7 +112,7 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
 
   constructor(host: ReactiveControllerHost) {
     super({
-      showToast: (config) => this.#showToast(config)
+      showToast: (type, config) => this.#showToast(type, config)
     });
 
     this.#host = host;
@@ -115,13 +122,13 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
     return html`${repeat(this.#toastRenderers, (it) => it())}`;
   }
 
-  #showToast(config: ToastConfig<TemplateResult>) {
-    const renderer = () => this.#renderToast(config);
+  #showToast(type: ToastType, config: ToastConfig<TemplateResult>) {
+    const renderer = () => this.#renderToast(type, config);
     this.#toastRenderers.add(renderer);
     this.#host.requestUpdate();
   }
 
-  #renderToast(config: ToastConfig<TemplateResult>) {
+  #renderToast(type: ToastType, config: ToastConfig<TemplateResult>) {
     let contentElem: HTMLElement | null = null;
 
     if (config.content) {
@@ -129,9 +136,12 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
       render(config.content, contentElem);
     }
 
-    return html`<dyn-toast
-      .config=${config}
-      .contentElement=${contentElem}
-    ></dyn-toast>`;
+    return html`
+      <dyn-toast
+        .type=${type}
+        .config=${config}
+        .contentElement=${contentElem}
+      ></dyn-toast>
+    `;
   }
 }
