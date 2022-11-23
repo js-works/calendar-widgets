@@ -22,33 +22,33 @@ async function build() {
     'shoelace-widgets-react',
     'shoelace-widgets-preact'
   ]) {
-    for (const format of ['esm', 'cjs']) {
-      const outfile = `./dist/${pkg}.${format}.js`;
+    const outfile = `./dist/${pkg}.js`;
 
-      await esbuild.build({
-        entryPoints: [`./src/main/${pkg}.ts`],
-        bundle: true,
-        outfile,
-        tsconfig: './tsconfig.build.json',
-        target: 'esnext',
-        minify: true,
-        sourcemap: true,
-        format,
-        external: [
-          'lit',
-          '@shoelace-style/localize',
-          '@shoelace-style/shoelace/*',
-          'react',
-          'react-dom/*',
-          'preact'
-        ],
-        define: {
-          'process.env.NODE_ENV': '"production"'
-        }
-      });
+    await esbuild.build({
+      entryPoints: [`./src/main/${pkg}.ts`],
+      bundle: true,
+      outfile,
+      tsconfig: './tsconfig.build.json',
+      target: 'esnext',
+      minify: true,
+      sourcemap: true,
+      format: 'esm',
+      external: [
+        'lit',
+        'lit/*',
+        '@shoelace-style/localize',
+        '@shoelace-style/shoelace/*',
+        'react',
+        'react-dom',
+        'react-dom/client',
+        'preact'
+      ],
+      define: {
+        'process.env.NODE_ENV': '"production"'
+      }
+    });
 
-      await createBrotliFile(outfile, outfile + '.br');
-    }
+    await createBrotliFile(outfile, outfile + '.br');
   }
 
   execSync(

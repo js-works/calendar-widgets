@@ -1,6 +1,6 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators';
-import { when } from 'lit/directives/when';
+import { customElement } from 'lit/decorators.js';
+import { when } from 'lit/directives/when.js';
 import SlCard from '@shoelace-style/shoelace/dist/components/card/card';
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';

@@ -1,9 +1,9 @@
 import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators';
-import { property, state } from 'lit/decorators';
-import { classMap } from 'lit/directives/class-map';
-import { repeat } from 'lit/directives/repeat';
-import { when } from 'lit/directives/when';
+import { customElement } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { when } from 'lit/directives/when.js';
 import { createEmitter, Listener } from '../../misc/events';
 
 import sidenavStyles from './sidenav.styles';

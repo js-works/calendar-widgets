@@ -1,5 +1,5 @@
-import { css, html, render, LitElement } from 'lit';
-import { customElement } from 'lit/decorators';
+import { css, html, LitElement } from 'lit';
+import { customElement } from 'lit/decorators.js';
 
 // controllers
 import { ToastsController } from '../main/shoelace-widgets-lit';

@@ -1,10 +1,10 @@
 import { html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators';
-import { classMap } from 'lit/directives/class-map';
-import { styleMap } from 'lit/directives/style-map';
-import { createRef, ref } from 'lit/directives/ref';
-import { repeat } from 'lit/directives/repeat';
-import { when } from 'lit/directives/when';
+import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { styleMap } from 'lit/directives/style-map.js';
+import { createRef, ref } from 'lit/directives/ref.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { when } from 'lit/directives/when.js';
 
 import {
   getAnimation,

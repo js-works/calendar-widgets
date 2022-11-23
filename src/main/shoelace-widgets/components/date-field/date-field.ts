@@ -1,8 +1,8 @@
 import { html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators';
-import { classMap } from 'lit/directives/class-map';
-import { when } from 'lit/directives/when';
-import { createRef, ref } from 'lit/directives/ref';
+import { customElement, property, state } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { when } from 'lit/directives/when.js';
+import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '@shoelace-style/localize';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
 

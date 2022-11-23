@@ -1,7 +1,7 @@
 import { css, html, unsafeCSS, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators';
-import { unsafeHTML } from 'lit/directives/unsafe-html';
-import { createRef, ref } from 'lit/directives/ref';
+import { customElement, property } from 'lit/decorators.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
+import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '@shoelace-style/localize/dist/index';
 import { DatePickerController } from './vanilla/date-picker-controller';
 import { renderDatePicker } from './vanilla/date-picker-render';

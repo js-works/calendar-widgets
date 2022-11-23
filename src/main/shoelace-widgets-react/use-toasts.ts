@@ -2,11 +2,17 @@ import { createElement as h, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { AbstractToastsController } from '../shoelace-widgets/toasts/toasts';
+import { DynamicToast } from '../shoelace-widgets/toasts/dynamic-toast';
 
 export { useToasts };
 
 class ToastsController extends AbstractToastsController<ReactNode> {
   #renderers = new Set<() => ReactNode>();
+
+  static {
+    // dependencies to prevent to much tree shaking
+    void [DynamicToast];
+  }
 
   constructor(
     setRenderer: (renderer: () => ReactNode) => void,
@@ -78,5 +84,5 @@ function DynToast(props: { type: any; config: any }) {
     elemRef.current!.contentElement = contentElement;
   }, []);
 
-  return h('dyn-toast', { ref: elemRef });
+  return h(DynamicToast.tagName, { ref: elemRef });
 }

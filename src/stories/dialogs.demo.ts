@@ -1,5 +1,5 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators';
+import { customElement } from 'lit/decorators.js';
 
 // components
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';

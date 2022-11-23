@@ -1,8 +1,10 @@
 {
   "version": "0.2",
   "words": [
-    "hbox", //
+    "esbuild", //
+    "hbox",
     "preact",
+    "outfile",
     "vbox"
   ],
   "ignorePaths": [

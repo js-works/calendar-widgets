@@ -1,14 +1,15 @@
-import { html, render, LitElement } from 'lit';
-import { createRef, ref } from 'lit/directives/ref';
-import { customElement, property, state } from 'lit/decorators';
-import type { ReactiveControllerHost, TemplateResult } from 'lit';
-import { repeat } from 'lit/directives/repeat';
+import { render } from 'lit';
+import { html, unsafeStatic } from 'lit/static-html.js';
 import { AbstractToastsController } from '../shoelace-widgets/toasts/toasts';
+import type { ReactiveControllerHost, TemplateResult } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import type { ToastConfig, ToastType } from '../shoelace-widgets/toasts/toasts';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
+import { DynamicToast } from '../shoelace-widgets/toasts/dynamic-toast';
 
 // icons
 import infoIcon from '../shoelace-widgets/icons/bootstrap/info-circle.icon';
@@ -40,72 +41,16 @@ const icons = {
   error: errorIcon
 };
 
-// === local classes =================================================
-
-@customElement('dyn-toast')
-class DynToast extends LitElement {
-  @property({ attribute: false })
-  type: ToastType | null = null;
-
-  @property({ attribute: false })
-  config: ToastConfig<unknown> | null = null;
-
-  @property({ attribute: false })
-  contentElement: HTMLElement | null = null;
-
-  static {
-    // required components (to prevent too much tree shaking)
-    void SlAlert;
-  }
-
-  private readonly _alertRef = createRef<SlAlert>();
-  private _toastPerformed = false;
-
-  protected override updated() {
-    if (this._alertRef.value && !this._toastPerformed) {
-      this._toastPerformed = true;
-      this._alertRef.value!.toast();
-    }
-  }
-
-  render() {
-    if (!this.config) {
-      return null;
-    }
-
-    const config = this.config;
-    const duration = config.duration ?? 3000;
-    const variant = variants[this.type!];
-    const icon = icons[this.type!];
-
-    const title =
-      typeof config.title === 'function' ? config.title() : config.title;
-
-    const message =
-      typeof config.message === 'function' ? config.message() : config.message;
-
-    return html`
-      <sl-alert
-        variant=${variant}
-        duration=${duration}
-        ?closable=${config.closable ?? false}
-        ${ref(this._alertRef)}
-        style="user-select: none"
-      >
-        <sl-icon slot="icon" src=${icon}></sl-icon>
-        <strong>${title}</strong>
-        <div>${message}</div>
-        <slot>${this.contentElement}</slot>
-      </sl-alert>
-    `;
-  }
-}
-
 // === exported classes ==============================================
 
 class ToastsController extends AbstractToastsController<TemplateResult> {
   readonly #host: ReactiveControllerHost;
   readonly #toastRenderers = new Set<() => TemplateResult>();
+
+  static {
+    // dependencies - to prevent to much tree shaking
+    void [SlAlert, DynamicToast];
+  }
 
   constructor(host: ReactiveControllerHost) {
     super({
@@ -133,12 +78,14 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
       render(config.content, contentElem);
     }
 
+    const tagLiteral = unsafeStatic(DynamicToast.tagName);
+
     return html`
-      <dyn-toast
+      <${tagLiteral}
         .type=${type}
         .config=${config}
         .contentElement=${contentElem}
-      ></dyn-toast>
+      ></${tagLiteral}>
     `;
   }
 }

@@ -1,6 +1,6 @@
 import { html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators';
-import { property } from 'lit/decorators';
+import { customElement } from 'lit/decorators.js';
+import { property } from 'lit/decorators.js';
 import { createEmitter, Listener } from '../../misc/events';
 import { FormSubmitEvent } from '../../events/form-submit-event';
 import { FormInvalidEvent } from '../../events/form-invalid-event';

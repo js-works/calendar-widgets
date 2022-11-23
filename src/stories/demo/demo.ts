@@ -1,7 +1,7 @@
 import { css, html, LitElement } from 'lit';
-import { customElement } from 'lit/decorators';
-import { repeat } from 'lit/directives/repeat';
-import { unsafeHTML } from 'lit/directives/unsafe-html';
+import { customElement } from 'lit/decorators.js';
+import { repeat } from 'lit/directives/repeat.js';
+import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { datePicker } from '../date-picker.demo';
 import { dateFields } from '../date-field.demo';
 import { dialogs } from '../dialogs.demo';

@@ -2,6 +2,7 @@ import { h, render } from 'preact';
 import type { VNode } from 'preact';
 import { useState } from 'preact/hooks';
 import { AbstractToastsController } from '../shoelace-widgets/toasts/toasts';
+import { DynamicToast } from '../shoelace-widgets/toasts/dynamic-toast';
 
 // === exports =======================================================
 
@@ -26,7 +27,7 @@ class ToastsController extends AbstractToastsController<VNode> {
         }
 
         const renderer = () =>
-          h('dyn-toast' as any, {
+          h(DynamicToast.tagName as any, {
             type,
             config,
             contentElement

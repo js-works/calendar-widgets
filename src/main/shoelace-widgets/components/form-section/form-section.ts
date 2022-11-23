@@ -1,7 +1,7 @@
 import { html, LitElement } from 'lit';
-import { customElement, property } from 'lit/decorators';
-import { classMap } from 'lit/directives/class-map';
-import { when } from 'lit/directives/when';
+import { customElement, property } from 'lit/decorators.js';
+import { classMap } from 'lit/directives/class-map.js';
+import { when } from 'lit/directives/when.js';
 
 // styles
 import fieldsetStyles from './form-section.styles';
