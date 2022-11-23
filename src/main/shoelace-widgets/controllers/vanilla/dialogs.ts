@@ -20,7 +20,9 @@ type DialogConfig<C, R> = {
   message: string | (() => string);
   content: C | null;
   width: string | null;
+  maxWidth: string | null;
   height: string | null;
+  maxHeight: string | null;
   padding: string | null;
 
   buttons: {
@@ -63,7 +65,9 @@ abstract class AbstractDialogsController<C> {
     message: string | (() => string);
     content?: C;
     width?: string;
+    maxWidth?: string;
     height?: string;
+    maxHeight?: string;
     padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
@@ -75,7 +79,9 @@ abstract class AbstractDialogsController<C> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
+      maxWidth: params.maxWidth ?? null,
       height: params.height ?? null,
+      maxHeight: params.maxHeight ?? null,
       padding: params.padding ?? null,
 
       buttons: [
@@ -92,7 +98,9 @@ abstract class AbstractDialogsController<C> {
     message: string | (() => string);
     content?: C;
     width?: string;
+    maxWidth?: string;
     height?: string;
+    maxHeight?: string;
     padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
@@ -104,7 +112,9 @@ abstract class AbstractDialogsController<C> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
+      maxWidth: params.width ?? null,
       height: params.height ?? null,
+      maxHeight: params.height ?? null,
       padding: params.padding ?? null,
 
       buttons: [
@@ -121,7 +131,9 @@ abstract class AbstractDialogsController<C> {
     message: string | (() => string);
     content?: C;
     width?: string;
+    maxWidth?: string;
     height?: string;
+    maxHeight?: string;
     padding?: string;
     title?: string;
     okText?: string;
@@ -133,7 +145,9 @@ abstract class AbstractDialogsController<C> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
+      maxWidth: params.maxWidth ?? null,
       height: params.height ?? null,
+      maxHeight: params.maxHeight ?? null,
       padding: params.padding ?? null,
 
       buttons: [
@@ -150,7 +164,9 @@ abstract class AbstractDialogsController<C> {
     message: string | (() => string);
     content?: C;
     width?: string;
+    maxWith?: string;
     height?: string;
+    maxHeight?: string;
     padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
@@ -162,7 +178,9 @@ abstract class AbstractDialogsController<C> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
+      maxWidth: params.width ?? null,
       height: params.height ?? null,
+      maxHeight: params.maxHeight ?? null,
       padding: params.padding ?? null,
 
       buttons: [
@@ -179,7 +197,9 @@ abstract class AbstractDialogsController<C> {
     message: string | (() => string);
     content?: C;
     width?: string;
+    maxWidth?: string;
     height?: string;
+    maxHeight?: string;
     padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
@@ -192,7 +212,9 @@ abstract class AbstractDialogsController<C> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
+      maxWidth: params.maxWidth ?? null,
       height: params.height ?? null,
+      maxHeight: params.maxHeight ?? null,
       padding: params.padding ?? null,
       mapResult: (action) => action === 'ok',
 
@@ -214,7 +236,9 @@ abstract class AbstractDialogsController<C> {
     message: string | (() => string);
     content?: C;
     width?: string;
+    maxWidth?: string;
     height?: string;
+    maxHeight?: string;
     padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
@@ -227,7 +251,9 @@ abstract class AbstractDialogsController<C> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
+      maxWidth: params.maxWidth ?? null,
       height: params.height ?? null,
+      maxHeight: params.maxHeight ?? null,
       padding: params.padding ?? null,
       mapResult: (action) => action === 'ok',
 
@@ -249,7 +275,9 @@ abstract class AbstractDialogsController<C> {
     message: string | (() => string);
     content?: C;
     width?: string;
+    maxWidth?: string;
     height?: string;
+    maxHeight?: string;
     padding?: string;
     title?: string | (() => string);
     okText?: string | (() => string);
@@ -263,7 +291,9 @@ abstract class AbstractDialogsController<C> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
+      maxWidth: params.maxWidth ?? null,
       height: params.height ?? null,
+      maxHeight: params.maxHeight ?? null,
       padding: params.padding ?? null,
 
       mapResult: (action, { input }) => (action === 'cancel' ? null : input),
@@ -286,7 +316,9 @@ abstract class AbstractDialogsController<C> {
     message?: string | (() => string);
     content?: C;
     width?: string;
+    maxWidth?: string;
     height?: string;
+    maxHeight?: string;
     padding?: string;
     labelLayout?: 'auto' | 'vertical' | 'horizontal';
     title?: string | (() => string);
@@ -300,7 +332,9 @@ abstract class AbstractDialogsController<C> {
       message: params.message || '',
       content: params.content || null,
       width: params.width ?? null,
+      maxWidth: params.maxWidth ?? null,
       height: params.height ?? null,
+      maxHeight: params.maxHeight ?? null,
       padding: params.padding ?? null,
       mapResult: (action, { input }) => (action === 'ok' ? null : input),
 

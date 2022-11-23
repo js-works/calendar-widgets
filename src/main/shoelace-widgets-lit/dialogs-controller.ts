@@ -156,11 +156,14 @@ class DynDialog extends LitElement {
     return html`
       <style>
         .dialog {
-          --width: ${this.config.width ?? 'initial'}
+          --width: initial;
         }
 
         .dialog::part(panel) {
-          height: ${this.config.height ? this.config.height : 'auto'}
+          width: ${this.config.width ? this.config.width : 'auto'};
+          max-width: ${this.config.maxWidth ? this.config.maxWidth : 'auto'};
+          height: ${this.config.height ? this.config.height : 'auto'};
+          max-height: ${this.config.maxHeight ? this.config.maxHeight : 'auto'}
         }
 
         ${dialogsStyles}

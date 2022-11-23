@@ -20,7 +20,7 @@ function Demo() {
     dialogs.input({
       title: 'Add user',
       labelLayout: 'horizontal',
-      width: '25rem',
+      width: '28rem',
       padding: '0 0.5rem',
 
       content: (
