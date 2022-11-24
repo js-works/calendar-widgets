@@ -38,6 +38,10 @@ import promptIcon from '../shoelace-widgets/icons/bootstrap/keyboard.icon';
 // styles
 import dialogsStyles from '../shared/dialogs/dialogs.styles';
 
+// === exports =======================================================
+
+export { DialogsController, DynamicDialog };
+
 // === types =========================================================
 
 // === icons by dialog type ==========================================
@@ -67,7 +71,7 @@ setDefaultAnimation('shoelaceWidgets.dialogs.vibrate', {
 });
 
 @customElement('dyn-dialog')
-class DynDialog extends LitElement {
+class DynamicDialog extends LitElement {
   @property({ attribute: false })
   config!: DialogConfig<unknown, unknown>;
 
@@ -252,7 +256,7 @@ class DynDialog extends LitElement {
   }
 }
 
-export class DialogsController extends AbstractDialogsController<TemplateResult> {
+class DialogsController extends AbstractDialogsController<TemplateResult> {
   static {
     // required components (just to prevent too much tree shaking)
     void [Form, TextField, SlAlert, SlButton, SlDialog, SlIcon, SlInput];

@@ -1,6 +1,6 @@
 {
   "name": "shoelace-widgets",
-  "version": "0.0.1",
+  "version": "0.0.4",
   "description": "",
   "type": "module",
   "types": "./dist/types/shoelace-widgets.d.ts",
@@ -25,6 +25,9 @@
   "files": [
     "dist"
   ],
+  "engines": {
+    "node": ">=14.17.0"
+  },
   "scripts": {
     "start": "vite",
     "test": "echo \"Error: no test specified\" && exit 1",

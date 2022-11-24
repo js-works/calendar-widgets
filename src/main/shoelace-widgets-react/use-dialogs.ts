@@ -3,12 +3,18 @@ import { useEffect, useState, useRef } from 'react';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { AbstractDialogsController } from '../shared/dialogs/dialogs';
 import { LocalizeController } from '@shoelace-style/localize';
+import { DynamicDialog } from '../shoelace-widgets-lit/dialogs-controller';
 
 export { useDialogs };
 
 class DialogsController extends AbstractDialogsController<ReactNode> {
   #localize: LocalizeController;
   #renderers = new Set<() => ReactNode>();
+
+  static {
+    // required components (to prevent too much tree shaking)
+    void [DynamicDialog];
+  }
 
   constructor(
     host: HTMLElement & ReactiveControllerHost,
