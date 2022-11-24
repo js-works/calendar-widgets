@@ -1,11 +1,14 @@
 import { render } from 'lit';
 import { html, unsafeStatic } from 'lit/static-html.js';
-import { AbstractToastsController } from '../shared/toasts/toasts';
+import { AbstractToastsController } from '../shared/toasts/abstract-toasts-controller';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
-import type { ToastConfig, ToastType } from '../shared/toasts/toasts';
+import type {
+  ToastConfig,
+  ToastType
+} from '../shared/toasts/abstract-toasts-controller';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
@@ -48,7 +51,7 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
   readonly #toastRenderers = new Set<() => TemplateResult>();
 
   static {
-    // dependencies - to prevent to much tree shaking
+    // required components (to prevent too much tree shaking)
     void [SlAlert, DynamicToast];
   }
 

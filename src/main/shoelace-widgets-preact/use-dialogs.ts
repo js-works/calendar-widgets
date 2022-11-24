@@ -4,7 +4,11 @@ import type { ReactiveController, ReactiveControllerHost } from 'lit';
 import { AbstractDialogsController } from '../shared/dialogs/dialogs';
 import { LocalizeController } from '@shoelace-style/localize';
 
+// === exports =======================================================
+
 export { useDialogs };
+
+// === local classes =================================================
 
 class DialogsController extends AbstractDialogsController<VNode> {
   #localize: LocalizeController;

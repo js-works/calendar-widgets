@@ -1,8 +1,9 @@
 import { html, LitElement } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement, property } from 'lit/decorators.js';
-import type { ToastConfig, ToastType } from './toasts';
+import type { ToastConfig, ToastType } from './abstract-toasts-controller';
 import { generateUniqueTagName } from '../../shoelace-widgets/misc/utils';
+
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 
@@ -16,33 +17,30 @@ import errorIcon from '../../shoelace-widgets/icons/bootstrap/exclamation-triang
 
 export { DynamicToast };
 
-// === local types ===================================================
+// === local constants ===============================================
 
-// === variant by dialog type ========================================
+const defaultDuration = 3000;
+const tagName = generateUniqueTagName('dynamic-toast--internal');
 
-const variants = {
+const variantByToastType = {
   info: 'primary',
   success: 'success',
   warning: 'warning',
   error: 'danger'
 };
 
-// === icons by dialog type ==========================================
-
-const icons = {
+const iconByToastType = {
   info: infoIcon,
   success: successIcon,
   warning: warningIcon,
   error: errorIcon
 };
 
-// === local classes =================================================
-
-const tagName = generateUniqueTagName('dynamic-toast--internal');
+// === components =================================================???
 
 @customElement(tagName)
 class DynamicToast extends LitElement {
-  static tagName = tagName;
+  static readonly tagName = tagName;
 
   @property({ attribute: false })
   type: ToastType | null = null;
@@ -52,6 +50,9 @@ class DynamicToast extends LitElement {
 
   @property({ attribute: false })
   contentElement: HTMLElement | null = null;
+
+  @property({ attribute: false })
+  dismissToast: (() => void) | null = null;
 
   static {
     // required components (to prevent too much tree shaking)
@@ -65,18 +66,24 @@ class DynamicToast extends LitElement {
     if (this._alertRef.value && !this._toastPerformed) {
       this._toastPerformed = true;
       this._alertRef.value!.toast();
+      this.dismissToast!();
     }
   }
 
   render() {
-    if (!this.config) {
+    if (
+      this._toastPerformed ||
+      !this.type ||
+      !this.config ||
+      !this.dismissToast
+    ) {
       return null;
     }
 
     const config = this.config;
-    const duration = config.duration ?? 3000;
-    const variant = variants[this.type!];
-    const icon = icons[this.type!];
+    const duration = config.duration ?? defaultDuration;
+    const variant = variantByToastType[this.type!];
+    const icon = iconByToastType[this.type!];
 
     const title =
       typeof config.title === 'function' ? config.title() : config.title;

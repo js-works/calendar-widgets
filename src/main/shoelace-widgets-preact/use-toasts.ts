@@ -1,7 +1,6 @@
-import { h, render } from 'preact';
-import type { VNode } from 'preact';
+import { h, render, VNode } from 'preact';
 import { useState } from 'preact/hooks';
-import { AbstractToastsController } from '../shared/toasts/toasts';
+import { AbstractToastsController } from '../shared/toasts/abstract-toasts-controller';
 import { DynamicToast } from '../shared/toasts/dynamic-toast';
 
 // === exports =======================================================
@@ -14,7 +13,7 @@ class ToastsController extends AbstractToastsController<VNode> {
   #toastRenderers = new Set<() => VNode>();
 
   constructor(
-    setRenderer: (renderer: () => VNode) => void,
+    supplyRenderer: (renderer: () => VNode) => void,
     forceUpdate: () => void
   ) {
     super({
@@ -26,20 +25,25 @@ class ToastsController extends AbstractToastsController<VNode> {
           render(config.content, contentElement);
         }
 
+        const dismissToast = () => {
+          this.#toastRenderers.delete(renderer);
+          forceUpdate();
+        };
+
         const renderer = () =>
-          h(DynamicToast.tagName as any, {
+          h(DynamicToast.tagName as unknown as any, {
             type,
             config,
-            contentElement
+            contentElement,
+            dismissToast
           });
 
         this.#toastRenderers.add(renderer);
         forceUpdate();
-        return Promise.resolve() as any;
       }
     });
 
-    setRenderer(() =>
+    supplyRenderer(() =>
       h(
         'span',
         null,
@@ -57,14 +61,14 @@ function useToasts(): [ToastsController, () => VNode] {
 
   const [[toastsCtrl, renderToasts]] = useState(
     (): [ToastsController, () => VNode] => {
-      let renderDialogs: () => VNode;
+      let renderToasts: () => VNode;
 
       const toastsCtrl = new ToastsController(
-        (renderer) => (renderDialogs = renderer),
+        (renderer) => (renderToasts = renderer),
         forceUpdate
       );
 
-      return [toastsCtrl, renderDialogs!];
+      return [toastsCtrl, renderToasts!];
     }
   );
 

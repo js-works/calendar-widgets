@@ -1,10 +1,20 @@
 import { createElement as h, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { createRoot } from 'react-dom/client';
-import { AbstractToastsController } from '../shared/toasts/toasts';
+
+import {
+  AbstractToastsController,
+  ToastConfig,
+  ToastType
+} from '../shared/toasts/abstract-toasts-controller';
+
 import { DynamicToast } from '../shared/toasts/dynamic-toast';
 
+// === exports =======================================================
+
 export { useToasts };
+
+// === local classes =================================================
 
 class ToastsController extends AbstractToastsController<ReactNode> {
   #renderers = new Set<() => ReactNode>();
@@ -15,7 +25,7 @@ class ToastsController extends AbstractToastsController<ReactNode> {
   }
 
   constructor(
-    setRenderer: (renderer: () => ReactNode) => void,
+    supplyRenderer: (renderer: () => ReactNode) => void,
     forceUpdate: () => void
   ) {
     super({
@@ -28,15 +38,19 @@ class ToastsController extends AbstractToastsController<ReactNode> {
           root.render(config.content);
         }
 
-        const renderer = () => h(DynToast, { type, config });
+        const dismissToast = () => {
+          this.#renderers.delete(renderer);
+          forceUpdate();
+        };
+
+        const renderer = () => h(DynToast, { type, config, dismissToast });
 
         this.#renderers.add(renderer);
         forceUpdate();
-        return Promise.resolve() as any;
       }
     });
 
-    setRenderer(() =>
+    supplyRenderer(() =>
       h(
         'span',
         null,
@@ -45,6 +59,8 @@ class ToastsController extends AbstractToastsController<ReactNode> {
     );
   }
 }
+
+// === public hooks ==================================================
 
 function useToasts(): [ToastsController, () => ReactNode] {
   const [, setToggle] = useState(false);
@@ -66,9 +82,14 @@ function useToasts(): [ToastsController, () => ReactNode] {
   return [toastsCtrl, renderToasts];
 }
 
-function DynToast(props: { type: any; config: any }) {
-  // TODO
-  const elemRef = useRef<any>();
+// === local components ==============================================
+
+function DynToast(props: {
+  type: ToastType;
+  config: ToastConfig<ReactNode>;
+  dismissToast: () => void;
+}) {
+  const dynamicToastRef = useRef<DynamicToast>();
 
   useEffect(() => {
     let contentElement: HTMLElement | null = null;
@@ -79,10 +100,13 @@ function DynToast(props: { type: any; config: any }) {
       root.render(props.config.content);
     }
 
-    elemRef.current!.type = props.type;
-    elemRef.current!.config = props.config;
-    elemRef.current!.contentElement = contentElement;
+    Object.assign(dynamicToastRef.current!, {
+      type: props.type,
+      config: props.config,
+      contentElement: contentElement,
+      dismissToast: props.dismissToast
+    });
   }, []);
 
-  return h(DynamicToast.tagName, { ref: elemRef });
+  return h(DynamicToast.tagName, { ref: dynamicToastRef });
 }
