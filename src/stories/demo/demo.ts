@@ -1,4 +1,4 @@
-import { css, html, LitElement } from 'lit';
+import { html, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -207,10 +207,8 @@ class DemoApp extends LitElement {
           </sl-tab-panel>
           <sl-tab-panel name="dialogs">${demo(dialogs())}</sl-tab-panel>
           <sl-tab-panel name="toasts">${demo(toasts())}</sl-tab-panel>
-          <sl-tab-panel name="react-demo"> ${demo(reactDemo())} </sl-tab-panel>
-          <sl-tab-panel name="preact-demo">
-            ${demo(preactDemo())}
-          </sl-tab-panel>
+          <sl-tab-panel name="react-demo">${demo(reactDemo())}</sl-tab-panel>
+          <sl-tab-panel name="preact-demo">${demo(preactDemo())}</sl-tab-panel>
         </sl-tab-group>
       </div>
     `;

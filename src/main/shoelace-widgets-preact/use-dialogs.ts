@@ -1,7 +1,7 @@
 import { h, VNode } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shared/dialogs/abstract-dialogs-controller';
+import { AbstractDialogsController } from '../shoelace-widgets/controllers/abstract-dialogs-controller';
 import { LocalizeController } from '@shoelace-style/localize';
 
 // === exports =======================================================
@@ -11,7 +11,6 @@ export { useDialogs };
 // === local classes =================================================
 
 class DialogsController extends AbstractDialogsController<VNode> {
-  #localize: LocalizeController;
   #renderers = new Set<() => VNode>();
 
   constructor(
@@ -20,7 +19,6 @@ class DialogsController extends AbstractDialogsController<VNode> {
     forceUpdate: () => void
   ) {
     super({
-      translate: (key) => this.#localize.term(`shoelaceWidgets.dialogs/${key}`),
       showDialog: (config) => {
         const renderer = () =>
           h(
@@ -45,8 +43,6 @@ class DialogsController extends AbstractDialogsController<VNode> {
         return Promise.resolve() as any;
       }
     });
-
-    this.#localize = new LocalizeController(host);
 
     setRenderer(() =>
       h(

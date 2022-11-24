@@ -1,26 +1,28 @@
 import { html, LitElement } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement, property } from 'lit/decorators.js';
-import type { ToastConfig, ToastType } from './abstract-toasts-controller';
-import { generateUniqueTagName } from '../../shoelace-widgets/misc/utils';
+
+import type {
+  ToastConfig,
+  ToastType
+} from '../../controllers/abstract-toasts-controller';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 
 // icons
-import infoIcon from '../../shoelace-widgets/icons/bootstrap/info-circle.icon';
-import successIcon from '../../shoelace-widgets/icons/bootstrap/check-circle.icon';
-import warningIcon from '../../shoelace-widgets/icons/bootstrap/exclamation-circle.icon';
-import errorIcon from '../../shoelace-widgets/icons/bootstrap/exclamation-triangle.icon';
+import infoIcon from '../../icons/bootstrap/info-circle.icon';
+import successIcon from '../../icons/bootstrap/check-circle.icon';
+import warningIcon from '../../icons/bootstrap/exclamation-circle.icon';
+import errorIcon from '../../icons/bootstrap/exclamation-triangle.icon';
 
 // === exports =======================================================
 
-export { DynamicToast };
+export { StandardToast };
 
 // === local constants ===============================================
 
 const defaultDuration = 3000;
-const tagName = generateUniqueTagName('dynamic-toast--internal');
 
 const variantByToastType = {
   info: 'primary',
@@ -38,10 +40,8 @@ const iconByToastType = {
 
 // === components =================================================???
 
-@customElement(tagName)
-class DynamicToast extends LitElement {
-  static readonly tagName = tagName;
-
+@customElement('sx-standard-toast')
+class StandardToast extends LitElement {
   @property({ attribute: false })
   config: ToastConfig<unknown> | null = null;
 

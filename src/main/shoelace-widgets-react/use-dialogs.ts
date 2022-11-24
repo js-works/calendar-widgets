@@ -1,9 +1,9 @@
 import { createElement as h, ReactNode } from 'react';
 import { useEffect, useState, useRef } from 'react';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shared/dialogs/abstract-dialogs-controller';
+import { AbstractDialogsController } from '../shoelace-widgets/controllers/abstract-dialogs-controller';
 import { LocalizeController } from '@shoelace-style/localize';
-import { DynamicDialog } from '../shoelace-widgets-lit/dialogs-controller';
+import { StandardDialog } from '../shoelace-widgets/components/standard-dialog/standard-dialog';
 
 export { useDialogs };
 
@@ -13,7 +13,7 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
 
   static {
     // required components (to prevent too much tree shaking)
-    void [DynamicDialog];
+    void [StandardDialog];
   }
 
   constructor(
@@ -22,7 +22,6 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
     forceUpdate: () => void
   ) {
     super({
-      translate: (key) => this.#localize.term(`shoelaceWidgets.dialogs/${key}`),
       showDialog: (config) => {
         const renderer = () =>
           h(

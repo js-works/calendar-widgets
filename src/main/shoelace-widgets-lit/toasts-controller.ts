@@ -1,18 +1,16 @@
-import { render } from 'lit';
-import { html, unsafeStatic } from 'lit/static-html.js';
-import { AbstractToastsController } from '../shared/toasts/abstract-toasts-controller';
+import { html, render } from 'lit';
+import { AbstractToastsController } from '../shoelace-widgets/controllers/abstract-toasts-controller';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
-import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 
 import type {
   ToastConfig,
   ToastType
-} from '../shared/toasts/abstract-toasts-controller';
+} from '../shoelace-widgets/controllers/abstract-toasts-controller';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
-import { DynamicToast } from '../shared/toasts/dynamic-toast';
+import { StandardToast } from '../shoelace-widgets/components/standard-toast/standard-toast';
 
 // icons
 import infoIcon from '../shoelace-widgets/icons/bootstrap/info-circle.icon';
@@ -52,7 +50,7 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
 
   static {
     // required components (to prevent too much tree shaking)
-    void [SlAlert, DynamicToast];
+    void [SlAlert, StandardToast];
   }
 
   constructor(host: ReactiveControllerHost) {
@@ -86,14 +84,12 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
       render(config.content, contentElem);
     }
 
-    const tagLiteral = unsafeStatic(DynamicToast.tagName);
-
     return html`
-      <${tagLiteral}
+      <sx-standard-toast
         .config=${config}
         .contentElement=${contentElem}
         .dismissToast=${dismissToast}
-      ></${tagLiteral}>
+      ></sx-standard-toast>
     `;
   }
 }

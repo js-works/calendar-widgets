@@ -4,7 +4,7 @@ import { createComponent } from '@lit-labs/react';
 import {
   ToastConfig as GenericToastConfig,
   ToastsController as GenericToastController
-} from './shared/toasts/abstract-toasts-controller';
+} from './shoelace-widgets/controllers/abstract-toasts-controller';
 
 import { Fieldset as SxFieldset } from './shoelace-widgets/components/fieldset/fieldset';
 import { TextField as SxTextField } from './shoelace-widgets/components/text-field/text-field';
@@ -12,7 +12,7 @@ import { TextField as SxTextField } from './shoelace-widgets/components/text-fie
 // types
 export type ToastConfig = GenericToastConfig<ReactNode>;
 export type ToastsController = GenericToastController<ReactNode>;
-export type { ToastType } from './shared/toasts/abstract-toasts-controller';
+export type { ToastType } from './shoelace-widgets/controllers/abstract-toasts-controller';
 
 // hooks
 export { useDialogs } from './shoelace-widgets-react/use-dialogs';

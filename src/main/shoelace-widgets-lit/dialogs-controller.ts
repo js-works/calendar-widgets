@@ -1,330 +1,90 @@
-import { html, LitElement } from 'lit';
-import { customElement, property, state } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
-import { styleMap } from 'lit/directives/style-map.js';
-import { createRef, ref } from 'lit/directives/ref.js';
+import { html } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
-import { when } from 'lit/directives/when.js';
+import type { ReactiveControllerHost, TemplateResult } from 'lit';
 
 import {
-  getAnimation,
-  setDefaultAnimation
-} from '@shoelace-style/shoelace/dist/utilities/animation-registry';
+  AbstractDialogsController,
+  DialogConfig,
+  ShowDialogFunction
+} from '../shoelace-widgets/controllers/abstract-dialogs-controller';
 
-import { LocalizeController } from '../shoelace-widgets/i18n/i18n';
-import type { ReactiveControllerHost, TemplateResult } from 'lit';
-import { AbstractDialogsController } from '../shared/dialogs/abstract-dialogs-controller';
-import type { DialogConfig } from '../shared/dialogs/abstract-dialogs-controller';
-import type { FormSubmitEvent } from '../shoelace-widgets/events/form-submit-event';
-
-// components
-import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
-import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-import { Form } from '../shoelace-widgets/components/form/form';
-import { TextField } from '../shoelace-widgets/components/text-field/text-field';
-
-// icons
-import infoIcon from '../shoelace-widgets/icons/bootstrap/info-square.icon';
-import successIcon from '../shoelace-widgets/icons/bootstrap/check2-square.icon';
-import warningIcon from '../shoelace-widgets/icons/bootstrap/exclamation-diamond.icon';
-import errorIcon from '../shoelace-widgets/icons/bootstrap/exclamation-triangle.icon';
-import confirmationIcon from '../shoelace-widgets/icons/bootstrap/question-diamond.icon';
-import approvalIcon from '../shoelace-widgets/icons/bootstrap/question-diamond.icon';
-import promptIcon from '../shoelace-widgets/icons/bootstrap/keyboard.icon';
-
-// styles
-import dialogsStyles from '../shared/dialogs/dialogs.styles';
+import { StandardDialog } from '../shoelace-widgets/components/standard-dialog/standard-dialog';
 
 // === exports =======================================================
 
-export { DialogsController, DynamicDialog };
+export { DialogsController };
 
 // === types =========================================================
-
-// === icons by dialog type ==========================================
-
-const icons = {
-  info: infoIcon,
-  success: successIcon,
-  warning: warningIcon,
-  error: errorIcon,
-  confirmation: confirmationIcon,
-  approval: approvalIcon,
-  prompt: promptIcon,
-  input: null
-};
-
-// === animations ====================================================
-
-setDefaultAnimation('shoelaceWidgets.dialogs.vibrate', {
-  keyframes: [
-    { transform: 'scale(1)' },
-    { transform: 'scale(0.95)' },
-    { transform: 'scale(1)' },
-    { transform: 'scale(0.95)' },
-    { transform: 'scale(1)' }
-  ],
-  options: { duration: 600, easing: 'ease-in-out' }
-});
-
-@customElement('dyn-dialog')
-class DynamicDialog extends LitElement {
-  @property({ attribute: false })
-  config!: DialogConfig<unknown, unknown>;
-
-  @property({ attribute: false })
-  dismissDialog!: () => void;
-
-  @property({ attribute: false })
-  emitResult!: (result: unknown) => void;
-
-  @property()
-  lang: string = '';
-
-  @property()
-  dir: string = '';
-
-  @state()
-  private _dialogOpen = false;
-
-  private _localize = new LocalizeController(this);
-  private _dialogRef = createRef<SlDialog>();
-  private _formRef = createRef<Form>();
-
-  private _lastClickedAction = '';
-
-  private _onFormSubmit = (ev: FormSubmitEvent) => {
-    ev.preventDefault();
-    const data = { ...ev.detail.data };
-
-    setTimeout(async () => {
-      data.action = this._lastClickedAction;
-      await this._dialogRef.value!.hide();
-      this.emitResult(this.config.mapResult?.(this._lastClickedAction, data));
-    });
-  };
-
-  private _onFormInvalid = async () => {
-    // TODO!!!
-  };
-
-  override willUpdate() {
-    const colorScheme = getComputedStyle(this).colorScheme;
-
-    if (colorScheme === 'dark') {
-      this.style.setProperty('--dialog--light', ' ');
-      this.style.setProperty('--dialog--dark', 'initial');
-    } else {
-      this.style.setProperty('--dialog--light', 'initial');
-      this.style.setProperty('--dialog--dark', ' ');
-    }
-  }
-
-  render() {
-    let additionalContent: TemplateResult = html``;
-
-    const hasPrimaryButton = this.config.buttons.some(
-      (it) => it.variant === 'primary'
-    );
-
-    if (this.config.type === 'prompt') {
-      const value =
-        this.config.params.value === 'string' ? this.config.params.value : '';
-
-      additionalContent = html`
-        <sx-text-field name="input" size="small" autofocus value=${value}>
-        </sx-text-field>
-      `;
-    }
-
-    const labelLayout =
-      this.config.type !== 'input'
-        ? 'auto'
-        : this.config.params.labelLayout === 'vertical'
-        ? 'vertical'
-        : this.config.params.labelLayout === 'horizontal'
-        ? 'horizontal'
-        : 'auto';
-
-    const dialogRef = createRef<SlDialog>();
-
-    const onAfterHide = (ev: Event) => {
-      if (ev.target === dialogRef.value) {
-        this.dismissDialog();
-      }
-    };
-
-    return html`
-      <style>
-        .dialog::part(panel) {
-          width: ${this.config.width ? this.config.width : 'auto'};
-          max-width: ${this.config.maxWidth ? this.config.maxWidth : 'auto'};
-          height: ${this.config.height ? this.config.height : 'auto'};
-          max-height: ${this.config.maxHeight ? this.config.maxHeight : 'auto'}
-        }
-
-        ${dialogsStyles}
-      </style>
-      <sx-form
-        class=${classMap({
-          'form': true,
-          'label-layout-vertical': labelLayout === 'vertical',
-          'label-layout-horizontal': labelLayout === 'horizontal'
-        })}
-        dir=${this._localize.dir()}
-        @sx-form-submit=${this._onFormSubmit}
-        @sx-form-invalid=${this._onFormInvalid}
-        ${ref(this._formRef)}
-      >
-        <sl-dialog
-          ?opTODOen=${this._dialogOpen}
-          open
-          class=${classMap({
-            dialog: true,
-            [`dialog--${this.config.type}`]: true
-          })}
-          @sl-after-hide=${onAfterHide}
-          ${ref(dialogRef)}
-        >
-          <div slot="label" class="header">
-            ${when(
-              icons[this.config.type],
-              () => html` <sl-icon
-                class="icon ${this.config.type}"
-                src=${icons[this.config.type]}
-              ></sl-icon>`
-            )}
-            <div class="title">${this.config.title}</div>
-          </div>
-          <div
-            class="main"
-            style=${styleMap({
-              padding:
-                'padding' in this.config ? (this.config as any).padding : null
-            })}
-          >
-            ${when(
-              this.config.message,
-              () => html` <div class="message">
-                ${textToResultTemplate(
-                  typeof this.config.message === 'function'
-                    ? this.config.message()
-                    : this.config.message
-                )}
-              </div>`
-            )}
-            <div class="content">
-              <slot></slot>
-              ${additionalContent}
-            </div>
-          </div>
-          <div slot="footer">
-            <div class="buttons">
-              ${repeat(
-                this.config.buttons,
-                ({ text, action, variant = 'default' }, idx) => {
-                  const autofocus =
-                    variant === 'primary' || (!hasPrimaryButton && idx === 0);
-
-                  const onClick = () => {
-                    this._lastClickedAction = action;
-                    this._formRef.value!.submit();
-                  };
-
-                  return html`
-                    <sl-button
-                      type="submit"
-                      variant=${variant}
-                      value=${idx}
-                      class="button"
-                      ?autofocus=${autofocus}
-                      @click=${onClick}
-                    >
-                      ${text}
-                    </sl-button>
-                  `;
-                }
-              )}
-            </div>
-          </div>
-        </sl-dialog>
-      </sx-form>
-    `;
-  }
-}
 
 class DialogsController extends AbstractDialogsController<TemplateResult> {
   static {
     // required components (just to prevent too much tree shaking)
-    void [Form, TextField, SlAlert, SlButton, SlDialog, SlIcon, SlInput];
+    void [StandardDialog];
   }
 
-  readonly #requestUpdate: () => Promise<boolean>;
-  readonly #localize: LocalizeController;
-  readonly #dialogRenderers = new Set<() => TemplateResult>();
+  readonly #host: ReactiveControllerHost;
+
+  readonly #dialogs: {
+    id: number;
+    config: DialogConfig;
+    supplyResult: (data: unknown) => void;
+  }[] = [];
+
+  #nextDialogId = 1;
 
   constructor(host: ReactiveControllerHost & HTMLElement) {
     super({
-      translate: (key) => this.#localize.term(`shoelaceWidgets.dialogs/${key}`),
-      showDialog: (config) => this.#showDialog(config)
+      showDialog: (config) => this.#showDialog(config as any) as any
     });
 
-    this.#localize = new LocalizeController(host);
-
-    this.#requestUpdate = () => {
-      host.requestUpdate();
-      return host.updateComplete;
-    };
+    this.#host = host;
   }
 
   render(): TemplateResult {
-    return html`${repeat(this.#dialogRenderers, (it) => it())}`;
+    return html`
+      <span>
+        ${repeat(
+          this.#dialogs,
+          ({ id }) => id,
+          ({ id, config }) =>
+            html`
+              <sx-standard-dialog
+                data-dialog-id=${id}
+                .dialogConfig=${config}
+                .onDialogClosed=${(result: unknown) =>
+                  this.#dismissDialog(id, result)}
+              >
+              </sx-standard-dialog>
+            `
+        )}
+      </span>
+    `;
   }
 
-  #showDialog = async <R = void>(
-    config: DialogConfig<TemplateResult, R>
-  ): Promise<R> => {
-    let emitResult: (result: unknown) => void;
+  #showDialog: ShowDialogFunction<TemplateResult> = async (config) => {
+    let resolveResult: ((result: unknown) => void) | null = null;
 
-    const renderer = () =>
-      html`
-        <dyn-dialog
-          .config=${config}
-          .dismissDialog=${() => {
-            this.#dialogRenderers.delete(renderer);
-            this.#requestUpdate();
-          }}
-          .emitResult=${(result: any) => {
-            return emitResult(result);
-          }}
-        >
-          ${config.content}
-        </dyn-dialog>
-      `;
-
-    this.#dialogRenderers.add(renderer);
-
-    await this.#requestUpdate();
-    // dialogOpen = true;
-    await this.#requestUpdate();
-
-    return new Promise((resolve) => {
-      emitResult = (result: any) => {
-        setTimeout(() => resolve(result), 50);
-      };
+    this.#dialogs.push({
+      id: this.#nextDialogId++,
+      config,
+      supplyResult: (result) => resolveResult!(result)
     });
-  };
-}
 
-function textToResultTemplate(text: string | null): TemplateResult | null {
-  if (!text) {
-    return null;
+    this.#requestUpdate();
+
+    return new Promise<unknown>((resolve) => {
+      resolveResult = resolve;
+    }) as unknown as any;
+  };
+
+  #dismissDialog(dialogId: number, result: unknown) {
+    const idx = this.#dialogs.findIndex((it) => it.id === dialogId);
+    const supplyResult = this.#dialogs[idx].supplyResult;
+    this.#dialogs.splice(idx, 1);
+    supplyResult(result);
   }
 
-  const lines = text.split(/$/gm);
-
-  return html`${repeat(lines, (line) => html`${line}<br />`)}`;
+  #requestUpdate() {
+    this.#host.requestUpdate();
+  }
 }

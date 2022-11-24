@@ -1,7 +1,7 @@
 import { h, render, VNode } from 'preact';
 import { useState } from 'preact/hooks';
-import { AbstractToastsController } from '../shared/toasts/abstract-toasts-controller';
-import { DynamicToast } from '../shared/toasts/dynamic-toast';
+import { AbstractToastsController } from '../shoelace-widgets/controllers/abstract-toasts-controller';
+import { StandardToast } from '../shoelace-widgets/components/standard-toast/standard-toast';
 
 // === exports =======================================================
 
@@ -31,7 +31,7 @@ class ToastsController extends AbstractToastsController<VNode> {
         };
 
         const renderer = () =>
-          h(DynamicToast.tagName as unknown as any, {
+          h('sx-standard-toast' as unknown as any, {
             config,
             contentElement,
             dismissToast

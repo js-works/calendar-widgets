@@ -4,6 +4,9 @@ import { customElement } from 'lit/decorators.js';
 // controllers
 import { ToastsController } from '../main/shoelace-widgets-lit';
 
+// components
+import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
+
 export default {
   title: 'shoelace-widgets'
 };
@@ -27,6 +30,11 @@ const styles = css`
 @customElement('toasts-demo')
 class toastsDemo extends LitElement {
   static styles = styles;
+
+  static {
+    // required components (to prevent too much tree shaking)
+    void [SlButton];
+  }
 
   private _toasts = new ToastsController(this);
 

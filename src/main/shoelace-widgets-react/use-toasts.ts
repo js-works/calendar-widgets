@@ -6,9 +6,9 @@ import {
   AbstractToastsController,
   ToastConfig,
   ToastType
-} from '../shared/toasts/abstract-toasts-controller';
+} from '../shoelace-widgets/controllers/abstract-toasts-controller';
 
-import { DynamicToast } from '../shared/toasts/dynamic-toast';
+import { StandardToast } from '../shoelace-widgets/components/standard-toast/standard-toast';
 
 // === exports =======================================================
 
@@ -20,8 +20,8 @@ class ToastsController extends AbstractToastsController<ReactNode> {
   #renderers = new Set<() => ReactNode>();
 
   static {
-    // dependencies to prevent to much tree shaking
-    void [DynamicToast];
+    // required components (to prevent to much tree shaking)
+    void [StandardToast];
   }
 
   constructor(
@@ -88,7 +88,7 @@ function DynToast(props: {
   config: ToastConfig<ReactNode>;
   dismissToast: () => void;
 }) {
-  const dynamicToastRef = useRef<DynamicToast>();
+  const dynamicToastRef = useRef<StandardToast>();
 
   useEffect(() => {
     let contentElement: HTMLElement | null = null;
@@ -106,5 +106,5 @@ function DynToast(props: {
     });
   }, []);
 
-  return h(DynamicToast.tagName, { ref: dynamicToastRef });
+  return h('sx-standard-toast', { ref: dynamicToastRef });
 }
