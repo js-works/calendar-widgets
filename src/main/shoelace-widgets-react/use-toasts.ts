@@ -85,7 +85,6 @@ function useToasts(): [ToastsController, () => ReactNode] {
 // === local components ==============================================
 
 function DynToast(props: {
-  type: ToastType;
   config: ToastConfig<ReactNode>;
   dismissToast: () => void;
 }) {
@@ -101,7 +100,6 @@ function DynToast(props: {
     }
 
     Object.assign(dynamicToastRef.current!, {
-      type: props.type,
       config: props.config,
       contentElement: contentElement,
       dismissToast: props.dismissToast
