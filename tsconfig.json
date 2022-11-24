@@ -22,6 +22,7 @@
     "baseUrl": ".",
     "skipLibCheck": true,
     "paths": {
+      "shoelace-widgets": ["./src/main/shoelace-widgets.ts"],
       "shoelace-widgets/internal": ["./src/main/shoelace-widgets-internal.ts"]
     },
     "typeRoots": ["node_modules/@types"],

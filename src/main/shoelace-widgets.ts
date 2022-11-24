@@ -10,3 +10,5 @@ export { Sidenav } from './shoelace-widgets/components/sidenav/sidenav';
 export { TextField } from './shoelace-widgets/components/text-field/text-field';
 export { TextArea } from './shoelace-widgets/components/text-area/text-area';
 export { VBox } from './shoelace-widgets/components/vbox/vbox';
+
+export type { FormSubmitEvent } from './shoelace-widgets/events/form-submit-event';

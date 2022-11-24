@@ -50,10 +50,11 @@ class DialogsController extends AbstractDialogsController<TemplateResult> {
             html`
               <sx-standard-dialog--internal
                 data-dialog-id=${id}
-                .dialogConfig=${config}
+                .config=${config}
                 .onDialogClosed=${(result: unknown) =>
                   this.#dismissDialog(id, result)}
               >
+                ${config.content}
               </sx-standard-dialog--internal>
             `
         )}

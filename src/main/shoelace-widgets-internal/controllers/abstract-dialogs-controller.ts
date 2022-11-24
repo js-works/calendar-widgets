@@ -1,7 +1,7 @@
 // === exports =======================================================
 
 export { AbstractDialogsController };
-export type { DialogConfig, ShowDialogFunction };
+export type { DialogConfig, DialogType, ShowDialogFunction };
 
 // === types =========================================================
 
