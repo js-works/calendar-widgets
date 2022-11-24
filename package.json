@@ -3,9 +3,25 @@
   "version": "0.0.1",
   "description": "",
   "type": "module",
-  "main": "./dist/shoelace-widgets.cjs.js",
-  "module": "./dist/shoelace-widgets.esm.js",
   "types": "./dist/types/shoelace-widgets.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/shoelace-widgets.js",
+      "types": "./dist/types/shoelace-widgets.d.ts"
+    },
+    "./lit": {
+      "import": "./dist/shoelace-widgets-lit.js",
+      "types": "./dist/types/shoelace-widgets-lit.d.ts"
+    },
+    "./react": {
+      "import": "./dist/shoelace-widgets-react.js",
+      "types": "./dist/types/shoelace-widgets-react.d.ts"
+    },
+    "./preact": {
+      "import": "./dist/shoelace-widgets-preact.js",
+      "types": "./dist/types/shoelace-widgets-preact.d.ts"
+    }
+  },
   "files": [
     "dist"
   ],
