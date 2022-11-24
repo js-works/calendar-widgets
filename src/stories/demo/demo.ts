@@ -5,7 +5,7 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { datePicker } from '../date-picker.demo';
 import { dateFields } from '../date-field.demo';
 import { dialogs } from '../dialogs.demo';
-import { toasts } from '../toasts.stories';
+import { toasts } from '../toasts.demo';
 import { reactDemo } from '../react.demo';
 import { preactDemo } from '../preact.demo';
 

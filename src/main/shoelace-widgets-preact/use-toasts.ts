@@ -17,7 +17,7 @@ class ToastsController extends AbstractToastsController<VNode> {
     forceUpdate: () => void
   ) {
     super({
-      showToast: (type, config) => {
+      showToast: (config) => {
         let contentElement: HTMLElement | null;
 
         if (config.content) {
@@ -32,7 +32,6 @@ class ToastsController extends AbstractToastsController<VNode> {
 
         const renderer = () =>
           h(DynamicToast.tagName as unknown as any, {
-            type,
             config,
             contentElement,
             dismissToast

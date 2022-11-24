@@ -7,7 +7,21 @@ export type { ToastConfig, ToastsController, ToastType };
 
 type ToastType = 'info' | 'success' | 'warning' | 'error';
 
-type ToastConfig<C> = {
+type ToastConfig<C> = ToastParams<C> & {
+  type: ToastType;
+};
+
+type ToastsController<C> = {
+  info(config: ToastParams<C>): void;
+  success(config: ToastParams<C>): void;
+  warn(config: ToastParams<C>): void;
+  error(config: ToastParams<C>): void;
+  show(config: ToastConfig<C>): void;
+};
+
+// === local types ===================================================
+
+type ToastParams<C> = {
   title?: string | (() => string);
   message?: string | (() => string);
   content?: C;
@@ -15,42 +29,32 @@ type ToastConfig<C> = {
   closable?: boolean;
 };
 
-type ToastsController<C> = {
-  info(config: ToastConfig<C>): void;
-  success(config: ToastConfig<C>): void;
-  warn(config: ToastConfig<C>): void;
-  error(config: ToastConfig<C>): void;
-  show(type: ToastType, config: ToastConfig<C>): void;
-};
-
 // === exported classes ==============================================
 
 abstract class AbstractToastsController<C> implements ToastsController<C> {
-  readonly #showToast: (type: ToastType, config: ToastConfig<C>) => void;
+  readonly #showToast: (config: ToastConfig<C>) => void;
 
-  constructor(params: {
-    showToast: (type: ToastType, config: ToastConfig<C>) => void;
-  }) {
+  constructor(params: { showToast: (config: ToastConfig<C>) => void }) {
     this.#showToast = params.showToast;
   }
 
-  info(config: ToastConfig<C>) {
-    this.#showToast('info', config);
+  info(params: ToastParams<C>) {
+    this.#showToast({ type: 'info', ...params });
   }
 
-  success(config: ToastConfig<C>) {
-    this.#showToast('success', config);
+  success(params: ToastParams<C>) {
+    this.#showToast({ type: 'success', ...params });
   }
 
-  warn(config: ToastConfig<C>) {
-    this.#showToast('warning', config);
+  warn(params: ToastParams<C>) {
+    this.#showToast({ type: 'warning', ...params });
   }
 
-  error(config: ToastConfig<C>) {
-    this.#showToast('error', config);
+  error(params: ToastParams<C>) {
+    this.#showToast({ type: 'error', ...params });
   }
 
-  show(type: ToastType, config: ToastConfig<C>) {
-    this.#showToast(type, config);
+  show(config: ToastConfig<C>) {
+    this.#showToast(config);
   }
 }

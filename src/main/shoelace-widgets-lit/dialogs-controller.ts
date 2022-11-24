@@ -13,8 +13,8 @@ import {
 
 import { LocalizeController } from '../shoelace-widgets/i18n/i18n';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
-import { AbstractDialogsController } from '../shared/dialogs/dialogs';
-import type { DialogConfig } from '../shared/dialogs/dialogs';
+import { AbstractDialogsController } from '../shared/dialogs/abstract-dialogs-controller';
+import type { DialogConfig } from '../shared/dialogs/abstract-dialogs-controller';
 import type { FormSubmitEvent } from '../shoelace-widgets/events/form-submit-event';
 
 // components

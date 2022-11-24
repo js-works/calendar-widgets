@@ -24,7 +24,8 @@ function Demo() {
       .toISOString()
       .substring(11, 19);
 
-    toasts.show(type, {
+    toasts.show({
+      type,
       title,
       message: 'Toast was opened at ' + time,
       closable: true,

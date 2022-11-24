@@ -57,7 +57,7 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
 
   constructor(host: ReactiveControllerHost) {
     super({
-      showToast: (type, config) => this.#showToast(type, config)
+      showToast: (config) => this.#showToast(config)
     });
 
     this.#host = host;
@@ -67,22 +67,18 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
     return html`${repeat(this.#toastRenderers, (it) => it())}`;
   }
 
-  #showToast(type: ToastType, config: ToastConfig<TemplateResult>) {
+  #showToast(config: ToastConfig<TemplateResult>) {
     const dismissToast = () => {
       this.#toastRenderers.delete(renderer);
       this.#host.requestUpdate();
     };
 
-    const renderer = () => this.#renderToast(type, config, dismissToast);
+    const renderer = () => this.#renderToast(config, dismissToast);
     this.#toastRenderers.add(renderer);
     this.#host.requestUpdate();
   }
 
-  #renderToast(
-    type: ToastType,
-    config: ToastConfig<TemplateResult>,
-    dismissToast: () => void
-  ) {
+  #renderToast(config: ToastConfig<TemplateResult>, dismissToast: () => void) {
     let contentElem: HTMLElement | null = null;
 
     if (config.content) {
@@ -94,7 +90,6 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
 
     return html`
       <${tagLiteral}
-        .type=${type}
         .config=${config}
         .contentElement=${contentElem}
         .dismissToast=${dismissToast}

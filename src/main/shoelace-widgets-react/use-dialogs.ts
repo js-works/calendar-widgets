@@ -1,7 +1,7 @@
 import { createElement as h, ReactNode } from 'react';
 import { useEffect, useState, useRef } from 'react';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shared/dialogs/dialogs';
+import { AbstractDialogsController } from '../shared/dialogs/abstract-dialogs-controller';
 import { LocalizeController } from '@shoelace-style/localize';
 import { DynamicDialog } from '../shoelace-widgets-lit/dialogs-controller';
 

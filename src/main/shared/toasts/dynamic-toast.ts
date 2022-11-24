@@ -43,9 +43,6 @@ class DynamicToast extends LitElement {
   static readonly tagName = tagName;
 
   @property({ attribute: false })
-  type: ToastType | null = null;
-
-  @property({ attribute: false })
   config: ToastConfig<unknown> | null = null;
 
   @property({ attribute: false })
@@ -71,19 +68,14 @@ class DynamicToast extends LitElement {
   }
 
   render() {
-    if (
-      this._toastPerformed ||
-      !this.type ||
-      !this.config ||
-      !this.dismissToast
-    ) {
+    if (this._toastPerformed || !this.config || !this.dismissToast) {
       return null;
     }
 
     const config = this.config;
     const duration = config.duration ?? defaultDuration;
-    const variant = variantByToastType[this.type!];
-    const icon = iconByToastType[this.type!];
+    const variant = variantByToastType[this.config.type];
+    const icon = iconByToastType[this.config.type!];
 
     const title =
       typeof config.title === 'function' ? config.title() : config.title;

@@ -1,7 +1,7 @@
 import { h, VNode } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shared/dialogs/dialogs';
+import { AbstractDialogsController } from '../shared/dialogs/abstract-dialogs-controller';
 import { LocalizeController } from '@shoelace-style/localize';
 
 // === exports =======================================================

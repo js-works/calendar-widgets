@@ -29,7 +29,7 @@ class ToastsController extends AbstractToastsController<ReactNode> {
     forceUpdate: () => void
   ) {
     super({
-      showToast: (type, config) => {
+      showToast: (config) => {
         let contentElement: HTMLElement | null;
 
         if (config.content) {
@@ -43,7 +43,7 @@ class ToastsController extends AbstractToastsController<ReactNode> {
           forceUpdate();
         };
 
-        const renderer = () => h(DynToast, { type, config, dismissToast });
+        const renderer = () => h(DynToast, { config, dismissToast });
 
         this.#renderers.add(renderer);
         forceUpdate();
