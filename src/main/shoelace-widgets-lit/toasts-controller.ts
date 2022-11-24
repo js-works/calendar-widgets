@@ -68,12 +68,21 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
   }
 
   #showToast(type: ToastType, config: ToastConfig<TemplateResult>) {
-    const renderer = () => this.#renderToast(type, config);
+    const dismissToast = () => {
+      this.#toastRenderers.delete(renderer);
+      this.#host.requestUpdate();
+    };
+
+    const renderer = () => this.#renderToast(type, config, dismissToast);
     this.#toastRenderers.add(renderer);
     this.#host.requestUpdate();
   }
 
-  #renderToast(type: ToastType, config: ToastConfig<TemplateResult>) {
+  #renderToast(
+    type: ToastType,
+    config: ToastConfig<TemplateResult>,
+    dismissToast: () => void
+  ) {
     let contentElem: HTMLElement | null = null;
 
     if (config.content) {
@@ -88,6 +97,7 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
         .type=${type}
         .config=${config}
         .contentElement=${contentElem}
+        .dismissToast=${dismissToast}
       ></${tagLiteral}>
     `;
   }
