@@ -41,28 +41,32 @@ class toastsDemo extends LitElement {
   private _onInfoClick = () => {
     this._toasts.info({
       message: 'Your next meeting starts in 15 minutes',
-      title: 'Info'
+      title: 'Info',
+      content: html`<strong>Some extra content ...</strong>`
     });
   };
 
   private _onSuccessClick = () => {
     this._toasts.success({
       message: 'Your question has been submitted successfully',
-      title: 'Success'
+      title: 'Success',
+      content: html`<strong>Some extra content ...</strong>`
     });
   };
 
   private _onWarnClick = () => {
     this._toasts.warn({
       message: 'This is your last warning',
-      title: 'Warning'
+      title: 'Warning',
+      content: html`<strong>Some extra content ...</strong>`
     });
   };
 
   private _onErrorClick = () => {
     this._toasts.error({
       message: 'The form could not be submitted',
-      title: 'Error'
+      title: 'Error',
+      content: html`<strong>Some extra content ...</strong>`
     });
   };
 

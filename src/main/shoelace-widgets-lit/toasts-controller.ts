@@ -85,11 +85,11 @@ class ToastsController extends AbstractToastsController<TemplateResult> {
     }
 
     return html`
-      <sx-standard-toast
+      <sx-standard-toast--internal
         .config=${config}
         .contentElement=${contentElem}
         .dismissToast=${dismissToast}
-      ></sx-standard-toast>
+      ></sx-standard-toast--internal>
     `;
   }
 }

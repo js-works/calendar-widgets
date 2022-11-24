@@ -31,7 +31,7 @@ class ToastsController extends AbstractToastsController<VNode> {
         };
 
         const renderer = () =>
-          h('sx-standard-toast' as unknown as any, {
+          h('sx-standard-toast--internal' as unknown as any, {
             config,
             contentElement,
             dismissToast

@@ -40,7 +40,7 @@ const iconByToastType = {
 
 // === components =================================================???
 
-@customElement('sx-standard-toast')
+@customElement('sx-standard-toast--internal')
 class StandardToast extends LitElement {
   @property({ attribute: false })
   config: ToastConfig<unknown> | null = null;

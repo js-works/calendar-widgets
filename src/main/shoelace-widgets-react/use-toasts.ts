@@ -106,5 +106,5 @@ function DynToast(props: {
     });
   }, []);
 
-  return h('sx-standard-toast', { ref: dynamicToastRef });
+  return h('sx-standard-toast--internal', { ref: dynamicToastRef });
 }

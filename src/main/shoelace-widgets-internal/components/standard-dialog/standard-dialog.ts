@@ -4,7 +4,7 @@ import { DialogConfig } from '../../controllers/abstract-dialogs-controller';
 
 export { StandardDialog };
 
-@customElement('sx-standard-dialog')
+@customElement('sx-standard-dialog--internal')
 class StandardDialog extends LitElement {
   @property({ attribute: false })
   dialogConfig: DialogConfig | null = null;
