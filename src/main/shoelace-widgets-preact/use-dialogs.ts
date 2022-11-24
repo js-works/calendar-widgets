@@ -1,7 +1,7 @@
 import { h, VNode } from 'preact';
 import { useEffect, useState } from 'preact/hooks';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shoelace-widgets/controllers/abstract-dialogs-controller';
+import { AbstractDialogsController } from '../shoelace-widgets-internal/controllers/abstract-dialogs-controller';
 import { LocalizeController } from '@shoelace-style/localize';
 
 // === exports =======================================================

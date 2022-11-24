@@ -20,7 +20,8 @@ async function build() {
     'shoelace-widgets',
     'shoelace-widgets-lit',
     'shoelace-widgets-react',
-    'shoelace-widgets-preact'
+    'shoelace-widgets-preact',
+    'shoelace-widgets-internal'
   ]) {
     const outfile = `./dist/${pkg}.js`;
 

@@ -6,9 +6,9 @@ import {
   AbstractDialogsController,
   DialogConfig,
   ShowDialogFunction
-} from '../shoelace-widgets/controllers/abstract-dialogs-controller';
+} from '../shoelace-widgets-internal/controllers/abstract-dialogs-controller';
 
-import { StandardDialog } from '../shoelace-widgets/components/standard-dialog/standard-dialog';
+import { StandardDialog } from '../shoelace-widgets-internal/components/standard-dialog/standard-dialog';
 
 // === exports =======================================================
 

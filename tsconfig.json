@@ -21,7 +21,9 @@
     "esModuleInterop": true,
     "baseUrl": ".",
     "skipLibCheck": true,
-    "paths": {},
+    "paths": {
+      "shoelace-widgets/internal": ["./src/main/shoelace-widgets-internal.ts"]
+    },
     "typeRoots": ["node_modules/@types"],
     "types": []
   },

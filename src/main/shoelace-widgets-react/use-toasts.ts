@@ -6,9 +6,9 @@ import {
   AbstractToastsController,
   ToastConfig,
   ToastType
-} from '../shoelace-widgets/controllers/abstract-toasts-controller';
+} from '../shoelace-widgets-internal/controllers/abstract-toasts-controller';
 
-import { StandardToast } from '../shoelace-widgets/components/standard-toast/standard-toast';
+import { StandardToast } from 'shoelace-widgets/internal';
 
 // === exports =======================================================
 

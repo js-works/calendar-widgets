@@ -1,9 +1,9 @@
 import { createElement as h, ReactNode } from 'react';
 import { useEffect, useState, useRef } from 'react';
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shoelace-widgets/controllers/abstract-dialogs-controller';
+import { AbstractDialogsController } from '../shoelace-widgets-internal/controllers/abstract-dialogs-controller';
 import { LocalizeController } from '@shoelace-style/localize';
-import { StandardDialog } from '../shoelace-widgets/components/standard-dialog/standard-dialog';
+import { StandardDialog } from '../shoelace-widgets-internal/components/standard-dialog/standard-dialog';
 
 export { useDialogs };
 

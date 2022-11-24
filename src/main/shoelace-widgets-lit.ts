@@ -2,7 +2,7 @@ import { TemplateResult } from 'lit';
 import {
   ToastConfig,
   ToastType
-} from './shoelace-widgets/controllers/abstract-toasts-controller';
+} from './shoelace-widgets-internal/controllers/abstract-toasts-controller';
 
 // classes
 export { DialogsController } from './shoelace-widgets-lit/dialogs-controller';
