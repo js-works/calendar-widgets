@@ -6,6 +6,7 @@ import {
 
 import calendarRangeIcon from './bootstrap/calendar-range.icon';
 import calendarIcon from './bootstrap/calendar.icon';
+import calendarMonthIcon from './bootstrap/calendar-month.icon';
 import calendar3Icon from './bootstrap/calendar3.icon';
 import checkCircleIcon from './bootstrap/check-circle.icon';
 import checkLgIcon from './bootstrap/check-lg.icon';
@@ -27,21 +28,25 @@ import questionDiamondIcon from './bootstrap/question-diamond.icon';
 import questionLgIcon from './bootstrap/question-lg.icon';
 import telephoneIcon from './bootstrap/telephone.icon';
 
+import dateTimeIcon from './custom/date-time.icon';
+import timeRangeIcon from './custom/time-range.icon';
+import weekIcon from './custom/week.icon';
+
 const icons = {
   'text-field.email': emailIcon,
   'text-field.phone': telephoneIcon,
   'text-field.cellphone': phoneIcon,
 
   'date-field.date': calendar3Icon,
-  'date-field.date-time': calendar3Icon,
+  'date-field.date-time': dateTimeIcon,
   'date-field.date-range': calendarRangeIcon,
   'date-field.time': clockIcon,
-  'date-field.time-range': clockIcon,
-  'date-field.week': calendarIcon,
-  'date-field.month': calendarIcon,
+  'date-field.time-range': timeRangeIcon,
+  'date-field.week': weekIcon,
+  'date-field.month': calendarMonthIcon,
   'date-field.year': calendarIcon,
 
-  'dialogs.information': infoSquareIcon,
+  'dialogs.information': infoCircleIcon,
   'dialogs.success': check2SquareIcon,
   'dialogs.warning': exclamationDiamondIcon,
   'dialogs.error': exclamationTriangleIcon,

@@ -152,6 +152,13 @@ class DialogsDemo extends LitElement {
         ></sx-text-field>
       `
     });
+
+    if (data) {
+      this._dlg.info({
+        title: 'Form data',
+        message: JSON.stringify(data, null, 2)
+      });
+    }
   };
 
   private _onInput2Click = async () => {

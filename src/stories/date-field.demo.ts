@@ -82,7 +82,13 @@ class DatePickerDemo extends LitElement {
         >
         </sx-choice>
         <br />
-        <sx-date-field label="Date" lang=${this._locale}></sx-date-field>
+        <sx-date-field
+          label="Date"
+          show-week-numbers
+          highlight-today
+          highlight-weekends
+          lang=${this._locale}
+        ></sx-date-field>
         <sx-date-field
           label="Date and time"
           selection-mode="dateTime"

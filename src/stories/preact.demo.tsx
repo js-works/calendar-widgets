@@ -16,8 +16,8 @@ function Demo() {
   const [dialogs, renderDialogs] = useDialogs();
   const [toasts, renderToasts] = useToasts();
 
-  const onOpenDialogClick = () => {
-    dialogs.input({
+  const onOpenDialogClick = async () => {
+    const data = await dialogs.input({
       title: 'Switch user',
       labelLayout: 'horizontal',
       width: '25rem',
@@ -25,10 +25,23 @@ function Demo() {
       content: (
         <>
           <sx-text-field label="Username" name="username" required />
-          <sx-text-field label="Password" name="password" required />
+
+          <sx-text-field
+            type="password"
+            label="Password"
+            name="password"
+            required
+          />
         </>
       )
     });
+
+    if (data) {
+      dialogs.info({
+        title: 'Form data',
+        message: JSON.stringify(data, null, 2)
+      });
+    }
   };
 
   const showToast = (type: ToastType, title: string) => {

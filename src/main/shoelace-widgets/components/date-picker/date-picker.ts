@@ -52,7 +52,7 @@ const datePickerCustomStyles = css`
     --cal-slider-thumb-background-color: var(--sl-color-neutral-0);
     --cal-slider-thumb-border-color: var(--sl-color-neutral-400);
     --cal-slider-thumb-border-width: 1px;
-    --cal-slider-thumb-border-radius: 4px;
+    --cal-slider-thumb-border-radius: 50%;
     --cal-slider-thumb-hover-background-color: var(--sl-color-neutral-0);
     --cal-slider-thumb-hover-border-color: var(--sl-color-neutral-1000);
     --cal-slider-thumb-focus-background-color: var(--sl-color-primary-600);

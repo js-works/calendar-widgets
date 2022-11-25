@@ -151,7 +151,7 @@ class StandardDialog extends LitElement {
   config: DialogConfig | null = null;
 
   @property({ attribute: false })
-  onDialogClosed: ((result: unknown) => void) | null = null;
+  handleDialogClosed: ((result: unknown) => void) | null = null;
 
   @property({ type: Boolean, attribute: false })
   open = false;
@@ -186,9 +186,14 @@ class StandardDialog extends LitElement {
         result = mapResult(action, data);
       }
 
-      this.onDialogClosed!(result);
+      this.handleDialogClosed!(result);
     });
   };
+
+  private async _cancelForm() {
+    await this._dialogRef.value!.hide();
+    this.handleDialogClosed!(undefined);
+  }
 
   private _onFormInvalid = async () => {
     // TODO!!!
@@ -244,11 +249,11 @@ class StandardDialog extends LitElement {
         : 'auto';
 
     const onAfterHide = (ev: Event) => {
-      /* TODO!!!
-      if (ev.target === dialogRef.value) {
-        this.dismissDialog();
+      if (ev.target === this._dialogRef.value) {
+        if (!this._lastClickedAction) {
+          this._cancelForm();
+        }
       }
-      */
     };
 
     return html`
@@ -322,7 +327,12 @@ class StandardDialog extends LitElement {
                 ({ action, variant = 'default', autofocus }, idx) => {
                   const onClick = () => {
                     this._lastClickedAction = action;
-                    this._formRef.value!.submit();
+
+                    if (action === 'cancel') {
+                      this._cancelForm();
+                    } else {
+                      this._formRef.value!.submit();
+                    }
                   };
 
                   const textKey = action === 'ok' ? 'okText' : 'cancelText';
@@ -363,7 +373,9 @@ function textToResultTemplate(
     return null;
   }
 
-  const lines = text.split(/$/gm);
+  const lines = text
+    .split(/\n\r?/gm) //
+    .map((it) => it.replace(/^\s+/, (it) => ''.padStart(it.length, '\u2000')));
 
   return html`${repeat(lines, (line) => html`${line}<br />`)}`;
 }

@@ -18,29 +18,32 @@ class DialogsController extends AbstractDialogsController<VNode> {
     setRenderer: (renderer: () => VNode) => void,
     forceUpdate: () => void
   ) {
+    let dialogResolve: ((value: unknown) => void) | null = null;
+
     super({
       showDialog: (config) => {
         const renderer = () =>
           h(
-            'dyn-dialog' as any,
+            'sx-standard-dialog--internal',
             {
               config,
 
-              dismissDialog: () => {
+              handleDialogClosed: (result: unknown) => {
+                alert('handleDialogClosed: ' + result);
                 this.#renderers.delete(renderer);
+                dialogResolve?.(result);
                 forceUpdate();
-              },
-
-              emitResult: (result: any) => {
-                //return emitResult(result);
               }
-            },
+            } as any,
             config.content
           );
 
         this.#renderers.add(renderer);
         forceUpdate();
-        return Promise.resolve() as any;
+
+        return new Promise<unknown>((resolve) => {
+          dialogResolve = resolve;
+        }) as any;
       }
     });
 
