@@ -6,6 +6,7 @@ import {
 
 import calendarRangeIcon from './bootstrap/calendar-range.icon';
 import calendarIcon from './bootstrap/calendar.icon';
+import calendarEventIcon from './bootstrap/calendar-event.icon';
 import calendarMonthIcon from './bootstrap/calendar-month.icon';
 import calendar3Icon from './bootstrap/calendar3.icon';
 import checkCircleIcon from './bootstrap/check-circle.icon';
@@ -30,7 +31,6 @@ import questionLgIcon from './bootstrap/question-lg.icon';
 import telephoneIcon from './bootstrap/telephone.icon';
 
 import dateIcon from './custom/date.icon';
-import dateTimeIcon from './custom/date-time.icon';
 import timeRangeIcon from './custom/time-range.icon';
 import weekIcon from './custom/week.icon';
 
@@ -40,7 +40,7 @@ const icons = {
   'text-field.cellphone': phoneIcon,
 
   'date-field.date': dateIcon,
-  'date-field.date-time': dateTimeIcon,
+  'date-field.date-time': calendarEventIcon,
   'date-field.date-range': calendarRangeIcon,
   'date-field.time': clockIcon,
   'date-field.time-range': timeRangeIcon,
