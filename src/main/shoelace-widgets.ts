@@ -1,3 +1,5 @@
+import './shoelace-widgets/icons/register-icons';
+
 export { Choice } from './shoelace-widgets/components/choice/choice';
 export { Fieldset } from './shoelace-widgets/components/fieldset/fieldset';
 export { Form } from './shoelace-widgets/components/form/form';

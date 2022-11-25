@@ -10,12 +10,6 @@ import type {
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 
-// icons
-import infoIcon from '../../../shoelace-widgets/icons/bootstrap/info-circle.icon';
-import successIcon from '../../../shoelace-widgets/icons/bootstrap/check-circle.icon';
-import warningIcon from '../../../shoelace-widgets/icons/bootstrap/exclamation-circle.icon';
-import errorIcon from '../../../shoelace-widgets/icons/bootstrap/exclamation-triangle.icon';
-
 // === exports =======================================================
 
 export { StandardToast };
@@ -29,13 +23,6 @@ const variantByToastType = {
   success: 'success',
   warning: 'warning',
   error: 'danger'
-};
-
-const iconByToastType = {
-  info: infoIcon,
-  success: successIcon,
-  warning: warningIcon,
-  error: errorIcon
 };
 
 // === components =================================================???
@@ -75,7 +62,6 @@ class StandardToast extends LitElement {
     const config = this.config;
     const duration = config.duration ?? defaultDuration;
     const variant = variantByToastType[this.config.type];
-    const icon = iconByToastType[this.config.type!];
 
     const title =
       typeof config.title === 'function' ? config.title() : config.title;
@@ -91,7 +77,11 @@ class StandardToast extends LitElement {
         ${ref(this._alertRef)}
         style="user-select: none"
       >
-        <sl-icon slot="icon" src=${icon}></sl-icon>
+        <sl-icon
+          slot="icon"
+          library="shoelace-widgets"
+          name=${`toasts.${this.config.type}`}
+        ></sl-icon>
         <strong>${title}</strong>
         <div>${message}</div>
         <slot>${this.contentElement}</slot>
