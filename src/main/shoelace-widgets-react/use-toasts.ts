@@ -54,7 +54,7 @@ class ToastsController extends AbstractToastsController<ReactNode> {
       h(
         'span',
         null,
-        [...this.#renderers].map((it) => it())
+        [...this.#renderers].map((it, idx) => h('span', { key: idx }, it()))
       )
     );
   }

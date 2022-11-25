@@ -41,7 +41,7 @@ const icons = {
   'date-field.month': calendarIcon,
   'date-field.year': calendarIcon,
 
-  'dialogs.info': infoSquareIcon,
+  'dialogs.information': infoSquareIcon,
   'dialogs.success': check2SquareIcon,
   'dialogs.warning': exclamationDiamondIcon,
   'dialogs.error': exclamationTriangleIcon,
@@ -49,7 +49,7 @@ const icons = {
   'dialogs.confirmation': questionDiamondIcon,
   'dialogs.approval': questionDiamondIcon,
 
-  'toasts.info': infoCircleIcon,
+  'toasts.information': infoCircleIcon,
   'toasts.success': checkCircleIcon,
   'toasts.warning': exclamationCircleIcon,
   'toasts.error': exclamationTriangleIcon

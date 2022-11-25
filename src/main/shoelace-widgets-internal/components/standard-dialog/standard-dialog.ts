@@ -41,7 +41,7 @@ const dialogSettingsByType: Record<
     mapResult?: (action: string, data: Record<string, any>) => unknown;
   }
 > = {
-  info: {
+  information: {
     buttons: [
       {
         action: 'ok',
@@ -154,7 +154,7 @@ class StandardDialog extends LitElement {
   onDialogClosed: ((result: unknown) => void) | null = null;
 
   @property({ type: Boolean, attribute: false })
-  open = true; // TODO!!!
+  open = false;
 
   @property()
   lang: string = '';
@@ -204,6 +204,12 @@ class StandardDialog extends LitElement {
       this.style.setProperty('--dialog--light', 'initial');
       this.style.setProperty('--dialog--dark', ' ');
     }
+  }
+
+  override firstUpdated() {
+    requestAnimationFrame(() => {
+      this._dialogRef.value!.show();
+    });
   }
 
   render() {
@@ -277,11 +283,13 @@ class StandardDialog extends LitElement {
           <div slot="label" class="header">
             ${when(
               this.config.type !== 'input',
-              () => html` <sl-icon
-                class="icon ${this.config!.type}"
-                library="shoelace-widgets"
-                name=${`dialogs.${this.config!.type}`}
-              ></sl-icon>`
+              () => html`
+                <sl-icon
+                  class="icon ${this.config!.type}"
+                  library="shoelace-widgets"
+                  name=${`dialogs.${this.config!.type}`}
+                ></sl-icon>
+              `
             )}
             <div class="title">${title}</div>
           </div>

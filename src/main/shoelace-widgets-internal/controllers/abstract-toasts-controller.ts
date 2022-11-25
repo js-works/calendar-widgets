@@ -5,7 +5,7 @@ export type { ToastConfig, ToastsController, ToastType };
 
 // === exported types ================================================
 
-type ToastType = 'info' | 'success' | 'warning' | 'error';
+type ToastType = 'information' | 'success' | 'warning' | 'error';
 
 type ToastConfig<C> = ToastParams<C> & {
   type: ToastType;
@@ -39,7 +39,7 @@ abstract class AbstractToastsController<C> implements ToastsController<C> {
   }
 
   info(params: ToastParams<C>) {
-    this.#showToast({ type: 'info', ...params });
+    this.#showToast({ type: 'information', ...params });
   }
 
   success(params: ToastParams<C>) {

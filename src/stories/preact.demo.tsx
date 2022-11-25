@@ -52,7 +52,9 @@ function Demo() {
       <sl-button onclick={onOpenDialogClick}>Open dialog</sl-button>
       <h3>Toasts</h3>
       <sl-button-group>
-        <sl-button onclick={() => showToast('info', 'Info')}>Info</sl-button>
+        <sl-button onclick={() => showToast('information', 'Info')}>
+          Info
+        </sl-button>
         <sl-button onclick={() => showToast('success', 'Success')}>
           Success
         </sl-button>

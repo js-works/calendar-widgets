@@ -19,7 +19,7 @@ export { StandardToast };
 const defaultDuration = 3000;
 
 const variantByToastType = {
-  info: 'primary',
+  information: 'primary',
   success: 'success',
   warning: 'warning',
   error: 'danger'

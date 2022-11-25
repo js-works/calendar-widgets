@@ -168,7 +168,7 @@ export default css`
     margin-top: 1.5em;
   }
 
-  .dialog--info .icon,
+  .dialog--information .icon,
   .dialog--confirmation .icon,
   .dialog--prompt .icon {
     color: var(--sl-color-primary-600);

@@ -6,7 +6,7 @@ export type { DialogConfig, DialogType, ShowDialogFunction };
 // === types =========================================================
 
 type DialogType =
-  | 'info'
+  | 'information'
   | 'success'
   | 'warning'
   | 'error'
@@ -27,7 +27,7 @@ type DialogBaseConfig<T extends DialogType, C> = {
   padding?: string | null;
 };
 
-type InfoDialogConfig<C> = DialogBaseConfig<'info', C> & {
+type InfoDialogConfig<C> = DialogBaseConfig<'information', C> & {
   okText?: string | (() => string) | null;
 };
 
@@ -105,7 +105,7 @@ abstract class AbstractDialogsController<C> {
   }
 
   info(params: InfoDialogParams<C>): Promise<void> {
-    return this.#showDialog({ type: 'info', ...params });
+    return this.#showDialog({ type: 'information', ...params });
   }
 
   success(params: SuccessDialogParams<C>): Promise<void> {

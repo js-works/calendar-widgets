@@ -75,7 +75,9 @@ function Demo() {
       <SlButton onClick={onOpenDialogClick}>Open dialog</SlButton>
       <h3>Toasts</h3>
       <SlButtonGroup>
-        <SlButton onclick={() => showToast('info', 'Info')}>Info</SlButton>
+        <SlButton onclick={() => showToast('information', 'Info')}>
+          Info
+        </SlButton>
         <SlButton onclick={() => showToast('success', 'Success')}>
           Success
         </SlButton>
