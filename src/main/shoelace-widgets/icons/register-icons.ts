@@ -12,6 +12,7 @@ import checkCircleIcon from './bootstrap/check-circle.icon';
 import checkLgIcon from './bootstrap/check-lg.icon';
 import check2SquareIcon from './bootstrap/check2-square.icon';
 import clockIcon from './bootstrap/clock.icon';
+import clockHistoryIcon from './bootstrap/clock-history.icon';
 import emailIcon from './bootstrap/email.icon';
 import exclamationCircleIcon from './bootstrap/exclamation-circle.icon';
 import exclamationDiamondIcon from './bootstrap/exclamation-diamond.icon';
