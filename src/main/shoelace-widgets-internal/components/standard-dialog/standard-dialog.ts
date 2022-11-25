@@ -57,14 +57,18 @@ const def: Record<
     buttons: {
       action: 'ok' | 'cancel';
       variant?: 'default' | 'primary' | 'success' | 'danger';
+      autofocus?: boolean;
     }[];
+
+    mapResult?: (action: string, data: Record<string, any>) => unknown;
   }
 > = {
   info: {
     buttons: [
       {
         action: 'ok',
-        variant: 'primary'
+        variant: 'primary',
+        autofocus: true
       }
     ]
   },
@@ -73,7 +77,8 @@ const def: Record<
     buttons: [
       {
         action: 'ok',
-        variant: 'success'
+        variant: 'success',
+        autofocus: true
       }
     ]
   },
@@ -82,7 +87,8 @@ const def: Record<
     buttons: [
       {
         action: 'ok',
-        variant: 'danger'
+        variant: 'danger',
+        autofocus: true
       }
     ]
   },
@@ -91,7 +97,8 @@ const def: Record<
     buttons: [
       {
         action: 'ok',
-        variant: 'danger'
+        variant: 'danger',
+        autofocus: true
       }
     ]
   },
@@ -103,21 +110,25 @@ const def: Record<
       },
       {
         action: 'ok',
-        variant: 'primary'
+        variant: 'primary',
+        autofocus: true
       }
-    ]
+    ],
+    mapResult: (action) => action === 'ok'
   },
 
   approval: {
     buttons: [
       {
-        action: 'cancel'
+        action: 'cancel',
+        autofocus: true
       },
       {
         action: 'ok',
         variant: 'danger'
       }
-    ]
+    ],
+    mapResult: (action) => action === 'ok'
   },
 
   prompt: {
@@ -127,9 +138,11 @@ const def: Record<
       },
       {
         action: 'ok',
-        variant: 'primary'
+        variant: 'primary',
+        autofocus: true
       }
-    ]
+    ],
+    mapResult: (action, { input }) => (action === 'cancel' ? null : input)
   },
 
   input: {
@@ -139,9 +152,11 @@ const def: Record<
       },
       {
         action: 'ok',
-        variant: 'primary'
+        variant: 'primary',
+        autofocus: true
       }
-    ]
+    ],
+    mapResult: (action, data) => (action === 'cancel' ? null : data)
   }
 };
 
@@ -168,8 +183,8 @@ class StandardDialog extends LitElement {
   // TODO
   private _translate = (key: string) =>
     this._localize.term(`shoelaceWidgets.dialogs/${key}`);
-  private _dialogRef = createRef<SlDialog>();
   private _formRef = createRef<Form>();
+  private _dialogRef = createRef<SlDialog>();
 
   private _lastClickedAction = '';
 
@@ -178,9 +193,17 @@ class StandardDialog extends LitElement {
     const data = { ...ev.detail.data };
 
     setTimeout(async () => {
-      data.action = this._lastClickedAction;
+      const action = this._lastClickedAction;
       await this._dialogRef.value!.hide();
-      // TODO!!! // this.emitResult(this.config.mapResult?.(this._lastClickedAction, data));
+
+      let result = undefined;
+      const mapResult = def[this.config!.type].mapResult;
+
+      if (mapResult) {
+        result = mapResult(action, data);
+      }
+
+      this.onDialogClosed!(result);
     });
   };
 
@@ -205,17 +228,7 @@ class StandardDialog extends LitElement {
       return null;
     }
 
-    const hasPrimaryButton = (def as any)[this.config.type].buttons.some(
-      (it: any) => it.variant === 'primary'
-    );
-
     let additionalContent: TemplateResult = html``;
-
-    /* TODO!!!
-    const hasPrimaryButton = this.config.buttons.some(
-      (it) => it.variant === 'primary'
-    );
-    */
 
     if (this.config.type === 'prompt') {
       const value = this.config.value === 'string' ? this.config.value : '';
@@ -234,8 +247,6 @@ class StandardDialog extends LitElement {
         : this.config.labelLayout === 'horizontal'
         ? 'horizontal'
         : 'auto';
-
-    const dialogRef = createRef<SlDialog>();
 
     const onAfterHide = (ev: Event) => {
       /* TODO!!!
@@ -272,7 +283,7 @@ class StandardDialog extends LitElement {
             [`dialog--${this.config.type}`]: true
           })}
           @sl-after-hide=${onAfterHide}
-          ${ref(dialogRef)}
+          ${ref(this._dialogRef)}
         >
           <div slot="label" class="header">
             ${when(
@@ -310,10 +321,7 @@ class StandardDialog extends LitElement {
             <div class="buttons">
               ${repeat(
                 (def as any)[this.config.type as any].buttons,
-                ({ action, variant = 'default' }, idx) => {
-                  const autofocus =
-                    variant === 'primary' || (!hasPrimaryButton && idx === 0);
-
+                ({ action, variant = 'default', autofocus }, idx) => {
                   const onClick = () => {
                     this._lastClickedAction = action;
                     this._formRef.value!.submit();
@@ -332,8 +340,8 @@ class StandardDialog extends LitElement {
                       type="submit"
                       variant=${variant}
                       value=${idx}
-                      class="button"
                       ?autofocus=${autofocus}
+                      class="button"
                       @click=${onClick}
                     >
                       ${text}

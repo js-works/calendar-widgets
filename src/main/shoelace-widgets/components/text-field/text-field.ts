@@ -63,6 +63,9 @@ class TextField extends LitElement {
   @property({ type: Boolean })
   required = false;
 
+  @property({ type: Boolean })
+  autofocus = false;
+
   @property()
   size: 'small' | 'medium' | 'large' = 'medium';
 
@@ -128,6 +131,7 @@ class TextField extends LitElement {
           size=${this.size}
           ${ref(this._slInputRef)}
           value=${this.value}
+          ?autofocus=${this.autofocus}
           @keydown=${this._onKeyDown}
           @sl-input=${this._onInput}
           @sl-change=${this._onChange}

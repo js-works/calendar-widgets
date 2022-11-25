@@ -53,10 +53,10 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/core/-/core-1.0.2.tgz#d06a66d3ad8214186eda2432ac8b8d81868a571f"
   integrity sha512-Skfy0YS3NJ5nV9us0uuPN0HDk1Q4edljaOhRBJGDWs9EBa7ZVMYBHRFlhLvvmwEoaIM9BlH6QJFn9/uZg0bACg==
 
-"@floating-ui/dom@^1.0.6":
-  version "1.0.6"
-  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.0.6.tgz#e42393ec381a4fe96673fbcee137a95e86c93ebc"
-  integrity sha512-kt/tg1oip9OAH1xjCTcx1OpcUpu9rjDw3GKJ/rEhUqhO7QyJWfrHU0DpLTNsH67+JyFL5Kv9X1utsXwKFVtyEQ==
+"@floating-ui/dom@^1.0.7":
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/@floating-ui/dom/-/dom-1.0.7.tgz#9e8e6615ce03e5ebc6a4ae879640a199a366f86d"
+  integrity sha512-6RsqvCYe0AYWtsGvuWqCm7mZytnXAZCjWtsWu1Kg8dI3INvj/DbKlDsZO+mKSaQdPT12uxIW9W2dAWJkPx4Y5g==
   dependencies:
     "@floating-ui/core" "^1.0.2"
 
@@ -193,12 +193,12 @@
   resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-3.0.3.tgz#d69e1f0e547799ecd5deb5e6ed9c8c78b4d01eb6"
   integrity sha512-BVYDsMTpSCjvC8akhTkcnl4WIgAv7AnRq8fSuNhdGDLjkpmN1ARdAXic5luAozoMVjft85ocOmEdT8z7MbXdmQ==
 
-"@shoelace-style/shoelace@^2.0.0-beta.84":
-  version "2.0.0-beta.84"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.84.tgz#b5261013deb99de565815a40b0ad7e8ec6cbba4f"
-  integrity sha512-DS8jWX7RnoR9HJ1TiX6D6gcLpBAVMMIy54nS4qMbBetBche0Tf9BhDxfhsXLK1EluzWHKjNJs0NjwxFWaYCSxw==
+"@shoelace-style/shoelace@^2.0.0-beta.85":
+  version "2.0.0-beta.85"
+  resolved "https://registry.yarnpkg.com/@shoelace-style/shoelace/-/shoelace-2.0.0-beta.85.tgz#57156a41aa366b9a8241cc47b127d2b663555e8a"
+  integrity sha512-Kq4BUEtB2tNlBPx97qM1/UQDBFYINMnlL4qNAHs0cCZF6q4J6U1NHot8TzWO83G4ufPHzNtjz9gaJLgzGWnNOA==
   dependencies:
-    "@floating-ui/dom" "^1.0.6"
+    "@floating-ui/dom" "^1.0.7"
     "@lit-labs/react" "^1.1.0"
     "@shoelace-style/animations" "^1.1.0"
     "@shoelace-style/localize" "^3.0.3"
@@ -1955,10 +1955,10 @@ preact@^10.11.3:
   resolved "https://registry.yarnpkg.com/preact/-/preact-10.11.3.tgz#8a7e4ba19d3992c488b0785afcc0f8aa13c78d19"
   integrity sha512-eY93IVpod/zG3uMF22Unl8h9KkrcKIRs2EGar8hwLZZDU1lkjph303V9HZBwufh2s736U6VXuhD109LYqPoffg==
 
-prettier@^2.7.1:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.7.1.tgz#e235806850d057f97bb08368a4f7d899f7760c64"
-  integrity sha512-ujppO+MkdPqoVINuDFDRLClm7D78qbDt0/NR+wp5FqEZOoTNAjPHWj17QRhu7geIHJfcNhRk1XVQmF8Bp3ye+g==
+prettier@^2.8.0:
+  version "2.8.0"
+  resolved "https://registry.yarnpkg.com/prettier/-/prettier-2.8.0.tgz#c7df58393c9ba77d6fba3921ae01faf994fb9dc9"
+  integrity sha512-9Lmg8hTFZKG0Asr/kW9Bp8tJjRVluO8EJQVfY2T7FMw9T5jy4I/Uvx0Rca/XWf50QQ1/SS48+6IJWnrb+2yemA==
 
 process-nextick-args@~2.0.0:
   version "2.0.1"
@@ -2200,10 +2200,10 @@ tar-stream@^2.2.0:
     inherits "^2.0.3"
     readable-stream "^3.1.1"
 
-terser@^5.15.1:
-  version "5.15.1"
-  resolved "https://registry.yarnpkg.com/terser/-/terser-5.15.1.tgz#8561af6e0fd6d839669c73b92bdd5777d870ed6c"
-  integrity sha512-K1faMUvpm/FBxjBXud0LWVAGxmvoPbZbfTCYbSgaaYQaIXI3/TdI7a7ZGA73Zrou6Q8Zmz3oeUTsp/dj+ag2Xw==
+terser@^5.16.0:
+  version "5.16.0"
+  resolved "https://registry.yarnpkg.com/terser/-/terser-5.16.0.tgz#29362c6f5506e71545c73b069ccd199bb28f7f54"
+  integrity sha512-KjTV81QKStSfwbNiwlBXfcgMcOloyuRdb62/iLFPGBcVNF4EXjhdYBhYHmbJpiBrVxZhDvltE11j+LBQUxEEJg==
   dependencies:
     "@jridgewell/source-map" "^0.3.2"
     acorn "^8.5.0"

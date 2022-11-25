@@ -249,6 +249,11 @@ class DialogsDemo extends LitElement {
 
       okText: 'Add user'
     });
+
+    this._dlg.info({
+      title: 'Form data',
+      message: JSON.stringify(data, null, 2)
+    });
   };
 
   private _onDestroyPlanet = async () => {
