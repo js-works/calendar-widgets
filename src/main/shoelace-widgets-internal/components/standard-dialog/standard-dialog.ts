@@ -1,10 +1,11 @@
-import { html, LitElement } from 'lit';
+import { html, LitElement, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { when } from 'lit/directives/when.js';
+
 import {
   DialogConfig,
   DialogType
@@ -13,8 +14,6 @@ import {
 export { StandardDialog };
 
 import { LocalizeController } from '../../../shoelace-widgets/i18n/i18n';
-import type { ReactiveControllerHost, TemplateResult } from 'lit';
-import { AbstractDialogsController } from '../../controllers/abstract-dialogs-controller';
 import type { FormSubmitEvent } from 'shoelace-widgets';
 
 // components
@@ -22,7 +21,6 @@ import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 import { Form } from '../../../shoelace-widgets/components/form/form';
 import { TextField } from '../../../shoelace-widgets/components/text-field/text-field';
 
@@ -31,7 +29,7 @@ import standardDialogStyles from './standard-dialog.styles';
 
 // === local constants ===============================================
 
-const def: Record<
+const dialogSettingsByType: Record<
   DialogType,
   {
     buttons: {
@@ -144,6 +142,11 @@ const def: Record<
 class StandardDialog extends LitElement {
   static readonly styles = standardDialogStyles;
 
+  static {
+    // required components (to prevent too much tree shaking)
+    void [Form, SlAlert, SlButton, SlDialog, SlIcon, TextField];
+  }
+
   @property({ attribute: false })
   config: DialogConfig | null = null;
 
@@ -177,7 +180,7 @@ class StandardDialog extends LitElement {
       await this._dialogRef.value!.hide();
 
       let result = undefined;
-      const mapResult = def[this.config!.type].mapResult;
+      const mapResult = dialogSettingsByType[this.config!.type].mapResult;
 
       if (mapResult) {
         result = mapResult(action, data);
@@ -207,6 +210,12 @@ class StandardDialog extends LitElement {
     if (!this.config) {
       return null;
     }
+
+    let title = this.config.title
+      ? typeof this.config.title === 'function'
+        ? this.config.title()
+        : this.config.title
+      : this._translate(this.config.type);
 
     let additionalContent: TemplateResult = html``;
 
@@ -274,7 +283,7 @@ class StandardDialog extends LitElement {
                 name=${`dialogs.${this.config!.type}`}
               ></sl-icon>`
             )}
-            <div class="title">${this.config.title}</div>
+            <div class="title">${title}</div>
           </div>
           <div
             class="main"
@@ -301,7 +310,7 @@ class StandardDialog extends LitElement {
           <div slot="footer">
             <div class="buttons">
               ${repeat(
-                (def as any)[this.config.type as any].buttons,
+                (dialogSettingsByType as any)[this.config.type as any].buttons,
                 ({ action, variant = 'default', autofocus }, idx) => {
                   const onClick = () => {
                     this._lastClickedAction = action;
