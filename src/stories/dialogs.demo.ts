@@ -209,9 +209,9 @@ class DialogsDemo extends LitElement {
           </sx-vbox>
         </sx-fieldset>
         <sx-fieldset caption="Phone + email">
-          <sx-text-field name="phone" type="telephone" label="Phone" required>
+          <sx-text-field name="phone" type="phone" label="Phone" required>
           </sx-text-field>
-          <sx-text-field name="mobilePhone" type="phone" label="Mobile">
+          <sx-text-field name="cellphone" type="cellphone" label="Mobile">
           </sx-text-field>
           <sx-text-field
             name="email"

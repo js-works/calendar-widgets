@@ -25,9 +25,22 @@ import phoneIcon from './bootstrap/phone.icon';
 import questionCircleIcon from './bootstrap/question-circle.icon';
 import questionDiamondIcon from './bootstrap/question-diamond.icon';
 import questionLgIcon from './bootstrap/question-lg.icon';
-import telephoneIcon from './bootstrap/question-lg.icon';
+import telephoneIcon from './bootstrap/telephone.icon';
 
 const icons = {
+  'text-field.email': emailIcon,
+  'text-field.phone': telephoneIcon,
+  'text-field.cellphone': phoneIcon,
+
+  'date-field.date': calendar3Icon,
+  'date-field.date-time': calendar3Icon,
+  'date-field.date-range': calendarRangeIcon,
+  'date-field.time': clockIcon,
+  'date-field.time-range': clockIcon,
+  'date-field.week': calendarIcon,
+  'date-field.month': calendarIcon,
+  'date-field.year': calendarIcon,
+
   'dialogs.info': infoSquareIcon,
   'dialogs.success': check2SquareIcon,
   'dialogs.warning': exclamationDiamondIcon,

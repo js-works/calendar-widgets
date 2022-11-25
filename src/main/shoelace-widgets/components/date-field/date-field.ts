@@ -21,17 +21,6 @@ import {
 // styles
 import dateFieldStyles from './date-field.styles';
 
-// icons
-import dateIcon from '../../icons/bootstrap/calendar3.icon';
-import datesIcon from '../../icons/bootstrap/calendar3.icon';
-import timeIcon from '../../icons/bootstrap/clock.icon';
-import timeRangeIcon from '../../icons/bootstrap/clock.icon';
-import dateTimeIcon from '../../icons/bootstrap/calendar3.icon';
-import dateRangeIcon from '../../icons/bootstrap/calendar-range.icon';
-import weekIcon from '../../icons/bootstrap/calendar.icon';
-import monthIcon from '../../icons/bootstrap/calendar.icon';
-import yearIcon from '../../icons/bootstrap/calendar.icon';
-
 // === types =========================================================
 
 declare global {
@@ -186,17 +175,18 @@ export class DateField extends LitElement {
   }
 
   render() {
-    const icon = {
-      date: dateIcon,
-      dates: datesIcon,
-      dateRange: dateRangeIcon,
-      dateTime: dateTimeIcon,
-      time: timeIcon,
-      timeRange: timeRangeIcon,
-      week: weekIcon,
-      month: monthIcon,
-      year: yearIcon
-    }[this.selectionMode];
+    const icon =
+      'date-field.' +
+      {
+        date: 'date',
+        dateRange: 'date-range',
+        dateTime: 'date-time',
+        time: 'time',
+        timeRange: 'time-range',
+        week: 'week',
+        month: 'month',
+        year: 'year'
+      }[this.selectionMode];
 
     return html`
       <div
@@ -234,7 +224,12 @@ export class DateField extends LitElement {
               'input--disabled': this.disabled
             })}
           >
-            <sl-icon slot="suffix" class="calendar-icon" src=${icon}></sl-icon>
+            <sl-icon
+              slot="suffix"
+              class="calendar-icon"
+              library="shoelace-widgets"
+              name=${icon}
+            ></sl-icon>
             <span
               slot="label"
               class=${classMap({
@@ -247,7 +242,7 @@ export class DateField extends LitElement {
           </sl-input>
           <div class="popup-content">
             <div class="popup-header">
-              <sl-icon src=${icon}></sl-icon>
+              <sl-icon library="shoelace-widgets" name=${icon}></sl-icon>
               <div class="popup-title">${this._getPopupTitle()}</div>
               <sl-icon-button
                 class="popup-close-button"

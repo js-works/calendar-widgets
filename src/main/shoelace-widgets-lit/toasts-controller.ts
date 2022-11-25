@@ -12,35 +12,9 @@ import type {
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 import { StandardToast } from 'shoelace-widgets/internal';
 
-// icons
-import infoIcon from '../shoelace-widgets/icons/bootstrap/info-circle.icon';
-import successIcon from '../shoelace-widgets/icons/bootstrap/check-circle.icon';
-import warningIcon from '../shoelace-widgets/icons/bootstrap/exclamation-circle.icon';
-import errorIcon from '../shoelace-widgets/icons/bootstrap/exclamation-triangle.icon';
-
 // === exports =======================================================
 
 export { ToastsController };
-
-// === local types ===================================================
-
-// === variant by dialog type ========================================
-
-const variants = {
-  info: 'primary',
-  success: 'success',
-  warning: 'warning',
-  error: 'danger'
-};
-
-// === icons by dialog type ==========================================
-
-const icons = {
-  info: infoIcon,
-  success: successIcon,
-  warning: warningIcon,
-  error: errorIcon
-};
 
 // === exported classes ==============================================
 

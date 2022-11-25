@@ -177,8 +177,7 @@ export default /*css*/ `
   }
 
   .cal-time-range-arrow {
-    font-size: 125%;
-    margin: -0.75em 1rem -0.25em 1.25em;
+    margin: -0.75em 1rem -0.25em 1.5em;
     padding: 0;
   }
 

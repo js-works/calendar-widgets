@@ -14,11 +14,6 @@ import {
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
 
-// icons
-import emailIcon from '../../icons/bootstrap/email.icon';
-import phoneIcon from '../../icons/bootstrap/phone.icon';
-import telephoneIcon from '../../icons/bootstrap/telephone.icon';
-
 // styles
 import textFieldStyles from './text-field.styles';
 
@@ -46,7 +41,7 @@ class TextField extends LitElement {
   }
 
   @property()
-  type: 'text' | 'password' | 'email' | 'phone' | 'telephone' = 'text';
+  type: 'text' | 'password' | 'email' | 'phone' | 'cellphone' = 'text';
 
   @property()
   name = '';
@@ -109,12 +104,10 @@ class TextField extends LitElement {
 
   render() {
     const icon =
-      this.type === 'email'
-        ? emailIcon
-        : this.type === 'phone'
-        ? phoneIcon
-        : this.type === 'telephone'
-        ? telephoneIcon
+      this.type === 'email' ||
+      this.type === 'phone' ||
+      this.type === 'cellphone'
+        ? `text-field.${this.type}`
         : null;
 
     return html`
@@ -154,7 +147,12 @@ class TextField extends LitElement {
           )}
           ${when(
             icon,
-            () => html`<sl-icon slot="suffix" src=${icon}></sl-icon> `
+            () =>
+              html`<sl-icon
+                slot="suffix"
+                library="shoelace-widgets"
+                name=${icon}
+              ></sl-icon> `
           )}
         </sl-input>
         ${when(this._formField.getValidationMode() === 'inline', () =>
