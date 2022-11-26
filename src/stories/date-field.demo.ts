@@ -87,12 +87,6 @@ class DatePickerDemo extends LitElement {
           show-week-numbers
           highlight-today
           highlight-weekends
-          .format=${{
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            weekday: 'short'
-          }}
           lang=${this._locale}
         ></sx-date-field>
         <sx-date-field

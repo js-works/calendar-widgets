@@ -91,8 +91,6 @@ class DatePickerController {
   }
 
   resetView() {
-    const selectionMode = this.#selectionMode;
-
     this.#view =
       this.#selectionMode === 'year'
         ? 'decade'
@@ -150,7 +148,12 @@ class DatePickerController {
   hasSelectedDay(year: number, month: number, day: number, week: string) {
     const mode = this.#selectionMode;
 
-    if (mode === 'date' || mode === 'dates' || mode === 'dateTime') {
+    if (
+      mode === 'date' ||
+      mode === 'dates' ||
+      mode === 'dateTime' ||
+      mode == 'dateRange'
+    ) {
       const value = this.#selectionMode;
       return this.#selection.has(getYearMonthDayString(year, month, day));
     } else if (mode === 'week' || mode === 'weeks') {
@@ -161,7 +164,9 @@ class DatePickerController {
   }
 
   getValue() {
-    if (this.#selectionMode === 'dateTime') {
+    if (this.#selectionMode === 'dateRange') {
+      return Array.from(this.#selection).sort().join('|');
+    } else if (this.#selectionMode === 'dateTime') {
       const dateString = Array.from(this.#selection)[0];
 
       const timeString = getHourMinuteString(
@@ -538,6 +543,21 @@ class DatePickerController {
         const dateString = getYearMonthDayString(year, month, day);
 
         this.#toggleSelected(dateString, this.#selectionMode !== 'dates');
+        break;
+      }
+
+      case 'dateRange': {
+        const dateString = getYearMonthDayString(year, month, day);
+
+        if (this.#selection.has(dateString)) {
+          this.#removeSelection(dateString);
+        } else if (this.#selection.size > 1) {
+          this.#selection.clear();
+          this.#addSelection(dateString);
+        } else {
+          this.#addSelection(dateString);
+        }
+
         break;
       }
 

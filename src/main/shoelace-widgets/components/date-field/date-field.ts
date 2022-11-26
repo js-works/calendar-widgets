@@ -328,7 +328,7 @@ const logicBySelectionMode: Record<
 
       return localize.date(value, {
         year: 'numeric',
-        month: 'numeric',
+        month: 'short',
         day: 'numeric'
       });
     },
@@ -347,12 +347,24 @@ const logicBySelectionMode: Record<
   },
 
   dateRange: {
-    formatValue(value) {
-      return value;
+    formatValue(value, localize) {
+      return logicBySelectionMode['dateRange'].getPopupTitle(value, localize);
     },
 
-    getPopupTitle(value) {
-      return value; // TODO!!!
+    getPopupTitle(value, localize) {
+      if (!value) {
+        return '';
+      }
+
+      const dates = value.split('|').map((it) => new Date(it));
+
+      const ret = new Intl.DateTimeFormat(localize.lang(), {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      }).formatRange(dates[0], dates[dates.length - 1]);
+
+      return ret;
     }
   },
 
@@ -364,7 +376,7 @@ const logicBySelectionMode: Record<
 
       return localize.date(value, {
         day: 'numeric',
-        month: 'numeric',
+        month: 'short',
         year: 'numeric',
         hour: 'numeric',
         minute: 'numeric'
