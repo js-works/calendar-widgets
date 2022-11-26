@@ -187,13 +187,28 @@ class Calendar {
       weekdays.push((i + options.firstDayOfWeek) % 7);
     }
 
+    const minMonth = options.minDate
+      ? options.minDate.getFullYear() * 12 + options.minDate.getMonth()
+      : null;
+
+    const maxMonth = options.maxDate
+      ? options.maxDate.getFullYear() * 12 + options.maxDate.getMonth()
+      : null;
+
+    const mon = year * 12 + month;
+
+    const prevDisabled =
+      mon <= 24 || !inNumberRange(mon - 1, minMonth, maxMonth);
+
+    const nextDisabled = !inNumberRange(mon + 1, maxMonth, maxMonth);
+
     return {
       year,
       month,
       days,
       weekdays,
-      prevDisabled: false, // TODO!!
-      nextDisabled: false // TODO!!!
+      prevDisabled,
+      nextDisabled
     };
   }
 
@@ -205,16 +220,16 @@ class Calendar {
     const currMonth = now.getMonth();
 
     const minMonth = options.minDate
-      ? options.minDate.getFullYear() * 100 + options.minDate.getMonth()
+      ? options.minDate.getFullYear() * 12 + options.minDate.getMonth()
       : null;
 
     const maxMonth = options.maxDate
-      ? options.maxDate.getFullYear() * 100 + options.maxDate.getMonth()
+      ? options.maxDate.getFullYear() * 12 + options.maxDate.getMonth()
       : null;
 
     for (let cellMonth = 0; cellMonth < 12; ++cellMonth) {
       const outOfMinMaxRange = !inNumberRange(
-        year * 100 + cellMonth,
+        year * 12 + cellMonth,
         minMonth,
         maxMonth
       );
@@ -231,16 +246,16 @@ class Calendar {
     const minYear = options.minDate ? options.minDate.getFullYear() : null;
     const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
 
-    const prevYearDisabled =
+    const prevDisabled =
       year <= 1 || !inNumberRange(year - 1, minYear, maxYear);
 
-    const nextYearDisabled = !inNumberRange(year + 1, minYear, maxYear);
+    const nextDisabled = !inNumberRange(year + 1, minYear, maxYear);
 
     return {
       year,
       months,
-      prevDisabled: prevYearDisabled,
-      nextDisabled: nextYearDisabled
+      prevDisabled,
+      nextDisabled
     };
   }
 
@@ -315,10 +330,25 @@ class Calendar {
       });
     }
 
+    const minCentury = options.minDate
+      ? Math.floor(options.minDate.getFullYear() / 100)
+      : null;
+
+    const maxCentury = options.maxDate
+      ? Math.floor(options.maxDate.getFullYear() / 100)
+      : null;
+
+    const century = Math.floor(year / 100);
+
+    const prevDisabled =
+      year <= 1 || !inNumberRange(century - 1, minCentury, maxCentury);
+
+    const nextDisabled = !inNumberRange(century + 1, minCentury, maxCentury);
+
     return {
       decades,
-      prevDisabled: false, // TODO!!!
-      nextDisabled: false // TODO!!!
+      prevDisabled,
+      nextDisabled
     };
   }
 }
