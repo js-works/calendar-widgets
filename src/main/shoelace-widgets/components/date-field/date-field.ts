@@ -98,6 +98,9 @@ export class DateField extends LitElement {
   @property({ converter: dateAttributeConverter, attribute: 'max-date' })
   maxDate: Date | null = null;
 
+  @property({ attribute: false })
+  format: Intl.DateTimeFormatOptions | null = null;
+
   @property()
   lang = '';
 
@@ -188,6 +191,19 @@ export class DateField extends LitElement {
         year: 'year'
       }[this.selectionMode];
 
+    let value = '';
+
+    if (this.selectionMode !== 'week' && this.format) {
+      if (this._value) {
+        value = this._localize.date(this._value, this.format);
+      }
+    } else {
+      value = logicBySelectionMode[this.selectionMode].formatValue(
+        this._value,
+        this._localize
+      );
+    }
+
     return html`
       <div
         class=${classMap({
@@ -208,10 +224,7 @@ export class DateField extends LitElement {
         >
           <sl-input
             slot="trigger"
-            value=${logicBySelectionMode[this.selectionMode].formatValue(
-              this._value,
-              this._localize
-            )}
+            value=${value}
             ?disabled=${this.disabled}
             readonly
             @click=${this._onInputClick}

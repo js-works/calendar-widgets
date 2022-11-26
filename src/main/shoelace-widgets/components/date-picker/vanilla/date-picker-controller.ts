@@ -455,12 +455,8 @@ class DatePickerController {
         this.#view = 'time';
         break;
 
-      case 'month':
-        this.#view = 'month';
-        break;
-
       default:
-        throw Error(`Illegal selection mode "${selectionMode}"`);
+        this.#view = 'month';
     }
 
     this.#requestUpdate();

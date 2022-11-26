@@ -200,7 +200,7 @@ class Calendar {
     const prevDisabled =
       mon <= 24 || !inNumberRange(mon - 1, minMonth, maxMonth);
 
-    const nextDisabled = !inNumberRange(mon + 1, maxMonth, maxMonth);
+    const nextDisabled = !inNumberRange(mon + 1, minMonth, maxMonth);
 
     return {
       year,
