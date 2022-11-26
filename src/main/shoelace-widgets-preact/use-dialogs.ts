@@ -1,51 +1,88 @@
-import { h, VNode, render } from 'preact';
-import { useEffect, useState } from 'preact/hooks';
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
+import { createElement, render, ComponentChildren, VNode } from 'preact';
+import { useState } from 'preact/hooks';
+
 import {
   AbstractDialogsController,
   ShowDialogFunction,
-  ShowToastFunction
+  ShowToastFunction,
+  StandardDialog,
+  StandardToast
 } from 'shoelace-widgets/internal';
 
 // === exports =======================================================
 
 export { useDialogs };
 
+// === locals ========================================================
+
+const h = createElement as (
+  type: string,
+  props: {} | null,
+  child?: ComponentChildren,
+  child2?: ComponentChildren
+) => VNode;
+
+// === exported hooks ================================================
+
+function useDialogs(): {
+  showDialog: ShowDialogFunction<VNode>;
+  showToast: ShowToastFunction<VNode>;
+  renderDialogs: () => VNode;
+} {
+  const [, setToggle] = useState(false);
+  const forceUpdate = () => setToggle((it) => !it);
+
+  return useState(() => {
+    const dialogCtrl = new DialogsController(forceUpdate);
+
+    return {
+      showDialog: dialogCtrl.show.bind(dialogCtrl),
+      showToast: dialogCtrl.toast.bind(dialogCtrl),
+      renderDialogs: dialogCtrl.render.bind(dialogCtrl)
+    };
+  })[0];
+}
+
 // === local classes =================================================
 
 class DialogsController extends AbstractDialogsController<VNode> {
-  #renderers = new Set<() => VNode>();
+  static {
+    // required dependencies (to avoid too much tree shaking)
+    void [StandardDialog, StandardToast];
+  }
 
-  constructor(
-    host: HTMLElement & ReactiveControllerHost,
-    setRenderer: (renderer: () => VNode) => void,
-    forceUpdate: () => void
-  ) {
-    let dialogResolve: ((value: unknown) => void) | null = null;
+  readonly #forceUpdate: () => void;
+
+  readonly #renderers: {
+    id: number;
+    render: () => VNode;
+  }[] = [];
+
+  #nextRendererId = 1;
+
+  constructor(forceUpdate: () => void) {
+    let dialogResolve: ((dialogResult: unknown) => void) | null = null;
 
     super({
       showDialog: (type, options) => {
-        const renderer = () =>
+        const rendererId = this.#addRenderer(() =>
           h(
             'sx-standard-dialog--internal',
             {
               config: { type, ...options },
 
-              dismissDialog: (result: unknown) => {
-                this.#renderers.delete(renderer);
-                dialogResolve?.(result);
-                forceUpdate();
+              resolve: (result: unknown) => {
+                this.#removeRenderer(rendererId);
+                dialogResolve!(result);
               }
-            } as any,
+            },
             options.content
-          );
-
-        this.#renderers.add(renderer);
-        forceUpdate();
+          )
+        );
 
         return new Promise<unknown>((resolve) => {
           dialogResolve = resolve;
-        }) as any;
+        }) as Promise<any>;
       },
 
       showToast: (type, options) => {
@@ -56,95 +93,42 @@ class DialogsController extends AbstractDialogsController<VNode> {
           render(options.content, contentElement);
         }
 
-        const dismissToast = () => {
-          this.#renderers.delete(renderToast);
-          forceUpdate();
-        };
-
-        const renderToast = () => {
-          return h('sx-standard-toast--internal' as any, {
+        const rendererId = this.#addRenderer(() => {
+          return h('sx-standard-toast--internal', {
             config: { type, ...options },
             contentElement,
-            dismissToast
+            dismissToast: () => this.#removeRenderer(rendererId)
           });
-        };
-
-        this.#renderers.add(renderToast);
-        forceUpdate();
+        });
       }
     });
 
-    setRenderer(() =>
-      h(
-        'span',
-        null,
-        [...this.#renderers].map((it) => it())
-      )
-    );
+    this.#forceUpdate = forceUpdate;
   }
 
-  render(): VNode {
+  #addRenderer(render: () => VNode): number {
+    const rendererId = this.#nextRendererId++;
+
+    this.#renderers.push({
+      id: rendererId,
+      render
+    });
+
+    this.#forceUpdate();
+    return rendererId;
+  }
+
+  #removeRenderer(rendererId: number) {
+    const idx = this.#renderers.findIndex((it) => it.id === rendererId);
+    this.#renderers.splice(idx, 1);
+    this.#forceUpdate();
+  }
+
+  render() {
     return h(
       'span',
       null,
-      [...this.#renderers].map((it, key) => h('span', { key }, it()))
+      this.#renderers.map((it) => h('span', { key: it.id }, it.render()))
     );
   }
-}
-
-function useDialogs(): {
-  showDialog: ShowDialogFunction<VNode>;
-  showToast: ShowToastFunction<VNode>;
-  renderDialogs: () => VNode;
-} {
-  const [, setToggle] = useState(false);
-  const forceUpdate = () => setToggle((it) => !it);
-  const [controllers] = useState(() => new Set<ReactiveController>());
-
-  const [{ showDialog, showToast, renderDialogs }] = useState(() => {
-    let renderDialogs: () => VNode;
-
-    const host: ReactiveControllerHost = {
-      addController(controller) {
-        controllers.add(controller);
-      },
-
-      removeController(controller) {
-        controllers.delete(controller);
-      },
-
-      requestUpdate: () => forceUpdate(),
-
-      get updateComplete() {
-        return new Promise<boolean>((resolve) => {
-          setTimeout(() => resolve(true), 100);
-        });
-      }
-    };
-
-    const proxy = new Proxy(document.createElement('div'), {
-      get(target, prop) {
-        return host.hasOwnProperty(prop)
-          ? (host as any)[prop]
-          : (target as any)[prop];
-      }
-    }) as unknown as HTMLElement & ReactiveControllerHost;
-
-    const dialogCtrl = new DialogsController(
-      proxy,
-      (renderer) => (renderDialogs = renderer),
-      forceUpdate
-    );
-
-    const showDialog = dialogCtrl.show.bind(dialogCtrl);
-    const showToast = dialogCtrl.toast.bind(dialogCtrl);
-
-    return { showDialog, showToast, renderDialogs: renderDialogs! };
-  });
-
-  useEffect(() => {
-    controllers.forEach((it) => it.hostUpdated?.());
-  });
-
-  return { showDialog, showToast, renderDialogs };
 }
