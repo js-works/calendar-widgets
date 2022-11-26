@@ -207,7 +207,7 @@ function renderDatePicker(
   }
 
   function renderMonthSheet() {
-    const view = calendar.getMonthView(
+    const view = calendar.getMonthData(
       datePickerCtrl.getActiveYear(),
       datePickerCtrl.getActiveMonth()
     );
@@ -240,11 +240,11 @@ function renderDatePicker(
     );
   }
 
-  function renderDayCell(dayData: Calendar.DayData) {
-    const currentHighlighted = props.highlightToday && dayData.current;
-    const highlighted = props.highlightWeekends && dayData.weekend;
+  function renderDayCell(dayItem: Calendar.DayItem) {
+    const currentHighlighted = props.highlightToday && dayItem.current;
+    const highlighted = props.highlightWeekends && dayItem.weekend;
 
-    if (props.daysAmount === 'minimal' && dayData.adjacent) {
+    if (props.daysAmount === 'minimal' && dayItem.adjacent) {
       return div({
         class: classMap({
           'cal-cell--highlighted': highlighted
@@ -253,128 +253,128 @@ function renderDatePicker(
     }
 
     const weekString = getYearWeekString(
-      dayData.calendarWeek.year,
-      dayData.calendarWeek.week
+      dayItem.calendarWeek.year,
+      dayItem.calendarWeek.week
     );
 
     const selected =
       datePickerCtrl.hasSelectedDay(
-        dayData.year,
-        dayData.month,
-        dayData.day,
+        dayItem.year,
+        dayItem.month,
+        dayItem.day,
         weekString
-      ) && !dayData.disabled;
+      ) && !dayItem.disabled;
 
     return div(
       {
         'class': classMap({
           'cal-cell': true,
-          'cal-cell--disabled': dayData.disabled,
-          'cal-cell--adjacent': dayData.adjacent,
-          'cal-cell--current': dayData.current,
+          'cal-cell--disabled': dayItem.disabled,
+          'cal-cell--adjacent': dayItem.adjacent,
+          'cal-cell--current': dayItem.current,
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--highlighted': highlighted,
           'cal-cell--selected': selected
         }),
         'data-date': getYearMonthDayString(
-          dayData.year,
-          dayData.month,
-          dayData.day
+          dayItem.year,
+          dayItem.month,
+          dayItem.day
         ),
         'data-week': weekString,
-        'data-subject': dayData.disabled ? null : 'day'
+        'data-subject': dayItem.disabled ? null : 'day'
       },
-      i18n.formatDay(dayData.day)
+      i18n.formatDay(dayItem.day)
     );
   }
 
   function renderYearSheet() {
-    const view = calendar.getYearView(datePickerCtrl.getActiveYear());
+    const yearData = calendar.getYearData(datePickerCtrl.getActiveYear());
 
     return div(
       { class: 'cal-sheet cal-sheet--year' },
-      view.months.map((monthData) => renderMonthCell(monthData))
+      yearData.months.map((monthData) => renderMonthCell(monthData))
     );
   }
 
-  function renderMonthCell(monthData: Calendar.MonthData) {
+  function renderMonthCell(monthItem: Calendar.MonthItem) {
     const selected = datePickerCtrl.hasSelectedMonth(
-      monthData.year,
-      monthData.month
+      monthItem.year,
+      monthItem.month
     );
 
-    const currentHighlighted = monthData.current && props.highlightToday;
+    const currentHighlighted = monthItem.current && props.highlightToday;
 
     return div(
       {
         'class': classMap({
           'cal-cell': true,
-          'cal-cell--disabled': monthData.disabled,
-          'cal-cell--current': monthData.current,
+          'cal-cell--disabled': monthItem.disabled,
+          'cal-cell--current': monthItem.current,
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected
         }),
-        'data-month': getYearMonthString(monthData.year, monthData.month),
-        'data-subject': monthData.disabled ? null : 'month'
+        'data-month': getYearMonthString(monthItem.year, monthItem.month),
+        'data-subject': monthItem.disabled ? null : 'month'
       },
-      i18n.getMonthName(monthData.month, 'short')
+      i18n.getMonthName(monthItem.month, 'short')
     );
   }
 
   function renderDecadeSheet() {
-    const view = calendar.getDecadeView(datePickerCtrl.getActiveYear());
+    const decadeData = calendar.getDecadeData(datePickerCtrl.getActiveYear());
 
     return div(
       { class: 'cal-sheet cal-sheet--decade' },
-      view.years.map((monthData, idx) => renderYearCell(monthData))
+      decadeData.years.map((monthData, idx) => renderYearCell(monthData))
     );
   }
 
-  function renderYearCell(yearData: Calendar.YearData) {
-    const selected = datePickerCtrl.hasSelectedYear(yearData.year);
-    const currentHighlighted = props.highlightToday && yearData.current;
+  function renderYearCell(yearItem: Calendar.YearItem) {
+    const selected = datePickerCtrl.hasSelectedYear(yearItem.year);
+    const currentHighlighted = props.highlightToday && yearItem.current;
 
     return div(
       {
         'class': classMap({
           'cal-cell': true,
-          'cal-cell--disabled': yearData.disabled,
-          'cal-cell--current': yearData.current,
+          'cal-cell--disabled': yearItem.disabled,
+          'cal-cell--current': yearItem.current,
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected
         }),
-        'data-year': getYearString(yearData.year),
-        'data-subject': yearData.disabled ? null : 'year'
+        'data-year': getYearString(yearItem.year),
+        'data-subject': yearItem.disabled ? null : 'year'
       },
-      i18n.formatYear(yearData.year)
+      i18n.formatYear(yearItem.year)
     );
   }
 
   function renderCenturySheet() {
-    const view = calendar.getCenturyView(datePickerCtrl.getActiveYear());
+    const centuryData = calendar.getCenturyData(datePickerCtrl.getActiveYear());
 
     return div(
       { class: 'cal-sheet cal-sheet--century' },
-      view.decades.map((decadeData, idx) => renderDecadeCell(decadeData))
+      centuryData.decades.map((decadeData, idx) => renderDecadeCell(decadeData))
     );
   }
 
-  function renderDecadeCell(decadeData: Calendar.DecadeData) {
-    const currentHighlighted = props.highlightToday && decadeData.current;
+  function renderDecadeCell(decadeItem: Calendar.DecadeItem) {
+    const currentHighlighted = props.highlightToday && decadeItem.current;
 
     return div(
       {
         'class': classMap({
           'cal-cell': true,
-          'cal-cell--disabled': decadeData.disabled,
-          'cal-cell--current': decadeData.current,
+          'cal-cell--disabled': decadeItem.disabled,
+          'cal-cell--current': decadeItem.current,
           'cal-cell--current-highlighted': currentHighlighted
         }),
-        'data-year': getYearString(decadeData.firstYear),
-        'data-subject': decadeData.disabled ? null : 'decade'
+        'data-year': getYearString(decadeItem.firstYear),
+        'data-subject': decadeItem.disabled ? null : 'decade'
       },
       i18n
-        .getDecadeTitle(decadeData.firstYear, 10)
+        .getDecadeTitle(decadeItem.firstYear, 10)
         .replaceAll('\u2013', '\u2013\u200B')
     );
   }

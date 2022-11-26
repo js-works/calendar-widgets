@@ -17,7 +17,7 @@ namespace Calendar {
     alwaysShow42Days: boolean;
   }>;
 
-  export type DayData = Readonly<{
+  export type DayItem = Readonly<{
     year: number;
     month: number;
     day: number;
@@ -29,7 +29,7 @@ namespace Calendar {
     adjacent: boolean;
   }>;
 
-  export type MonthData = Readonly<{
+  export type MonthItem = Readonly<{
     year: number;
     month: number; // 0 -> january, ..., 11 -> december
     current: boolean; // true if current month, else false
@@ -37,14 +37,14 @@ namespace Calendar {
     disabled: boolean;
   }>;
 
-  export type YearData = Readonly<{
+  export type YearItem = Readonly<{
     year: number;
     current: boolean; // true if current year, else false
     outOfMinMaxRange: boolean;
     disabled: boolean;
   }>;
 
-  export type DecadeData = Readonly<{
+  export type DecadeItem = Readonly<{
     firstYear: number;
     lastYear: number;
     current: boolean; // true if current decade, else false
@@ -52,32 +52,32 @@ namespace Calendar {
     disabled: boolean;
   }>;
 
-  export type MonthView = Readonly<{
+  export type MonthData = Readonly<{
     year: number;
     month: number; // 0 -> january, ..., 11 -> december
-    days: DayData[];
+    days: DayItem[];
     weekdays: number[];
     prevDisabled: boolean;
     nextDisabled: boolean;
   }>;
 
-  export type YearView = Readonly<{
+  export type YearData = Readonly<{
     year: number;
-    months: readonly MonthData[];
+    months: readonly MonthItem[];
     prevDisabled: boolean;
     nextDisabled: boolean;
   }>;
 
-  export type DecadeView = Readonly<{
+  export type DecadeData = Readonly<{
     startYear: number;
     endYear: number;
-    years: readonly YearData[];
+    years: readonly YearItem[];
     prevDisabled: boolean;
     nextDisabled: boolean;
   }>;
 
-  export type CenturyView = Readonly<{
-    decades: readonly DecadeData[];
+  export type CenturyData = Readonly<{
+    decades: readonly DecadeItem[];
     prevDisabled: boolean;
     nextDisabled: boolean;
   }>;
@@ -92,7 +92,7 @@ class Calendar {
     this.#options = options;
   }
 
-  getMonthView(year: number, month: number): Calendar.MonthView {
+  getMonthData(year: number, month: number): Calendar.MonthData {
     // we also allow month values less than 0 and greater than 11
     const n = year * 12 + month;
     year = Math.floor(n / 12);
@@ -123,7 +123,7 @@ class Calendar {
       }
     }
 
-    const days: Calendar.DayData[] = [];
+    const days: Calendar.DayItem[] = [];
 
     for (let i = 0; i < daysToShow; ++i) {
       let cellYear: number;
@@ -197,9 +197,9 @@ class Calendar {
     };
   }
 
-  getYearView(year: number): Calendar.YearView {
+  getYearData(year: number): Calendar.YearData {
     const options = this.#options;
-    const months: Calendar.MonthData[] = [];
+    const months: Calendar.MonthItem[] = [];
     const now = new Date();
     const currYear = now.getFullYear();
     const currMonth = now.getMonth();
@@ -244,12 +244,12 @@ class Calendar {
     };
   }
 
-  getDecadeView(year: number): Calendar.DecadeView {
+  getDecadeData(year: number): Calendar.DecadeData {
     const options = this.#options;
     const startYear = year - (year % 10);
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
-    const years: Calendar.YearData[] = [];
+    const years: Calendar.YearItem[] = [];
     const minYear = options.minDate ? options.minDate.getFullYear() : null;
     const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
 
@@ -273,12 +273,12 @@ class Calendar {
     };
   }
 
-  getCenturyView(year: number): Calendar.CenturyView {
+  getCenturyData(year: number): Calendar.CenturyData {
     const options = this.#options;
     const startYear = year - (year % 100);
     const endYear = startYear + 119;
     const currYear = new Date().getFullYear();
-    const decades: Calendar.DecadeData[] = [];
+    const decades: Calendar.DecadeItem[] = [];
 
     const minYear = options.minDate
       ? Math.floor(options.minDate.getFullYear() / 10) * 10
@@ -287,7 +287,7 @@ class Calendar {
     const maxYear = options.maxDate
       ? Math.floor(options.maxDate.getFullYear() / 10) * 10 + 9
       : null;
-    console.log(minYear, maxYear);
+
     for (let cellYear = startYear; cellYear <= endYear; cellYear += 10) {
       const outOfMinMaxRange = !inNumberRange(cellYear, minYear, maxYear);
 
