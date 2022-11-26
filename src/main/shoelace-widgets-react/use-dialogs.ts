@@ -1,129 +1,159 @@
-import { createElement as h, ReactNode } from 'react';
-import { useEffect, useState, useRef } from 'react';
-import type { ReactiveController, ReactiveControllerHost } from 'lit';
-import { AbstractDialogsController } from '../shoelace-widgets-internal/controllers/abstract-dialogs-controller';
-import { LocalizeController } from '@shoelace-style/localize';
-import { StandardDialog } from '../shoelace-widgets-internal/components/standard-dialog/standard-dialog';
+import {
+  createElement as h,
+  useEffect,
+  useRef,
+  useState,
+  ReactNode
+} from 'react';
+
+import { createRoot } from 'react-dom/client';
+
+import {
+  AbstractDialogsController,
+  ShowDialogFunction,
+  ShowToastFunction,
+  StandardDialog,
+  StandardToast
+} from 'shoelace-widgets/internal';
+
+// === exports =======================================================
 
 export { useDialogs };
 
-class DialogsController extends AbstractDialogsController<ReactNode> {
-  #localize: LocalizeController;
-  #renderers = new Set<() => ReactNode>();
+// === exported hooks ================================================
 
+function useDialogs(): {
+  showDialog: ShowDialogFunction<ReactNode>;
+  showToast: ShowToastFunction<ReactNode>;
+  renderDialogs: () => ReactNode;
+} {
+  const [, setToggle] = useState(false);
+  const forceUpdate = () => setToggle((it) => !it);
+
+  return useState(() => {
+    const dialogCtrl = new DialogsController(forceUpdate);
+
+    return {
+      showDialog: dialogCtrl.show.bind(dialogCtrl),
+      showToast: dialogCtrl.toast.bind(dialogCtrl),
+      renderDialogs: dialogCtrl.render.bind(dialogCtrl)
+    };
+  })[0];
+}
+
+// === local classes =================================================
+
+class DialogsController extends AbstractDialogsController<ReactNode> {
   static {
-    // required components (to prevent too much tree shaking)
-    void [StandardDialog];
+    // required dependencies (to avoid too much tree shaking)
+    void [StandardDialog, StandardToast];
   }
 
-  constructor(
-    host: HTMLElement & ReactiveControllerHost,
-    setRenderer: (renderer: () => ReactNode) => void,
-    forceUpdate: () => void
-  ) {
+  readonly #forceUpdate: () => void;
+
+  readonly #renderers: {
+    id: number;
+    render: () => ReactNode;
+  }[] = [];
+
+  #nextRendererId = 1;
+
+  constructor(forceUpdate: () => void) {
+    let dialogResolve: ((dialogResult: unknown) => void) | null = null;
+
     super({
-      showDialog: (config) => {
-        const renderer = () =>
+      showDialog: (type, options) => {
+        const rendererId = this.#addRenderer(() =>
           h(
-            DynDialog,
+            DynamicComponent,
             {
-              config,
+              type: 'sx-standard-dialog--internal',
+              params: {
+                config: { type, ...options },
 
-              dismissDialog: () => {
-                this.#renderers.delete(renderer);
-                forceUpdate();
-              },
-
-              emitResult: (result: any) => {
-                //return emitResult(result);
+                resolve: (result: unknown) => {
+                  this.#removeRenderer(rendererId);
+                  dialogResolve!(result);
+                }
               }
             },
-            config.content
-          );
+            options.content
+          )
+        );
 
-        this.#renderers.add(renderer);
-        forceUpdate();
-        return Promise.resolve() as any;
+        return new Promise<unknown>((resolve) => {
+          dialogResolve = resolve;
+        }) as Promise<any>;
+      },
+
+      showToast: (type, options) => {
+        let contentElement: HTMLElement | null;
+
+        if (options.content) {
+          contentElement = document.createElement('span');
+          const root = createRoot(contentElement);
+          root.render(options.content);
+        }
+
+        const rendererId = this.#addRenderer(() => {
+          return h(
+            DynamicComponent,
+            {
+              type: 'sx-standard-toast--internal',
+              params: {
+                config: { type, ...options },
+                contentElement,
+                dismissToast: () => this.#removeRenderer(rendererId)
+              }
+            },
+            options.content
+          );
+        });
       }
     });
 
-    this.#localize = new LocalizeController(host);
+    this.#forceUpdate = forceUpdate;
+  }
 
-    setRenderer(() =>
-      h(
-        'span',
-        null,
-        [...this.#renderers].map((it) => it())
-      )
+  #addRenderer(render: () => ReactNode): number {
+    const rendererId = this.#nextRendererId++;
+
+    this.#renderers.push({
+      id: rendererId,
+      render
+    });
+
+    this.#forceUpdate();
+    return rendererId;
+  }
+
+  #removeRenderer(rendererId: number) {
+    const idx = this.#renderers.findIndex((it) => it.id === rendererId);
+    this.#renderers.splice(idx, 1);
+    this.#forceUpdate();
+  }
+
+  render() {
+    return h(
+      'span',
+      null,
+      this.#renderers.map((it) => h('span', { key: it.id }, it.render()))
     );
   }
 }
 
-function useDialogs(): [DialogsController, () => ReactNode] {
-  const [, setToggle] = useState(false);
-  const forceUpdate = () => setToggle((it) => !it);
-  const [controllers] = useState(() => new Set<ReactiveController>());
+// === local components ==============================================
 
-  const [[dialogCtrl, renderDialogs]] = useState(
-    (): [DialogsController, () => ReactNode] => {
-      let renderDialogs: () => ReactNode;
-
-      const host: ReactiveControllerHost = {
-        addController(controller) {
-          controllers.add(controller);
-        },
-
-        removeController(controller) {
-          controllers.delete(controller);
-        },
-
-        requestUpdate: () => forceUpdate(),
-
-        get updateComplete() {
-          return new Promise<boolean>((resolve) => {
-            setTimeout(() => resolve(true), 100);
-          });
-        }
-      };
-
-      const proxy = new Proxy(document.createElement('div'), {
-        get(target, prop) {
-          return host.hasOwnProperty(prop)
-            ? (host as any)[prop]
-            : (target as any)[prop];
-        }
-      }) as unknown as HTMLElement & ReactiveControllerHost;
-
-      const dialogCtrl = new DialogsController(
-        proxy,
-        (renderer) => (renderDialogs = renderer),
-        forceUpdate
-      );
-
-      return [dialogCtrl, renderDialogs!];
-    }
-  );
-
-  useEffect(() => {
-    controllers.forEach((it) => it.hostUpdated?.());
-  });
-
-  return [dialogCtrl, renderDialogs];
-}
-
-function DynDialog(props: {
-  config: any;
-  dismissDialog: any;
-  emitResult: any;
+function DynamicComponent(props: {
+  type: string;
+  params: Record<string, unknown>;
+  children?: ReactNode;
 }) {
-  const elemRef = useRef<any>();
+  const elemRef = useRef<HTMLElement>();
 
   useEffect(() => {
-    const dynDialog = elemRef.current!;
-    dynDialog.config = props.config;
-    dynDialog.dismissDialog = props.dismissDialog;
-    dynDialog.emitResult = props.emitResult;
+    Object.assign(elemRef.current!, props.params);
   }, []);
 
-  return h('dyn-dialog', { ref: elemRef }, props.config.content);
+  return h(props.type, { ref: elemRef }, props.children);
 }

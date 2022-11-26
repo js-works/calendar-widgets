@@ -3,7 +3,7 @@ import { createElement, Ref, ReactNode, Fragment } from 'react';
 import { createRoot } from 'react-dom/client';
 import { useDialogs } from '../main/shoelace-widgets-react';
 import { SlButton, SlButtonGroup } from '@shoelace-style/shoelace/dist/react';
-import { useToasts, Fieldset, TextField } from '../main/shoelace-widgets-react';
+import { Fieldset, TextField } from '../main/shoelace-widgets-react';
 import type { ToastType } from '../main/shoelace-widgets-react';
 
 export const reactDemo = () => {
@@ -14,27 +14,24 @@ export const reactDemo = () => {
 };
 
 function Demo() {
-  const [dialogs, renderDialogs] = useDialogs();
-  const [toasts, renderToasts] = useToasts();
+  const { showDialog, showToast, renderDialogs } = useDialogs();
 
-  const showToast = (type: ToastType, title: string) => {
+  const openToast = (type: ToastType, title: string) => {
     const now = new Date();
 
     const time = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
       .toISOString()
       .substring(11, 19);
 
-    toasts.show({
-      type,
+    showToast(type, {
       title,
       message: 'Toast was opened at ' + time,
-      closable: true,
       content: <strong>Some extra content...</strong>
     });
   };
 
   const onOpenDialogClick = async () => {
-    const formData = await dialogs.input({
+    const formData = await showDialog('input', {
       title: 'New user',
       okText: 'Add user',
       labelLayout: 'horizontal',
@@ -75,19 +72,16 @@ function Demo() {
       <SlButton onClick={onOpenDialogClick}>Open dialog</SlButton>
       <h3>Toasts</h3>
       <SlButtonGroup>
-        <SlButton onclick={() => showToast('information', 'Info')}>
-          Info
-        </SlButton>
-        <SlButton onclick={() => showToast('success', 'Success')}>
+        <SlButton onclick={() => openToast('info', 'Info')}>Info</SlButton>
+        <SlButton onclick={() => openToast('success', 'Success')}>
           Success
         </SlButton>
-        <SlButton onclick={() => showToast('warning', 'Warning')}>
+        <SlButton onclick={() => openToast('warn', 'Warning')}>
           Warning
         </SlButton>
-        <SlButton onclick={() => showToast('error', 'Error')}>Error</SlButton>
+        <SlButton onclick={() => openToast('error', 'Error')}>Error</SlButton>
       </SlButtonGroup>
       {renderDialogs()}
-      {renderToasts()}
     </div>
   );
 }

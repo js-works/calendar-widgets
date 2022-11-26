@@ -18,8 +18,7 @@ export { useDialogs };
 const h = createElement as (
   type: string,
   props: {} | null,
-  child?: ComponentChildren,
-  child2?: ComponentChildren
+  child?: ComponentChildren
 ) => VNode;
 
 // === exported hooks ================================================
