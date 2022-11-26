@@ -230,9 +230,9 @@ class Calendar {
 
     const minYear = options.minDate ? options.minDate.getFullYear() : null;
     const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
-
+    console.log(year, minYear, maxYear);
     const prevYearDisabled =
-      true || year <= 1 || !inNumberRange(year - 1, minYear, maxYear);
+      year <= 1 || !inNumberRange(year - 1, minYear, maxYear);
 
     const nextYearDisabled = !inNumberRange(year + 1, minYear, maxYear);
 

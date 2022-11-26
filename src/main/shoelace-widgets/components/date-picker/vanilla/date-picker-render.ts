@@ -1,7 +1,7 @@
 import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
 import { CalendarLocalizer } from './calendar-localizer';
-import { h } from './vdom';
+import { h, VNode } from './vdom';
 
 const [a, div, input, span] = ['a', 'div', 'input', 'span'].map((tag) =>
   h.bind(null, tag)
@@ -71,14 +71,53 @@ function renderDatePicker(
   function render() {
     const view = datePickerCtrl.getView();
 
-    const sheet =
-      view === 'century'
-        ? renderCenturySheet()
-        : view === 'decade'
-        ? renderDecadeSheet()
-        : view === 'year'
-        ? renderYearSheet()
-        : renderMonthSheet();
+    let sheet: VNode = null;
+    let prevDisabled = false;
+    let nextDisabled = false;
+
+    switch (view) {
+      case 'century': {
+        const data = calendar.getCenturyData(datePickerCtrl.getActiveYear());
+        sheet = renderCenturySheet(data);
+        prevDisabled = data.prevDisabled;
+        nextDisabled = data.nextDisabled;
+        break;
+      }
+
+      case 'decade': {
+        const data = calendar.getDecadeData(datePickerCtrl.getActiveYear());
+        sheet = renderDecadeSheet(data);
+        prevDisabled = data.prevDisabled;
+        nextDisabled = data.nextDisabled;
+        break;
+      }
+
+      case 'year': {
+        const data = calendar.getYearData(datePickerCtrl.getActiveYear());
+        sheet = renderYearSheet(data);
+        prevDisabled = data.prevDisabled;
+        nextDisabled = data.nextDisabled;
+        break;
+      }
+
+      case 'month': {
+        const data = calendar.getMonthData(
+          datePickerCtrl.getActiveYear(),
+          datePickerCtrl.getActiveMonth()
+        );
+
+        sheet = renderMonthSheet(data);
+        prevDisabled = data.prevDisabled;
+        nextDisabled = data.nextDisabled;
+        break;
+      }
+
+      case 'time':
+        break;
+
+      default:
+        throw new Error(`Illegal view ${view}`);
+    }
 
     // TODO!!!
     const typeSnakeCase = props.selectionMode.replace(
@@ -99,24 +138,31 @@ function renderDatePicker(
             },
             a(
               {
-                'class': 'cal-prev',
-                'data-subject': 'prev',
-                'hidden': false // TODO!!!!
+                'class': classMap({
+                  'cal-prev': true,
+                  'cal-prev--disabled': prevDisabled
+                }),
+                'data-subject': prevDisabled ? null : 'prev'
               },
               i18n.getDirection() === 'ltr' ? '\u{1F860}' : '\u{1F862}'
             ),
             renderTitle(),
             a(
               {
-                'class': 'cal-next',
-                'data-subject': 'next'
+                'class': classMap({
+                  'cal-next': true,
+                  'cal-next--disabled': nextDisabled
+                }),
+                'data-subject': nextDisabled ? null : 'next'
               },
               i18n.getDirection() === 'ltr' ? '\u{1F862}' : '\u{1F860}'
             )
           ),
+
       props.selectionMode === 'time' || props.selectionMode === 'timeRange'
         ? null
         : sheet,
+
       props.selectionMode !== 'dateTime' &&
         props.selectionMode !== 'time' &&
         props.selectionMode !== 'timeRange'
@@ -206,12 +252,7 @@ function renderDatePicker(
     );
   }
 
-  function renderMonthSheet() {
-    const view = calendar.getMonthData(
-      datePickerCtrl.getActiveYear(),
-      datePickerCtrl.getActiveMonth()
-    );
-
+  function renderMonthSheet(monthData: Calendar.MonthData) {
     return div(
       {
         class: classMap({
@@ -222,10 +263,10 @@ function renderDatePicker(
       },
 
       props.showWeekNumbers ? div() : null,
-      view.weekdays.map((idx) =>
+      monthData.weekdays.map((idx) =>
         div({ class: 'cal-weekday' }, i18n.getWeekdayName(idx, 'short'))
       ),
-      view.days.flatMap((dayData, idx) => {
+      monthData.days.flatMap((dayData, idx) => {
         const cell = renderDayCell(dayData);
         return !props.showWeekNumbers || idx % 7 > 0
           ? cell
@@ -288,9 +329,7 @@ function renderDatePicker(
     );
   }
 
-  function renderYearSheet() {
-    const yearData = calendar.getYearData(datePickerCtrl.getActiveYear());
-
+  function renderYearSheet(yearData: Calendar.YearData) {
     return div(
       { class: 'cal-sheet cal-sheet--year' },
       yearData.months.map((monthData) => renderMonthCell(monthData))
@@ -321,9 +360,7 @@ function renderDatePicker(
     );
   }
 
-  function renderDecadeSheet() {
-    const decadeData = calendar.getDecadeData(datePickerCtrl.getActiveYear());
-
+  function renderDecadeSheet(decadeData: Calendar.DecadeData) {
     return div(
       { class: 'cal-sheet cal-sheet--decade' },
       decadeData.years.map((monthData, idx) => renderYearCell(monthData))
@@ -350,9 +387,7 @@ function renderDatePicker(
     );
   }
 
-  function renderCenturySheet() {
-    const centuryData = calendar.getCenturyData(datePickerCtrl.getActiveYear());
-
+  function renderCenturySheet(centuryData: Calendar.CenturyData) {
     return div(
       { class: 'cal-sheet cal-sheet--century' },
       centuryData.decades.map((decadeData, idx) => renderDecadeCell(decadeData))

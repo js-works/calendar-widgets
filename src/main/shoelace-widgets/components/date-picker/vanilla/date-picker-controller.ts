@@ -22,7 +22,7 @@ namespace DatePickerController {
     | 'year'
     | 'years';
 
-  export type View = 'month' | 'year' | 'decade' | 'century' | 'time';
+  export type View = 'time' | 'month' | 'year' | 'decade' | 'century';
 }
 
 class DatePickerController {
@@ -451,11 +451,16 @@ class DatePickerController {
         break;
 
       case 'time':
+      case 'timeRange':
         this.#view = 'time';
         break;
 
-      default:
+      case 'month':
         this.#view = 'month';
+        break;
+
+      default:
+        throw Error(`Illegal selection mode "${selectionMode}"`);
     }
 
     this.#requestUpdate();

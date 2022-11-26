@@ -52,6 +52,11 @@ export default /*css*/ `
     cursor: pointer;
   }
 
+  .cal-prev--disabled,
+  .cal-next--disabled {
+    visibility: hidden;
+  }
+
   .cal-title:not(.cal-title--disabled):hover,
   .cal-prev:not(.cal-prev--disabled):hover,
   .cal-next:not(.cal-next--disabled):hover {
