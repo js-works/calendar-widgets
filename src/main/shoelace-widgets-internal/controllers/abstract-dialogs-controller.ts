@@ -117,10 +117,12 @@ type DialogConfig<C = unknown> =
 
 abstract class DialogControllerBase<C> {
   abstract show(type: 'info', options: InfoDialogOptions<C>): Promise<void>;
+
   abstract show(
     type: 'success',
     options: SuccessDialogOptions<C>
   ): Promise<void>;
+
   abstract show(type: 'warn', options: WarnDialogOptions<C>): Promise<void>;
   abstract show(type: 'error', options: ErrorDialogOptions<C>): Promise<void>;
 
@@ -141,7 +143,7 @@ abstract class DialogControllerBase<C> {
 
   abstract show(
     type: 'input',
-    options: InputDialogConfig<C>
+    options: InputDialogOptions<C>
   ): Promise<Record<string, any> | null>;
 }
 

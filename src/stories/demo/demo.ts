@@ -6,7 +6,7 @@ import { datePicker } from '../date-picker.demo';
 import { dateFields } from '../date-field.demo';
 import { dialogs } from '../dialogs.demo';
 //import { reactDemo } from '../react.demo';
-//import { preactDemo } from '../preact.demo';
+import { preactDemo } from '../preact.demo';
 
 import {
   convertThemeToCss,
@@ -199,7 +199,7 @@ class DemoApp extends LitElement {
           </sl-tab-panel>
           <sl-tab-panel name="dialogs">${demo(dialogs())}</sl-tab-panel>
           <sl-tab-panel name="react-demo"></sl-tab-panel>
-          <sl-tab-panel name="preact-demo"></sl-tab-panel>
+          <sl-tab-panel name="preact-demo">${demo(preactDemo())}</sl-tab-panel>
         </sl-tab-group>
       </div>
     `;

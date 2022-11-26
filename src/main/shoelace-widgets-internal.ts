@@ -2,7 +2,9 @@ export type {
   DialogConfig,
   DialogType,
   ToastType,
-  ToastConfig
+  ToastConfig,
+  ShowDialogFunction,
+  ShowToastFunction
 } from './shoelace-widgets-internal/controllers/abstract-dialogs-controller';
 
 export { AbstractDialogsController } from './shoelace-widgets-internal/controllers/abstract-dialogs-controller';

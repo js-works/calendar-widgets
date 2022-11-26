@@ -151,7 +151,7 @@ class StandardDialog extends LitElement {
   config: DialogConfig | null = null;
 
   @property({ attribute: false })
-  handleDialogClosed: ((result: unknown) => void) | null = null;
+  resolve: ((result: unknown) => void) | null = null;
 
   @property({ type: Boolean, attribute: false })
   open = false;
@@ -186,13 +186,13 @@ class StandardDialog extends LitElement {
         result = mapResult(action, data);
       }
 
-      this.handleDialogClosed!(result);
+      this.resolve!(result);
     });
   };
 
   private async _cancelForm() {
     await this._dialogRef.value!.hide();
-    this.handleDialogClosed!(undefined);
+    this.resolve!(undefined);
   }
 
   private _onFormInvalid = async () => {
