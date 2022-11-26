@@ -100,7 +100,8 @@ function renderDatePicker(
             a(
               {
                 'class': 'cal-prev',
-                'data-subject': 'prev'
+                'data-subject': 'prev',
+                'hidden': false // TODO!!!!
               },
               i18n.getDirection() === 'ltr' ? '\u{1F860}' : '\u{1F862}'
             ),

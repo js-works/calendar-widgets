@@ -8,7 +8,7 @@ export type { VElement, VNode };
 
 // === types =========================================================
 
-type Attrs = Record<string, string | number | null | undefined>;
+type Attrs = Record<string, string | number | boolean | null | undefined>;
 type Patch = (node: Element | Text) => void;
 
 type VElement = {
@@ -101,8 +101,8 @@ function renderVElement(velem: VElement): HTMLElement {
 
   if (velem.attrs) {
     for (const [k, v] of Object.entries(velem.attrs)) {
-      if (v != null) {
-        elem.setAttribute(k, String(v));
+      if (v != null && v !== false) {
+        elem.setAttribute(k, v === true ? '' : String(v));
       }
     }
   }
@@ -223,15 +223,16 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
 function updateAttribute(
   elem: Element,
   attrName: string,
-  value: string | number | null | undefined
+  value: string | number | boolean | null | undefined
 ) {
-  if (value == null) {
+  if (value == null || value === false) {
     elem.removeAttribute(attrName);
   } else {
-    elem.setAttribute(attrName, String(value));
+    const val = value === true ? '' : String(value);
+    elem.setAttribute(attrName, val);
 
     if (elem.tagName === 'INPUT' && attrName === 'value') {
-      (elem as HTMLInputElement).value = String(value);
+      (elem as HTMLInputElement).value = val;
     }
   }
 }

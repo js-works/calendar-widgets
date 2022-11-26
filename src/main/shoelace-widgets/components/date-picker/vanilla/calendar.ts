@@ -57,29 +57,29 @@ namespace Calendar {
     month: number; // 0 -> january, ..., 11 -> december
     days: DayData[];
     weekdays: number[];
-    prevMonthDisabled: boolean;
-    nextMonthDisabled: boolean;
+    prevDisabled: boolean;
+    nextDisabled: boolean;
   }>;
 
   export type YearView = Readonly<{
     year: number;
     months: readonly MonthData[];
-    prevYearDisabled: boolean;
-    nextYearDisabled: boolean;
+    prevDisabled: boolean;
+    nextDisabled: boolean;
   }>;
 
   export type DecadeView = Readonly<{
     startYear: number;
     endYear: number;
     years: readonly YearData[];
-    prevDecadeDisabled: boolean;
-    nextDecadeDisabled: boolean;
+    prevDisabled: boolean;
+    nextDisabled: boolean;
   }>;
 
   export type CenturyView = Readonly<{
     decades: readonly DecadeData[];
-    prevCenturyDisabled: boolean;
-    nextCenturyDisabled: boolean;
+    prevDisabled: boolean;
+    nextDisabled: boolean;
   }>;
 }
 
@@ -192,8 +192,8 @@ class Calendar {
       month,
       days,
       weekdays,
-      prevMonthDisabled: false, // TODO!!
-      nextMonthDisabled: false // TODO!!!
+      prevDisabled: false, // TODO!!
+      nextDisabled: false // TODO!!!
     };
   }
 
@@ -214,7 +214,7 @@ class Calendar {
 
     for (let cellMonth = 0; cellMonth < 12; ++cellMonth) {
       const outOfMinMaxRange = !inNumberRange(
-        currYear * 100 + cellMonth,
+        year * 100 + cellMonth,
         minMonth,
         maxMonth
       );
@@ -228,11 +228,19 @@ class Calendar {
       });
     }
 
+    const minYear = options.minDate ? options.minDate.getFullYear() : null;
+    const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
+
+    const prevYearDisabled =
+      true || year <= 1 || !inNumberRange(year - 1, minYear, maxYear);
+
+    const nextYearDisabled = !inNumberRange(year + 1, minYear, maxYear);
+
     return {
       year,
       months,
-      prevYearDisabled: false, // TODO!!!
-      nextYearDisabled: false // TODO!!!
+      prevDisabled: prevYearDisabled,
+      nextDisabled: nextYearDisabled
     };
   }
 
@@ -260,8 +268,8 @@ class Calendar {
       startYear,
       endYear,
       years,
-      prevDecadeDisabled: false, // TODO!!!
-      nextDecadeDisabled: false // TODO!!!
+      prevDisabled: false, // TODO!!!
+      nextDisabled: false // TODO!!!
     };
   }
 
@@ -294,8 +302,8 @@ class Calendar {
 
     return {
       decades,
-      prevCenturyDisabled: false, // TODO!!!
-      nextCenturyDisabled: false // TODO!!!
+      prevDisabled: false, // TODO!!!
+      nextDisabled: false // TODO!!!
     };
   }
 }
