@@ -5,9 +5,8 @@ import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { datePicker } from '../date-picker.demo';
 import { dateFields } from '../date-field.demo';
 import { dialogs } from '../dialogs.demo';
-import { toasts } from '../toasts.demo';
-import { reactDemo } from '../react.demo';
-import { preactDemo } from '../preact.demo';
+//import { reactDemo } from '../react.demo';
+//import { preactDemo } from '../preact.demo';
 
 import {
   convertThemeToCss,
@@ -180,13 +179,6 @@ class DemoApp extends LitElement {
           </sl-tab>
           <sl-tab
             slot="nav"
-            panel="toasts"
-            ?active=${this._activeTab === 'toasts'}
-          >
-            Toasts
-          </sl-tab>
-          <sl-tab
-            slot="nav"
             panel="react-demo"
             ?active=${this._activeTab === 'react-demo'}
           >
@@ -206,9 +198,8 @@ class DemoApp extends LitElement {
             ${demo(dateFields())}
           </sl-tab-panel>
           <sl-tab-panel name="dialogs">${demo(dialogs())}</sl-tab-panel>
-          <sl-tab-panel name="toasts">${demo(toasts())}</sl-tab-panel>
-          <sl-tab-panel name="react-demo">${demo(reactDemo())}</sl-tab-panel>
-          <sl-tab-panel name="preact-demo">${demo(preactDemo())}</sl-tab-panel>
+          <sl-tab-panel name="react-demo"></sl-tab-panel>
+          <sl-tab-panel name="preact-demo"></sl-tab-panel>
         </sl-tab-group>
       </div>
     `;

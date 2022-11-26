@@ -9,6 +9,7 @@ import {
 } from '../shoelace-widgets-internal/controllers/abstract-dialogs-controller';
 
 import { StandardDialog } from '../shoelace-widgets-internal/components/standard-dialog/standard-dialog';
+import { StandardToast } from '../shoelace-widgets-internal/components/standard-toast/standard-toast';
 
 // === exports =======================================================
 
@@ -19,7 +20,7 @@ export { DialogsController };
 class DialogsController extends AbstractDialogsController<TemplateResult> {
   static {
     // required components (just to prevent too much tree shaking)
-    void [StandardDialog];
+    void [StandardDialog, StandardToast];
   }
 
   readonly #host: ReactiveControllerHost;
@@ -103,6 +104,7 @@ class DialogsController extends AbstractDialogsController<TemplateResult> {
 
     const dismissToast = () => {
       this.#toastRenderers.delete(renderToast);
+      this.#requestUpdate();
     };
 
     const renderToast = () => html`
