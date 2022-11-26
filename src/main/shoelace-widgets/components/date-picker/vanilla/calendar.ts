@@ -230,7 +230,7 @@ class Calendar {
 
     const minYear = options.minDate ? options.minDate.getFullYear() : null;
     const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
-    console.log(year, minYear, maxYear);
+
     const prevYearDisabled =
       year <= 1 || !inNumberRange(year - 1, minYear, maxYear);
 
@@ -264,12 +264,27 @@ class Calendar {
       });
     }
 
+    const minDecade = options.minDate
+      ? Math.floor(options.minDate.getFullYear() / 10)
+      : null;
+
+    const maxDecade = options.maxDate
+      ? Math.floor(options.maxDate.getFullYear() / 10)
+      : null;
+
+    const decade = Math.floor(year / 10);
+
+    const prevDisabled =
+      year <= 1 || !inNumberRange(decade - 1, minDecade, maxDecade);
+
+    const nextDisabled = !inNumberRange(decade + 1, minDecade, maxDecade);
+
     return {
       startYear,
       endYear,
       years,
-      prevDisabled: false, // TODO!!!
-      nextDisabled: false // TODO!!!
+      prevDisabled,
+      nextDisabled
     };
   }
 
