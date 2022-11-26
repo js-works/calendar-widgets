@@ -168,8 +168,8 @@ export default css`
     margin-top: 1.5em;
   }
 
-  .dialog--information .icon,
-  .dialog--confirmation .icon,
+  .dialog--info .icon,
+  .dialog--confirm .icon,
   .dialog--prompt .icon {
     color: var(--sl-color-primary-600);
 
@@ -184,9 +184,9 @@ export default css`
       var(--dialog--dark, var(--sl-color-neutral-100));
   }
 
-  .dialog--warning .icon,
+  .dialog--warn .icon,
   .dialog--error .icon,
-  .dialog--approval .icon {
+  .dialog--approve .icon {
     color: var(--sl-color-danger-600);
 
     background-color: var(--dialog--light, var(--sl-color-danger-100))

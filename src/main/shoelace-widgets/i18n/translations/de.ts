@@ -6,14 +6,15 @@ const translations: Translations = {
   '$name': 'Deutsch',
   '$dir': 'ltr',
 
-  'shoelaceWidgets.dialogs/approval': 'Zustimmung',
   'shoelaceWidgets.dialogs/cancel': 'Abbrechen',
-  'shoelaceWidgets.dialogs/confirmation': 'Bestätigung',
-  'shoelaceWidgets.dialogs/error': 'Fehler',
-  'shoelaceWidgets.dialogs/information': 'Information',
-  'shoelaceWidgets.dialogs/input': 'Eingabe',
   'shoelaceWidgets.dialogs/ok': 'OK',
-  'shoelaceWidgets.dialogs/warning': 'Abbrechen'
+  'shoelaceWidgets.dialogs/titleApprove': 'Zustimmung',
+  'shoelaceWidgets.dialogs/titleConfirm': 'Bestätigung',
+  'shoelaceWidgets.dialogs/titleError': 'Fehler',
+  'shoelaceWidgets.dialogs/titleInfo': 'Information',
+  'shoelaceWidgets.dialogs/titleInput': 'Eingabe',
+  'shoelaceWidgets.dialogs/titleSuccess': 'Information',
+  'shoelaceWidgets.dialogs/titleWarn': 'Abbrechen'
 };
 
 registerTranslation(translations);

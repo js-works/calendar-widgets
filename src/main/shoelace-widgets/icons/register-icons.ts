@@ -48,17 +48,17 @@ const icons = {
   'date-field.month': calendarMonthIcon,
   'date-field.year': calendarIcon,
 
-  'dialogs.information': infoCircleIcon,
+  'dialogs.info': infoCircleIcon,
   'dialogs.success': check2SquareIcon,
-  'dialogs.warning': exclamationDiamondIcon,
+  'dialogs.warn': exclamationDiamondIcon,
   'dialogs.error': exclamationTriangleIcon,
   'dialogs.prompt': keyboardIcon,
-  'dialogs.confirmation': questionDiamondIcon,
-  'dialogs.approval': questionDiamondIcon,
+  'dialogs.confirm': questionDiamondIcon,
+  'dialogs.approve': questionDiamondIcon,
 
-  'toasts.information': infoCircleIcon,
+  'toasts.info': infoCircleIcon,
   'toasts.success': checkCircleIcon,
-  'toasts.warning': exclamationCircleIcon,
+  'toasts.warn': exclamationCircleIcon,
   'toasts.error': exclamationTriangleIcon
 };
 

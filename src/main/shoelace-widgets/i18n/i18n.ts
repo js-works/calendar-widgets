@@ -11,14 +11,15 @@ export type { Translations };
 // === exported types ================================================
 
 interface Translations extends Translation {
-  'shoelaceWidgets.dialogs/approval': string;
   'shoelaceWidgets.dialogs/cancel': string;
-  'shoelaceWidgets.dialogs/confirmation': string;
-  'shoelaceWidgets.dialogs/error': string;
-  'shoelaceWidgets.dialogs/information': string;
-  'shoelaceWidgets.dialogs/input': string;
   'shoelaceWidgets.dialogs/ok': string;
-  'shoelaceWidgets.dialogs/warning': string;
+  'shoelaceWidgets.dialogs/titleApprove': string;
+  'shoelaceWidgets.dialogs/titleConfirm': string;
+  'shoelaceWidgets.dialogs/titleError': string;
+  'shoelaceWidgets.dialogs/titleInfo': string;
+  'shoelaceWidgets.dialogs/titleInput': string;
+  'shoelaceWidgets.dialogs/titleSuccess': string;
+  'shoelaceWidgets.dialogs/titleWarn': string;
 }
 
 // === local data ====================================================

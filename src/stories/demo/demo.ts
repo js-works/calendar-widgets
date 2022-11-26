@@ -176,7 +176,7 @@ class DemoApp extends LitElement {
             panel="dialogs"
             ?active=${this._activeTab === 'dialogs'}
           >
-            Dialogs
+            Dialogs+Toasts
           </sl-tab>
           <sl-tab
             slot="nav"

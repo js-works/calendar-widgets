@@ -2,10 +2,7 @@ import { html, LitElement } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement, property } from 'lit/decorators.js';
 
-import type {
-  ToastConfig,
-  ToastType
-} from '../../controllers/abstract-toasts-controller';
+import type { ToastConfig } from '../../controllers/abstract-dialogs-controller';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
@@ -19,9 +16,9 @@ export { StandardToast };
 const defaultDuration = 3000;
 
 const variantByToastType = {
-  information: 'primary',
+  info: 'primary',
   success: 'success',
-  warning: 'warning',
+  warn: 'warning',
   error: 'danger'
 };
 
@@ -73,7 +70,7 @@ class StandardToast extends LitElement {
       <sl-alert
         variant=${variant}
         duration=${duration}
-        ?closable=${config.closable ?? false}
+        closable
         ${ref(this._alertRef)}
         style="user-select: none"
       >

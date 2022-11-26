@@ -1,22 +1,30 @@
 // === exports =======================================================
 
 export { AbstractDialogsController };
-export type { DialogConfig, DialogType, ShowDialogFunction };
+
+export type {
+  DialogConfig,
+  DialogType,
+  ToastConfig,
+  ToastOptions,
+  ToastType,
+  ShowDialogFunction,
+  ShowToastFunction
+};
 
 // === types =========================================================
 
 type DialogType =
-  | 'information'
+  | 'info'
   | 'success'
-  | 'warning'
+  | 'warn'
   | 'error'
-  | 'confirmation'
-  | 'approval'
+  | 'confirm'
+  | 'approve'
   | 'prompt'
   | 'input';
 
-type DialogBaseConfig<T extends DialogType, C> = {
-  type: T;
+interface DialogBaseOptions<C> {
   title?: string | (() => string);
   message?: string | (() => string);
   content?: C | null;
@@ -25,114 +33,168 @@ type DialogBaseConfig<T extends DialogType, C> = {
   height?: string | null;
   maxHeight?: string | null;
   padding?: string | null;
-};
+}
 
-type InfoDialogConfig<C> = DialogBaseConfig<'information', C> & {
+interface InfoDialogOptions<C> extends DialogBaseOptions<C> {
   okText?: string | (() => string) | null;
-};
+}
 
-type SuccessDialogConfig<C> = DialogBaseConfig<'success', C> & {
+interface SuccessDialogOptions<C> extends DialogBaseOptions<C> {
   okText?: string | (() => string) | null;
-};
+}
 
-type WarningDialogConfig<C> = DialogBaseConfig<'warning', C> & {
+interface WarnDialogOptions<C> extends DialogBaseOptions<C> {
   okText?: string | (() => string) | null;
-};
+}
 
-type ErrorDialogConfig<C> = DialogBaseConfig<'error', C> & {
+interface ErrorDialogOptions<C> extends DialogBaseOptions<C> {
   okText?: string | (() => string) | null;
-};
+}
 
-type ConfirmationDialogConfig<C> = DialogBaseConfig<'confirmation', C> & {
-  okText?: string | (() => string) | null;
-  cancelText?: string | (() => string) | null;
-};
-
-type ApprovalDialogConfig<C> = DialogBaseConfig<'approval', C> & {
+interface ConfirmDialogOptions<C> extends DialogBaseOptions<C> {
   okText?: string | (() => string) | null;
   cancelText?: string | (() => string) | null;
-};
+}
 
-type PromptDialogConfig<C> = DialogBaseConfig<'prompt', C> & {
+interface ApproveDialogOptions<C> extends DialogBaseOptions<C> {
+  okText?: string | (() => string) | null;
+  cancelText?: string | (() => string) | null;
+}
+
+interface PromptDialogOptions<C> extends DialogBaseOptions<C> {
   okText?: string | (() => string) | null;
   cancelText?: string | (() => string) | null;
   value?: string | null;
-};
+}
 
-type InputDialogConfig<C> = DialogBaseConfig<'input', C> & {
+interface InputDialogOptions<C> extends DialogBaseOptions<C> {
   okText?: string | (() => string) | null;
   cancelText?: string | (() => string) | null;
   labelLayout?: 'auto' | 'vertical' | 'horizontal' | null;
-};
+}
+
+interface InfoDialogConfig<C> extends InfoDialogOptions<C> {
+  type: 'info';
+}
+
+interface SuccessDialogConfig<C> extends SuccessDialogOptions<C> {
+  type: 'success';
+}
+
+interface WarnDialogConfig<C> extends WarnDialogOptions<C> {
+  type: 'warn';
+}
+
+interface ErrorDialogConfig<C> extends ErrorDialogOptions<C> {
+  type: 'error';
+}
+
+interface ConfirmDialogConfig<C> extends ConfirmDialogOptions<C> {
+  type: 'confirm';
+}
+
+interface ApproveDialogConfig<C> extends ApproveDialogOptions<C> {
+  type: 'approve';
+}
+
+interface PromptDialogConfig<C> extends PromptDialogOptions<C> {
+  type: 'prompt';
+}
+
+interface InputDialogConfig<C> extends InputDialogOptions<C> {
+  type: 'input';
+}
 
 type DialogConfig<C = unknown> =
   | InfoDialogConfig<C>
   | SuccessDialogConfig<C>
-  | WarningDialogConfig<C>
+  | WarnDialogConfig<C>
   | ErrorDialogConfig<C>
-  | ConfirmationDialogConfig<C>
-  | ApprovalDialogConfig<C>
+  | ConfirmDialogConfig<C>
+  | ApproveDialogConfig<C>
   | PromptDialogConfig<C>
   | InputDialogConfig<C>;
 
-type ShowDialogFunction<C> = {
-  (config: InfoDialogConfig<C>): Promise<void>;
-  (config: SuccessDialogConfig<C>): Promise<void>;
-  (config: WarningDialogConfig<C>): Promise<void>;
-  (config: ErrorDialogConfig<C>): Promise<void>;
-  (config: ConfirmationDialogConfig<C>): Promise<boolean>;
-  (config: ApprovalDialogConfig<C>): Promise<boolean>;
-  (config: PromptDialogConfig<C>): Promise<string | null>;
-  (config: InputDialogConfig<C>): Promise<Record<string, any> | null>;
-};
+abstract class DialogControllerBase<C> {
+  abstract show(type: 'info', options: InfoDialogOptions<C>): Promise<void>;
+  abstract show(
+    type: 'success',
+    options: SuccessDialogOptions<C>
+  ): Promise<void>;
+  abstract show(type: 'warn', options: WarnDialogOptions<C>): Promise<void>;
+  abstract show(type: 'error', options: ErrorDialogOptions<C>): Promise<void>;
 
-type InfoDialogParams<C> = Omit<InfoDialogConfig<C>, 'type'>;
-type SuccessDialogParams<C> = Omit<SuccessDialogConfig<C>, 'type'>;
-type WarningDialogParams<C> = Omit<WarningDialogConfig<C>, 'type'>;
-type ErrorDialogParams<C> = Omit<ErrorDialogConfig<C>, 'type'>;
-type ConfirmationDialogParams<C> = Omit<ConfirmationDialogConfig<C>, 'type'>;
-type ApprovalDialogParams<C> = Omit<ApprovalDialogConfig<C>, 'type'>;
-type PromptDialogParams<C> = Omit<PromptDialogConfig<C>, 'type'>;
-type InputDialogParams<C> = Omit<InputDialogConfig<C>, 'type'>;
+  abstract show(
+    type: 'confirm',
+    options: ConfirmDialogOptions<C>
+  ): Promise<boolean>;
 
-abstract class AbstractDialogsController<C> {
+  abstract show(
+    type: 'approve',
+    options: ApproveDialogOptions<C>
+  ): Promise<boolean>;
+
+  abstract show(
+    type: 'prompt',
+    options: PromptDialogOptions<C>
+  ): Promise<string | null>;
+
+  abstract show(
+    type: 'input',
+    options: InputDialogConfig<C>
+  ): Promise<Record<string, any> | null>;
+}
+
+type ShowDialogFunction<C> = DialogControllerBase<C>['show'];
+
+type ToastType = 'info' | 'success' | 'warn' | 'error';
+
+interface ToastOptions<C> {
+  title?: string | (() => string);
+  message?: string | (() => string);
+  content?: C | null;
+  duration?: number;
+}
+
+interface ToastConfig<C> extends ToastOptions<C> {
+  type: ToastType;
+}
+
+interface ShowToastFunction<C> {
+  (type: ToastType, options: ToastOptions<C>): void;
+}
+
+abstract class AbstractDialogsController<C> extends DialogControllerBase<C> {
   #showDialog: ShowDialogFunction<C>;
+  #showToast: ShowToastFunction<C>;
 
-  constructor(params: {
-    showDialog: <R>(config: DialogConfig<C>) => Promise<R>;
+  constructor(options: {
+    showDialog: ShowDialogFunction<C>;
+    showToast: ShowToastFunction<C>;
   }) {
-    this.#showDialog = params.showDialog;
+    super();
+    this.#showDialog = options.showDialog;
+    this.#showToast = options.showToast;
   }
 
-  info(params: InfoDialogParams<C>): Promise<void> {
-    return this.#showDialog({ type: 'information', ...params });
+  show(type: 'info', options: InfoDialogOptions<C>): Promise<void>;
+  show(type: 'success', options: SuccessDialogOptions<C>): Promise<void>;
+  show(type: 'warn', options: WarnDialogOptions<C>): Promise<void>;
+  show(type: 'error', options: ErrorDialogOptions<C>): Promise<void>;
+  show(type: 'confirm', options: ConfirmDialogOptions<C>): Promise<boolean>;
+  show(type: 'approve', options: ApproveDialogOptions<C>): Promise<boolean>;
+  show(type: 'prompt', options: PromptDialogOptions<C>): Promise<string | null>;
+
+  show(
+    type: 'input',
+    options: InputDialogOptions<C>
+  ): Promise<Record<string, any> | null>;
+
+  show(type: unknown, options: unknown): Promise<unknown> {
+    return this.#showDialog(type as any, options as any);
   }
 
-  success(params: SuccessDialogParams<C>): Promise<void> {
-    return this.#showDialog({ type: 'success', ...params });
-  }
-
-  warn(params: WarningDialogParams<C>): Promise<void> {
-    return this.#showDialog({ type: 'warning', ...params });
-  }
-
-  error(params: ErrorDialogParams<C>): Promise<void> {
-    return this.#showDialog({ type: 'error', ...params });
-  }
-
-  confirm(params: ConfirmationDialogParams<C>): Promise<boolean> {
-    return this.#showDialog({ type: 'confirmation', ...params });
-  }
-
-  approve(params: ApprovalDialogParams<C>): Promise<boolean> {
-    return this.#showDialog({ type: 'approval', ...params });
-  }
-
-  prompt(params: PromptDialogParams<C>): Promise<string | null> {
-    return this.#showDialog({ type: 'prompt', ...params });
-  }
-
-  input(params: InputDialogParams<C>): Promise<Record<string, any> | null> {
-    return this.#showDialog({ type: 'input', ...params });
+  toast(type: ToastType, options: ToastOptions<C>): void {
+    this.#showToast(type, options);
   }
 }

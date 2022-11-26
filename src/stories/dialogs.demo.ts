@@ -5,7 +5,7 @@ import { customElement } from 'lit/decorators.js';
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
-import { DialogsController } from '../main/shoelace-widgets-lit';
+import { DialogsController, ToastType } from '../main/shoelace-widgets-lit';
 import { TextField } from '../main/shoelace-widgets';
 import { TextArea } from '../main/shoelace-widgets';
 import { Choice } from '../main/shoelace-widgets';
@@ -22,15 +22,26 @@ export const dialogs = () =>
   '<dialogs-demo class="sl-theme-light"></dialogs-demo>';
 
 const styles = css`
-  :host {
-    padding: 3rem;
+  .base {
+    display: flex;
+    gap: 5rem;
+  }
+
+  .section {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     box-sizing: border-box;
     background-color: var(--sl-color-neutral-0);
   }
 
-  .demo sl-button {
+  .section sl-button {
     width: 9rem;
     margin: 4px 2px;
+  }
+
+  .headline {
+    font-size: var(--sl-font-size-medium);
+    font-weight: var(--sl-font-weight-semibold);
   }
 `;
 
@@ -54,10 +65,10 @@ class DialogsDemo extends LitElement {
     ];
   }
 
-  private _dlg = new DialogsController(this);
+  private readonly _dialogs = new DialogsController(this);
 
   private _onInfoClick = () => {
-    this._dlg.info({
+    this._dialogs.show('info', {
       message: 'Your question has been submitted successfully.',
       title: 'Submit',
       okText: 'Thanks :-)'
@@ -65,7 +76,7 @@ class DialogsDemo extends LitElement {
   };
 
   private _onSuccessClick = () => {
-    this._dlg.success({
+    this._dialogs.show('success', {
       message: 'Your question has been submitted successfully',
       title: 'Submit',
       okText: 'Good to know'
@@ -73,7 +84,7 @@ class DialogsDemo extends LitElement {
   };
 
   private _onWarnClick = () => {
-    this._dlg.warn({
+    this._dialogs.show('warn', {
       message: 'This is your last warning.',
       title: 'Important!!!',
       okText: 'OK - I understand'
@@ -81,13 +92,13 @@ class DialogsDemo extends LitElement {
   };
 
   private _onErrorClick = () => {
-    this._dlg.error({
+    this._dialogs.show('error', {
       message: 'File "logs.txt" does not exist.'
     });
   };
 
   private _onConfirmClick = async () => {
-    const confirmed = await this._dlg.confirm({
+    const confirmed = await this._dialogs.show('confirm', {
       message: 'Do you really want to log out?',
       okText: 'Log out'
     });
@@ -95,14 +106,14 @@ class DialogsDemo extends LitElement {
     if (confirmed) {
       await pause(200);
 
-      this._dlg.info({
+      this._dialogs.show('info', {
         message: "You've been logged out"
       });
     }
   };
 
   private _onApproveClick = async () => {
-    const approved = await this._dlg.approve({
+    const approved = await this._dialogs.show('approve', {
       message:
         'Are you really sure that you want to deactivate the account?\nAll data will be deleted.',
       title: 'Deactivate account',
@@ -111,14 +122,14 @@ class DialogsDemo extends LitElement {
     });
 
     if (approved) {
-      this._dlg.info({
+      this._dialogs.show('approve', {
         message: 'Project has been deleted'
       });
     }
   };
 
   private _onPromptClick = async () => {
-    const name = await this._dlg.prompt({
+    const name = await this._dialogs.show('prompt', {
       message: 'Please enter your name',
       title: 'Input required',
       cancelText: 'No way!'
@@ -127,14 +138,14 @@ class DialogsDemo extends LitElement {
     if (name !== null) {
       await pause(200);
 
-      this._dlg.info({
+      this._dialogs.show('info', {
         message: `Hello, ${name || 'stranger'}!`
       });
     }
   };
 
   private _onInputClick = async () => {
-    const data = await this._dlg.input({
+    const data = await this._dialogs.show('input', {
       title: 'Switch user',
       labelLayout: 'horizontal',
       width: '15rem',
@@ -154,7 +165,7 @@ class DialogsDemo extends LitElement {
     });
 
     if (data) {
-      this._dlg.info({
+      this._dialogs.show('info', {
         title: 'Form data',
         message: JSON.stringify(data, null, 2)
       });
@@ -162,7 +173,7 @@ class DialogsDemo extends LitElement {
   };
 
   private _onInput2Click = async () => {
-    const data = await this._dlg.input({
+    const data = await this._dialogs.show('input', {
       title: 'Add new user',
       labelLayout: 'horizontal',
       width: '36rem',
@@ -257,21 +268,21 @@ class DialogsDemo extends LitElement {
       okText: 'Add user'
     });
 
-    this._dlg.info({
+    this._dialogs.show('info', {
       title: 'Form data',
       message: JSON.stringify(data, null, 2)
     });
   };
 
   private _onDestroyPlanet = async () => {
-    const confirmed = await this._dlg.confirm({
+    const confirmed = await this._dialogs.show('confirm', {
       message: 'Are you really sure that the planet shall be destroyed?'
     });
 
     if (confirmed) {
       await pause(200);
 
-      const approved = await this._dlg.approve({
+      const approved = await this._dialogs.show('approve', {
         message:
           'But this is such a lovely planet. ' +
           'Are you really, really sure it shall be destroyed?',
@@ -283,7 +294,7 @@ class DialogsDemo extends LitElement {
       if (approved) {
         await pause(200);
 
-        await this._dlg.error({
+        await this._dialogs.show('error', {
           message:
             'You are not allowed to destroy planets. ' +
             'Only Darth Vader is authorized.'
@@ -292,42 +303,53 @@ class DialogsDemo extends LitElement {
     }
   };
 
+  private _showToast(type: ToastType, title: string) {
+    this._dialogs.toast(type, {
+      title,
+      message: 'This is a toast ...',
+      content: html`<strong>Some extra content...</strong>`
+    });
+  }
+
   render() {
     return html`
-      <div class="demo">
+      <div class="base">
         <div>
-          <sl-button @click=${this._onInfoClick}>Info</sl-button>
+          <h4 class="headline">Dialogs</h4>
+          <div class="section">
+            <sl-button @click=${this._onInfoClick}>Info</sl-button>
+            <sl-button @click=${this._onSuccessClick}>Success</sl-button>
+            <sl-button @click=${this._onWarnClick}>Warn</sl-button>
+            <sl-button @click=${this._onErrorClick}>Error</sl-button>
+            <sl-button @click=${this._onConfirmClick}>Confirm</sl-button>
+            <sl-button @click=${this._onApproveClick}>Approve</sl-button>
+            <sl-button @click=${this._onPromptClick}>Prompt</sl-button>
+            <sl-button @click=${this._onInputClick}>Input</sl-button>
+            <sl-button @click=${this._onInput2Click}>Input 2</sl-button>
+            <sl-button @click=${this._onDestroyPlanet}>
+              Destroy planet &#x1F609;
+            </sl-button>
+          </div>
         </div>
         <div>
-          <sl-button @click=${this._onSuccessClick}>Success</sl-button>
+          <h4 class="headline">Toasts</h4>
+          <div class="section">
+            <sl-button @click=${() => this._showToast('info', 'Information')}>
+              Info
+            </sl-button>
+            <sl-button @click=${() => this._showToast('success', 'Success')}>
+              Success
+            </sl-button>
+            <sl-button @click=${() => this._showToast('warn', 'Warning')}>
+              Warn
+            </sl-button>
+            <sl-button @click=${() => this._showToast('error', 'Error')}>
+              Error
+            </sl-button>
+          </div>
+          ${this._dialogs.render()}
         </div>
-        <div>
-          <sl-button @click=${this._onWarnClick}>Warn</sl-button>
-        </div>
-        <div>
-          <sl-button @click=${this._onErrorClick}>Error</sl-button>
-        </div>
-        <div>
-          <sl-button @click=${this._onConfirmClick}>Confirm</sl-button>
-        </div>
-        <div>
-          <sl-button @click=${this._onApproveClick}>Approve</sl-button>
-        </div>
-        <div>
-          <sl-button @click=${this._onPromptClick}>Prompt</sl-button>
-        </div>
-        <div>
-          <sl-button @click=${this._onInputClick}>Input</sl-button>
-        </div>
-        <div>
-          <sl-button @click=${this._onInput2Click}>Input 2</sl-button>
-        </div>
-        <br />
-        <sl-button @click=${this._onDestroyPlanet}>
-          Destroy planet &#x1F609;
-        </sl-button>
       </div>
-      ${this._dlg.render()}
     `;
   }
 }

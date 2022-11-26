@@ -1,11 +1,11 @@
-import { html } from 'lit';
+import { html, render } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
 
 import {
   AbstractDialogsController,
   DialogConfig,
-  ShowDialogFunction
+  ToastConfig
 } from '../shoelace-widgets-internal/controllers/abstract-dialogs-controller';
 
 import { StandardDialog } from '../shoelace-widgets-internal/components/standard-dialog/standard-dialog';
@@ -30,11 +30,18 @@ class DialogsController extends AbstractDialogsController<TemplateResult> {
     supplyResult: (data: unknown) => void;
   }[] = [];
 
+  readonly #toastRenderers = new Set<() => TemplateResult>();
+
   #nextDialogId = 1;
 
   constructor(host: ReactiveControllerHost & HTMLElement) {
     super({
-      showDialog: (config) => this.#showDialog(config as any) as any
+      showDialog: (type, options) =>
+        this.#showDialog({ type, ...options } as any) as any,
+
+      showToast: (type, options) => {
+        this.#showToast({ type, ...options } as any) as any;
+      }
     });
 
     this.#host = host;
@@ -58,11 +65,12 @@ class DialogsController extends AbstractDialogsController<TemplateResult> {
               </sx-standard-dialog--internal>
             `
         )}
+        ${repeat(this.#toastRenderers, (it) => it())}
       </span>
     `;
   }
 
-  #showDialog: ShowDialogFunction<TemplateResult> = async (config) => {
+  async #showDialog(config: DialogConfig<TemplateResult>) {
     let resolveResult: ((result: unknown) => void) | null = null;
 
     this.#dialogs.push({
@@ -76,13 +84,37 @@ class DialogsController extends AbstractDialogsController<TemplateResult> {
     return new Promise<unknown>((resolve) => {
       resolveResult = resolve;
     }) as unknown as any;
-  };
+  }
 
   #dismissDialog(dialogId: number, result: unknown) {
     const idx = this.#dialogs.findIndex((it) => it.id === dialogId);
     const supplyResult = this.#dialogs[idx].supplyResult;
     this.#dialogs.splice(idx, 1);
     supplyResult(result);
+  }
+
+  #showToast(config: ToastConfig<TemplateResult>) {
+    let contentElem: HTMLElement | null = null;
+
+    if (config.content) {
+      contentElem = document.createElement('div');
+      render(config.content, contentElem);
+    }
+
+    const dismissToast = () => {
+      this.#toastRenderers.delete(renderToast);
+    };
+
+    const renderToast = () => html`
+      <sx-standard-toast--internal
+        .config=${config}
+        .contentElement=${contentElem}
+        .dismissToast=${dismissToast}
+      ></sx-standard-toast--internal>
+    `;
+
+    this.#toastRenderers.add(renderToast);
+    this.#requestUpdate();
   }
 
   #requestUpdate() {

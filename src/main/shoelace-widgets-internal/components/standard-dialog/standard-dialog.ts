@@ -41,7 +41,7 @@ const dialogSettingsByType: Record<
     mapResult?: (action: string, data: Record<string, any>) => unknown;
   }
 > = {
-  information: {
+  info: {
     buttons: [
       {
         action: 'ok',
@@ -61,7 +61,7 @@ const dialogSettingsByType: Record<
     ]
   },
 
-  warning: {
+  warn: {
     buttons: [
       {
         action: 'ok',
@@ -81,7 +81,7 @@ const dialogSettingsByType: Record<
     ]
   },
 
-  confirmation: {
+  confirm: {
     buttons: [
       {
         action: 'cancel'
@@ -95,7 +95,7 @@ const dialogSettingsByType: Record<
     mapResult: (action) => action === 'ok'
   },
 
-  approval: {
+  approve: {
     buttons: [
       {
         action: 'cancel',
@@ -226,7 +226,11 @@ class StandardDialog extends LitElement {
       ? typeof this.config.title === 'function'
         ? this.config.title()
         : this.config.title
-      : this._translate(this.config.type);
+      : this._translate(
+          'title' +
+            this.config.type[0].toUpperCase() +
+            this.config.type.substring(1)
+        );
 
     let additionalContent: TemplateResult = html``;
 
@@ -292,7 +296,7 @@ class StandardDialog extends LitElement {
                 <sl-icon
                   class="icon ${this.config!.type}"
                   library="shoelace-widgets"
-                  name=${`dialogs.${this.config!.type}`}
+                  name=${'dialogs.' + this.config!.type}
                 ></sl-icon>
               `
             )}
