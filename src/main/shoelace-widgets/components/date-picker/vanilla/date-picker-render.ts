@@ -34,7 +34,7 @@ export { renderDatePicker, DatePickerProps };
 
 type DatePickerProps = {
   selectionMode: DatePickerController.SelectionMode;
-  elevateNavigation: boolean;
+  accentuateHeader: boolean;
   showWeekNumbers: boolean;
   daysAmount: 'default' | 'minimal' | 'maximal';
   highlightToday: boolean;
@@ -175,7 +175,7 @@ function renderDatePicker(
             {
               class: classMap({
                 'cal-nav': true,
-                'cal-nav--elevated': props.elevateNavigation
+                'cal-nav--accentuated': props.accentuateHeader
               })
             },
             a(

@@ -50,7 +50,7 @@ class DatePickerDemo extends LitElement {
   private _locale = 'en-US';
   private _selectionValue: string = '';
   private _selectionMode = 'dateRange';
-  private _elevateNavigation = true;
+  private _accentuateHeader = true;
   private _highlightToday = true;
   private _highlightWeekends = true;
   private _disableWeekends = false;
@@ -101,7 +101,7 @@ class DatePickerDemo extends LitElement {
             data-subject="datePicker"
             selection-mode=${this._selectionMode}
             days-amount=${this._daysAmount}
-            ?elevate-navigation=${this._elevateNavigation}
+            ?accentuate-header=${this._accentuateHeader}
             ?highlight-today=${this._highlightToday}
             ?highlight-weekends=${this._highlightWeekends}
             ?disable-weekends=${this._disableWeekends}
@@ -173,10 +173,10 @@ class DatePickerDemo extends LitElement {
                 </sl-menu-item>
               </sl-select>
               <sl-checkbox
-                data-subject="elevateNavigation"
-                ?checked=${this._elevateNavigation}
+                data-subject="accentuateHeader"
+                ?checked=${this._accentuateHeader}
               >
-                elevate navigation
+                accentuate header
               </sl-checkbox>
               <sl-checkbox
                 data-subject="highlightToday"

@@ -28,9 +28,9 @@ export default /*css*/ `
     background-color: var(--cal-nav-background-color);
   }
 
-  .cal-nav--elevated {
-    color: var(--cal-nav-elevated-color);
-    background-color: var(--cal-nav-elevated-background-color);
+  .cal-nav--accentuated {
+    color: var(--cal-nav-accentuated-color);
+    background-color: var(--cal-nav-accentuated-background-color);
   }
 
   .cal-title,
@@ -69,16 +69,16 @@ export default /*css*/ `
     background-color: var(--cal-nav-active-background-color);
   }
 
-  .cal-nav--elevated .cal-title:not(.cal-title--disabled):hover,
-  .cal-nav--elevated .cal-prev:not(.cal-prev--disabled):hover,
-  .cal-nav--elevated .cal-next:not(.cal-next--disabled):hover {
-    background-color: var(--cal-nav-elevated-hover-background-color);
+  .cal-nav--accentuated .cal-title:not(.cal-title--disabled):hover,
+  .cal-nav--accentuated .cal-prev:not(.cal-prev--disabled):hover,
+  .cal-nav--accentuated .cal-next:not(.cal-next--disabled):hover {
+    background-color: var(--cal-nav-accentuated-hover-background-color);
   }
 
-  .cal-nav--elevated .cal-title:not(.cal-title--disabled):active,
-  .cal-nav--elevated .cal-prev:not(.cal-prev--disabled):active,
-  .cal-nav--elevated .cal-next:not(.cal-next--disabled):active {
-    background-color: var(--cal-nav-elevated-active-background-color);
+  .cal-nav--accentuated .cal-title:not(.cal-title--disabled):active,
+  .cal-nav--accentuated .cal-prev:not(.cal-prev--disabled):active,
+  .cal-nav--accentuated .cal-next:not(.cal-next--disabled):active {
+    background-color: var(--cal-nav-accentuated-active-background-color);
   }
 
   .cal-sheet {
