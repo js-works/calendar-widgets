@@ -42,7 +42,9 @@ async function build() {
         'react',
         'react-dom',
         'react-dom/client',
-        'preact'
+        'preact',
+        'shoelace-widgets',
+        'shoelace-widgets/internal'
       ],
       define: {
         'process.env.NODE_ENV': '"production"'

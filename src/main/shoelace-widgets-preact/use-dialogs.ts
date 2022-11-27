@@ -29,7 +29,9 @@ function useDialogs(): {
   renderDialogs: () => VNode;
 } {
   const [, setDummy] = useState(0);
-  const forceUpdate = () => setDummy((it) => (it + 1) % 1000);
+
+  const forceUpdate = () =>
+    setDummy((it) => (it + 1) % Number.MAX_SAFE_INTEGER);
 
   return useState(() => {
     const dialogCtrl = new DialogsController(forceUpdate);

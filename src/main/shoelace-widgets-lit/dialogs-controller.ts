@@ -6,10 +6,10 @@ import {
   AbstractDialogsController,
   DialogConfig,
   ToastConfig
-} from '../shoelace-widgets-internal/controllers/abstract-dialogs-controller';
+} from 'shoelace-widgets/internal';
 
-import { StandardDialog } from '../shoelace-widgets-internal/components/standard-dialog/standard-dialog';
-import { StandardToast } from '../shoelace-widgets-internal/components/standard-toast/standard-toast';
+import { StandardDialog } from 'shoelace-widgets/internal';
+import { StandardToast } from 'shoelace-widgets/internal';
 
 // === exports =======================================================
 
