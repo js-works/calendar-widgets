@@ -7,10 +7,42 @@ export const preactDemo = () => {
   return container;
 };
 
+const styles = /*css*/ `
+  .preact-demo .headline {
+    font-size: var(--sl-font-size-medium);
+    font-weight: var(--sl-font-weight-semibold);
+  }
+`;
+
 function Demo() {
   const { showDialog, showToast, renderDialogs } = useDialogs();
 
-  const onOpenDialogClick = async () => {
+  const onInfoDialogClick = () => {
+    showDialog('info', {
+      message: "It's 7 o'clock in the morning - time to stand up."
+    });
+  };
+
+  const onErrorDialogClick = () => {
+    showDialog('error', {
+      message: 'File could not be created.'
+    });
+  };
+
+  const onPromptDialogClick = async () => {
+    const name = await showDialog('prompt', {
+      message: 'Please enter your name'
+    });
+
+    if (name !== null) {
+      showDialog('info', {
+        title: 'Welcome',
+        message: 'Hello, ' + (name === '' ? 'stranger' : name)
+      });
+    }
+  };
+
+  const onInputDialogClick = async () => {
     const data = await showDialog('input', {
       title: 'Switch user',
       labelLayout: 'horizontal',
@@ -53,10 +85,16 @@ function Demo() {
   };
 
   return (
-    <div>
-      <h3>Dialogs</h3>
-      <sl-button onclick={onOpenDialogClick}>Open dialog</sl-button>
-      <h3>Toasts</h3>
+    <div class="preact-demo">
+      <style>{styles}</style>
+      <h3 class="headline">Dialogs</h3>
+      <sl-button-group>
+        <sl-button onclick={onInfoDialogClick}>Info</sl-button>
+        <sl-button onclick={onErrorDialogClick}>Error</sl-button>
+        <sl-button onclick={onPromptDialogClick}>Prompt</sl-button>
+        <sl-button onclick={onInputDialogClick}>Input</sl-button>
+      </sl-button-group>
+      <h3 class="headline">Toasts</h3>
       <sl-button-group>
         <sl-button onclick={() => openToast('info', 'Info')}>Info</sl-button>
         <sl-button onclick={() => openToast('success', 'Success')}>

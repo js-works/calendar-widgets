@@ -6,6 +6,13 @@ import { SlButton, SlButtonGroup } from '@shoelace-style/shoelace/dist/react';
 import { Fieldset, TextField } from '../main/shoelace-widgets-react';
 import type { ToastType } from '../main/shoelace-widgets-react';
 
+const styles = /*css*/ `
+  .react-demo .headline {
+    font-size: var(--sl-font-size-medium);
+    font-weight: var(--sl-font-weight-semibold);
+  }
+`;
+
 export const reactDemo = () => {
   const container = document.createElement('div');
   const root = createRoot(container);
@@ -67,10 +74,11 @@ function Demo() {
   };
 
   return (
-    <div>
-      <h3>Dialogs</h3>
+    <div className="react-demo">
+      <style>{styles}</style>
+      <h3 className="headline">Dialogs</h3>
       <SlButton onClick={onOpenDialogClick}>Open dialog</SlButton>
-      <h3>Toasts</h3>
+      <h3 className="headline">Toasts</h3>
       <SlButtonGroup>
         <SlButton onclick={() => openToast('info', 'Info')}>Info</SlButton>
         <SlButton onclick={() => openToast('success', 'Success')}>

@@ -18,6 +18,7 @@ interface Translations extends Translation {
   'shoelaceWidgets.dialogs/titleError': string;
   'shoelaceWidgets.dialogs/titleInfo': string;
   'shoelaceWidgets.dialogs/titleInput': string;
+  'shoelaceWidgets.dialogs/titlePrompt': string;
   'shoelaceWidgets.dialogs/titleSuccess': string;
   'shoelaceWidgets.dialogs/titleWarn': string;
 }

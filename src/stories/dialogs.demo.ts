@@ -22,20 +22,15 @@ export const dialogs = () =>
   '<dialogs-demo class="sl-theme-light"></dialogs-demo>';
 
 const styles = css`
-  .base {
-    display: flex;
-    gap: 5rem;
-  }
-
   .section {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+    width: 30rem;
+    grid-template-columns: auto auto;
     box-sizing: border-box;
     background-color: var(--sl-color-neutral-0);
   }
 
   .section sl-button {
-    width: 9rem;
+    width: 10rem;
     margin: 4px 2px;
   }
 
@@ -117,13 +112,12 @@ class DialogsDemo extends LitElement {
       message:
         'Are you really sure that you want to deactivate the account?\nAll data will be deleted.',
       title: 'Deactivate account',
-      okText: 'Deactivate',
-      width: '20rem'
+      okText: 'Deactivate'
     });
 
     if (approved) {
       this._dialogs.show('approve', {
-        message: 'Project has been deleted'
+        message: 'Account has been deactivated'
       });
     }
   };
@@ -304,51 +298,55 @@ class DialogsDemo extends LitElement {
   };
 
   private _showToast(type: ToastType, title: string) {
+    const now = new Date();
+
+    const time = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+      .toISOString()
+      .substring(11, 19);
+
     this._dialogs.toast(type, {
       title,
-      message: 'This is a toast ...',
+      message: 'Toast was opened at ' + time,
       content: html`<strong>Some extra content...</strong>`
     });
   }
 
   render() {
     return html`
-      <div class="base">
-        <div>
-          <h4 class="headline">Dialogs</h4>
-          <div class="section">
-            <sl-button @click=${this._onInfoClick}>Info</sl-button>
-            <sl-button @click=${this._onSuccessClick}>Success</sl-button>
-            <sl-button @click=${this._onWarnClick}>Warn</sl-button>
-            <sl-button @click=${this._onErrorClick}>Error</sl-button>
-            <sl-button @click=${this._onConfirmClick}>Confirm</sl-button>
-            <sl-button @click=${this._onApproveClick}>Approve</sl-button>
-            <sl-button @click=${this._onPromptClick}>Prompt</sl-button>
-            <sl-button @click=${this._onInputClick}>Input</sl-button>
-            <sl-button @click=${this._onInput2Click}>Input 2</sl-button>
-            <sl-button @click=${this._onDestroyPlanet}>
-              Destroy planet &#x1F609;
-            </sl-button>
-          </div>
+      <div>
+        <h4 class="headline">Dialogs</h4>
+        <div class="section">
+          <sl-button @click=${this._onInfoClick}>Info</sl-button>
+          <sl-button @click=${this._onSuccessClick}>Success</sl-button>
+          <sl-button @click=${this._onWarnClick}>Warn</sl-button>
+          <sl-button @click=${this._onErrorClick}>Error</sl-button>
+          <sl-button @click=${this._onConfirmClick}>Confirm</sl-button>
+          <sl-button @click=${this._onApproveClick}>Approve</sl-button>
+          <sl-button @click=${this._onPromptClick}>Prompt</sl-button>
+          <sl-button @click=${this._onInputClick}>Input</sl-button>
+          <sl-button @click=${this._onInput2Click}>Input 2</sl-button>
+          <sl-button @click=${this._onDestroyPlanet}>
+            Destroy planet &#x1F609;
+          </sl-button>
         </div>
-        <div>
-          <h4 class="headline">Toasts</h4>
-          <div class="section">
-            <sl-button @click=${() => this._showToast('info', 'Information')}>
-              Info
-            </sl-button>
-            <sl-button @click=${() => this._showToast('success', 'Success')}>
-              Success
-            </sl-button>
-            <sl-button @click=${() => this._showToast('warn', 'Warning')}>
-              Warn
-            </sl-button>
-            <sl-button @click=${() => this._showToast('error', 'Error')}>
-              Error
-            </sl-button>
-          </div>
-          ${this._dialogs.render()}
+      </div>
+      <div>
+        <h4 class="headline">Toasts</h4>
+        <div class="section">
+          <sl-button @click=${() => this._showToast('info', 'Information')}>
+            Info
+          </sl-button>
+          <sl-button @click=${() => this._showToast('success', 'Success')}>
+            Success
+          </sl-button>
+          <sl-button @click=${() => this._showToast('warn', 'Warning')}>
+            Warn
+          </sl-button>
+          <sl-button @click=${() => this._showToast('error', 'Error')}>
+            Error
+          </sl-button>
         </div>
+        ${this._dialogs.render()}
       </div>
     `;
   }

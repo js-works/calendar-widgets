@@ -13,6 +13,7 @@ const translations: Translations = {
   'shoelaceWidgets.dialogs/titleError': 'Error',
   'shoelaceWidgets.dialogs/titleInfo': 'Information',
   'shoelaceWidgets.dialogs/titleInput': 'Input',
+  'shoelaceWidgets.dialogs/titlePrompt': 'Input',
   'shoelaceWidgets.dialogs/titleSuccess': 'Information',
   'shoelaceWidgets.dialogs/titleWarn': 'Cancel'
 };

@@ -166,9 +166,9 @@ class StandardDialog extends LitElement {
   // TODO
   private _translate = (key: string) =>
     this._localize.term(`shoelaceWidgets.dialogs/${key}`);
+
   private _formRef = createRef<Form>();
   private _dialogRef = createRef<SlDialog>();
-
   private _lastClickedAction = '';
 
   private _onFormSubmit = (ev: FormSubmitEvent) => {
@@ -192,7 +192,16 @@ class StandardDialog extends LitElement {
 
   private async _cancelForm() {
     await this._dialogRef.value!.hide();
-    this.resolve!(undefined);
+
+    let result: unknown = undefined;
+
+    const mapResult = dialogSettingsByType[this.config!.type].mapResult;
+
+    if (mapResult) {
+      result = mapResult('cancel', {});
+    }
+
+    this.resolve!(result);
   }
 
   private _onFormInvalid = async () => {
@@ -211,7 +220,11 @@ class StandardDialog extends LitElement {
     }
   }
 
-  override firstUpdated() {
+  override updated() {
+    if (!this._dialogRef.value) {
+      return;
+    }
+
     requestAnimationFrame(() => {
       this._dialogRef.value!.show();
     });
