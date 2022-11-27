@@ -3,23 +3,20 @@ import { customElement, property } from 'lit/decorators.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '@shoelace-style/localize/dist/index';
-import { DatePickerController } from './vanilla/date-picker-controller';
-import { renderDatePicker } from './vanilla/date-picker-render';
-import { render, renderToString } from './vanilla/vdom';
-import datePickerBaseStyles from './vanilla/date-picker.styles';
+import { DatePicker as Picker } from './vanilla/date-picker';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
 
 // === exports =======================================================
 
 export { DatePicker };
 
-// === exported types ==========================================
+// === exported types ================================================
 
 namespace DatePicker {
-  export type SelectionMode = DatePickerController.SelectionMode;
+  export type SelectionMode = Picker.SelectionMode;
 }
 
-// === converters ====================================================
+// === styles  =======================================================
 
 const datePickerCustomStyles = css`
   .base {
@@ -61,17 +58,19 @@ const datePickerCustomStyles = css`
   }
 `;
 
+// === components ====================================================
+
 @customElement('sx-date-picker')
 class DatePicker extends LitElement {
-  static styles = [unsafeCSS(datePickerBaseStyles), datePickerCustomStyles];
+  static styles = [unsafeCSS(Picker.styles), datePickerCustomStyles];
 
   @property()
   get value(): string {
-    return this._datePickerCtrl.getValue();
+    return this._picker.getValue();
   }
 
   set value(value: string) {
-    this._datePickerCtrl.setValue(value);
+    this._picker.setValue(value);
   }
 
   @property({ type: String, attribute: 'selection-mode' })
@@ -110,17 +109,20 @@ class DatePicker extends LitElement {
   @property()
   dir = '';
 
-  private _datePickerCtrl: DatePickerController;
+  private _picker: Picker;
   private _containerRef = createRef<HTMLDivElement>();
   private _localize = new LocalizeController(this);
 
   constructor() {
     super();
 
-    this._datePickerCtrl = new DatePickerController(this, {
+    this._picker = new Picker(this, {
       requestUpdate: () => this.requestUpdate(),
       getSelectionMode: () => this.selectionMode,
-      onChange: this._onChange
+      onChange: this._onChange,
+      getLocale: () => this._localize.lang(),
+      getDirection: () => this._localize.dir(),
+      getProps: () => this
     });
   }
 
@@ -128,31 +130,23 @@ class DatePicker extends LitElement {
     this.dispatchEvent(new Event('change', { bubbles: true, composed: true }));
   };
 
-  private _getPickerVElem = () =>
-    renderDatePicker(
-      this._localize.lang(),
-      this._localize.dir() === 'rtl' ? 'rtl' : 'ltr',
-      this,
-      this._datePickerCtrl
-    );
-
   shouldUpdate() {
     if (!this.hasUpdated) {
       return true;
     }
 
-    render(this._containerRef.value!, this._getPickerVElem());
+    this._picker.render(this._containerRef.value!);
     return false;
   }
 
   resetView() {
-    this._datePickerCtrl.resetView();
+    this._picker.resetView();
   }
 
   render() {
     return html`
       <div class="base" ${ref(this._containerRef)}>
-        ${unsafeHTML(renderToString(this._getPickerVElem()))}
+        ${unsafeHTML(this._picker.renderToString())}
       </div>
     `;
   }

@@ -1,7 +1,7 @@
 import { Calendar } from './calendar';
 import { DatePickerController } from './date-picker-controller';
 import { CalendarLocalizer } from './calendar-localizer';
-import { h, VNode } from './vdom';
+import { h, VElement, VNode } from './vdom';
 
 const [a, div, input, span] = ['a', 'div', 'input', 'span'].map((tag) =>
   h.bind(null, tag)
@@ -28,7 +28,7 @@ import {
 
 // === exports =======================================================
 
-export { renderDatePicker };
+export { renderDatePicker, DatePickerProps };
 
 // === types ===================================================
 
@@ -52,7 +52,7 @@ function renderDatePicker(
   direction: 'ltr' | 'rtl',
   props: DatePickerProps,
   datePickerCtrl: DatePickerController
-) {
+): VElement {
   const i18n = new CalendarLocalizer({
     locale,
     direction
