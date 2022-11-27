@@ -31,7 +31,6 @@ class DatePickerController {
   readonly #_selection = new Set<string>();
   readonly #requestUpdate: () => void;
   readonly #onChange: (() => void) | null;
-  readonly #getNode: () => HTMLElement | ShadowRoot;
 
   #_view: DatePickerController.View = 'month';
   #activeYear = new Date().getFullYear();
@@ -61,13 +60,17 @@ class DatePickerController {
   }
 
   constructor(
-    element: HTMLElement,
+    root: HTMLElement | Promise<HTMLElement>,
     params: {
       getSelectionMode: () => DatePickerController.SelectionMode;
       requestUpdate: () => void;
       onChange?: () => void;
     }
   ) {
+    (root instanceof HTMLElement ? Promise.resolve(root) : root).then((root) =>
+      this.#addEventListeners(root.shadowRoot ? root.shadowRoot : root)
+    );
+
     let updateRequested = false;
 
     this.#requestUpdate = () => {
@@ -85,9 +88,7 @@ class DatePickerController {
 
     this.#oldSelectionMode = params.getSelectionMode();
     this.#getSelectionMode = params.getSelectionMode;
-    this.#getNode = () => element.shadowRoot || element;
     this.#onChange = params.onChange || null;
-    setTimeout(() => this.#addEventListeners());
   }
 
   resetView() {
@@ -225,17 +226,15 @@ class DatePickerController {
     }, 50);
   }
 
-  #addEventListeners = () => {
-    const node = this.#getNode();
-
-    node.addEventListener('change', (ev: Event) => {
-      if (ev.target !== this.#getNode()) {
+  #addEventListeners = (root: HTMLElement | ShadowRoot) => {
+    root.addEventListener('change', (ev: Event) => {
+      if (ev.target !== root) {
         ev.preventDefault();
         ev.stopPropagation();
       }
     });
 
-    node.addEventListener('input', (ev: Event) => {
+    root.addEventListener('input', (ev: Event) => {
       const target = ev.target;
 
       if (!(target instanceof HTMLElement)) {
@@ -298,7 +297,7 @@ class DatePickerController {
       ev.stopPropagation();
     });
 
-    node.addEventListener('mousedown', (ev: Event) => {
+    root.addEventListener('mousedown', (ev: Event) => {
       const target = ev.target;
       let preventDefault = true;
 
@@ -316,7 +315,7 @@ class DatePickerController {
       }
     });
 
-    node.addEventListener('click', (ev: Event) => {
+    root.addEventListener('click', (ev: Event) => {
       const target = ev.target;
 
       if (!(target instanceof HTMLElement)) {

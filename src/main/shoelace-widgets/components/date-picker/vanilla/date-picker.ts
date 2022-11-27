@@ -25,7 +25,7 @@ class DatePicker {
   readonly #datePickerController: DatePickerController;
 
   constructor(
-    root: HTMLElement,
+    root: HTMLElement | Promise<HTMLElement>,
     params: {
       getSelectionMode: () => DatePickerController.SelectionMode;
       getLocale: () => string;
