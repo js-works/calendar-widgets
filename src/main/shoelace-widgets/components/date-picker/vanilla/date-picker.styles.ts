@@ -176,17 +176,17 @@ export default /*css*/ `
   }
 
   .cal-cell--in-selection-range:not(.cal-cell--selected) {
-    background-color: var(--cal-cell-in-range-background-color);
+    background-color: var(--cal-cell-selection-range-background-color);
   }
 
-  .cal-cell--first-in-selection-range {
-    border-top-left-radius: 0.3em;
-    border-bottom-left-radius: 0.3em;
+  .cal-cell--first-in-selection-range:not(.cal-cell--last-in-selection-range) {
+    border-top-left-radius: 0.75em;
+    border-bottom-left-radius: 0.75em;
   }
   
-  .cal-cell--last-in-selection-range {
-    border-top-right-radius: 0.3em; 
-    border-bottom-right-radius: 0.3em;
+  .cal-cell--last-in-selection-range:not(.cal-cell--first-in-selection-range) {
+    border-top-right-radius: 0.75em; 
+    border-bottom-right-radius: 0.75em;
   }
 
   .cal-week-number {
