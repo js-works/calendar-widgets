@@ -77,7 +77,10 @@ function renderDatePicker(
 
     switch (view) {
       case 'century': {
-        const data = calendar.getCenturyData(datePickerCtrl.getActiveYear());
+        const data = calendar.getCenturyData({
+          year: datePickerCtrl.getActiveYear()
+        });
+
         sheet = renderCenturySheet(data);
         prevDisabled = data.prevDisabled;
         nextDisabled = data.nextDisabled;
@@ -85,7 +88,10 @@ function renderDatePicker(
       }
 
       case 'decade': {
-        const data = calendar.getDecadeData(datePickerCtrl.getActiveYear());
+        const data = calendar.getDecadeData({
+          year: datePickerCtrl.getActiveYear()
+        });
+
         sheet = renderDecadeSheet(data);
         prevDisabled = data.prevDisabled;
         nextDisabled = data.nextDisabled;
@@ -93,7 +99,10 @@ function renderDatePicker(
       }
 
       case 'year': {
-        const data = calendar.getYearData(datePickerCtrl.getActiveYear());
+        const data = calendar.getYearData({
+          year: datePickerCtrl.getActiveYear()
+        });
+
         sheet = renderYearSheet(data);
         prevDisabled = data.prevDisabled;
         nextDisabled = data.nextDisabled;
@@ -101,10 +110,43 @@ function renderDatePicker(
       }
 
       case 'month': {
-        const data = calendar.getMonthData(
-          datePickerCtrl.getActiveYear(),
-          datePickerCtrl.getActiveMonth()
-        );
+        let selectionRange: {
+          start: { year: number; month: number; day: number };
+          end: { year: number; month: number; day: number };
+        } | null = null;
+
+        const value = datePickerCtrl.getValue();
+        const values = value ? value.split('|').sort() : null;
+
+        if (props.selectionMode === 'dateRange' && values) {
+          const startTokens = values[0]
+            .split('-')
+            .map((it) => parseInt(it, 10));
+
+          const endTokens = (values[1] || values[0])
+            .split('-')
+            .map((it) => parseInt(it, 10));
+
+          selectionRange = {
+            start: {
+              year: startTokens[0],
+              month: startTokens[1] - 1,
+              day: startTokens[2]
+            },
+
+            end: {
+              year: endTokens[0],
+              month: endTokens[1] - 1,
+              day: endTokens[2]
+            }
+          };
+        }
+
+        const data = calendar.getMonthData({
+          year: datePickerCtrl.getActiveYear(),
+          month: datePickerCtrl.getActiveMonth(),
+          selectionRange
+        });
 
         sheet = renderMonthSheet(data);
         prevDisabled = data.prevDisabled;
@@ -263,9 +305,11 @@ function renderDatePicker(
       },
 
       props.showWeekNumbers ? div() : null,
+
       monthData.weekdays.map((idx) =>
         div({ class: 'cal-weekday' }, i18n.getWeekdayName(idx, 'short'))
       ),
+
       monthData.days.flatMap((dayData, idx) => {
         const cell = renderDayCell(dayData);
         return !props.showWeekNumbers || idx % 7 > 0
@@ -315,7 +359,10 @@ function renderDatePicker(
           'cal-cell--current': dayItem.current,
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--highlighted': highlighted,
-          'cal-cell--selected': selected
+          'cal-cell--selected': selected,
+          'cal-cell--in-selection-range': dayItem.inSelectionRange,
+          'cal-cell--first-in-selection-range': dayItem.firstInSelectionRange,
+          'cal-cell--last-in-selection-range': dayItem.lastInSelectionRange
         }),
         'data-date': getYearMonthDayString(
           dayItem.year,

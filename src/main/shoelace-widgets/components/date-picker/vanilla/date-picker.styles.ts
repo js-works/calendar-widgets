@@ -175,8 +175,18 @@ export default /*css*/ `
     ) !important;
   }
 
-  .cal-cell--in-range:not(.cal-cell--selected) {
+  .cal-cell--in-selection-range:not(.cal-cell--selected) {
     background-color: var(--cal-cell-in-range-background-color);
+  }
+
+  .cal-cell--first-in-selection-range {
+    border-top-left-radius: 0.3em;
+    border-bottom-left-radius: 0.3em;
+  }
+  
+  .cal-cell--last-in-selection-range {
+    border-top-right-radius: 0.3em; 
+    border-bottom-right-radius: 0.3em;
   }
 
   .cal-week-number {

@@ -26,6 +26,9 @@ namespace Calendar {
     weekend: boolean; // true if weekend day, else false
     disabled: boolean;
     outOfMinMaxRange: boolean;
+    inSelectionRange: boolean;
+    firstInSelectionRange: boolean;
+    lastInSelectionRange: boolean;
     adjacent: boolean;
   }>;
 
@@ -92,11 +95,19 @@ class Calendar {
     this.#options = options;
   }
 
-  getMonthData(year: number, month: number): Calendar.MonthData {
+  getMonthData(params: {
+    year: number;
+    month: number;
+
+    selectionRange?: {
+      start: { year: number; month: number; day: number };
+      end: { year: number; month: number; day: number };
+    } | null;
+  }): Calendar.MonthData {
     // we also allow month values less than 0 and greater than 11
-    const n = year * 12 + month;
-    year = Math.floor(n / 12);
-    month = n % 12;
+    const n = params.year * 12 + params.month;
+    const year = Math.floor(n / 12);
+    const month = n % 12;
 
     const options = this.#options;
     const firstDayOfWeek = options.firstDayOfWeek;
@@ -160,12 +171,46 @@ class Calendar {
         options.maxDate
       );
 
+      let inSelectionRange = false;
+      let firstInSelectionRange = false;
+      let lastInSelectionRange = false;
+
+      if (params.selectionRange) {
+        const {
+          year: startYear,
+          month: startMonth,
+          day: startDay
+        } = params.selectionRange.start;
+
+        const {
+          year: endYear,
+          month: endMonth,
+          day: endDay
+        } = params.selectionRange.end;
+
+        const startDate = new Date(startYear, startMonth, startDay);
+        const endDate = new Date(endYear, endMonth, endDay);
+
+        if (startDate.getTime() <= endDate.getTime()) {
+          inSelectionRange = inDateRange(cellDate, startDate, endDate);
+
+          firstInSelectionRange =
+            inSelectionRange && cellDate.getTime() === startDate.getTime();
+
+          lastInSelectionRange =
+            inSelectionRange && cellDate.getTime() === endDate.getTime();
+        }
+      }
+
       days.push({
         year: cellYear,
         month: cellMonth,
         day: cellDay,
         disabled: (options.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
+        inSelectionRange,
+        firstInSelectionRange,
+        lastInSelectionRange,
         adjacent,
         weekend,
 
@@ -212,7 +257,10 @@ class Calendar {
     };
   }
 
-  getYearData(year: number): Calendar.YearData {
+  getYearData(params: {
+    year: number; //
+  }): Calendar.YearData {
+    const year = params.year;
     const options = this.#options;
     const months: Calendar.MonthItem[] = [];
     const now = new Date();
@@ -259,7 +307,10 @@ class Calendar {
     };
   }
 
-  getDecadeData(year: number): Calendar.DecadeData {
+  getDecadeData(params: {
+    year: number; //
+  }): Calendar.DecadeData {
+    const year = params.year;
     const options = this.#options;
     const startYear = year - (year % 10);
     const endYear = startYear + 11;
@@ -303,7 +354,10 @@ class Calendar {
     };
   }
 
-  getCenturyData(year: number): Calendar.CenturyData {
+  getCenturyData(params: {
+    year: number; //
+  }): Calendar.CenturyData {
+    const year = params.year;
     const options = this.#options;
     const startYear = year - (year % 100);
     const endYear = startYear + 119;
