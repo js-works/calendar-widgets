@@ -144,7 +144,7 @@ export default /*css*/ `
     background-color: var(--cal-cell-highlighted-background-color);
   }
 
-  .cal-cell--adjacent:not(.cal-cell--disabled):not(:hover) {
+  .cal-cell--adjacent:not(.cal-cell--selected):not(.cal-cell--disabled):not(:hover) {
     color: var(--cal-cell-adjacent-color);
   }
 
@@ -152,9 +152,6 @@ export default /*css*/ `
     color: var(--cal-cell-adjacent-disabled-color);
   }
 
-  .cal-cell--adjacent.cal-cell--selected:not(:hover) {
-    color: var(--cal-cell-adjacent-selected-color);
-  }
 
   .cal-cell--current-highlighted {
     background-color: var(--cal-cell-current-highlighted-background-color);
@@ -180,13 +177,13 @@ export default /*css*/ `
   }
 
   .cal-cell--first-in-selection-range:not(.cal-cell--last-in-selection-range) {
-    border-top-left-radius: 0.5em;
-    border-bottom-left-radius: 0.5em;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
   }
   
   .cal-cell--last-in-selection-range:not(.cal-cell--first-in-selection-range) {
-    border-top-right-radius: 0.5em; 
-    border-bottom-right-radius: 0.5em;
+    border-top-right-radius: 6px; 
+    border-bottom-right-radius: 6px;
   }
 
   .cal-week-number {
