@@ -48,18 +48,9 @@ function Demo() {
       content: (
         <>
           <Fieldset caption="User">
-            <TextField name="firstName" label="First name" required />
+            <TextField name="firstName" label="First name" required autofocus />
             <TextField name="lastName" label="Last name" required />
             <TextField type="email" name="email" label="Email" required />
-          </Fieldset>
-          <Fieldset caption="Account">
-            <TextField label="Username" name="username" required />
-            <TextField
-              type="password"
-              label="Password"
-              name="password"
-              required
-            />
           </Fieldset>
         </>
       )

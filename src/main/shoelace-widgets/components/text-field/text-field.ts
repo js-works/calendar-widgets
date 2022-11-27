@@ -58,7 +58,7 @@ class TextField extends LitElement {
   @property({ type: Boolean })
   required = false;
 
-  @property({ type: Boolean })
+  @property({ type: Boolean, reflect: true })
   autofocus = false;
 
   @property()

@@ -50,7 +50,7 @@ function Demo() {
 
       content: (
         <>
-          <sx-text-field label="Username" name="username" required />
+          <sx-text-field label="Username" name="username" required autofocus />
 
           <sx-text-field
             type="password"

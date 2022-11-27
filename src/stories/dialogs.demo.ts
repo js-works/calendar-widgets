@@ -148,6 +148,7 @@ class DialogsDemo extends LitElement {
           label="Username"
           name="username"
           required
+          autofocus
         ></sx-text-field>
         <sx-text-field
           label="Password"
@@ -179,7 +180,6 @@ class DialogsDemo extends LitElement {
           <sx-choice
             label="Salutation"
             type="horizontal-radios"
-            required
             .options=${[
               { value: 'mrs', text: 'Mrs.' },
               { value: 'mr', text: 'Mr.' },
@@ -205,10 +205,10 @@ class DialogsDemo extends LitElement {
         </sx-fieldset>
         <sx-fieldset caption="Address">
           <sx-vbox>
-            <sx-text-field label="Street" required></sx-text-field>
+            <sx-text-field label="Street"></sx-text-field>
             <sx-compound-field label="Zip / City" column-widths="30% 70%">
-              <sx-text-field name="zip" required></sx-text-field>
-              <sx-text-field name="city" required></sx-text-field>
+              <sx-text-field name="zip"></sx-text-field>
+              <sx-text-field name="city"></sx-text-field>
             </sx-compound-field>
             <sx-choice
               label="Country"
@@ -262,10 +262,12 @@ class DialogsDemo extends LitElement {
       okText: 'Add user'
     });
 
-    this._dialogs.show('info', {
-      title: 'Form data',
-      message: JSON.stringify(data, null, 2)
-    });
+    if (data) {
+      this._dialogs.show('info', {
+        title: 'Form data',
+        message: JSON.stringify(data, null, 2)
+      });
+    }
   };
 
   private _onDestroyPlanet = async () => {

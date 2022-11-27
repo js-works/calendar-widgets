@@ -130,8 +130,7 @@ const dialogSettingsByType: Record<
       },
       {
         action: 'ok',
-        variant: 'primary',
-        autofocus: true
+        variant: 'primary'
       }
     ],
     mapResult: (action, data) => (action === 'cancel' ? null : data)
@@ -172,6 +171,10 @@ class StandardDialog extends LitElement {
   private _lastClickedAction = '';
 
   private _onFormSubmit = (ev: FormSubmitEvent) => {
+    if (!this._lastClickedAction) {
+      this._lastClickedAction = 'ok';
+    }
+
     ev.preventDefault();
     const data = { ...ev.detail.data };
 
@@ -192,7 +195,6 @@ class StandardDialog extends LitElement {
 
   private async _cancelForm() {
     await this._dialogRef.value!.hide();
-
     let result: unknown = undefined;
 
     const mapResult = dialogSettingsByType[this.config!.type].mapResult;
@@ -265,6 +267,10 @@ class StandardDialog extends LitElement {
         ? 'horizontal'
         : 'auto';
 
+    const onAfterShow = () => {
+      (this.querySelector('[autofocus]') as unknown as any)?.focus?.();
+    };
+
     const onAfterHide = (ev: Event) => {
       if (ev.target === this._dialogRef.value) {
         if (!this._lastClickedAction) {
@@ -299,6 +305,7 @@ class StandardDialog extends LitElement {
             dialog: true,
             [`dialog--${this.config.type}`]: true
           })}
+          @sl-after-show=${onAfterShow}
           @sl-after-hide=${onAfterHide}
           ${ref(this._dialogRef)}
         >
