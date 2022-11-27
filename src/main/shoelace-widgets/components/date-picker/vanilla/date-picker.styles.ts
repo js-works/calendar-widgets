@@ -175,6 +175,10 @@ export default /*css*/ `
     ) !important;
   }
 
+  .cal-cell--in-range:not(.cal-cell--selected) {
+    background-color: var(--cal-cell-in-range-background-color);
+  }
+
   .cal-week-number {
     display: flex;
     align-items: center;
