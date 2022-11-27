@@ -27,8 +27,8 @@ function useDialogs(): {
   showToast: ShowToastFunction<ReactNode>;
   renderDialogs: () => ReactNode;
 } {
-  const [, setToggle] = useState(false);
-  const forceUpdate = () => setToggle((it) => !it);
+  const [, useDummy] = useState(0);
+  const forceUpdate = () => useDummy((it) => (it + 1) % 1000);
 
   return useState(() => {
     const dialogCtrl = new DialogsController(forceUpdate);
@@ -63,10 +63,11 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
 
     super({
       showDialog: (type, options) => {
-        const rendererId = this.#addRenderer(() =>
+        const rendererId = this.#addRenderer((key) =>
           h(
             DynamicComponent,
             {
+              key,
               type: 'sx-standard-dialog--internal',
               params: {
                 config: { type, ...options },
@@ -95,10 +96,11 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
           root.render(options.content);
         }
 
-        const rendererId = this.#addRenderer(() => {
+        const rendererId = this.#addRenderer((key) => {
           return h(
             DynamicComponent,
             {
+              key,
               type: 'sx-standard-toast--internal',
               params: {
                 config: { type, ...options },
@@ -115,12 +117,12 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
     this.#forceUpdate = forceUpdate;
   }
 
-  #addRenderer(render: () => ReactNode): number {
+  #addRenderer(render: (key: number) => ReactNode): number {
     const rendererId = this.#nextRendererId++;
 
     this.#renderers.push({
       id: rendererId,
-      render
+      render: () => render(rendererId)
     });
 
     this.#forceUpdate();
@@ -137,7 +139,7 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
     return h(
       'span',
       null,
-      this.#renderers.map((it) => h('span', { key: it.id }, it.render()))
+      this.#renderers.map((it) => it.render())
     );
   }
 }

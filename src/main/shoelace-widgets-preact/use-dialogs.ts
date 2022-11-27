@@ -28,8 +28,8 @@ function useDialogs(): {
   showToast: ShowToastFunction<VNode>;
   renderDialogs: () => VNode;
 } {
-  const [, setToggle] = useState(false);
-  const forceUpdate = () => setToggle((it) => !it);
+  const [, setDummy] = useState(0);
+  const forceUpdate = () => setDummy((it) => (it + 1) % 1000);
 
   return useState(() => {
     const dialogCtrl = new DialogsController(forceUpdate);
@@ -64,10 +64,11 @@ class DialogsController extends AbstractDialogsController<VNode> {
 
     super({
       showDialog: (type, options) => {
-        const rendererId = this.#addRenderer(() =>
+        const rendererId = this.#addRenderer((key) =>
           h(
             'sx-standard-dialog--internal',
             {
+              key,
               config: { type, ...options },
 
               resolve: (result: unknown) => {
@@ -92,8 +93,9 @@ class DialogsController extends AbstractDialogsController<VNode> {
           render(options.content, contentElement);
         }
 
-        const rendererId = this.#addRenderer(() => {
+        const rendererId = this.#addRenderer((key) => {
           return h('sx-standard-toast--internal', {
+            key,
             config: { type, ...options },
             contentElement,
             dismissToast: () => this.#removeRenderer(rendererId)
@@ -105,12 +107,12 @@ class DialogsController extends AbstractDialogsController<VNode> {
     this.#forceUpdate = forceUpdate;
   }
 
-  #addRenderer(render: () => VNode): number {
+  #addRenderer(render: (key: number) => VNode): number {
     const rendererId = this.#nextRendererId++;
 
     this.#renderers.push({
       id: rendererId,
-      render
+      render: () => render(rendererId)
     });
 
     this.#forceUpdate();
@@ -127,7 +129,7 @@ class DialogsController extends AbstractDialogsController<VNode> {
     return h(
       'span',
       null,
-      this.#renderers.map((it) => h('span', { key: it.id }, it.render()))
+      this.#renderers.map((it) => it.render())
     );
   }
 }

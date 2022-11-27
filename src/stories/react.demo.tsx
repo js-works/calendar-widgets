@@ -23,6 +23,59 @@ export const reactDemo = () => {
 function Demo() {
   const { showDialog, showToast, renderDialogs } = useDialogs();
 
+  const onInfoDialogClick = () => {
+    showDialog('info', {
+      message: "It's 7 o'clock in the morning - time to stand up."
+    });
+  };
+
+  const onErrorDialogClick = () => {
+    showDialog('error', {
+      message: 'File could not be created.'
+    });
+  };
+
+  const onPromptDialogClick = async () => {
+    const name = await showDialog('prompt', {
+      message: 'Please enter your name'
+    });
+
+    if (name !== null) {
+      showDialog('info', {
+        title: 'Welcome',
+        message: 'Hello, ' + (name === '' ? 'stranger' : name)
+      });
+    }
+  };
+
+  const onInputDialogClick = async () => {
+    const data = await showDialog('input', {
+      title: 'Switch user',
+      labelLayout: 'horizontal',
+      width: '25rem',
+
+      content: (
+        <>
+          <TextField label="Username" name="username" required autofocus />
+
+          <TextField
+            type="password"
+            label="Password"
+            name="password"
+            required
+          />
+        </>
+      )
+    });
+
+    if (data) {
+      showDialog('info', {
+        title: 'Form data',
+        message: JSON.stringify(data, null, 2)
+      });
+    }
+  };
+
   const openToast = (type: ToastType, title: string) => {
     const now = new Date();
 
@@ -37,38 +90,14 @@ function Demo() {
     });
   };
 
-  const onOpenDialogClick = async () => {
-    const formData = await showDialog('input', {
-      title: 'New user',
-      okText: 'Add user',
-      labelLayout: 'horizontal',
-      width: '34rem',
-      padding: '0 0.5rem',
-
-      content: (
-        <>
-          <Fieldset caption="User">
-            <TextField name="firstName" label="First name" required autofocus />
-            <TextField name="lastName" label="Last name" required />
-            <TextField type="email" name="email" label="Email" required />
-          </Fieldset>
-        </>
-      )
-    });
-
-    /*
-    dialogs.info({
-      title: 'Form data',
-      message: JSON.stringify(formData, null, 2)
-    });
-    */
-  };
-
   return (
     <div className="react-demo">
       <style>{styles}</style>
       <h3 className="headline">Dialogs</h3>
-      <SlButton onClick={onOpenDialogClick}>Open dialog</SlButton>
+      <SlButton onClick={onInfoDialogClick}>Info</SlButton>
+      <SlButton onClick={onErrorDialogClick}>Error</SlButton>
+      <SlButton onClick={onPromptDialogClick}>Prompt</SlButton>
+      <SlButton onClick={onInputDialogClick}>Input</SlButton>
       <h3 className="headline">Toasts</h3>
       <SlButtonGroup>
         <SlButton onclick={() => openToast('info', 'Info')}>Info</SlButton>
