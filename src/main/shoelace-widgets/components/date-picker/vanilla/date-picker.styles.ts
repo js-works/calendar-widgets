@@ -180,13 +180,13 @@ export default /*css*/ `
   }
 
   .cal-cell--first-in-selection-range:not(.cal-cell--last-in-selection-range) {
-    border-top-left-radius: 0.75em;
-    border-bottom-left-radius: 0.75em;
+    border-top-left-radius: 0.5em;
+    border-bottom-left-radius: 0.5em;
   }
   
   .cal-cell--last-in-selection-range:not(.cal-cell--first-in-selection-range) {
-    border-top-right-radius: 0.75em; 
-    border-bottom-right-radius: 0.75em;
+    border-top-right-radius: 0.5em; 
+    border-bottom-right-radius: 0.5em;
   }
 
   .cal-week-number {

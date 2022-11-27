@@ -32,7 +32,7 @@ const datePickerCustomStyles = css`
     --cal-nav-elevated-background-color: var(--sl-color-primary-600);
     --cal-nav-elevated-hover-background-color: var(--sl-color-primary-600);
     --cal-nav-elevated-active-background-color: var(--sl-color-primary-700);
-    --cal-cell-hover-background-color: var(--sl-color-primary-100);
+    --cal-cell-hover-background-color: var(--sl-color-primary-200);
     --cal-cell-disabled-color: var(--sl-color-neutral-300);
     --cal-cell-highlighted-background-color: var(--sl-color-neutral-50);
     --cal-cell-adjacent-color: var(--sl-color-neutral-400);
@@ -44,9 +44,9 @@ const datePickerCustomStyles = css`
     );
 
     --cal-cell-selected-color: var(--sl-color-neutral-0);
-    --cal-cell-selected-background-color: var(--sl-color-primary-600);
-    --cal-cell-selected-hover-background-color: var(--sl-color-primary-500);
-    --cal-cell-selection-range-background-color: var(--sl-color-primary-300);
+    --cal-cell-selected-background-color: var(--sl-color-primary-500);
+    --cal-cell-selected-hover-background-color: var(--sl-color-primary-600);
+    --cal-cell-selection-range-background-color: var(--sl-color-primary-100);
     --cal-slider-thumb-background-color: var(--sl-color-neutral-0);
     --cal-slider-thumb-border-color: var(--sl-color-neutral-400);
     --cal-slider-thumb-border-width: 1px;
