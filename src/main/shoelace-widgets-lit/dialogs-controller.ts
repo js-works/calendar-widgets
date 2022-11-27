@@ -1,15 +1,13 @@
 import { html, render } from 'lit';
-import { repeat } from 'lit/directives/repeat.js';
 import type { ReactiveControllerHost, TemplateResult } from 'lit';
+import { repeat } from 'lit/directives/repeat.js';
+import type { DialogConfig, ToastConfig } from 'shoelace-widgets/internal';
 
 import {
   AbstractDialogsController,
-  DialogConfig,
-  ToastConfig
+  StandardDialog,
+  StandardToast
 } from 'shoelace-widgets/internal';
-
-import { StandardDialog } from 'shoelace-widgets/internal';
-import { StandardToast } from 'shoelace-widgets/internal';
 
 // === exports =======================================================
 
