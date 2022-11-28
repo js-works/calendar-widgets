@@ -37,6 +37,9 @@ namespace Calendar {
     month: number; // 0 -> january, ..., 11 -> december
     current: boolean; // true if current month, else false
     outOfMinMaxRange: boolean;
+    inSelectionRange: boolean;
+    firstInSelectionRange: boolean;
+    lastInSelectionRange: boolean;
     disabled: boolean;
   }>;
 
@@ -44,6 +47,9 @@ namespace Calendar {
     year: number;
     current: boolean; // true if current year, else false
     outOfMinMaxRange: boolean;
+    inSelectionRange: boolean;
+    firstInSelectionRange: boolean;
+    lastInSelectionRange: boolean;
     disabled: boolean;
   }>;
 
@@ -137,36 +143,36 @@ class Calendar {
     const days: Calendar.DayItem[] = [];
 
     for (let i = 0; i < daysToShow; ++i) {
-      let cellYear: number;
-      let cellMonth: number;
-      let cellDay: number;
+      let itemYear: number;
+      let itemMonth: number;
+      let itemDay: number;
       let adjacent = false;
 
       if (i < remainingDaysOfLastMonth) {
-        cellDay = dayCountOfLastMonth - remainingDaysOfLastMonth + i + 1;
-        cellMonth = month === 0 ? 11 : month - 1;
-        cellYear = month === 0 ? year - 1 : year;
+        itemDay = dayCountOfLastMonth - remainingDaysOfLastMonth + i + 1;
+        itemMonth = month === 0 ? 11 : month - 1;
+        itemYear = month === 0 ? year - 1 : year;
         adjacent = true;
       } else {
-        cellDay = i - remainingDaysOfLastMonth + 1;
+        itemDay = i - remainingDaysOfLastMonth + 1;
 
-        if (cellDay > dayCountOfCurrMonth) {
-          cellDay = cellDay - dayCountOfCurrMonth;
-          cellMonth = month === 11 ? 0 : month + 1;
-          cellYear = month === 11 ? year + 1 : year;
+        if (itemDay > dayCountOfCurrMonth) {
+          itemDay = itemDay - dayCountOfCurrMonth;
+          itemMonth = month === 11 ? 0 : month + 1;
+          itemYear = month === 11 ? year + 1 : year;
           adjacent = true;
         } else {
-          cellMonth = month;
-          cellYear = year;
+          itemMonth = month;
+          itemYear = year;
           adjacent = false;
         }
       }
 
-      const cellDate = new Date(cellYear, cellMonth, cellDay);
-      const weekend = options.weekendDays.includes(cellDate.getDay());
+      const itemDate = new Date(itemYear, itemMonth, itemDay);
+      const weekend = options.weekendDays.includes(itemDate.getDay());
 
       const outOfMinMaxRange = !inDateRange(
-        cellDate,
+        itemDate,
         options.minDate,
         options.maxDate
       );
@@ -192,20 +198,20 @@ class Calendar {
         const endDate = new Date(endYear, endMonth, endDay);
 
         if (startDate.getTime() <= endDate.getTime()) {
-          inSelectionRange = inDateRange(cellDate, startDate, endDate);
+          inSelectionRange = inDateRange(itemDate, startDate, endDate);
 
           firstInSelectionRange =
-            inSelectionRange && cellDate.getTime() === startDate.getTime();
+            inSelectionRange && itemDate.getTime() === startDate.getTime();
 
           lastInSelectionRange =
-            inSelectionRange && cellDate.getTime() === endDate.getTime();
+            inSelectionRange && itemDate.getTime() === endDate.getTime();
         }
       }
 
       days.push({
-        year: cellYear,
-        month: cellMonth,
-        day: cellDay,
+        year: itemYear,
+        month: itemMonth,
+        day: itemDay,
         disabled: (options.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
         inSelectionRange,
@@ -215,14 +221,14 @@ class Calendar {
         weekend,
 
         calendarWeek: options.getCalendarWeek(
-          new Date(cellYear, cellMonth, cellDay),
+          new Date(itemYear, itemMonth, itemDay),
           firstDayOfWeek
         ),
 
         current:
-          cellYear === currYear &&
-          cellMonth === currMonth &&
-          cellDay === currDay
+          itemYear === currYear &&
+          itemMonth === currMonth &&
+          itemDay === currDay
       });
     }
 
@@ -259,6 +265,10 @@ class Calendar {
 
   getYearData(params: {
     year: number; //
+    selectionRange?: {
+      start: { year: number; month: number };
+      end: { year: number; month: number };
+    } | null;
   }): Calendar.YearData {
     const year = params.year;
     const options = this.#options;
@@ -275,18 +285,48 @@ class Calendar {
       ? options.maxDate.getFullYear() * 12 + options.maxDate.getMonth()
       : null;
 
-    for (let cellMonth = 0; cellMonth < 12; ++cellMonth) {
+    for (let itemMonth = 0; itemMonth < 12; ++itemMonth) {
       const outOfMinMaxRange = !inNumberRange(
-        year * 12 + cellMonth,
+        year * 12 + itemMonth,
         minMonth,
         maxMonth
       );
 
+      let inSelectionRange = false;
+      let firstInSelectionRange = false;
+      let lastInSelectionRange = false;
+
+      if (params.selectionRange) {
+        const { year: startYear, month: startMonth } =
+          params.selectionRange.start;
+
+        const { year: endYear, month: endMonth } = params.selectionRange.end;
+
+        const startValue = startYear * 12 + startMonth;
+        const endValue = endYear * 12 + endMonth;
+
+        if (startValue <= endValue) {
+          const itemValue = year * 12 + itemMonth;
+
+          inSelectionRange = inNumberRange(
+            year * 12 + itemMonth,
+            startValue,
+            endValue
+          );
+
+          firstInSelectionRange = inSelectionRange && itemValue === startValue;
+          lastInSelectionRange = inSelectionRange && itemValue === endValue;
+        }
+      }
+
       months.push({
         year,
-        month: cellMonth,
-        current: year === currYear && cellMonth === currMonth,
+        month: itemMonth,
+        current: year === currYear && itemMonth === currMonth,
         outOfMinMaxRange,
+        inSelectionRange,
+        firstInSelectionRange,
+        lastInSelectionRange,
         disabled: outOfMinMaxRange
       });
     }
@@ -309,6 +349,10 @@ class Calendar {
 
   getDecadeData(params: {
     year: number; //
+    selectionRange?: {
+      start: { year: number };
+      end: { year: number };
+    } | null;
   }): Calendar.DecadeData {
     const year = params.year;
     const options = this.#options;
@@ -319,13 +363,32 @@ class Calendar {
     const minYear = options.minDate ? options.minDate.getFullYear() : null;
     const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
 
-    for (let cellYear = startYear; cellYear <= endYear; ++cellYear) {
-      const outOfMinMaxRange = !inNumberRange(cellYear, minYear, maxYear);
+    for (let itemYear = startYear; itemYear <= endYear; ++itemYear) {
+      const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
+
+      let inSelectionRange = false;
+      let firstInSelectionRange = false;
+      let lastInSelectionRange = false;
+
+      if (params.selectionRange) {
+        const { year: startYear } = params.selectionRange.start;
+
+        const { year: endYear } = params.selectionRange.end;
+
+        if (startYear <= endYear) {
+          inSelectionRange = inNumberRange(itemYear, startYear, endYear);
+          firstInSelectionRange = inSelectionRange && itemYear === startYear;
+          lastInSelectionRange = inSelectionRange && itemYear === endYear;
+        }
+      }
 
       years.push({
-        current: cellYear === currYear,
-        year: cellYear,
+        current: itemYear === currYear,
+        year: itemYear,
         outOfMinMaxRange,
+        inSelectionRange,
+        firstInSelectionRange,
+        lastInSelectionRange,
         disabled: outOfMinMaxRange
       });
     }
@@ -372,13 +435,13 @@ class Calendar {
       ? Math.floor(options.maxDate.getFullYear() / 10) * 10 + 9
       : null;
 
-    for (let cellYear = startYear; cellYear <= endYear; cellYear += 10) {
-      const outOfMinMaxRange = !inNumberRange(cellYear, minYear, maxYear);
+    for (let itemYear = startYear; itemYear <= endYear; itemYear += 10) {
+      const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
       decades.push({
-        current: cellYear <= currYear && cellYear + 10 > currYear,
-        firstYear: cellYear,
-        lastYear: cellYear + 9,
+        current: itemYear <= currYear && itemYear + 10 > currYear,
+        firstYear: itemYear,
+        lastYear: itemYear + 9,
         outOfMinMaxRange,
         disabled: outOfMinMaxRange
       });

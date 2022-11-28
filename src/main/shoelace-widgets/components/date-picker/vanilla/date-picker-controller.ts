@@ -20,8 +20,10 @@ namespace DatePickerController {
     | 'weeks'
     | 'month'
     | 'months'
+    | 'monthRange'
     | 'year'
-    | 'years';
+    | 'years'
+    | 'yearRange';
 
   export type View =
     | 'time'
@@ -101,10 +103,16 @@ class DatePickerController {
 
   resetView() {
     this.#view =
-      this.#selectionMode === 'year'
+      this.#selectionMode === 'year' ||
+      this.#selectionMode === 'years' ||
+      this.#selectionMode === 'yearRange'
         ? 'decade'
-        : this.#selectionMode === 'month'
+        : this.#selectionMode === 'month' ||
+          this.#selectionMode === 'months' ||
+          this.#selectionMode === 'monthRange'
         ? 'year'
+        : this.#selectionMode === 'time' || this.#selectionMode === 'timeRange'
+        ? this.#selectionMode
         : 'month';
 
     this.#activeYear = new Date().getFullYear();
@@ -178,10 +186,15 @@ class DatePickerController {
   }
 
   getValue() {
-    if (this.#selectionMode === 'dateRange') {
-      return Array.from(this.#selection).sort().join('|');
+    const selectedItems = [...this.#selection].sort();
+
+    if (
+      this.#selectionMode === 'dateRange' ||
+      this.#selectionMode === 'monthRange' ||
+      this.#selectionMode === 'yearRange'
+    ) {
+      return selectedItems.join('|');
     } else if (this.#selectionMode === 'dateTimeRange') {
-      const selectedItems = [...this.#selection];
       const selectionSize = selectedItems.length;
 
       if (selectionSize === 0) {
@@ -203,7 +216,7 @@ class DatePickerController {
 
       return ret;
     } else if (this.#selectionMode === 'dateTime') {
-      const dateString = Array.from(this.#selection)[0];
+      const dateString = selectedItems[0];
 
       const timeString = getHourMinuteString(
         this.#activeHour,
@@ -220,7 +233,7 @@ class DatePickerController {
         getHourMinuteString(this.#activeHour2, this.#activeMinute2)
       );
     } else {
-      return Array.from(this.#selection).sort().join(',');
+      return selectedItems.join(',');
     }
   }
 
@@ -495,11 +508,13 @@ class DatePickerController {
     switch (selectionMode) {
       case 'year':
       case 'years':
+      case 'yearRange':
         this.#view = 'decade';
         break;
 
       case 'month':
       case 'months':
+      case 'monthRange':
         this.#view = 'year';
         break;
 
@@ -537,10 +552,13 @@ class DatePickerController {
 
   #setActiveMinutes = (minute: number) => {
     this.#activeMinute = minute;
-    this.#activeHour2 = Math.max(this.#activeHour, this.#activeHour2);
 
-    if (this.#activeHour === this.#activeHour2) {
-      this.#activeMinute2 = Math.max(this.#activeMinute, this.#activeMinute2);
+    if (this.#selectionMode === 'timeRange') {
+      this.#activeHour2 = Math.max(this.#activeHour, this.#activeHour2);
+
+      if (this.#activeHour === this.#activeHour2) {
+        this.#activeMinute2 = Math.max(this.#activeMinute, this.#activeMinute2);
+      }
     }
 
     this.#requestUpdate();
@@ -548,10 +566,13 @@ class DatePickerController {
 
   #setActiveHours2 = (hour: number) => {
     this.#activeHour2 = hour;
-    this.#activeHour = Math.min(this.#activeHour, this.#activeHour2);
 
-    if (this.#activeHour === this.#activeHour2) {
-      this.#activeMinute = Math.min(this.#activeMinute, this.#activeMinute2);
+    if (this.#selectionMode === 'timeRange') {
+      this.#activeHour = Math.min(this.#activeHour, this.#activeHour2);
+
+      if (this.#activeHour === this.#activeHour2) {
+        this.#activeMinute = Math.min(this.#activeMinute, this.#activeMinute2);
+      }
     }
 
     this.#requestUpdate();
@@ -624,7 +645,11 @@ class DatePickerController {
   };
 
   #clickMonth = (year: number, month: number) => {
-    if (this.#selectionMode !== 'month' && this.#selectionMode !== 'months') {
+    if (
+      this.#selectionMode !== 'month' &&
+      this.#selectionMode !== 'months' &&
+      this.#selectionMode !== 'monthRange'
+    ) {
       this.#activeYear = year;
       this.#activeMonth = month;
       this.#view = 'month';
@@ -639,6 +664,18 @@ class DatePickerController {
         case 'months':
           this.#toggleSelected(monthString);
           break;
+
+        case 'monthRange':
+          if (this.#selection.has(monthString)) {
+            this.#removeSelection(monthString);
+          } else if (this.#selection.size > 1) {
+            this.#selection.clear();
+            this.#addSelection(monthString);
+          } else {
+            this.#addSelection(monthString);
+          }
+
+          break;
       }
     }
 
@@ -646,7 +683,11 @@ class DatePickerController {
   };
 
   #clickYear = (year: number) => {
-    if (this.#selectionMode !== 'year' && this.#selectionMode !== 'years') {
+    if (
+      this.#selectionMode !== 'year' &&
+      this.#selectionMode !== 'years' &&
+      this.#selectionMode !== 'yearRange'
+    ) {
       this.#activeYear = year;
       this.#view = 'year';
     } else {
@@ -659,6 +700,18 @@ class DatePickerController {
 
         case 'years':
           this.#toggleSelected(yearString);
+          break;
+
+        case 'yearRange':
+          if (this.#selection.has(yearString)) {
+            this.#removeSelection(yearString);
+          } else if (this.#selection.size > 1) {
+            this.#selection.clear();
+            this.#addSelection(yearString);
+          } else {
+            this.#addSelection(yearString);
+          }
+
           break;
       }
     }

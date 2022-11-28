@@ -92,8 +92,30 @@ function renderDatePicker(
       }
 
       case 'decade': {
+        let selectionRange: {
+          start: { year: number };
+          end: { year: number };
+        } | null = null;
+
+        const value = datePickerCtrl.getValue();
+
+        const values = value
+          ? value
+              .split('|')
+              .sort()
+              .map((it) => parseInt(it, 10))
+          : null;
+
+        if (props.selectionMode === 'yearRange' && values) {
+          selectionRange = {
+            start: { year: values[0] },
+            end: { year: values[1] }
+          };
+        }
+        console.log(selectionRange);
         const data = calendar.getDecadeData({
-          year: datePickerCtrl.getActiveYear()
+          year: datePickerCtrl.getActiveYear(),
+          selectionRange
         });
 
         sheet = renderDecadeSheet(data);
@@ -103,10 +125,34 @@ function renderDatePicker(
       }
 
       case 'year': {
-        const data = calendar.getYearData({
-          year: datePickerCtrl.getActiveYear()
-        });
+        let selectionRange: {
+          start: { year: number; month: number };
+          end: { year: number; month: number };
+        } | null = null;
 
+        const value = datePickerCtrl.getValue();
+        const values = value ? value.split('|').sort() : null;
+
+        if (props.selectionMode === 'monthRange' && values) {
+          const startTokens = values[0]
+            .split('-')
+            .map((it) => parseInt(it, 10));
+
+          const endTokens = (values[1] || values[0])
+            .split('-')
+            .map((it) => parseInt(it, 10));
+
+          selectionRange = {
+            start: { year: startTokens[0], month: startTokens[1] - 1 },
+            end: { year: endTokens[0], month: endTokens[1] - 1 }
+          };
+        }
+
+        const data = calendar.getYearData({
+          year: datePickerCtrl.getActiveYear(),
+          selectionRange
+        });
+        console.log(selectionRange);
         sheet = renderYearSheet(data);
         prevDisabled = data.prevDisabled;
         nextDisabled = data.nextDisabled;
@@ -164,6 +210,7 @@ function renderDatePicker(
 
       case 'time':
       case 'time2':
+      case 'timeRange':
         break;
 
       default:
@@ -361,7 +408,10 @@ function renderDatePicker(
           'cal-cell--disabled': monthItem.disabled,
           'cal-cell--current': monthItem.current,
           'cal-cell--current-highlighted': currentHighlighted,
-          'cal-cell--selected': selected
+          'cal-cell--selected': selected,
+          'cal-cell--in-selection-range': monthItem.inSelectionRange,
+          'cal-cell--first-in-selection-range': monthItem.firstInSelectionRange,
+          'cal-cell--last-in-selection-range': monthItem.lastInSelectionRange
         }),
         'data-month': getYearMonthString(monthItem.year, monthItem.month),
         'data-subject': monthItem.disabled ? null : 'month'
@@ -388,7 +438,10 @@ function renderDatePicker(
           'cal-cell--disabled': yearItem.disabled,
           'cal-cell--current': yearItem.current,
           'cal-cell--current-highlighted': currentHighlighted,
-          'cal-cell--selected': selected
+          'cal-cell--selected': selected,
+          'cal-cell--in-selection-range': yearItem.inSelectionRange,
+          'cal-cell--first-in-selection-range': yearItem.firstInSelectionRange,
+          'cal-cell--last-in-selection-range': yearItem.lastInSelectionRange
         }),
         'data-year': getYearString(yearItem.year),
         'data-subject': yearItem.disabled ? null : 'year'
@@ -559,7 +612,10 @@ function renderDatePicker(
       ),
       selectionMode !== 'dateTime' && selectionMode !== 'dateTimeRange'
         ? null
-        : a({ 'class': 'cal-back-link', 'data-subject': 'view-month' }, 'Done')
+        : a(
+            { 'class': 'cal-back-link', 'data-subject': 'view-month' },
+            'Back to month'
+          )
     );
   }
 

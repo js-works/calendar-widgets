@@ -340,11 +340,11 @@ export default /*css*/ `
     background-color: #ddf;
     padding: 0.5em 1em;
     box-sizing: border-box;
-    margin: 1rem 2rem 0 2rem;
     text-align: center;
     cursor: pointer;
     background-color: var(--cal-back-link-background-color);
     border-radius: var(--cal-back-link-border-radius, 3px);
+    margin: 1.5rem 2rem 0 2rem;
   }
 
   .cal-back-link:hover {

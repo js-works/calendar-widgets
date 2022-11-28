@@ -151,9 +151,32 @@ class DatePickerDemo extends LitElement {
             <sl-menu-item value="weeks">weeks</sl-menu-item>
             <sl-menu-item value="month">month</sl-menu-item>
             <sl-menu-item value="months">months</sl-menu-item>
+            <sl-menu-item value="monthRange">monthRange</sl-menu-item>
             <sl-menu-item value="year">year</sl-menu-item>
             <sl-menu-item value="years">years</sl-menu-item>
+            <sl-menu-item value="yearRange">yearRange</sl-menu-item>
           </sl-select>
+          <sl-select
+            label="Days amount"
+            data-subject="daysAmount"
+            value=${this._daysAmount}
+          >
+            <sl-menu-item value="default">
+              default (with adjacent days)
+            </sl-menu-item>
+            <sl-menu-item value="minimal">
+              minimal (without adjacent days)
+            </sl-menu-item>
+            <sl-menu-item value="maximal">
+              maximal (always 42 days)
+            </sl-menu-item>
+          </sl-select>
+          <sl-checkbox
+            data-subject="accentuateHeader"
+            ?checked=${this._accentuateHeader}
+          >
+            accentuate header
+          </sl-checkbox>
           ${when(
             [
               'date',
@@ -165,27 +188,6 @@ class DatePickerDemo extends LitElement {
               'weeks'
             ].includes(this._selectionMode),
             () => html`
-              <sl-select
-                label="Days amount"
-                data-subject="daysAmount"
-                value=${this._daysAmount}
-              >
-                <sl-menu-item value="default">
-                  default (with adjacent days)
-                </sl-menu-item>
-                <sl-menu-item value="minimal">
-                  minimal (without adjacent days)
-                </sl-menu-item>
-                <sl-menu-item value="maximal">
-                  maximal (always 42 days)
-                </sl-menu-item>
-              </sl-select>
-              <sl-checkbox
-                data-subject="accentuateHeader"
-                ?checked=${this._accentuateHeader}
-              >
-                accentuate header
-              </sl-checkbox>
               <sl-checkbox
                 data-subject="highlightToday"
                 ?checked=${this._highlightToday}

@@ -422,7 +422,21 @@ const logicBySelectionMode: Record<
     },
 
     getPopupTitle(value, localize) {
-      return logicBySelectionMode['dateTimeRange'].formatValue(value, localize);
+      if (!value) {
+        return '';
+      }
+
+      const dates = value.split('|').map((it) => new Date(it));
+
+      if (dates.length < 2) {
+        dates.push(dates[0]);
+      }
+
+      return new Intl.DateTimeFormat(localize.lang(), {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric'
+      }).formatRange(dates[0], dates[1]);
     }
   },
 
