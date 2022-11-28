@@ -41,9 +41,10 @@ export class DateField extends LitElement {
   @property({ type: String, attribute: 'selection-mode' })
   selectionMode:
     | 'date'
+    | 'time'
     | 'dateTime'
     | 'dateRange'
-    | 'time'
+    | 'dateTimeRange'
     | 'timeRange'
     | 'week'
     | 'month'
@@ -182,8 +183,9 @@ export class DateField extends LitElement {
       'date-field.' +
       {
         date: 'date',
-        dateRange: 'date-range',
         dateTime: 'date-time',
+        dateRange: 'date-range',
+        dateTimeRange: 'date-time-range',
         time: 'time',
         timeRange: 'time-range',
         week: 'week',
@@ -395,6 +397,32 @@ const logicBySelectionMode: Record<
         hour: 'numeric',
         minute: 'numeric'
       });
+    }
+  },
+
+  dateTimeRange: {
+    formatValue(value, localize) {
+      if (!value) {
+        return '';
+      }
+
+      const dates = value.split('|').map((it) => new Date(it));
+
+      if (dates.length < 2) {
+        dates.push(dates[0]);
+      }
+
+      return new Intl.DateTimeFormat(localize.lang(), {
+        day: 'numeric',
+        month: 'short',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      }).formatRange(dates[0], dates[1]);
+    },
+
+    getPopupTitle(value, localize) {
+      return logicBySelectionMode['dateTimeRange'].formatValue(value, localize);
     }
   },
 

@@ -29,6 +29,7 @@ import questionCircleIcon from './bootstrap/question-circle.icon';
 import questionDiamondIcon from './bootstrap/question-diamond.icon';
 import questionLgIcon from './bootstrap/question-lg.icon';
 import telephoneIcon from './bootstrap/telephone.icon';
+import calendarWeekIcon from './bootstrap/calendar-week.icon';
 
 import dateIcon from './custom/date.icon';
 import timeRangeIcon from './custom/time-range.icon';
@@ -42,6 +43,7 @@ const icons = {
   'date-field.date': dateIcon,
   'date-field.date-time': calendarEventIcon,
   'date-field.date-range': calendarRangeIcon,
+  'date-field.date-time-range': calendarWeekIcon,
   'date-field.time': clockIcon,
   'date-field.time-range': timeRangeIcon,
   'date-field.week': weekIcon,

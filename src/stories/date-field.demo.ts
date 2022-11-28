@@ -100,6 +100,11 @@ class DatePickerDemo extends LitElement {
           lang=${this._locale}
         ></sx-date-field>
         <sx-date-field
+          label="Date time range"
+          selection-mode="dateTimeRange"
+          lang=${this._locale}
+        ></sx-date-field>
+        <sx-date-field
           label="Time"
           selection-mode="time"
           lang=${this._locale}

@@ -477,7 +477,7 @@ function renderDatePicker(
 
     return div(
       { class: 'cal-time-links' },
-      selectionSize > 0 ? renderTimeLink('time') : null,
+      renderTimeLink('time'),
       selectionSize > 1 ? renderTimeLink('time2') : null
     );
   }
@@ -487,25 +487,35 @@ function renderDatePicker(
     let hour = 0;
     let minute = 0;
 
-    if (type === 'time') {
-      hour = datePickerCtrl.getActiveHour();
-      minute = datePickerCtrl.getActiveMinute();
-    } else {
-      hour = datePickerCtrl.getActiveHour2();
-      minute = datePickerCtrl.getActiveMinute2();
+    let timeString = '';
+
+    if (datePickerCtrl.getSelectionSize() > 0) {
+      if (type === 'time') {
+        hour = datePickerCtrl.getActiveHour();
+        minute = datePickerCtrl.getActiveMinute();
+      } else {
+        hour = datePickerCtrl.getActiveHour2();
+        minute = datePickerCtrl.getActiveMinute2();
+      }
+
+      const date = new Date(2000, 0, 1, hour, minute);
+
+      timeString = new Intl.DateTimeFormat(i18n.getLocale(), {
+        hour: '2-digit',
+        minute: '2-digit'
+      }).format(date);
     }
 
-    const date = new Date(2000, 0, 1, hour, minute);
-
-    const timeString = new Intl.DateTimeFormat(i18n.getLocale(), {
-      hour: '2-digit',
-      minute: '2-digit'
-    }).format(date);
-
     return a(
-      { 'class': 'cal-time-link', 'data-subject': type },
+      {
+        'class': classMap({
+          'cal-time-link': true,
+          'cal-time-link--disabled': timeString === ''
+        }),
+        'data-subject': type
+      },
       icon,
-      timeString
+      timeString === '' ? '--:--' : timeString
     );
   }
 

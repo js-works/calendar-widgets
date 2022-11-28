@@ -36,6 +36,10 @@ const styles = css`
   .mode-selector {
     min-width: 17rem;
   }
+
+  .selection {
+    margin-top: 0.5rem;
+  }
 `;
 
 @customElement('date-picker-demo')
@@ -112,8 +116,10 @@ class DatePickerDemo extends LitElement {
             .minDate=${this._minDate}
             .maxDate=${this._maxDate}
           ></sx-date-picker>
-          <div>Selection:</div>
-          <div>${this._selectionValue.replaceAll(',', ', ')}</div>
+          <div class="selection">
+            <div>Selection:</div>
+            <div>${this._selectionValue.replaceAll(',', ', ')}</div>
+          </div>
         </div>
         <div class="second-column">
           <sl-select label="Locale" data-subject="locale" value=${this._locale}>

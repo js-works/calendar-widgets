@@ -36,6 +36,9 @@ export default css`
 
   .popup-title {
     flex-grow: 1;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .popup-close-button {

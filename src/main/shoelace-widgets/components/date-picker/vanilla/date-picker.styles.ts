@@ -13,7 +13,7 @@ export default /*css*/ `
 
   .cal-base--date-time,
   .cal-base--date-time-range {
-    height: 17rem;
+    height: 16rem;
   }
 
   .cal-input {
@@ -198,12 +198,13 @@ export default /*css*/ `
   }
 
   .cal-time-links {
-    height: 3em;
+    height: 2rem;
     display: flex;
     align-items: center;
     justify-items: center
     gap: 2em;
     padding: 0 2em;
+    box-sizing: border-box;
   }
 
   .cal-time-link {
@@ -212,6 +213,11 @@ export default /*css*/ `
     align-items: center;
     gap: 0.5em;
     cursor: pointer;
+  }
+
+  .cal-time-link--disabled {
+    cursor: pointer;
+    pointer-events: none;
   }
 
   .cal-time-range-arrow {

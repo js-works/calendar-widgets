@@ -56,9 +56,9 @@ const datePickerCustomStyles = css`
     --cal-slider-thumb-focus-background-color: var(--sl-color-primary-600);
     --cal-slider-thumb-focus-border-color: var(--sl-color-primary-600);
     --cal-slider-track-color: var(--sl-color-neutral-400);
-    --cal-back-link-background-color: var(--sl-color-primary-200);
-    --cal-back-link-hover-background-color: var(--sl-color-primary-300);
-    --cal-back-link-active-background-color: var(--sl-color-primary-400);
+    --cal-back-link-background-color: var(--sl-color-primary-100);
+    --cal-back-link-hover-background-color: var(--sl-color-primary-200);
+    --cal-back-link-active-background-color: var(--sl-color-primary-300);
     --cal-back-link-border-radius: var(--sl-border-radius-medium);
   }
 `;

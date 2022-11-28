@@ -23,7 +23,14 @@ namespace DatePickerController {
     | 'year'
     | 'years';
 
-  export type View = 'time' | 'time2' | 'month' | 'year' | 'decade' | 'century';
+  export type View =
+    | 'time'
+    | 'time2'
+    | 'timeRange'
+    | 'month'
+    | 'year'
+    | 'decade'
+    | 'century';
 }
 
 class DatePickerController {
@@ -36,10 +43,10 @@ class DatePickerController {
   #_view: DatePickerController.View = 'month';
   #activeYear = new Date().getFullYear();
   #activeMonth = new Date().getMonth();
-  #activeHour = new Date().getHours();
-  #activeMinute = new Date().getMinutes();
-  #activeHour2 = new Date().getHours();
-  #activeMinute2 = new Date().getMinutes();
+  #activeHour = 0;
+  #activeMinute = 0;
+  #activeHour2 = 0;
+  #activeMinute2 = 0;
   #notifyTimeoutId: unknown = null;
 
   get #selectionMode() {
@@ -497,8 +504,11 @@ class DatePickerController {
         break;
 
       case 'time':
-      case 'timeRange':
         this.#view = 'time';
+        break;
+
+      case 'timeRange':
+        this.#view = 'timeRange';
         break;
 
       default:
