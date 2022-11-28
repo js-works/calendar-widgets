@@ -204,7 +204,6 @@ export default /*css*/ `
     justify-items: center
     gap: 2em;
     padding: 0 2em;
-    xxxborder: 1px solid red;
   }
 
   .cal-time-link {
@@ -220,29 +219,15 @@ export default /*css*/ `
     padding: 0;
   }
 
-  .cal-time-selector-headline {
-    margin: 0.75em 0 -0.75em 0.9em;
-    font-size: 110%;
-  }
-
   .cal-time-selector {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    grid-template-rows: auto auto;
-    column-gap: 0.75rem;
-    padding: 0.125rem 0 0.75rem 0;
-    margin: 0 1rem;
-  }
-
-  .cal-base--time .cal-time-selector {
-    padding: 1.125rem 0.25rem calc(1rem + 5px) 0;
+    display: flex;
+    flex-direction: column;
   }
 
   .cal-time {
-    grid-column: 1;
-    grid-row: 1 / span 2;
     align-self: center;
-    font-size: 115%;
+    margin: 0.5rem 0 0 0;
+    font-size: 125%;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic,
       var(--cal-font-family);
     text-align: start;
@@ -260,15 +245,25 @@ export default /*css*/ `
     margin-inline-start: 0.5em;
   }
 
+  .cal-hours-headline,
+  .cal-minutes-headline {
+    margin: 0.5em 2rem 0 2rem;
+    font-size: calc(100% - 1px);
+  }
+
+  .cal-hour-slider,
+  .cal-minute-slider {
+    margin: 1rem 2rem;
+  }
+
+
   /* time sliders */
 
   input[type='range'] {
     -webkit-appearance: none;
     appearance: none;
     outline: none;
-    margin: 0.5em 0;
     height: 0.75px;
-    padding: 0.5em 0;
     
     background-image: linear-gradient(
       var(--cal-slider-track-color),
@@ -332,5 +327,25 @@ export default /*css*/ `
     box-shadow: none;
     border: none;
     background-color: transparent;
+  }
+
+  .cal-back-link {
+    display: block;
+    background-color: #ddf;
+    padding: 0.5em 1em;
+    box-sizing: border-box;
+    margin: 1rem 2rem 0 2rem;
+    text-align: center;
+    cursor: pointer;
+    background-color: var(--cal-back-link-background-color);
+    border-radius: var(--cal-back-link-border-radius, 3px);
+  }
+
+  .cal-back-link:hover {
+    background-color: var(--cal-back-link-hover-background-color);
+  }
+  
+  .cal-back-link:active {
+    background-color: var(--cal-back-link-active-background-color);
   }
 `;

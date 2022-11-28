@@ -6,14 +6,9 @@ import { h, VElement, VNode } from './vdom';
 // icons
 import timeIcon from './icons/time.icon';
 
-const [a, button, div, img, input, span] = [
-  'a',
-  'button',
-  'div',
-  'img',
-  'input',
-  'span'
-].map((tag) => h.bind(null, tag));
+const [a, div, img, input, span] = ['a', 'div', 'img', 'input', 'span'].map(
+  (tag) => h.bind(null, tag)
+);
 
 function classMap(classes: Record<string, unknown>): string {
   const arr: string[] = [];
@@ -531,34 +526,30 @@ function renderDatePicker(
     return div(
       null,
       div(
-        null,
-        selectionMode !== 'timeRange'
-          ? null
-          : div({ class: 'cal-time-selector-headline' }, 'From'),
-        div(
-          { class: 'cal-time-selector' },
-          div({ class: 'cal-time' }, renderTime(type)),
-          input({
-            'type': 'range',
-            'class': 'cal-hour-slider',
-            'value': hour,
-            'min': 0,
-            'max': 23,
-            'data-subject': 'hours' + (type === 'time2' ? '2' : '')
-          }),
-          input({
-            'type': 'range',
-            'class': 'cal-minute-slider',
-            'value': minute,
-            'min': 0,
-            'max': 59,
-            'data-subject': 'minutes' + (type === 'time2' ? '2' : '')
-          })
-        )
+        { class: 'cal-time-selector' },
+        div({ class: 'cal-time' }, renderTime(type)),
+        div({ class: 'cal-hours-headline' }, 'Hours'),
+        input({
+          'type': 'range',
+          'class': 'cal-hour-slider',
+          'value': hour,
+          'min': 0,
+          'max': 23,
+          'data-subject': 'hours' + (type === 'time2' ? '2' : '')
+        }),
+        div({ class: 'cal-minutes-headline' }, 'Minutes'),
+        input({
+          'type': 'range',
+          'class': 'cal-minute-slider',
+          'value': minute,
+          'min': 0,
+          'max': 59,
+          'data-subject': 'minutes' + (type === 'time2' ? '2' : '')
+        })
       ),
       selectionMode !== 'dateTime' && selectionMode !== 'dateTimeRange'
         ? null
-        : button({ 'data-subject': 'view-month' }, 'Back')
+        : a({ 'class': 'cal-back-link', 'data-subject': 'view-month' }, 'Done')
     );
   }
 
