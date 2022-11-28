@@ -414,6 +414,10 @@ class DatePickerController {
           this.#setView('time2');
           break;
         }
+
+        case 'view-month': {
+          this.#setView('month');
+        }
       }
 
       ev.preventDefault();

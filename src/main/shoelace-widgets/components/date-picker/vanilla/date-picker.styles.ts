@@ -11,6 +11,11 @@ export default /*css*/ `
     min-width: 20rem;
   }
 
+  .cal-base--date-time,
+  .cal-base--date-time-range {
+    height: 17rem;
+  }
+
   .cal-input {
     position: absolute;
     width: 0;
@@ -229,7 +234,7 @@ export default /*css*/ `
     margin: 0 1rem;
   }
 
-  .cal-base--type-time .cal-time-selector {
+  .cal-base--time .cal-time-selector {
     padding: 1.125rem 0.25rem calc(1rem + 5px) 0;
   }
 
