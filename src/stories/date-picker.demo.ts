@@ -49,7 +49,7 @@ class DatePickerDemo extends LitElement {
 
   private _locale = 'en-US';
   private _selectionValue: string = '';
-  private _selectionMode = 'dateRange';
+  private _selectionMode = 'dateTimeRange';
   private _accentuateHeader = true;
   private _highlightToday = true;
   private _highlightWeekends = true;
@@ -136,8 +136,9 @@ class DatePickerDemo extends LitElement {
           >
             <sl-menu-item value="date">date</sl-menu-item>
             <sl-menu-item value="dates">dates</sl-menu-item>
-            <sl-menu-item value="dateRange">dateRange</sl-menu-item>
             <sl-menu-item value="dateTime">dateTime</sl-menu-item>
+            <sl-menu-item value="dateRange">dateRange</sl-menu-item>
+            <sl-menu-item value="dateTimeRange">dateTimeRange</sl-menu-item>
             <sl-menu-item value="time">time</sl-menu-item>
             <sl-menu-item value="timeRange">timeRange</sl-menu-item>
             <sl-menu-item value="week">week</sl-menu-item>
@@ -151,8 +152,9 @@ class DatePickerDemo extends LitElement {
             [
               'date',
               'dates',
-              'dateRange',
               'dateTime',
+              'dateRange',
+              'dateTimeRange',
               'week',
               'weeks'
             ].includes(this._selectionMode),

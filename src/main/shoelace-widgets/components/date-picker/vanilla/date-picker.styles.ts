@@ -192,6 +192,24 @@ export default /*css*/ `
     justify-content: center;
   }
 
+  .cal-time-links {
+    height: 3em;
+    display: flex;
+    align-items: center;
+    justify-items: center
+    gap: 2em;
+    padding: 0 2em;
+    xxxborder: 1px solid red;
+  }
+
+  .cal-time-link {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    gap: 0.5em;
+    cursor: pointer;
+  }
+
   .cal-time-range-arrow {
     margin: -0.75em 1rem -0.25em 1.5em;
     padding: 0;

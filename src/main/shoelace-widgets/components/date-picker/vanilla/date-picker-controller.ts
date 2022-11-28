@@ -11,10 +11,11 @@ namespace DatePickerController {
   export type SelectionMode =
     | 'date'
     | 'dates'
-    | 'time'
     | 'dateTime'
     | 'dateRange'
+    | 'time'
     | 'timeRange'
+    | 'dateTimeRange'
     | 'week'
     | 'weeks'
     | 'month'
@@ -22,7 +23,7 @@ namespace DatePickerController {
     | 'year'
     | 'years';
 
-  export type View = 'time' | 'month' | 'year' | 'decade' | 'century';
+  export type View = 'time' | 'time2' | 'month' | 'year' | 'decade' | 'century';
 }
 
 class DatePickerController {
@@ -138,6 +139,10 @@ class DatePickerController {
     return this.#activeMinute2;
   }
 
+  getSelectionSize() {
+    return this.#selection.size;
+  }
+
   hasSelectedYear(year: number) {
     return this.#selection.has(getYearString(year));
   }
@@ -153,7 +158,8 @@ class DatePickerController {
       mode === 'date' ||
       mode === 'dates' ||
       mode === 'dateTime' ||
-      mode == 'dateRange'
+      mode === 'dateRange' ||
+      mode === 'dateTimeRange'
     ) {
       const value = this.#selectionMode;
       return this.#selection.has(getYearMonthDayString(year, month, day));
@@ -167,6 +173,28 @@ class DatePickerController {
   getValue() {
     if (this.#selectionMode === 'dateRange') {
       return Array.from(this.#selection).sort().join('|');
+    } else if (this.#selectionMode === 'dateTimeRange') {
+      const selectedItems = [...this.#selection];
+      const selectionSize = selectedItems.length;
+
+      if (selectionSize === 0) {
+        return '';
+      }
+
+      let ret =
+        selectedItems[0] +
+        'T' +
+        getHourMinuteString(this.#activeHour, this.#activeMinute);
+
+      if (selectionSize > 1) {
+        ret +=
+          '|' +
+          selectedItems[1] +
+          'T' +
+          getHourMinuteString(this.#activeHour2, this.#activeMinute2);
+      }
+
+      return ret;
     } else if (this.#selectionMode === 'dateTime') {
       const dateString = Array.from(this.#selection)[0];
 
@@ -376,6 +404,16 @@ class DatePickerController {
           this.#clickDecade(year);
           break;
         }
+
+        case 'time': {
+          this.#setView('time');
+          break;
+        }
+
+        case 'time2': {
+          this.#setView('time2');
+          break;
+        }
       }
 
       ev.preventDefault();
@@ -545,7 +583,8 @@ class DatePickerController {
         break;
       }
 
-      case 'dateRange': {
+      case 'dateRange':
+      case 'dateTimeRange': {
         const dateString = getYearMonthDayString(year, month, day);
 
         if (this.#selection.has(dateString)) {
