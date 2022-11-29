@@ -1,4 +1,4 @@
-import { css } from 'lit';
+import { css, unsafeCSS } from 'lit';
 
 export default css`
   .sl-control {
@@ -43,7 +43,7 @@ export default css`
     max-width: 1ex;
     overflow: hidden;
     content: '*';
-    color: var(--sl-color-danger-700);
+    color: var(--sl-color-danger-800);
     box-sizing: border-box;
   }
 
@@ -52,6 +52,12 @@ export default css`
   }
 
   /* -------------------------------------------------------------- */
+
+  .validation-error:not(:empty)::before {
+    content: '\\0026a0\\00fe0e \\00a0';
+    color: var(--sl-color-danger-800);
+    font-family: 'monospace';
+  }
 
   .validation-error:not(:empty) {
     xxxposition: absolute;
@@ -77,13 +83,14 @@ export default css`
 
   .base.invalid sl-input::part(form-control-label),
   .base.invalid sl-select::part(form-control-label) {
-    xxxcolor: var(--sl-color-danger-700);
+    xxxcolor: var(--sl-color-danger-800);
   }
 
   .base.invalid sl-input::part(base),
   .base.invalid sl-select::part(control) {
     border-color: var(--sl-color-danger-800);
     background-color: var(--sl-color-danger-50);
+
     --sl-input-focus-ring-color: var(--sl-color-danger-400);
   }
 `;

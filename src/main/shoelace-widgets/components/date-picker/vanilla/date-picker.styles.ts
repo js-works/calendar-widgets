@@ -248,8 +248,9 @@ export default /*css*/ `
   }
 
   .cal-time-date {
-    font-size: 75%;
+    font-size: 60%;
     margin-bottom: 0.25em;
+    font-weight: 200;
   }
 
   .cal-day-period {
