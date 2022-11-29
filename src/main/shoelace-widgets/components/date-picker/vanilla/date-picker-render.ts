@@ -490,14 +490,14 @@ function renderDatePicker(
         ? datePickerCtrl.getActiveMinute()
         : datePickerCtrl.getActiveMinute2();
 
-    const date = new Date(1970, 0, 1, hour, minute);
+    const timeDate = new Date(1970, 0, 1, hour, minute);
     let time = '';
     let dayPeriod = '';
 
     const parts = new Intl.DateTimeFormat(i18n.getLocale(), {
       hour: '2-digit',
       minute: '2-digit'
-    }).formatToParts(date);
+    }).formatToParts(timeDate);
 
     if (
       parts.length > 4 &&
@@ -515,13 +515,28 @@ function renderDatePicker(
       time = parts.map((it) => it.value).join('');
     }
 
+    let dateNode: VNode = null;
+
+    if (
+      props.selectionMode === 'dateTime' ||
+      props.selectionMode === 'dateTimeRange'
+    ) {
+      const date = new Date(); // TODO!!!!!!!!
+
+      const formattedDate = new Intl.DateTimeFormat(i18n.getLocale(), {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      }).format(date);
+
+      dateNode = h('div', { class: 'cal-time-date' }, formattedDate);
+    }
+
     return div(
       {
-        class: classMap({
-          'cal-time': true,
-          'cal-time--has-day-period': !!dayPeriod
-        })
+        class: 'cal-time'
       },
+      dateNode,
       time,
       !dayPeriod ? null : span({ class: 'cal-day-period' }, dayPeriod)
     );
@@ -591,7 +606,7 @@ function renderDatePicker(
       null,
       div(
         { class: 'cal-time-selector' },
-        div({ class: 'cal-time' }, renderTime(type)),
+        renderTime(type),
         div({ class: 'cal-hours-headline' }, 'Hours'),
         input({
           'type': 'range',

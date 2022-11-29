@@ -117,8 +117,6 @@ class DatePickerController {
 
     this.#activeYear = new Date().getFullYear();
     this.#activeMonth = new Date().getMonth();
-    this.#activeHour = new Date().getHours();
-    this.#activeMinute = new Date().getMinutes();
     this.#requestUpdate();
   }
 
@@ -240,6 +238,10 @@ class DatePickerController {
   setValue(value: string) {
     if (value === '') {
       this.#selection.clear();
+      this.#activeHour = 0;
+      this.#activeMinute = 0;
+      this.#activeHour2 = 0;
+      this.#activeMinute2 = 0;
     } else {
       // TODO!!!!
     }

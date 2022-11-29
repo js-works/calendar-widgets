@@ -155,6 +155,7 @@ export class DateField extends LitElement {
   private _onClearClick = () => {
     this.value = '';
     this._dropdownRef.value!.hide();
+    this._pickerRef.value!.value = '';
   };
 
   private _onPickerChange = (ev: Event) => {
@@ -288,8 +289,9 @@ export class DateField extends LitElement {
                 variant="text"
                 class="button"
                 @click=${this._onClearClick}
-                >Clear</sl-button
               >
+                Clear
+              </sl-button>
               <sl-button
                 variant="text"
                 class="button"

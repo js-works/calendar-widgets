@@ -235,20 +235,21 @@ export default /*css*/ `
   .cal-time-selector {
     display: flex;
     flex-direction: column;
+    margin-top: 0.5rem;
   }
 
   .cal-time {
+    text-align: center;
     align-self: center;
     margin: 0.5rem 0 0 0;
-    font-size: 125%;
+    font-size: 180%;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic,
       var(--cal-font-family);
-    text-align: start;
-    min-width: 3em;
   }
 
-  .cal-time--has-day-period {
-    min-width: 4em;
+  .cal-time-date {
+    font-size: 75%;
+    margin-bottom: 0.25em;
   }
 
   .cal-day-period {
