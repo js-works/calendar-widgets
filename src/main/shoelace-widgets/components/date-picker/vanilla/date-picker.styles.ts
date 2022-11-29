@@ -204,9 +204,10 @@ export default /*css*/ `
   }
 
   .cal-time-links {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
     align-items: center;
-    padding: 0 2em;
+    padding: 0 3em;
     min-height: 2em;
     box-sizing: border-box;
     margin-bottom: 0.5em;
@@ -223,17 +224,14 @@ export default /*css*/ `
     pointer-events: none;
   }
 
-
-  .cal-time-link:only-child {
-    margin-left: 0.25em;
-  }
-
-  .cal-time-link:first-child:not(:only-child) {
-    margin: 0 1.5em 0 auto;
+  .cal-time-link:first-child {
+    grid-column: 1;
+    justify-self: start;
   }
   
   .cal-time-link:nth-child(2) {
-    margin: 0 auto 0 1.5em;
+    justify-self: end;
+    grid-column: 2;
   }
 
   .cal-time-selector {
