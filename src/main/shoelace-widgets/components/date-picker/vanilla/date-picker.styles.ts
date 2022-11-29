@@ -13,7 +13,7 @@ export default /*css*/ `
 
   .cal-base--date-time,
   .cal-base--date-time-range {
-    height: 16rem;
+    height: 17rem;
   }
 
   .cal-input {
@@ -204,13 +204,14 @@ export default /*css*/ `
   }
 
   .cal-time-links {
-    height: 2rem;
+    min-height: 2em;
     display: flex;
     align-items: center;
     justify-items: center
     gap: 2em;
     padding: 0 2em;
     box-sizing: border-box;
+    margin-bottom: 0.5em;
   }
 
   .cal-time-link {

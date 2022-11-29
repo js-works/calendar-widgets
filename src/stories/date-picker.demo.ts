@@ -24,7 +24,18 @@ const styles = css`
   }
 
   .first-column {
-    width: 20rem;
+    width: 21rem;
+  }
+
+  .picker {
+    display: block;
+    border: 1px solid var(--sl-color-primary-100);
+    box-shadow: var(--sl-shadow-large);
+    width: 21rem;
+  }
+
+  .selection {
+    margin-top: 1rem;
   }
 
   .second-column {
@@ -35,10 +46,6 @@ const styles = css`
 
   .mode-selector {
     min-width: 17rem;
-  }
-
-  .selection {
-    margin-top: 0.5rem;
   }
 `;
 
@@ -115,6 +122,7 @@ class DatePickerDemo extends LitElement {
             dir=${this._locale === 'ar-SA' ? 'rtl' : 'ltr'}
             .minDate=${this._minDate}
             .maxDate=${this._maxDate}
+            class="picker"
           ></sx-date-picker>
           <div class="selection">
             <div>Selection:</div>

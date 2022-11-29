@@ -73,10 +73,6 @@ class DatePickerDemo extends LitElement {
             {
               value: 'it',
               text: 'it'
-            },
-            {
-              value: 'ar-SA',
-              text: 'ar-SA'
             }
           ]}
         >
