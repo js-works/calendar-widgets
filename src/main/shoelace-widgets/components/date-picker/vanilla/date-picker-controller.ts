@@ -289,7 +289,7 @@ class DatePickerController {
         return;
       }
 
-      const subject = target.getAttribute('data-subject');
+      const subject = this.#getSubject(target);
 
       if (!subject) {
         return;
@@ -350,7 +350,7 @@ class DatePickerController {
       let preventDefault = true;
 
       if (target instanceof HTMLElement) {
-        const subject = target.getAttribute('data-subject');
+        const subject = this.#getSubject(target);
 
         if (subject === 'hour' || subject === 'minute') {
           preventDefault = false;
@@ -366,11 +366,11 @@ class DatePickerController {
     root.addEventListener('click', (ev: Event) => {
       const target = ev.target;
 
-      if (!(target instanceof HTMLElement)) {
+      if (!(target instanceof Element)) {
         return;
       }
 
-      const subject = target.getAttribute('data-subject');
+      const subject = this.#getSubject(target);
 
       if (!subject) {
         return;
@@ -724,4 +724,11 @@ class DatePickerController {
     this.#view = 'decade';
     this.#requestUpdate();
   };
+
+  #getSubject(elem: Element) {
+    return (
+      elem.getAttribute('data-subject') ||
+      elem.parentElement?.getAttribute('data-subject')
+    );
+  }
 }

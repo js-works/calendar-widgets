@@ -33,15 +33,16 @@ export default /*css*/ `
     background-color: var(--cal-nav-background-color);
   }
 
-  .cal-nav--accentuated {
-    color: var(--cal-nav-accentuated-color);
-    background-color: var(--cal-nav-accentuated-background-color);
-  }
-
   .cal-title,
   .cal-prev,
   .cal-next {
     padding: 5px 0.75rem;
+  }
+  
+  .cal-prev,
+  .cal-next {
+    display: flex;
+    align-items: center;
   }
 
   .cal-title {
@@ -62,16 +63,21 @@ export default /*css*/ `
     visibility: hidden;
   }
 
-  .cal-title:not(.cal-title--disabled):hover,
-  .cal-prev:not(.cal-prev--disabled):hover,
-  .cal-next:not(.cal-next--disabled):hover {
+  .cal-nav:not(.cal-nav--accentuated) .cal-title:not(.cal-title--disabled):hover,
+  .cal-nav:not(.cal-nav--accentuated) .cal-prev:not(.cal-prev--disabled):hover,
+  .cal-nav:not(.cal-nav--accentuated) .cal-next:not(.cal-next--disabled):hover {
     background-color: var(--cal-nav-hover-background-color);
   }
 
-  .cal-title:not(.cal-title--disabled):active,
-  .cal-prev:not(.cal-prev--disabled):active,
-  .cal-next:not(.cal-next--disabled):active {
+  .cal-nav:not(.cal-nav--accentuated) .cal-title:not(.cal-title--disabled):active,
+  .cal-nav:not(.cal-nav--accentuated) .cal-prev:not(.cal-prev--disabled):active,
+  .cal-nav:not(.cal-nav--accentuated) .cal-next:not(.cal-next--disabled):active {
     background-color: var(--cal-nav-active-background-color);
+  }
+
+  .cal-nav--accentuated {
+    color: var(--cal-nav-accentuated-color);
+    background-color: var(--cal-nav-accentuated-background-color);
   }
 
   .cal-nav--accentuated .cal-title:not(.cal-title--disabled):hover,

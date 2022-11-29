@@ -5,6 +5,8 @@ import { h, VElement, VNode } from './vdom';
 
 // icons
 import timeIcon from './icons/time.icon';
+import arrowLeftIcon from './icons/arrow-left.icon';
+import arrowRightIcon from './icons/arrow-right.icon';
 
 const [a, div, img, input, span] = ['a', 'div', 'img', 'input', 'span'].map(
   (tag) => h.bind(null, tag)
@@ -245,7 +247,7 @@ function renderDatePicker(
                 }),
                 'data-subject': prevDisabled ? null : 'prev'
               },
-              i18n.getDirection() === 'ltr' ? '\u{1F860}' : '\u{1F862}'
+              i18n.getDirection() === 'ltr' ? arrowLeftIcon : arrowRightIcon
             ),
             renderTitle(),
             a(
@@ -256,7 +258,7 @@ function renderDatePicker(
                 }),
                 'data-subject': nextDisabled ? null : 'next'
               },
-              i18n.getDirection() === 'ltr' ? '\u{1F862}' : '\u{1F860}'
+              i18n.getDirection() === 'ltr' ? arrowRightIcon : arrowLeftIcon
             )
           ),
 
@@ -536,7 +538,6 @@ function renderDatePicker(
   }
 
   function renderTimeLink(type: 'time' | 'time2') {
-    const icon = img({ src: timeIcon });
     let hour = 0;
     let minute = 0;
 
@@ -567,7 +568,7 @@ function renderDatePicker(
         }),
         'data-subject': type
       },
-      icon,
+      timeIcon,
       timeString === '' ? '--:--' : timeString
     );
   }

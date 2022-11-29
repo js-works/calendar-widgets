@@ -30,6 +30,8 @@ const entityReplacements: Record<string, string> = {
   '<': '&lt;'
 };
 
+const svgNamespace = 'http://www.w3.org/2000/svg';
+
 // === exported functions ============================================
 
 function h(
@@ -63,8 +65,18 @@ function renderToString(vnode: VNode): string {
     } else {
       push('<', vnode.tagName);
 
-      if (vnode.attrs) {
-        for (const [k, v] of Object.entries(vnode.attrs)) {
+      let attrs = vnode.attrs;
+
+      if (!attrs?.xmlns) {
+        const ns = getNamespace(vnode);
+
+        if (ns) {
+          attrs = { ...vnode.attrs, xmlns: ns };
+        }
+      }
+
+      if (attrs) {
+        for (const [k, v] of Object.entries(attrs)) {
           if (v !== null) {
             push(' ', k, '="', encodeEntities(String(v)), '"');
           }
@@ -88,7 +100,7 @@ function render(container: Element, velem: VElement) {
   if (!oldVElem) {
     container.replaceChildren(renderVElement(velem));
   } else {
-    diff(oldVElem, velem)(container.firstElementChild!);
+    diff(oldVElem, velem, '')(container.firstElementChild!);
   }
 
   (container as any)[symbolVElem] = velem;
@@ -96,8 +108,18 @@ function render(container: Element, velem: VElement) {
 
 // === local functions ===============================================
 
-function renderVElement(velem: VElement): HTMLElement {
-  const elem = document.createElement(velem.tagName);
+function renderVElement(velem: VElement, ns?: string): Element {
+  let elem: Element;
+
+  if (!ns) {
+    ns = getNamespace(velem);
+  }
+
+  if (!ns) {
+    elem = document.createElement(velem.tagName);
+  } else {
+    elem = document.createElementNS(ns, velem.tagName);
+  }
 
   if (velem.attrs) {
     for (const [k, v] of Object.entries(velem.attrs)) {
@@ -108,18 +130,18 @@ function renderVElement(velem: VElement): HTMLElement {
   }
 
   for (const vchild of velem.children) {
-    elem.append(renderVNode(vchild));
+    elem.append(renderVNode(vchild, ns || ''));
   }
 
   return elem;
 }
 
-function renderVNode(vnode: VNode): HTMLElement | Text {
+function renderVNode(vnode: VNode, ns: string): Element | Text {
   return vnode == null
     ? document.createTextNode('')
     : typeof vnode !== 'object'
     ? document.createTextNode(String(vnode))
-    : renderVElement(vnode);
+    : renderVElement(vnode, ns);
 }
 
 function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
@@ -148,12 +170,16 @@ function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
   return (node) => patches.forEach((patch) => patch(node));
 }
 
-function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
+function diffChildren(
+  oldVChildren: VNode[],
+  newVChildren: VNode[],
+  ns: string
+): Patch {
   const childPatches: Patch[] = [];
 
   oldVChildren.forEach((oldVChild, i) => {
     if (i < newVChildren.length) {
-      childPatches.push(diff(oldVChild, newVChildren[i]));
+      childPatches.push(diff(oldVChild, newVChildren[i], ns));
     } else {
       childPatches.push((node) => node.remove());
     }
@@ -163,7 +189,7 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
 
   for (const additionalVChild of newVChildren.slice(oldVChildren.length)) {
     additionalPatches.push((node) => {
-      node.appendChild(renderVNode(additionalVChild));
+      node.appendChild(renderVNode(additionalVChild, ns));
     });
   }
 
@@ -185,9 +211,13 @@ function diffChildren(oldVChildren: VNode[], newVChildren: VNode[]): Patch {
   };
 }
 
-function diff(oldVTree: VNode, newVTree: VNode): Patch {
+function diff(oldVTree: VNode, newVTree: VNode, ns: string): Patch {
+  if (!ns) {
+    ns = getNamespace(newVTree);
+  }
+
   if (oldVTree == null) {
-    return (node) => node.replaceWith(renderVNode(newVTree));
+    return (node) => node.replaceWith(renderVNode(newVTree, ns));
   }
 
   if (newVTree == null) {
@@ -201,16 +231,16 @@ function diff(oldVTree: VNode, newVTree: VNode): Patch {
     typeof newVTree === 'number'
   ) {
     return oldVTree !== newVTree
-      ? (node) => node.replaceWith(renderVNode(newVTree))
+      ? (node) => node.replaceWith(renderVNode(newVTree, ns))
       : () => {};
   }
 
   if (oldVTree.tagName !== newVTree.tagName) {
-    return (node) => node.replaceWith(renderVElement(newVTree));
+    return (node) => node.replaceWith(renderVElement(newVTree, ns));
   }
 
   const patchAttrs = diffAttrs(oldVTree.attrs || {}, newVTree.attrs || {});
-  const patchChildren = diffChildren(oldVTree.children, newVTree.children);
+  const patchChildren = diffChildren(oldVTree.children, newVTree.children, ns);
 
   return (node) => {
     patchAttrs(node);
@@ -235,6 +265,16 @@ function updateAttribute(
       (elem as HTMLInputElement).value = val;
     }
   }
+}
+
+function getNamespace(vnode: VNode): string {
+  let ret = '';
+
+  if (vnode && typeof vnode === 'object' && vnode.tagName === 'svg') {
+    ret = svgNamespace;
+  }
+
+  return ret;
 }
 
 // cSpell:words vchild vchildren velem vnode
