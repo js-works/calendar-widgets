@@ -727,10 +727,7 @@ class DatePickerController {
     this.#requestUpdate();
   };
 
-  #getSubject(elem: Element) {
-    return (
-      elem.getAttribute('data-subject') ||
-      elem.parentElement?.getAttribute('data-subject')
-    );
+  #getSubject(elem: Element): string {
+    return elem.closest('[data-subject]')?.getAttribute('data-subject') || '';
   }
 }

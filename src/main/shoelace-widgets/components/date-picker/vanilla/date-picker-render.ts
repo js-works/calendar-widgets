@@ -114,7 +114,7 @@ function renderDatePicker(
             end: { year: values[1] }
           };
         }
-        console.log(selectionRange);
+
         const data = calendar.getDecadeData({
           year: datePickerCtrl.getActiveYear(),
           selectionRange
