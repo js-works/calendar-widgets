@@ -87,8 +87,8 @@ class DatePicker extends LitElement {
   @property({ type: Boolean, attribute: 'show-week-numbers' })
   showWeekNumbers = false;
 
-  @property({ type: String, attribute: 'days-amount' })
-  daysAmount: 'default' | 'minimal' | 'maximal' = 'default';
+  @property({ type: String, attribute: 'calendar-size' })
+  calendarSize: 'default' | 'minimal' | 'maximal' = 'default';
 
   @property({ type: Boolean, attribute: 'highlight-today' })
   highlightToday = false;

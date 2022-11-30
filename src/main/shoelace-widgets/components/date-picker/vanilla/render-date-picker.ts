@@ -42,7 +42,7 @@ type DatePickerProps = {
   selectionMode: DatePickerController.SelectionMode;
   accentuateHeader: boolean;
   showWeekNumbers: boolean;
-  daysAmount: 'default' | 'minimal' | 'maximal';
+  calendarSize: 'default' | 'minimal' | 'maximal';
   highlightToday: boolean;
   highlightWeekends: boolean;
   disableWeekends: boolean;
@@ -69,7 +69,7 @@ function renderDatePicker(
     weekendDays: i18n.getWeekendDays(),
     getCalendarWeek: (date: Date) => i18n.getCalendarWeek(date),
     disableWeekends: props.disableWeekends,
-    alwaysShow42Days: props.daysAmount === 'maximal',
+    alwaysShow42Days: props.calendarSize === 'maximal',
     minDate: props.minDate,
     maxDate: props.maxDate
   });
@@ -312,7 +312,7 @@ function renderDatePicker(
     const currentHighlighted = props.highlightToday && dayItem.current;
     const highlighted = props.highlightWeekends && dayItem.weekend;
 
-    if (props.daysAmount === 'minimal' && dayItem.adjacent) {
+    if (props.calendarSize === 'minimal' && dayItem.adjacent) {
       return div({
         class: classMap({
           'cal-cell--highlighted': highlighted
@@ -404,7 +404,7 @@ function renderDatePicker(
     const selected = datePickerCtrl.hasSelectedYear(yearItem.year);
     const currentHighlighted = props.highlightToday && yearItem.current;
 
-    if (yearItem.adjacent && props.daysAmount === 'minimal') {
+    if (yearItem.adjacent && props.calendarSize === 'minimal') {
       return h('div');
     }
 
@@ -438,7 +438,7 @@ function renderDatePicker(
   function renderDecadeCell(decadeItem: Calendar.DecadeItem) {
     const currentHighlighted = props.highlightToday && decadeItem.current;
 
-    if (decadeItem.adjacent && props.daysAmount === 'minimal') {
+    if (decadeItem.adjacent && props.calendarSize === 'minimal') {
       return h('div');
     }
 

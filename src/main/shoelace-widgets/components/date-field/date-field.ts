@@ -81,8 +81,8 @@ export class DateField extends LitElement {
   @property({ type: Boolean, attribute: 'show-week-numbers' })
   showWeekNumbers = false;
 
-  @property({ type: String, attribute: 'days-amount' })
-  daysAmount: 'default' | 'minimal' | 'maximal' = 'default';
+  @property({ type: String, attribute: 'calendar-size' })
+  calendarSize: 'default' | 'minimal' | 'maximal' = 'default';
 
   @property({ type: Boolean, attribute: 'highlight-weekends' })
   highlightWeekends = false;
@@ -271,7 +271,7 @@ export class DateField extends LitElement {
               class="date-picker"
               value=${this.value}
               selection-mode=${this.selectionMode}
-              days-amount=${this.daysAmount}
+              calendar-size=${this.calendarSize}
               ?show-week-numbers=${this.showWeekNumbers}
               ?highlight-weekends=${this.highlightWeekends}
               ?disable-weekends=${this.disableWeekends}

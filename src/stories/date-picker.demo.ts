@@ -66,7 +66,7 @@ class DatePickerDemo extends LitElement {
   private _highlightWeekends = true;
   private _disableWeekends = false;
   private _showWeekNumbers = true;
-  private _daysAmount: 'default' | 'minimal' | 'maximal' = 'default';
+  private _calendarSize: 'default' | 'minimal' | 'maximal' = 'default';
   private _enableCenturyView = false;
   private _minDate: Date | null = null;
   private _maxDate: Date | null = null;
@@ -85,8 +85,8 @@ class DatePickerDemo extends LitElement {
       this._selectionValue = target.value;
     } else if (subject === 'selectionMode') {
       this._selectionMode = target.value;
-    } else if (subject === 'daysAmount') {
-      this._daysAmount = target.value;
+    } else if (subject === 'calendarSize') {
+      this._calendarSize = target.value;
     } else if (subject === 'minDate') {
       this._minDate = target.value ? new Date(target.value) : null;
     } else if (subject === 'maxDate') {
@@ -111,7 +111,7 @@ class DatePickerDemo extends LitElement {
           <sx-date-picker
             data-subject="datePicker"
             selection-mode=${this._selectionMode}
-            days-amount=${this._daysAmount}
+            calendar-size=${this._calendarSize}
             ?accentuate-header=${this._accentuateHeader}
             ?highlight-today=${this._highlightToday}
             ?highlight-weekends=${this._highlightWeekends}
@@ -165,9 +165,9 @@ class DatePickerDemo extends LitElement {
             <sl-menu-item value="yearRange">yearRange</sl-menu-item>
           </sl-select>
           <sl-select
-            label="Days amount"
-            data-subject="daysAmount"
-            value=${this._daysAmount}
+            label="Calendar size"
+            data-subject="calendarSize"
+            value=${this._calendarSize}
           >
             <sl-menu-item value="default">
               default (with adjacent days)
