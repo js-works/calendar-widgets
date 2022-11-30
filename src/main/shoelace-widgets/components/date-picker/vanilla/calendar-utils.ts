@@ -1,5 +1,3 @@
-import type { ReactiveControllerHost } from 'lit';
-
 export {
   formatDay,
   formatWeekNumber,
