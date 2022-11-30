@@ -222,7 +222,7 @@ function renderDatePicker(
         sheet = renderTimeRangeView('time1');
         break;
 
-      case 'timeRange1':
+      case 'timeRange2':
         sheet = renderTimeRangeView('time2');
         break;
 
@@ -239,7 +239,10 @@ function renderDatePicker(
     return div(
       { class: `cal-base cal-view--${typeSnakeCase}` },
 
-      view === 'time1' || view === 'time2'
+      view === 'time1' ||
+        view === 'time2' ||
+        view === 'timeRange1' ||
+        view === 'timeRange2'
         ? sheet
         : renderCommon(view, sheet, prevDisabled, nextDisabled)
     );
@@ -505,7 +508,8 @@ function renderDatePicker(
 
     return div(
       {
-        class: 'cal-time'
+        'class': `cal-time cal-time--${type === 'time1' ? '1' : '2'}`,
+        'data-subject': `timeRange${type === 'time1' ? '1' : '2'}`
       },
       timeHeader,
       div({ class: 'cal-time-value' }, time)
@@ -620,6 +624,7 @@ function renderDatePicker(
       div(
         {
           class: classMap({
+            'cal-time-range': true,
             'cal-time-range--time1': type === 'time1',
             'cal-time-range--time2': type === 'time2'
           })

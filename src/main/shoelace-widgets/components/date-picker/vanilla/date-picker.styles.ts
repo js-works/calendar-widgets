@@ -9,6 +9,7 @@ export default /*css*/ `
     flex-direction: column;
     user-select: none;
     min-width: 20rem;
+    box-sizing: border-box;
   }
 
   .cal-view--date-time,
@@ -280,6 +281,29 @@ export default /*css*/ `
   :where(.cal-view--time1, .cal-view--time2) .cal-time {
     text-align: center;
   }
+  
+  :where(.cal-view--time-range1, .cal-view--time-range-2) .cal-time--2 {
+    font-size: 70% !important;
+  }
+  
+  :where(.cal-view--time-range1, .cal-view--time-range-2) .cal-time--1 {
+    padding: 0 0 1em 2em;
+  }
+
+  .cal-view--time-range1 .cal-time--2:hover {
+    background-color: var(--sl-color-primary-50);
+    cursor: pointer;
+  }
+
+  .cal-time-range {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+
+  .cal-time--1,
+  .cal-time--2 {
+  }
 
   /* time sliders */
 
@@ -373,13 +397,6 @@ export default /*css*/ `
     background-color: var(--cal-back-link-active-background-color);
   }
 
-  .cal-time-range--time1 {
-    display: flex;
-  }
-
-  .cal-time-range--time1 > :first-child {
-    flex-grow: 5;
-  }
 
   .cal-time-range--time1 > :nth-child(2) {
     font-size: 75%;

@@ -440,8 +440,19 @@ class DatePickerController {
           break;
         }
 
+        case 'timeRange1': {
+          this.#setView('timeRange1');
+          break;
+        }
+
+        case 'timeRange2': {
+          this.#setView('timeRange2');
+          break;
+        }
+
         case 'view-month': {
           this.#setView('month');
+          break;
         }
       }
 
@@ -540,6 +551,7 @@ class DatePickerController {
   };
 
   #setView = (view: DatePickerController.View) => {
+    alert(view);
     this.#view = view;
     this.#requestUpdate();
   };

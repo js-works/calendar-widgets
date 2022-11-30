@@ -1,5 +1,5 @@
 import { render, renderToString, VElement } from './vdom';
-import { renderDatePicker, DatePickerProps } from './date-picker-render';
+import { renderDatePicker, DatePickerProps } from './render-date-picker';
 import { DatePickerController } from './date-picker-controller';
 
 import styles from './date-picker.styles';
