@@ -529,7 +529,22 @@ function renderDatePicker(
         day: 'numeric'
       }).format(date);
 
-      dateNode = h('div', { class: 'cal-time-date' }, formattedDate);
+      let fromOrToLabel = '';
+
+      if (props.selectionMode === 'dateTimeRange') {
+        const selectionSize = datePickerCtrl.getSelectionSize();
+
+        if (selectionSize > 1) {
+          fromOrToLabel = (type === 'time' ? 'from:' : 'to:') + '\u00a0\u00a0';
+        }
+      }
+
+      dateNode = h(
+        'div',
+        { class: 'cal-time-date' },
+        fromOrToLabel,
+        formattedDate
+      );
     }
 
     return div(
