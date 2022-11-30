@@ -276,33 +276,45 @@ export default /*css*/ `
     display: grid;
     grid-template-columns: 1fr;
     gap: 0.5em;
+    padding-bottom: 1em;
   }
 
   :where(.cal-view--time1, .cal-view--time2) .cal-time {
     text-align: center;
   }
   
-  :where(.cal-view--time-range1, .cal-view--time-range-2) .cal-time--2 {
-    font-size: 70% !important;
+  .cal-view--time-range1 .cal-time--2,
+  .cal-view--time-range2 .cal-time--1 {
+    font-size: 70%;
   }
   
-  :where(.cal-view--time-range1, .cal-view--time-range-2) .cal-time--1 {
+  .cal-view--time-range1 .cal-time--1 {
     padding: 0 0 1em 2em;
+  }
+  
+  .cal-view--time-range2 .cal-time--2 {
+    padding: 0 0 1em 0.5em;
   }
 
   .cal-view--time-range1 .cal-time--2:hover {
     background-color: var(--sl-color-primary-50);
     cursor: pointer;
   }
+  
+  .cal-view--time-range2 .cal-time--1:hover {
+    background-color: var(--sl-color-primary-50);
+    cursor: pointer;
+  }
 
   .cal-time-range {
+    padding-bottom: 1em;
+  }
+
+  .cal-time-range-tabs {
     display: grid;
     grid-template-columns: 1fr 1fr;
     align-items: center;
-  }
-
-  .cal-time--1,
-  .cal-time--2 {
+    gap: 0;
   }
 
   /* time sliders */
@@ -397,17 +409,20 @@ export default /*css*/ `
     background-color: var(--cal-back-link-active-background-color);
   }
 
+  .cal-view--time-range1 .cal-time--2,
+  .cal-view--time-range2 .cal-time--1 {
+    border: 0 solid var(--sl-color-neutral-300);
+  }
 
-  .cal-time-range--time1 > :nth-child(2) {
-    font-size: 75%;
-    border: 0 solid #aaa; /* TODO!!! */
+  .cal-view--time-range1 .cal-time--2 {
     border-width: 0 0 1px 1px;
     padding: 1em;
     margin: 1em;
-    flex-grow: 5;
   }
   
-  .cal-time-range--time2 {
-    display: flex;
+  .cal-view--time-range2 .cal-time--1 {
+    border-width: 0 1px 1px 0;
+    padding: 1em;
+    margin: 1em;
   }
 `;

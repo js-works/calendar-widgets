@@ -551,7 +551,6 @@ class DatePickerController {
   };
 
   #setView = (view: DatePickerController.View) => {
-    alert(view);
     this.#view = view;
     this.#requestUpdate();
   };

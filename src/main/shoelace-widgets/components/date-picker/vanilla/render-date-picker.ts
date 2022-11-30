@@ -620,14 +620,10 @@ function renderDatePicker(
 
   function renderTimeRangeView(type: 'time1' | 'time2') {
     return div(
-      null, //
+      { class: 'cal-time-range' },
       div(
         {
-          class: classMap({
-            'cal-time-range': true,
-            'cal-time-range--time1': type === 'time1',
-            'cal-time-range--time2': type === 'time2'
-          })
+          class: 'cal-time-range-tabs'
         },
         renderTime('time1'),
         renderTime('time2')
