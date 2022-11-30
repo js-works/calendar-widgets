@@ -93,21 +93,28 @@ class CalendarLocalizer {
     }).format(date);
   }
 
-  getDecadeTitle(year: number, yearCount = 10, offset = 0) {
+  getDecadeTitle(year: number) {
     const startYear = Math.floor(year / 10) * 10;
 
     return Intl.DateTimeFormat(this.#locale, {
       year: 'numeric'
       /* @ts-ignore */ // TODO!!!
     }).formatRange(
-      new Date(startYear + offset, 1, 1),
-      new Date(startYear + offset + yearCount - 1, 1, 1)
+      new Date(startYear, 1, 1),
+      new Date(startYear + 10, -1, 1, 1)
     );
   }
 
-  getCenturyTitle(year: number, decadeCount = 10, offset = 0) {
+  getCenturyTitle(year: number) {
     const startYear = Math.floor(year / 100) * 100;
-    return this.getDecadeTitle(startYear, decadeCount * 10, offset * 10);
+
+    return Intl.DateTimeFormat(this.#locale, {
+      year: 'numeric'
+      /* @ts-ignore */ // TODO!!!
+    }).formatRange(
+      new Date(startYear, 1, 1),
+      new Date(startYear + 100, -1, 1, 1)
+    );
   }
 }
 

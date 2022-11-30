@@ -254,9 +254,9 @@ function renderDatePicker(
 
     const title =
       view === 'century'
-        ? i18n.getCenturyTitle(activeYear, 12)
+        ? i18n.getCenturyTitle(activeYear)
         : view === 'decade'
-        ? i18n.getDecadeTitle(activeYear, 12)
+        ? i18n.getDecadeTitle(activeYear)
         : view === 'year'
         ? i18n.getYearTitle(activeYear)
         : i18n.getMonthTitle(activeYear, datePickerCtrl.getActiveMonth());
@@ -412,6 +412,7 @@ function renderDatePicker(
           'cal-cell--current': yearItem.current,
           'cal-cell--current-highlighted': currentHighlighted,
           'cal-cell--selected': selected,
+          'cal-cell--adjacent': yearItem.adjacent,
           'cal-cell--in-selection-range': yearItem.inSelectionRange,
           'cal-cell--first-in-selection-range': yearItem.firstInSelectionRange,
           'cal-cell--last-in-selection-range': yearItem.lastInSelectionRange
@@ -439,13 +440,14 @@ function renderDatePicker(
           'cal-cell': true,
           'cal-cell--disabled': decadeItem.disabled,
           'cal-cell--current': decadeItem.current,
+          'cal-cell--adjacent': decadeItem.adjacent,
           'cal-cell--current-highlighted': currentHighlighted
         }),
         'data-year': getYearString(decadeItem.firstYear),
         'data-subject': decadeItem.disabled ? null : 'decade'
       },
       i18n
-        .getDecadeTitle(decadeItem.firstYear, 10)
+        .getDecadeTitle(decadeItem.firstYear)
         .replaceAll('\u2013', '\u2013\u200B')
     );
   }

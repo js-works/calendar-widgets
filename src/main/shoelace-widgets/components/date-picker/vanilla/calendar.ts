@@ -46,6 +46,7 @@ namespace Calendar {
   export type YearItem = Readonly<{
     year: number;
     current: boolean; // true if current year, else false
+    adjacent: boolean;
     outOfMinMaxRange: boolean;
     inSelectionRange: boolean;
     firstInSelectionRange: boolean;
@@ -57,6 +58,7 @@ namespace Calendar {
     firstYear: number;
     lastYear: number;
     current: boolean; // true if current decade, else false
+    adjacent: boolean;
     outOfMinMaxRange: boolean;
     disabled: boolean;
   }>;
@@ -356,7 +358,7 @@ class Calendar {
   }): Calendar.DecadeData {
     const year = params.year;
     const options = this.#options;
-    const startYear = year - (year % 10);
+    const startYear = year - (year % 10) - 1;
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
     const years: Calendar.YearItem[] = [];
@@ -364,6 +366,7 @@ class Calendar {
     const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
 
     for (let itemYear = startYear; itemYear <= endYear; ++itemYear) {
+      const adjacent = itemYear === startYear || itemYear === endYear;
       const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
       let inSelectionRange = false;
@@ -385,6 +388,7 @@ class Calendar {
       years.push({
         current: itemYear === currYear,
         year: itemYear,
+        adjacent,
         outOfMinMaxRange,
         inSelectionRange,
         firstInSelectionRange,
@@ -422,7 +426,7 @@ class Calendar {
   }): Calendar.CenturyData {
     const year = params.year;
     const options = this.#options;
-    const startYear = year - (year % 100);
+    const startYear = year - (year % 100) - 10;
     const endYear = startYear + 119;
     const currYear = new Date().getFullYear();
     const decades: Calendar.DecadeItem[] = [];
@@ -436,12 +440,14 @@ class Calendar {
       : null;
 
     for (let itemYear = startYear; itemYear <= endYear; itemYear += 10) {
+      const adjacent = itemYear === startYear || itemYear === endYear - 9;
       const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
       decades.push({
         current: itemYear <= currYear && itemYear + 10 > currYear,
         firstYear: itemYear,
         lastYear: itemYear + 9,
+        adjacent,
         outOfMinMaxRange,
         disabled: outOfMinMaxRange
       });
