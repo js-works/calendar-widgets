@@ -404,6 +404,10 @@ function renderDatePicker(
     const selected = datePickerCtrl.hasSelectedYear(yearItem.year);
     const currentHighlighted = props.highlightToday && yearItem.current;
 
+    if (yearItem.adjacent && props.daysAmount === 'minimal') {
+      return h('div');
+    }
+
     return div(
       {
         'class': classMap({
@@ -433,6 +437,10 @@ function renderDatePicker(
 
   function renderDecadeCell(decadeItem: Calendar.DecadeItem) {
     const currentHighlighted = props.highlightToday && decadeItem.current;
+
+    if (decadeItem.adjacent && props.daysAmount === 'minimal') {
+      return h('div');
+    }
 
     return div(
       {

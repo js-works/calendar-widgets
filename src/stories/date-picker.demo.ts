@@ -45,7 +45,7 @@ const styles = css`
   }
 
   .mode-selector {
-    min-width: 17rem;
+    min-width: 18rem;
   }
 `;
 
