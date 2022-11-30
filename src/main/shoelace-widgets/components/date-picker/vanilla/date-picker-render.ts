@@ -154,7 +154,7 @@ function renderDatePicker(
           year: datePickerCtrl.getActiveYear(),
           selectionRange
         });
-        console.log(selectionRange);
+
         sheet = renderYearSheet(data);
         prevDisabled = data.prevDisabled;
         nextDisabled = data.nextDisabled;
@@ -210,10 +210,17 @@ function renderDatePicker(
         break;
       }
 
-      case 'time':
+      case 'time1':
+        return renderTimeView('time1');
+
       case 'time2':
-      case 'timeRange':
-        break;
+        return renderTimeView('time2');
+
+      case 'timeRange1':
+        return renderTimeRangeView('time1');
+
+      case 'timeRange1':
+        return renderTimeRangeView('time2');
 
       default:
         throw new Error(`Illegal view ${view}`);
@@ -227,40 +234,35 @@ function renderDatePicker(
 
     return div(
       { class: `cal-base cal-base--${typeSnakeCase}` },
-      view === 'time' ||
-        view === 'time2' ||
-        props.selectionMode === 'time' ||
-        props.selectionMode === 'timeRange'
-        ? null
-        : div(
-            {
-              class: classMap({
-                'cal-nav': true,
-                'cal-nav--accentuated': props.accentuateHeader
-              })
-            },
-            a(
-              {
-                'class': classMap({
-                  'cal-prev': true,
-                  'cal-prev--disabled': prevDisabled
-                }),
-                'data-subject': prevDisabled ? null : 'prev'
-              },
-              i18n.getDirection() === 'ltr' ? arrowLeftIcon : arrowRightIcon
-            ),
-            renderTitle(),
-            a(
-              {
-                'class': classMap({
-                  'cal-next': true,
-                  'cal-next--disabled': nextDisabled
-                }),
-                'data-subject': nextDisabled ? null : 'next'
-              },
-              i18n.getDirection() === 'ltr' ? arrowRightIcon : arrowLeftIcon
-            )
-          ),
+      div(
+        {
+          class: classMap({
+            'cal-nav': true,
+            'cal-nav--accentuated': props.accentuateHeader
+          })
+        },
+        a(
+          {
+            'class': classMap({
+              'cal-prev': true,
+              'cal-prev--disabled': prevDisabled
+            }),
+            'data-subject': prevDisabled ? null : 'prev'
+          },
+          i18n.getDirection() === 'ltr' ? arrowLeftIcon : arrowRightIcon
+        ),
+        renderTitle(),
+        a(
+          {
+            'class': classMap({
+              'cal-next': true,
+              'cal-next--disabled': nextDisabled
+            }),
+            'data-subject': nextDisabled ? null : 'next'
+          },
+          i18n.getDirection() === 'ltr' ? arrowRightIcon : arrowLeftIcon
+        )
+      ),
 
       props.selectionMode === 'time' || props.selectionMode === 'timeRange'
         ? null
@@ -270,10 +272,7 @@ function renderDatePicker(
         (props.selectionMode === 'dateTime' ||
           props.selectionMode === 'dateTimeRange')
         ? renderTimeLinks()
-        : null,
-
-      view !== 'time' ? null : renderTimeSelector('time'),
-      view !== 'time2' ? null : renderTimeSelector('time2')
+        : null
     );
   }
 
@@ -479,14 +478,14 @@ function renderDatePicker(
     );
   }
 
-  function renderTime(type: 'time' | 'time2') {
+  function renderTime(type: 'time1' | 'time2') {
     const hour =
-      type === 'time'
+      type === 'time1'
         ? datePickerCtrl.getActiveHour()
         : datePickerCtrl.getActiveHour2();
 
     const minute =
-      type === 'time'
+      type === 'time1'
         ? datePickerCtrl.getActiveMinute()
         : datePickerCtrl.getActiveMinute2();
 
@@ -515,7 +514,7 @@ function renderDatePicker(
       time = parts.map((it) => it.value).join('');
     }
 
-    let dateNode: VNode = null;
+    let timeHeader: VNode = null;
 
     if (
       props.selectionMode === 'dateTime' ||
@@ -535,15 +534,21 @@ function renderDatePicker(
         const selectionSize = datePickerCtrl.getSelectionSize();
 
         if (selectionSize > 1) {
-          fromOrToLabel = (type === 'time' ? 'from:' : 'to:') + '\u00a0\u00a0';
+          fromOrToLabel = (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0';
         }
       }
 
-      dateNode = h(
+      timeHeader = h(
         'div',
-        { class: 'cal-time-date' },
+        { class: 'cal-time-header', style: 'border: 1px solid red;' },
         fromOrToLabel,
         formattedDate
+      );
+    } else if (props.selectionMode === 'timeRange') {
+      timeHeader = h(
+        'div',
+        { class: 'cal-time-header' },
+        (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0'
       );
     }
 
@@ -551,8 +556,8 @@ function renderDatePicker(
       {
         class: 'cal-time'
       },
-      dateNode,
-      time,
+      timeHeader,
+      div({ class: 'cal-time--without-day-period' }, time),
       !dayPeriod ? null : span({ class: 'cal-day-period' }, dayPeriod)
     );
   }
@@ -562,19 +567,19 @@ function renderDatePicker(
 
     return div(
       { class: 'cal-time-links' },
-      renderTimeLink('time'),
+      renderTimeLink('time1'),
       selectionSize > 1 ? renderTimeLink('time2') : null
     );
   }
 
-  function renderTimeLink(type: 'time' | 'time2') {
+  function renderTimeLink(type: 'time1' | 'time2') {
     let hour = 0;
     let minute = 0;
 
     let timeString = '';
 
     if (datePickerCtrl.getSelectionSize() > 0) {
-      if (type === 'time') {
+      if (type === 'time1') {
         hour = datePickerCtrl.getActiveHour();
         minute = datePickerCtrl.getActiveMinute();
       } else {
@@ -603,13 +608,13 @@ function renderDatePicker(
     );
   }
 
-  function renderTimeSelector(type: 'time' | 'time2') {
+  function renderTimeSliders(type: 'time1' | 'time2') {
     const selectionMode = props.selectionMode;
 
     let hour = 0;
     let minute = 0;
 
-    if (type === 'time') {
+    if (type === 'time1') {
       hour = datePickerCtrl.getActiveHour();
       minute = datePickerCtrl.getActiveMinute();
     } else {
@@ -620,8 +625,7 @@ function renderDatePicker(
     return div(
       null,
       div(
-        { class: 'cal-time-selector' },
-        renderTime(type),
+        { class: 'cal-time-sliders' },
         div({ class: 'cal-hours-headline' }, 'Hours'),
         input({
           'type': 'range',
@@ -647,6 +651,27 @@ function renderDatePicker(
             { 'class': 'cal-back-link', 'data-subject': 'view-month' },
             'Back to month'
           )
+    );
+  }
+
+  function renderTimeView(type: 'time1' | 'time2') {
+    return div(null, renderTime(type), renderTimeSliders(type));
+  }
+
+  function renderTimeRangeView(type: 'time1' | 'time2') {
+    return div(
+      null, //
+      div(
+        {
+          class: classMap({
+            'cal-time-range--time1': type === 'time1',
+            'cal-time-range--time2': type === 'time2'
+          })
+        },
+        renderTime('time1'),
+        renderTime('time2')
+      ),
+      renderTimeSliders(type)
     );
   }
 

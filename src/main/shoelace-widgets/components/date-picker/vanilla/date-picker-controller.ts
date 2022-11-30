@@ -26,9 +26,10 @@ namespace DatePickerController {
     | 'yearRange';
 
   export type View =
-    | 'time'
+    | 'time1'
     | 'time2'
-    | 'timeRange'
+    | 'timeRange1'
+    | 'timeRange2'
     | 'month'
     | 'year'
     | 'decade'
@@ -111,8 +112,10 @@ class DatePickerController {
           this.#selectionMode === 'months' ||
           this.#selectionMode === 'monthRange'
         ? 'year'
-        : this.#selectionMode === 'time' || this.#selectionMode === 'timeRange'
-        ? this.#selectionMode
+        : this.#selectionMode === 'time'
+        ? 'time1'
+        : this.#selectionMode === 'timeRange'
+        ? 'timeRange1'
         : 'month';
 
     this.#activeYear = new Date().getFullYear();
@@ -427,8 +430,8 @@ class DatePickerController {
           break;
         }
 
-        case 'time': {
-          this.#setView('time');
+        case 'time1': {
+          this.#setView('time1');
           break;
         }
 
@@ -521,11 +524,11 @@ class DatePickerController {
         break;
 
       case 'time':
-        this.#view = 'time';
+        this.#view = 'time1';
         break;
 
       case 'timeRange':
-        this.#view = 'timeRange';
+        this.#view = 'timeRange1';
         break;
 
       default:

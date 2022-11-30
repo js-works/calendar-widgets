@@ -234,38 +234,53 @@ export default /*css*/ `
     grid-column: 2;
   }
 
-  .cal-time-selector {
+  .cal-time-sliders {
     display: flex;
     flex-direction: column;
     margin-top: 0.5rem;
   }
 
   .cal-time {
-    text-align: center;
-    align-self: center;
+    display: grid;
+    grid-template-areas: 'header header' 'time day-period';
+    grid-template-columns: min-content auto;
+    grid-template-rows: min-content min-content;
     margin: 0.5rem 0 0 0;
-    font-size: 180%;
     font-family: 'Century Gothic', CenturyGothic, AppleGothic,
       var(--cal-font-family);
+    border: 1px solid green;
   }
 
-  .cal-time-date {
+  .cal-time-header {
+    grid-area: header;
     font-size: 60%;
     margin-bottom: 0.25em;
     font-weight: 200;
+    align-self: start;
+  }
+
+  .cal-time--without-day-period {
+    grid-area: time;
+    align-self: center; 
+    justify-self: start;
+    font-size: 120%;
   }
 
   .cal-day-period {
+    grid-area: day-period;
     display: inline-block;
-    font-size: 60%;
     text-align: left;
+    font-size: 80%;
     margin-inline-start: 0.5em;
+    align-self: center;
+    justify-self: start;
   }
 
   .cal-hours-headline,
   .cal-minutes-headline {
     margin: 0.5em 2rem 0 2rem;
     font-size: calc(100% - 1px);
+    padding: 0;
   }
 
   .cal-hour-slider,
@@ -364,5 +379,26 @@ export default /*css*/ `
   
   .cal-back-link:active {
     background-color: var(--cal-back-link-active-background-color);
+  }
+
+  .cal-time-range--time1 {
+    display: flex;
+  }
+
+  .cal-time-range--time1 > :first-child {
+    flex-grow: 5;
+  }
+
+  .cal-time-range--time1 > :nth-child(2) {
+    font-size: 75%;
+    border: 0 solid #aaa; /* TODO!!! */
+    border-width: 0 0 1px 1px;
+    padding: 1em;
+    margin: 1em;
+    flex-grow: 5;
+  }
+  
+  .cal-time-range--time2 {
+    display: flex;
   }
 `;

@@ -60,7 +60,7 @@ class DatePickerDemo extends LitElement {
 
   private _locale = 'en-US';
   private _selectionValue: string = '';
-  private _selectionMode = 'dateTimeRange';
+  private _selectionMode = 'timeRange';
   private _accentuateHeader = true;
   private _highlightToday = true;
   private _highlightWeekends = true;
