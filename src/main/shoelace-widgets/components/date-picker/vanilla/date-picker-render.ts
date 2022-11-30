@@ -211,68 +211,37 @@ function renderDatePicker(
       }
 
       case 'time1':
-        return renderTimeView('time1');
+        sheet = renderTimeView('time1');
+        break;
 
       case 'time2':
-        return renderTimeView('time2');
+        sheet = renderTimeView('time2');
+        break;
 
       case 'timeRange1':
-        return renderTimeRangeView('time1');
+        sheet = renderTimeRangeView('time1');
+        break;
 
       case 'timeRange1':
-        return renderTimeRangeView('time2');
+        sheet = renderTimeRangeView('time2');
+        break;
 
       default:
         throw new Error(`Illegal view ${view}`);
     }
 
     // TODO!!!
-    const typeSnakeCase = props.selectionMode.replace(
+    const typeSnakeCase = view.replace(
       /[A-Z]/g,
       (it) => `-${it.toLowerCase()}`
     );
 
     return div(
-      { class: `cal-base cal-base--${typeSnakeCase}` },
-      div(
-        {
-          class: classMap({
-            'cal-nav': true,
-            'cal-nav--accentuated': props.accentuateHeader
-          })
-        },
-        a(
-          {
-            'class': classMap({
-              'cal-prev': true,
-              'cal-prev--disabled': prevDisabled
-            }),
-            'data-subject': prevDisabled ? null : 'prev'
-          },
-          i18n.getDirection() === 'ltr' ? arrowLeftIcon : arrowRightIcon
-        ),
-        renderTitle(),
-        a(
-          {
-            'class': classMap({
-              'cal-next': true,
-              'cal-next--disabled': nextDisabled
-            }),
-            'data-subject': nextDisabled ? null : 'next'
-          },
-          i18n.getDirection() === 'ltr' ? arrowRightIcon : arrowLeftIcon
-        )
-      ),
+      { class: `cal-base cal-view--${typeSnakeCase}` },
 
-      props.selectionMode === 'time' || props.selectionMode === 'timeRange'
-        ? null
-        : sheet,
-
-      view === 'month' &&
-        (props.selectionMode === 'dateTime' ||
-          props.selectionMode === 'dateTimeRange')
-        ? renderTimeLinks()
-        : null
+      view === 'time1' || view === 'time2'
+        ? sheet
+        : renderCommon(view, sheet, prevDisabled, nextDisabled)
     );
   }
 
@@ -490,29 +459,11 @@ function renderDatePicker(
         : datePickerCtrl.getActiveMinute2();
 
     const timeDate = new Date(1970, 0, 1, hour, minute);
-    let time = '';
-    let dayPeriod = '';
 
-    const parts = new Intl.DateTimeFormat(i18n.getLocale(), {
+    let time = new Intl.DateTimeFormat(i18n.getLocale(), {
       hour: '2-digit',
       minute: '2-digit'
-    }).formatToParts(timeDate);
-
-    if (
-      parts.length > 4 &&
-      parts[parts.length - 1].type === 'dayPeriod' &&
-      parts[parts.length - 2].type === 'literal' &&
-      parts[parts.length - 2].value === ' '
-    ) {
-      time = parts
-        .slice(0, -2)
-        .map((it) => it.value)
-        .join('');
-
-      dayPeriod = parts[parts.length - 1].value;
-    } else {
-      time = parts.map((it) => it.value).join('');
-    }
+    }).format(timeDate);
 
     let timeHeader: VNode = null;
 
@@ -540,7 +491,7 @@ function renderDatePicker(
 
       timeHeader = h(
         'div',
-        { class: 'cal-time-header', style: 'border: 1px solid red;' },
+        { class: 'cal-time-header' },
         fromOrToLabel,
         formattedDate
       );
@@ -557,8 +508,7 @@ function renderDatePicker(
         class: 'cal-time'
       },
       timeHeader,
-      div({ class: 'cal-time--without-day-period' }, time),
-      !dayPeriod ? null : span({ class: 'cal-day-period' }, dayPeriod)
+      div({ class: 'cal-time-value' }, time)
     );
   }
 
@@ -655,7 +605,13 @@ function renderDatePicker(
   }
 
   function renderTimeView(type: 'time1' | 'time2') {
-    return div(null, renderTime(type), renderTimeSliders(type));
+    return div(
+      {
+        class: 'cal-time-and-sliders'
+      },
+      renderTime(type),
+      renderTimeSliders(type)
+    );
   }
 
   function renderTimeRangeView(type: 'time1' | 'time2') {
@@ -672,6 +628,61 @@ function renderDatePicker(
         renderTime('time2')
       ),
       renderTimeSliders(type)
+    );
+  }
+
+  function renderNav(prevDisabled: boolean, nextDisabled: boolean) {
+    return div(
+      {
+        class: classMap({
+          'cal-nav': true,
+          'cal-nav--accentuated': props.accentuateHeader
+        })
+      },
+      a(
+        {
+          'class': classMap({
+            'cal-prev': true,
+            'cal-prev--disabled': prevDisabled
+          }),
+          'data-subject': prevDisabled ? null : 'prev'
+        },
+        i18n.getDirection() === 'ltr' ? arrowLeftIcon : arrowRightIcon
+      ),
+      renderTitle(),
+      a(
+        {
+          'class': classMap({
+            'cal-next': true,
+            'cal-next--disabled': nextDisabled
+          }),
+          'data-subject': nextDisabled ? null : 'next'
+        },
+        i18n.getDirection() === 'ltr' ? arrowRightIcon : arrowLeftIcon
+      )
+    );
+  }
+
+  function renderCommon(
+    view: DatePickerController.View,
+    sheet: VNode,
+    prevDisabled: boolean,
+    nextDisabled: boolean
+  ) {
+    return h(
+      'div',
+      null,
+      renderNav(prevDisabled, nextDisabled),
+
+      props.selectionMode === 'time' || props.selectionMode === 'timeRange'
+        ? null
+        : sheet,
+
+      view === 'month' &&
+        (props.selectionMode === 'dateTime' ||
+          props.selectionMode === 'dateTimeRange')
+        ? renderTimeLinks()
+        : null
     );
   }
 

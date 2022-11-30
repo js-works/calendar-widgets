@@ -11,8 +11,8 @@ export default /*css*/ `
     min-width: 20rem;
   }
 
-  .cal-base--date-time,
-  .cal-base--date-time-range {
+  .cal-view--date-time,
+  .cal-view--date-time-range {
     height: 17rem;
   }
 
@@ -241,39 +241,22 @@ export default /*css*/ `
   }
 
   .cal-time {
-    display: grid;
-    grid-template-areas: 'header header' 'time day-period';
-    grid-template-columns: min-content auto;
-    grid-template-rows: min-content min-content;
     margin: 0.5rem 0 0 0;
-    font-family: 'Century Gothic', CenturyGothic, AppleGothic,
-      var(--cal-font-family);
-    border: 1px solid green;
   }
 
   .cal-time-header {
     grid-area: header;
-    font-size: 60%;
+    font-size: calc(100% - 1px);
     margin-bottom: 0.25em;
     font-weight: 200;
     align-self: start;
   }
 
-  .cal-time--without-day-period {
+  .cal-time-value {
     grid-area: time;
     align-self: center; 
     justify-self: start;
-    font-size: 120%;
-  }
-
-  .cal-day-period {
-    grid-area: day-period;
-    display: inline-block;
-    text-align: left;
-    font-size: 80%;
-    margin-inline-start: 0.5em;
-    align-self: center;
-    justify-self: start;
+    font-size: 150%;
   }
 
   .cal-hours-headline,
@@ -288,6 +271,15 @@ export default /*css*/ `
     margin: 1rem 2rem;
   }
 
+  .cal-time-and-sliders {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.5em;
+  }
+
+  :where(.cal-view--time1, .cal-view--time2) .cal-time {
+    text-align: center;
+  }
 
   /* time sliders */
 
