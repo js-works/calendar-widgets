@@ -49,48 +49,186 @@ const [a, div, input] = ['a', 'div', 'input'].map((tag) => h.bind(null, tag));
 class DatePicker {
   #i18n: I18n;
   #getProps: () => DatePicker.Props;
+  #requestUpdate: () => void;
 
-  #selection = new Set<string>(['2022-12-12', '2022-12-22']);
+  #selection = new Set<string>();
+  #activeYear = 2022;
+  #activeMonth = 11;
+  #activeDay = 1;
   #activeHour1 = 0;
   #activeHour2 = 0;
   #activeMinute1 = 0;
   #activeMinute2 = 0;
+  #view: View = 'year';
 
-  constructor(params: {
-    getLocale: () => string;
-    getProps: () => DatePicker.Props; //
-  }) {
+  constructor(
+    host: HTMLElement | Promise<HTMLElement>,
+    params: {
+      getLocale: () => string;
+      getProps: () => DatePicker.Props; //
+      requestUpdate: () => void;
+    }
+  ) {
     this.#i18n = new I18n(params.getLocale);
     this.#getProps = params.getProps;
+    this.#requestUpdate = params.requestUpdate;
+
+    (host instanceof HTMLElement ? Promise.resolve(host) : host).then(
+      (elem) => {
+        const root = elem.shadowRoot || elem;
+
+        root.addEventListener('click', (ev: Event) => {
+          const target = ev.target;
+          const result = this.#getSubject(target);
+
+          if (!result) {
+            return;
+          }
+
+          const [subject, elem] = result;
+          const props = this.#getProps();
+
+          switch (subject) {
+            case 'next':
+              return this.#onNextClick();
+
+            case 'prev':
+              return this.#onPrevClick();
+
+            case 'item':
+              return this.#onItemClick(elem, props);
+          }
+        });
+      }
+    );
+  }
+
+  #getSubject(target: EventTarget | null): [string, HTMLElement] | null {
+    console.log(111, target);
+    if (target && target instanceof Element) {
+      const elem = target.closest('[data-subject]');
+
+      if (elem instanceof HTMLElement) {
+        const subject = elem?.getAttribute('data-subject');
+
+        if (subject) {
+          return [subject, elem];
+        }
+      }
+    }
+
+    return null;
   }
 
   #sheetHasRowNames(sheet: Sheet) {
     return !!sheet.rowNames?.length;
   }
 
+  #onNextClick = () => {
+    if (this.#view === 'month') {
+      if (this.#activeMonth === 11) {
+        ++this.#activeYear;
+        this.#activeMonth = 0;
+      } else {
+        ++this.#activeMonth;
+      }
+    } else if (this.#view === 'year') {
+      ++this.#activeYear;
+    }
+
+    this.#requestUpdate();
+  };
+
+  #onPrevClick = () => {
+    if (this.#view === 'month') {
+      if (this.#activeMonth === 0) {
+        --this.#activeYear;
+        this.#activeMonth = 11;
+      } else {
+        --this.#activeMonth;
+      }
+    } else if (this.#view === 'year') {
+      --this.#activeYear;
+    }
+
+    this.#requestUpdate();
+  };
+
+  #onItemClick = (elem: HTMLElement, props: DatePicker.Props) => {
+    const selectionKey = elem.getAttribute('data-selection-key');
+
+    if (!selectionKey) {
+      return;
+    }
+
+    const selectType = meta[props.selectionMode].selectType;
+    const initialView = meta[props.selectionMode].initialView;
+    const selected = this.#selection.has(selectionKey);
+
+    if (this.#view !== initialView) {
+      alert('TODO');
+    }
+
+    if (selectType === 'single') {
+      this.#selection.clear();
+
+      if (!selected) {
+        this.#selection.add(selectionKey);
+      }
+    } else if (selectType === 'multi') {
+      if (selected) {
+        this.#selection.delete(selectionKey);
+      } else {
+        this.#selection.add(selectionKey);
+      }
+    } else if (selected) {
+      this.#selection.delete(selectionKey);
+    } else if (this.#selection.size > 1) {
+      this.#selection.clear();
+      this.#selection.add(selectionKey);
+    } else {
+      this.#selection.add(selectionKey);
+    }
+
+    this.#requestUpdate();
+  };
+
   renderToString() {
     const props = this.#getProps();
     const cal = new Calendar(this.#i18n.getLocale());
 
-    const monthSheet = cal.getMonthSheet({
-      year: 2022,
-      month: 11,
-      showWeekNumbers: props.showWeekNumbers,
-      selectWeeks: false,
-      disableWeekends: props.disableWeekends,
-      highlightCurrent: true,
-      highlightWeekends: props.highlightWeekends,
-      minDate: null, //new Date(2022, 11, 15),
-      maxDate: null,
+    let sheet: Sheet;
 
-      selectedRange: {
-        start: { year: 2022, month: 11, day: 12 },
-        end: { year: 2022, month: 11, day: 22 }
-      }
-    });
+    if (this.#view === 'month') {
+      sheet = cal.getMonthSheet({
+        year: this.#activeYear,
+        month: this.#activeMonth,
+        showWeekNumbers: props.showWeekNumbers,
+        selectWeeks: true,
+        disableWeekends: props.disableWeekends,
+        highlightCurrent: true,
+        highlightWeekends: props.highlightWeekends,
+        minDate: null, //new Date(2022, 11, 15),
+        maxDate: null
+
+        /*
+        selectedRange: {
+          start: { year: 2022, month: 11, day: 12 },
+          end: { year: 2022, month: 11, day: 22 }
+        }
+        */
+      });
+    } else if (this.#view === 'year') {
+      sheet = cal.getYearData({
+        year: this.#activeYear,
+        minDate: null,
+        maxDate: null,
+        selectionRange: null
+      });
+    }
 
     return renderToString(
-      this.#renderCalendarView(monthSheet, props)
+      this.#renderCalendarView(sheet!, props)
       // this.#renderTimeView(props)
     );
   }
@@ -134,28 +272,31 @@ class DatePicker {
       },
       div(
         {
-          class: classMap({
+          'class': classMap({
             'cal-prev': true,
             'cal-prev--disabled': sheet.prevDisabled
-          })
+          }),
+          'data-subject': sheet.prevDisabled ? null : 'prev'
         },
         arrowLeftIcon
       ),
       div(
         {
-          class: classMap({
+          'class': classMap({
             'cal-title': true,
-            'cal-title--disabled': sheet.upDisabled
-          })
+            'cal-title--disabled': false
+          }),
+          'data-subject': 'up'
         },
         sheet.name
       ),
       div(
         {
-          class: classMap({
+          'class': classMap({
             'cal-next': true,
             'cal-next--disabled': sheet.nextDisabled
-          })
+          }),
+          'data-subject': sheet.nextDisabled ? null : 'next'
         },
         arrowRightIcon
       )
@@ -173,7 +314,7 @@ class DatePicker {
         class: 'cal-sheet',
         style: `grid-template-columns: ${gridTemplateColumns};`
       },
-      this.#renderTableHead(sheet, props),
+      sheet.columnNames?.length ? this.#renderTableHead(sheet, props) : null,
       this.#renderTableBody(sheet, props)
     );
   }
@@ -227,7 +368,7 @@ class DatePicker {
       },
       a(
         {
-          class: classMap({
+          'class': classMap({
             'cal-cell': true,
             'cal-cell--current': item.current,
             'cal-cell--disabled': item.disabled,
@@ -236,7 +377,11 @@ class DatePicker {
             'cal-cell--in-selection-range': item.inSelectedRange,
             'cal-cell--first-in-selection-range': item.firstInSelectedRange,
             'cal-cell--last-in-selection-range': item.lastInSelectedRange
-          })
+          }),
+
+          'data-key': item.key,
+          'data-selection-key': item.selectionKey,
+          'data-subject': item.disabled ? null : 'item'
         },
         item.name
       )
@@ -429,3 +574,88 @@ class DatePicker {
     );
   }
 }
+
+type View = 'month' | 'year' | 'decade' | 'time1' | 'time2';
+
+const meta: Record<
+  DatePicker.SelectionMode,
+  {
+    selectType: 'single' | 'multi' | 'range' | null;
+    initialView: Exclude<View, 'time2'>;
+  }
+> = {
+  date: {
+    selectType: 'single',
+    initialView: 'month'
+  },
+
+  dates: {
+    selectType: 'multi',
+    initialView: 'month'
+  },
+
+  dateRange: {
+    selectType: 'range',
+    initialView: 'month'
+  },
+
+  dateTime: {
+    selectType: 'single',
+    initialView: 'month'
+  },
+
+  dateTimeRange: {
+    selectType: 'range',
+    initialView: 'month'
+  },
+
+  time: {
+    selectType: null,
+    initialView: 'time1'
+  },
+
+  timeRange: {
+    selectType: null,
+    initialView: 'time1'
+  },
+
+  week: {
+    selectType: 'single',
+    initialView: 'month'
+  },
+
+  weeks: {
+    selectType: 'multi',
+    initialView: 'month'
+  },
+
+  month: {
+    selectType: 'single',
+    initialView: 'year'
+  },
+
+  months: {
+    selectType: 'multi',
+    initialView: 'year'
+  },
+
+  monthRange: {
+    selectType: 'range',
+    initialView: 'year'
+  },
+
+  year: {
+    selectType: 'single',
+    initialView: 'decade'
+  },
+
+  years: {
+    selectType: 'multi',
+    initialView: 'decade'
+  },
+
+  yearRange: {
+    selectType: 'range',
+    initialView: 'decade'
+  }
+};

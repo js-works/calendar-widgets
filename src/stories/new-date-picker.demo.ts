@@ -104,7 +104,7 @@ const styles = css`
 
   .cal-row-name {
     text-align: center;
-    margin: 0.25em 0.5em !important;
+    min-width: 1.5em;
     font-size: 75%;
     opacity: 80%;
   }
@@ -443,21 +443,24 @@ class DatePicker2 extends LitElement {
 
   private _localize = new LocalizeController(this);
 
-  private _datePicker = new DatePicker({
+  private _datePicker = new DatePicker(this, {
     getLocale: () => this._localize.lang(),
 
     getProps: () => ({
-      selectionMode: 'dateTimeRange',
+      selectionMode: 'month',
       accentuateHeader: true,
       showWeekNumbers: true,
       sheetSize: 'default',
+      selectWeeks: true,
       highlightToday: true,
       highlightWeekends: true,
       disableWeekends: false,
       enableCenturyView: true,
       minDate: new Date(2022, 11, 15),
       maxDate: new Date(2022, 11, 24)
-    })
+    }),
+
+    requestUpdate: () => this.requestUpdate()
   });
 
   render() {

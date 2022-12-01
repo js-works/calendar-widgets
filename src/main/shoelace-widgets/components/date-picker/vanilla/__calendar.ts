@@ -31,8 +31,6 @@ interface Sheet {
   name: string;
   prevDisabled: boolean;
   nextDisabled: boolean;
-  upDisabled: boolean;
-  downDisabled: boolean;
   columnCount: number;
   highlightedColumns: number[] | null;
   columnNames: string[] | null;
@@ -179,7 +177,7 @@ class Calendar {
         inSelectedRange,
         firstInSelectedRange,
         lastInSelectedRange,
-        current: today().getDate() === itemDate.getDate(),
+        current: today().getTime() === itemDate.getTime(),
         highlighted: !!(params.highlightWeekends && weekend),
         adjacent
       });
@@ -239,12 +237,107 @@ class Calendar {
       columnNames: this.#i18n.getWeekdayNames('short', true),
       rowNames,
       prevDisabled,
+      nextDisabled
+    };
+  }
+
+  getYearData(params: {
+    year: number; //
+    minDate: Date | null;
+    maxDate: Date | null;
+    selectionRange?: {
+      start: { year: number; month: number };
+      end: { year: number; month: number };
+    } | null;
+  }): Sheet {
+    const year = params.year;
+    const monthItems: SheetItem[] = [];
+    const now = new Date();
+    const currYear = now.getFullYear();
+    const currMonth = now.getMonth();
+
+    const minMonth = params.minDate
+      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
+      : null;
+
+    const maxMonth = params.maxDate
+      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
+      : null;
+
+    for (let itemMonth = 0; itemMonth < 12; ++itemMonth) {
+      const outOfMinMaxRange = !inNumberRange(
+        year * 12 + itemMonth,
+        minMonth,
+        maxMonth
+      );
+
+      let inSelectedRange = false;
+      let firstInSelectedRange = false;
+      let lastInSelectedRange = false;
+
+      if (params.selectionRange) {
+        const { year: startYear, month: startMonth } =
+          params.selectionRange.start;
+
+        const { year: endYear, month: endMonth } = params.selectionRange.end;
+
+        const startValue = startYear * 12 + startMonth;
+        const endValue = endYear * 12 + endMonth;
+
+        if (startValue <= endValue) {
+          const itemValue = year * 12 + itemMonth;
+
+          inSelectedRange = inNumberRange(
+            year * 12 + itemMonth,
+            startValue,
+            endValue
+          );
+
+          firstInSelectedRange = inSelectedRange && itemValue === startValue;
+          lastInSelectedRange = inSelectedRange && itemValue === endValue;
+        }
+      }
+
+      const key = getYearMonthString(year, itemMonth);
+
+      monthItems.push({
+        key: key,
+        selectionKey: key,
+        name: this.#i18n.getMonthName(itemMonth, 'short'),
+        current: year === currYear && itemMonth === currMonth,
+        adjacent: false,
+        highlighted: false,
+        outOfMinMaxRange,
+        inSelectedRange,
+        firstInSelectedRange,
+        lastInSelectedRange,
+        disabled: outOfMinMaxRange
+      });
+    }
+
+    const minYear = params.minDate ? params.minDate.getFullYear() : null;
+    const maxYear = params.maxDate ? params.maxDate.getFullYear() : null;
+
+    const prevDisabled =
+      year <= 1 || !inNumberRange(year - 1, minYear, maxYear);
+
+    const nextDisabled = !inNumberRange(year + 1, minYear, maxYear);
+
+    return {
+      key: String(year),
+      name: this.#i18n.formatYear(year),
+      columnCount: 4,
+      highlightedColumns: null,
+      columnNames: null,
+      rowNames: null,
+      prevDisabled,
       nextDisabled,
-      upDisabled: false,
-      downDisabled: true
+      items: monthItems
     };
   }
 }
+
+// === local helpers =================================================
 
 function getDayCountOfMonth(year: number, month: number) {
   // we also allow month values less than 0 and greater than 11
