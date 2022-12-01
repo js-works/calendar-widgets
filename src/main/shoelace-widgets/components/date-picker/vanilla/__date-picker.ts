@@ -1,6 +1,7 @@
 import { Calendar, Sheet, SheetItem } from './__calendar';
 import { h, renderToString, VNode } from './vdom';
 import { classMap } from './__utils';
+import { I18n } from './__i18n';
 
 // icons
 import arrowLeftIcon from './icons/arrow-left.icon';
@@ -48,21 +49,26 @@ const [a, div, img, input, span] = ['a', 'div', 'img', 'input', 'span'].map(
 );
 
 class DatePicker {
-  #getLocale: () => string;
+  #i18n: I18n;
   #getProps: () => DatePicker.Props;
 
-  #selection = new Set<string>(['2022-12-21', '2022-12-22']);
+  #selection = new Set<string>(['2022-12-12', '2022-12-22']);
+  #activeHour1 = 0;
+  #activeHour2 = 0;
+  #activeMinute1 = 0;
+  #activeMinute2 = 0;
 
   constructor(params: {
     getLocale: () => string;
     getProps: () => DatePicker.Props; //
   }) {
-    (this.#getLocale = params.getLocale), (this.#getProps = params.getProps);
+    this.#i18n = new I18n(params.getLocale);
+    this.#getProps = params.getProps;
   }
 
   renderToString() {
     const props = this.#getProps();
-    const cal = new Calendar(this.#getLocale());
+    const cal = new Calendar(this.#i18n.getLocale());
 
     const monthSheet = cal.getMonthSheet({
       year: 2022,
@@ -73,7 +79,12 @@ class DatePicker {
       highlightCurrent: true,
       highlightWeekends: props.highlightWeekends,
       minDate: null, //new Date(2022, 11, 15),
-      maxDate: null
+      maxDate: null,
+
+      selectedRange: {
+        start: { year: 2022, month: 11, day: 12 },
+        end: { year: 2022, month: 11, day: 22 }
+      }
     });
 
     return renderToString(this.#renderSheetView(monthSheet, props));
@@ -85,7 +96,8 @@ class DatePicker {
         class: 'cal-base'
       },
       this.#renderSheetHeader(sheet, props),
-      this.#renderSheet(sheet, props)
+      this.#renderSheet(sheet, props),
+      this.#renderTimeLinks()
     );
   }
 
@@ -197,11 +209,62 @@ class DatePicker {
             'cal-cell--current': item.current,
             'cal-cell--disabled': item.disabled,
             'cal-cell--adjacent': item.adjacent,
-            'cal-cell--selected': selected
+            'cal-cell--selected': selected,
+            'cal-cell--in-selection-range': item.inSelectedRange,
+            'cal-cell--first-in-selection-range': item.firstInSelectedRange,
+            'cal-cell--last-in-selection-range': item.lastInSelectedRange
           })
         },
         item.name
       )
+    );
+  }
+
+  // --- time links ------------------------------------------------
+
+  #renderTimeLinks() {
+    const selectionSize = this.#selection.size;
+
+    return div(
+      { class: 'cal-time-links' },
+      this.#renderTimeLink('time1'),
+      selectionSize > 1 ? this.#renderTimeLink('time2') : null
+    );
+  }
+
+  #renderTimeLink(type: 'time1' | 'time2') {
+    let hour = 0;
+    let minute = 0;
+
+    let timeString = '';
+
+    if (this.#selection.size > 0) {
+      if (type === 'time1') {
+        hour = this.#activeHour1;
+        minute = this.#activeMinute1;
+      } else {
+        hour = this.#activeHour2;
+        minute = this.#activeMinute2;
+      }
+
+      const date = new Date(2000, 0, 1, hour, minute);
+
+      timeString = this.#i18n.formatDate(date, {
+        hour: '2-digit',
+        minute: '2-digit'
+      });
+    }
+
+    return a(
+      {
+        'class': classMap({
+          'cal-time-link': true,
+          'cal-time-link--disabled': timeString === ''
+        }),
+        'data-subject': type
+      },
+      timeIcon,
+      timeString === '' ? '--:--' : timeString
     );
   }
 

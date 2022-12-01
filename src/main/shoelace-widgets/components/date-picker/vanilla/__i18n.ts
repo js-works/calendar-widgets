@@ -80,14 +80,14 @@ class I18n {
     }
   }
 
-  #getLocale: () => string;
+  getLocale: () => string;
 
   get #locale() {
-    return this.#getLocale();
+    return this.getLocale();
   }
 
   constructor(locale: string | (() => string)) {
-    this.#getLocale = typeof locale === 'function' ? locale : () => locale;
+    this.getLocale = typeof locale === 'function' ? locale : () => locale;
   }
 
   getLocaleInfo(): LocaleInfo {

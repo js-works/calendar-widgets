@@ -18,6 +18,8 @@ const styles = css`
     user-select: none;
   }
 
+  /* calendar sheet and sheet header */
+
   .cal-header {
     display: grid;
     grid-template-columns: min-content auto min-content;
@@ -120,6 +122,7 @@ const styles = css`
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0.25em;
   }
 
   .cal-cell:not(.cal-cell--disabled):not(.cal-cell--selected):hover {
@@ -162,6 +165,53 @@ const styles = css`
 
   .cal-cell--current:not(.cal-cell-selected):not(:hover) {
     background-color: var(--cal-cell-current-highlighted-background-color);
+  }
+
+  .cal-cell--in-selection-range:not(.cal-cell--selected) {
+    background-color: var(--cal-cell-selection-range-background-color);
+  }
+
+  .cal-cell--first-in-selection-range:not(.cal-cell--last-in-selection-range) {
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+  }
+
+  .cal-cell--last-in-selection-range:not(.cal-cell--first-in-selection-range) {
+    border-top-right-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  /* time links */
+
+  .cal-time-links {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+    padding: 0 3em;
+    min-height: 2em;
+    box-sizing: border-box;
+    margin: 0.5em;
+  }
+
+  .cal-time-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    cursor: pointer;
+  }
+
+  .cal-time-link--disabled {
+    pointer-events: none;
+  }
+
+  .cal-time-link:first-child {
+    grid-column: 1;
+    justify-self: start;
+  }
+
+  .cal-time-link:nth-child(2) {
+    justify-self: end;
+    grid-column: 2;
   }
 `;
 
