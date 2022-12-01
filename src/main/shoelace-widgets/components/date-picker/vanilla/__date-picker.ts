@@ -101,7 +101,8 @@ class DatePicker {
       this.#renderSheet(sheet, props),
       //this.#renderTimeLinks(),
       //this.#renderTimeSliders('time1', props)
-      this.#renderTime('time1', props)
+      //this.#renderTimeTabs(props)
+      this.#renderBackToMonthLink()
     );
   }
 
@@ -147,7 +148,7 @@ class DatePicker {
     const hasRowNames = this.#sheetHasRowNames(sheet);
 
     let gridTemplateColumns =
-      (hasRowNames ? 'min-content ' : '') + `repeat(${sheet.columnCount}, 1fr)`;
+      (hasRowNames ? 'auto ' : '') + `repeat(${sheet.columnCount}, 1fr)`;
 
     return div(
       {
@@ -306,7 +307,8 @@ class DatePicker {
         const selectionSize = this.#selection.size;
 
         if (selectionSize > 1) {
-          fromOrToLabel = (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0';
+          fromOrToLabel =
+            (type === 'time1' ? 'xxxxfrom:' : 'xxxxxto:') + '\u00a0\u00a0';
         }
       }
 
@@ -331,6 +333,16 @@ class DatePicker {
       },
       timeHeader,
       div({ class: 'cal-time-value' }, time)
+    );
+  }
+
+  // --- time tabs ---------------------------------------------------
+
+  #renderTimeTabs(props: DatePicker.Props) {
+    return div(
+      { class: 'cal-time-tabs' },
+      div({ class: 'xxxlink' }, this.#renderTime('time1', props)),
+      this.#selection.size > 1 ? this.#renderTime('time2', props) : null
     );
   }
 
@@ -385,6 +397,17 @@ class DatePicker {
             { 'class': 'cal-back-link', 'data-subject': 'view-month' },
             'Back to month'
           )
+    );
+  }
+
+  // --- back link----------------------------------------------------
+
+  #renderBackToMonthLink() {
+    return a(
+      {
+        class: 'cal-back-to-month-link'
+      },
+      'Back to month'
     );
   }
 }

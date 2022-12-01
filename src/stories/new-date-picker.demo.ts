@@ -100,7 +100,7 @@ const styles = css`
 
   .cal-row-name {
     text-align: center;
-    padding: 0.25em 0.75em;
+    margin: 0.25em !important;
     font-size: 75%;
     opacity: 80%;
   }
@@ -218,21 +218,51 @@ const styles = css`
 
   .cal-time {
     margin: 0.5rem 0 0 0;
+    border: 1px solid red;
   }
 
   .cal-time-header {
-    grid-area: header;
     font-size: calc(100% - 1px);
     margin-bottom: 0.25em;
     font-weight: 200;
-    align-self: start;
   }
 
   .cal-time-value {
-    grid-area: time;
-    align-self: center;
-    justify-self: start;
     font-size: 150%;
+  }
+
+  /* time tabs */
+
+  .cal-time-tabs {
+    display: grid;
+    grid-template-columns: auto auto;
+  }
+
+  .xxxlink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 0 solid #aaa;
+    border-width: 0 1px 1px 0;
+    font-size: 50%;
+  }
+
+  /* back to month link */
+  .cal-back-to-month-link {
+    display: block;
+    padding: 0.5em 2em;
+    text-align: center;
+    background-color: var(--cal-back-link-background-color);
+    border-radius: var(--cal-back-link-border-radius, 3px);
+    cursor: pointer;
+  }
+
+  .cal-back-to-month-link:hover {
+    background-color: var(--cal-back-link-hover-background-color);
+  }
+
+  .cal-back-to-month-link:active {
+    background-color: var(--cal-back-link-active-background-color);
   }
 
   /* time sliders */
@@ -383,7 +413,7 @@ class DatePicker2 extends LitElement {
     getLocale: () => this._localize.lang(),
 
     getProps: () => ({
-      selectionMode: 'dateTime',
+      selectionMode: 'dateTimeRange',
       accentuateHeader: true,
       showWeekNumbers: true,
       sheetSize: 'default',
