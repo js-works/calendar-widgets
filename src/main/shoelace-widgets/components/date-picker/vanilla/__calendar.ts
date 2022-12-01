@@ -1,11 +1,15 @@
-import { h, renderToString } from './vdom';
+import { h, renderToString, VNode } from './vdom';
 import { I18n } from './__i18n';
 
 import {
   getYearMonthString,
   getYearMonthDayString,
-  getYearWeekString
+  getYearWeekString,
+  inDateRange,
+  inNumberRange
 } from './__utils';
+
+export { Calendar, Sheet, SheetItem };
 
 type SheetItem = {
   key: string;
@@ -26,34 +30,28 @@ interface Sheet {
   prevDisabled: boolean;
   nextDisabled: boolean;
   columnNames: string[];
-  rowNames: string[];
+  rowNames: string[] | null;
   items: SheetItem[];
-  disabledColumns: number[];
 }
 
 type CalendarWeek = { year: number; week: number };
 
-type CalendarConfig = {
-  locale: string;
-  disableWeekends: boolean;
-  sheetSize: 'default' | 'minimal' | 'maximal';
-  minDate: Date | null;
-  maxDate: Date | null;
-};
-
 class Calendar {
-  #config: CalendarConfig;
   #i18n: I18n;
 
-  constructor(config: CalendarConfig) {
-    this.#i18n = new I18n(config.locale);
-    this.#config = config;
+  constructor(locale: string | (() => string)) {
+    this.#i18n = new I18n(locale);
   }
 
   getMonthSheet(params: {
     year: number;
     month: number;
-    selectWeek?: boolean;
+    sheetSize?: 'default' | 'minimal' | 'maximal';
+    minDate?: Date | null;
+    maxDate?: Date | null;
+    showWeekNumbers?: boolean;
+    disableWeekends?: boolean;
+    selectWeeks?: boolean;
 
     selectedRange?: {
       start: { year: number; month: number; day: number };
@@ -65,7 +63,6 @@ class Calendar {
     const year = Math.floor(n / 12);
     const month = n % 12;
 
-    const config = this.#config;
     const firstDayOfWeek = this.#i18n.getFirstDayOfWeek();
     const firstWeekdayOfMonth = new Date(year, month, 1).getDay();
     const now = new Date();
@@ -82,7 +79,7 @@ class Calendar {
 
     let daysToShow = 42;
 
-    if (config.sheetSize === 'maximal') {
+    if (params.sheetSize !== 'maximal') {
       daysToShow = getDayCountOfMonth(year, month) + remainingDaysOfLastMonth;
 
       if (daysToShow % 7 > 0) {
@@ -123,8 +120,8 @@ class Calendar {
 
       const outOfMinMaxRange = !inDateRange(
         itemDate,
-        config.minDate,
-        config.maxDate
+        params.minDate || null,
+        params.maxDate || null
       );
 
       let inSelectedRange = false;
@@ -162,7 +159,7 @@ class Calendar {
 
       let selectionKey = key;
 
-      if (params.selectWeek) {
+      if (params.selectWeeks) {
         const calendarWeek = this.#i18n.getCalendarWeek(
           new Date(itemYear, itemMonth, itemDay)
         );
@@ -173,8 +170,8 @@ class Calendar {
       dayItems.push({
         key,
         name: this.#i18n.formatDay(itemDay),
-        selectionKey: key,
-        disabled: (config.disableWeekends && weekend) || outOfMinMaxRange,
+        selectionKey,
+        disabled: (params.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
         inSelectedRange,
         firstInSelectedRange,
@@ -194,12 +191,12 @@ class Calendar {
       weekdays.push((i + this.#i18n.getFirstDayOfWeek()) % 7);
     }
 
-    const minMonth = config.minDate
-      ? config.minDate.getFullYear() * 12 + config.minDate.getMonth()
+    const minMonth = params.minDate
+      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
       : null;
 
-    const maxMonth = config.maxDate
-      ? config.maxDate.getFullYear() * 12 + config.maxDate.getMonth()
+    const maxMonth = params.maxDate
+      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
       : null;
 
     const mon = year * 12 + month;
@@ -214,32 +211,21 @@ class Calendar {
       month: 'long'
     });
 
+    let rowNames: string[] | null = null;
+
+    if (params.showWeekNumbers) {
+      rowNames = ['a', 'b', 'c', 'd', 'e']; // TODO!!!
+    }
+
     return {
       key: getYearMonthString(year, month),
       name: nameOfMonth,
       items: dayItems,
-      columnNames: [], // TODO
-      rowNames: [], // TODO
-      disabledColumns: [], // TODO
+      columnNames: this.#i18n.getWeekdayNames('short', true),
+      rowNames,
       prevDisabled,
       nextDisabled
     };
-  }
-}
-
-export class DatePicker {
-  renderToString() {
-    const cal = new Calendar({
-      locale: 'en-US',
-      minDate: null,
-      maxDate: null,
-      disableWeekends: false,
-      sheetSize: 'default'
-    });
-
-    const monthSheet = cal.getMonthSheet({ year: 2022, month: 10 });
-    console.log(monthSheet);
-    return renderToString(h('div', null, 'juhu'));
   }
 }
 
@@ -254,40 +240,4 @@ function getDayCountOfMonth(year: number, month: number) {
   }
 
   return year % 4 !== 0 || (year % 100 === 0 && year % 400 !== 0) ? 28 : 29;
-}
-
-function inNumberRange(
-  value: number,
-  start: number | null,
-  end: number | null
-) {
-  if (start === null && end === null) {
-    return true;
-  }
-
-  if (start === null) {
-    return value <= end!;
-  } else if (end === null) {
-    return value >= start;
-  } else {
-    return value >= start && value <= end;
-  }
-}
-function inDateRange(value: Date, start: Date | null, end: Date | null) {
-  if (start === null && end === null) {
-    return true;
-  }
-
-  const toNumber = (date: Date) =>
-    date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
-
-  const val = toNumber(value);
-
-  if (start === null) {
-    return val <= toNumber(end!);
-  } else if (end === null) {
-    return val >= toNumber(start!);
-  } else {
-    return val >= toNumber(start) && val <= toNumber(end);
-  }
 }

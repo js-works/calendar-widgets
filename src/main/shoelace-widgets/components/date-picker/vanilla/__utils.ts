@@ -3,7 +3,9 @@ export {
   getYearMonthDayString,
   getYearMonthString,
   getYearString,
-  getYearWeekString
+  getYearWeekString,
+  inDateRange,
+  inNumberRange
 };
 
 function getYearMonthDayString(year: number, month: number, day: number) {
@@ -37,4 +39,41 @@ function getHourMinuteString(hour: number, minute: number) {
   const m = minute.toString().padStart(2, '0');
 
   return `${h}:${m}`;
+}
+
+function inDateRange(value: Date, start: Date | null, end: Date | null) {
+  if (start === null && end === null) {
+    return true;
+  }
+
+  const toNumber = (date: Date) =>
+    date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
+
+  const val = toNumber(value);
+
+  if (start === null) {
+    return val <= toNumber(end!);
+  } else if (end === null) {
+    return val >= toNumber(start!);
+  } else {
+    return val >= toNumber(start) && val <= toNumber(end);
+  }
+}
+
+function inNumberRange(
+  value: number,
+  start: number | null,
+  end: number | null
+) {
+  if (start === null && end === null) {
+    return true;
+  }
+
+  if (start === null) {
+    return value <= end!;
+  } else if (end === null) {
+    return value >= start;
+  } else {
+    return value >= start && value <= end;
+  }
 }

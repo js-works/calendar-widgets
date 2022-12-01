@@ -1,5 +1,45 @@
 export { I18n, LocaleInfo };
 
+// === locale data ===================================================
+
+// ***********************************************************************
+// ** Locale information for "first day of week", or "weekend days", or
+// ** "week number" is currently (September 2022) not available in Intl
+// ** (see https://github.com/tc39/proposal-intl-locale-info)
+// ** so we have to take care of that on our own
+// ***********************************************************************
+
+// Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
+// Day of week is represented by number (0 = sunday, ..., 6 = saturday).
+const firstDayOfWeekData: Record<number, string> = {
+  0:
+    'AG,AS,AU,BD,BR,BS,BT,BW,BZ,CA,CN,CO,DM,DO,ET,GT,GU,HK,HN,ID,IL,IN,' +
+    'JM,JP,KE,KH,KR,LA,MH,MM,MO,MT,MX,MZ,NI,NP,PA,PE,PH,PK,PR,PT,PY,SA,' +
+    'SG,SV,TH,TT,TW,UM,US,VE,VI,WS,YE,ZA,ZW',
+  1:
+    'AD,AI,AL,AM,AN,AR,AT,AX,AZ,BA,BE,BG,BM,BN,BY,CH,CL,CM,CR,CY,CZ,DE,' +
+    'DK,EC,EE,ES,FI,FJ,FO,FR,GB,GE,GF,GP,GR,HR,HU,IE,IS,IT,KG,KZ,LB,LI,' +
+    'LK,LT,LU,LV,MC,MD,ME,MK,MN,MQ,MY,NL,NO,NZ,PL,RE,RO,RS,RU,SE,SI,SK,' +
+    'SM,TJ,TM,TR,UA,UY,UZ,VA,VN,XK',
+  5: 'MV',
+  6: 'AE,AF,BH,DJ,DZ,EG,IQ,IR,JO,KW,LY,OM,QA,SD,SY'
+};
+
+// Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
+const weekendData: Record<string, string> = {
+  // Friday and Saturday
+  '5+6': 'AE,BH,DZ,EG,IL,IQ,JO,KW,LY,OM,QA,SA,SD,SY,YE',
+
+  // Thursday and Friday
+  '4+5': 'AF',
+
+  // Sunday
+  '6': 'IN,UG',
+
+  // Friday
+  '5': 'IR'
+};
+
 // === exported types ================================================
 
 type LocaleInfo = Readonly<{
@@ -18,49 +58,11 @@ class I18n {
     Readonly<number[]>
   >();
 
-  // ***********************************************************************
-  // ** Locale information for "first day of week", or "weekend days", or
-  // ** "week number" is currently (September 2022) not available in Intl
-  // ** (see https://github.com/tc39/proposal-intl-locale-info)
-  // ** so we have to take care of that on our own
-  // ***********************************************************************
-
-  // Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
-  // Day of week is represented by number (0 = sunday, ..., 6 = saturday).
-  static #firstDayOfWeekData: Record<number, string> = {
-    0:
-      'AG,AS,AU,BD,BR,BS,BT,BW,BZ,CA,CN,CO,DM,DO,ET,GT,GU,HK,HN,ID,IL,IN,' +
-      'JM,JP,KE,KH,KR,LA,MH,MM,MO,MT,MX,MZ,NI,NP,PA,PE,PH,PK,PR,PT,PY,SA,' +
-      'SG,SV,TH,TT,TW,UM,US,VE,VI,WS,YE,ZA,ZW',
-    1:
-      'AD,AI,AL,AM,AN,AR,AT,AX,AZ,BA,BE,BG,BM,BN,BY,CH,CL,CM,CR,CY,CZ,DE,' +
-      'DK,EC,EE,ES,FI,FJ,FO,FR,GB,GE,GF,GP,GR,HR,HU,IE,IS,IT,KG,KZ,LB,LI,' +
-      'LK,LT,LU,LV,MC,MD,ME,MK,MN,MQ,MY,NL,NO,NZ,PL,RE,RO,RS,RU,SE,SI,SK,' +
-      'SM,TJ,TM,TR,UA,UY,UZ,VA,VN,XK',
-    5: 'MV',
-    6: 'AE,AF,BH,DJ,DZ,EG,IQ,IR,JO,KW,LY,OM,QA,SD,SY'
-  };
-
-  // Source: https://github.com/unicode-cldr/cldr-core/blob/master/supplemental/weekData.json
-  static #weekendData: Record<string, string> = {
-    // Friday and Saturday
-    '5+6': 'AE,BH,DZ,EG,IL,IQ,JO,KW,LY,OM,QA,SA,SD,SY,YE',
-
-    // Thursday and Friday
-    '4+5': 'AF',
-
-    // Sunday
-    '6': 'IN,UG',
-
-    // Friday
-    '5': 'IR'
-  };
-
   static {
     // prepare `first day of week per country` data
-    for (const firstDayOfWeek of Object.keys(I18n.#firstDayOfWeekData)) {
+    for (const firstDayOfWeek of Object.keys(firstDayOfWeekData)) {
       const firstDay = Number.parseInt(firstDayOfWeek, 10);
-      const countryCodes = I18n.#firstDayOfWeekData[firstDay].split(',');
+      const countryCodes = firstDayOfWeekData[firstDay].split(',');
 
       countryCodes.forEach((countryCode) => {
         I18n.#firstDayOfWeekByCountryCode.set(countryCode, firstDay);
@@ -68,7 +70,7 @@ class I18n {
     }
 
     // prepare `weekend days per country` data
-    for (const [key, value] of Object.entries(I18n.#weekendData)) {
+    for (const [key, value] of Object.entries(weekendData)) {
       const days = Object.freeze(key.split('+').map((it) => parseInt(it)));
       const countryCodes = value.split(',');
 
@@ -78,10 +80,14 @@ class I18n {
     }
   }
 
-  #locale: string;
+  #getLocale: () => string;
 
-  constructor(locale: string) {
-    this.#locale = locale;
+  get #locale() {
+    return this.#getLocale();
+  }
+
+  constructor(locale: string | (() => string)) {
+    this.#getLocale = typeof locale === 'function' ? locale : () => locale;
   }
 
   getLocaleInfo(): LocaleInfo {
@@ -107,6 +113,23 @@ class I18n {
     const region = this.getLocaleInfo().region!;
 
     return region ? I18n.#firstDayOfWeekByCountryCode.get(region) ?? 1 : 1;
+  }
+
+  getWeekdayNames(
+    format: 'narrow' | 'short' | 'long',
+    startWithFirstDayOfWeek = false
+  ) {
+    const ret: string[] = [];
+
+    const firstIndex = startWithFirstDayOfWeek ? this.getFirstDayOfWeek() : 0;
+
+    for (let i = 0; i < 7; ++i) {
+      const n = (i + firstIndex) % 7;
+      const date = new Date(2000, 0, n + 2);
+      ret.push(this.formatDate(date, { weekday: format }));
+    }
+
+    return ret;
   }
 
   getCalendarWeek(date: Date): {

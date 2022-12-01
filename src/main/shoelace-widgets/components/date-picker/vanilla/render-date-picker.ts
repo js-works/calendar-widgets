@@ -293,14 +293,14 @@ function renderDatePicker(
         div({ class: 'cal-weekday' }, i18n.getWeekdayName(idx, 'short'))
       ),
 
-      monthData.days.flatMap((dayData, idx) => {
-        const cell = renderDayCell(dayData);
+      monthData.days.flatMap((dayItem, idx) => {
+        const cell = renderDayCell(dayItem);
         return !props.showWeekNumbers || idx % 7 > 0
           ? cell
           : [
               div(
                 { class: 'cal-week-number' },
-                i18n.formatWeekNumber(dayData.calendarWeek.week)
+                i18n.formatWeekNumber(dayItem.calendarWeek.week)
               ),
               cell
             ];
