@@ -6,7 +6,8 @@ import {
   getYearMonthDayString,
   getYearWeekString,
   inDateRange,
-  inNumberRange
+  inNumberRange,
+  today
 } from './__utils';
 
 export { Calendar, Sheet, SheetItem };
@@ -55,6 +56,7 @@ class Calendar {
     minDate?: Date | null;
     maxDate?: Date | null;
     showWeekNumbers?: boolean;
+    highlightCurrent?: boolean;
     highlightWeekends?: boolean;
     disableWeekends?: boolean;
     selectWeeks?: boolean;
@@ -72,9 +74,6 @@ class Calendar {
     const firstDayOfWeek = this.#i18n.getFirstDayOfWeek();
     const firstWeekdayOfMonth = new Date(year, month, 1).getDay();
     const now = new Date();
-    const currYear = now.getFullYear();
-    const currMonth = now.getMonth();
-    const currDay = now.getDate();
     const dayCountOfCurrMonth = getDayCountOfMonth(year, month);
     const dayCountOfLastMonth = getDayCountOfMonth(year, month - 1);
 
@@ -166,9 +165,7 @@ class Calendar {
       let selectionKey = key;
 
       if (params.selectWeeks) {
-        const calendarWeek = this.#i18n.getCalendarWeek(
-          new Date(itemYear, itemMonth, itemDay)
-        );
+        const calendarWeek = this.#i18n.getCalendarWeek(itemDate);
 
         selectionKey = getYearWeekString(calendarWeek.year, calendarWeek.week);
       }
@@ -182,12 +179,7 @@ class Calendar {
         inSelectedRange,
         firstInSelectedRange,
         lastInSelectedRange,
-
-        current:
-          itemYear === currYear &&
-          itemMonth === currMonth &&
-          itemDay === currDay,
-
+        current: today().getDate() === itemDate.getDate(),
         highlighted: !!(params.highlightWeekends && weekend),
         adjacent
       });

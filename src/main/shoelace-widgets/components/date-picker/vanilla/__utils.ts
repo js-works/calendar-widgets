@@ -6,7 +6,8 @@ export {
   getYearString,
   getYearWeekString,
   inDateRange,
-  inNumberRange
+  inNumberRange,
+  today
 };
 
 function getYearMonthDayString(year: number, month: number, day: number) {
@@ -89,4 +90,15 @@ function classMap(classes: Record<string, unknown>): string {
   }
 
   return arr.join(' ');
+}
+
+function today(): Date {
+  const ret = new Date();
+
+  ret.setHours(0);
+  ret.setMinutes(0);
+  ret.setSeconds(0);
+  ret.setMilliseconds(0);
+
+  return ret;
 }

@@ -51,6 +51,8 @@ class DatePicker {
   #getLocale: () => string;
   #getProps: () => DatePicker.Props;
 
+  #selection = new Set<string>(['2022-12-21', '2022-12-22']);
+
   constructor(params: {
     getLocale: () => string;
     getProps: () => DatePicker.Props; //
@@ -66,9 +68,12 @@ class DatePicker {
       year: 2022,
       month: 11,
       showWeekNumbers: props.showWeekNumbers,
-      selectWeeks: true,
+      selectWeeks: false,
       disableWeekends: props.disableWeekends,
-      highlightWeekends: props.highlightWeekends
+      highlightCurrent: true,
+      highlightWeekends: props.highlightWeekends,
+      minDate: null, //new Date(2022, 11, 15),
+      maxDate: null
     });
 
     return renderToString(this.#renderSheetView(monthSheet, props));
@@ -113,8 +118,8 @@ class DatePicker {
       div(
         {
           class: classMap({
-            'cal-prev': true,
-            'cal-prev--disabled': sheet.prevDisabled
+            'cal-next': true,
+            'cal-next--disabled': sheet.nextDisabled
           })
         },
         arrowRightIcon
@@ -135,26 +140,6 @@ class DatePicker {
       },
       this.#renderTableHead(sheet, props),
       this.#renderTableBody(sheet, props)
-    );
-  }
-
-  #renderTableCell(item: SheetItem, props: DatePicker.Props) {
-    return div(
-      {
-        class: classMap({
-          'cal-cell-container': true,
-          'cal-cell-container--highlighted': item.highlighted
-        })
-      },
-      a(
-        {
-          class: classMap({
-            'cal-cell': true,
-            'cal-cell--disabled': item.disabled
-          })
-        },
-        item.name
-      )
     );
   }
 
@@ -193,6 +178,31 @@ class DatePicker {
     });
 
     return cells;
+  }
+
+  #renderTableCell(item: SheetItem, props: DatePicker.Props) {
+    const selected = this.#selection.has(item.selectionKey);
+
+    return div(
+      {
+        class: classMap({
+          'cal-cell-container': true,
+          'cal-cell-container--highlighted': item.highlighted
+        })
+      },
+      a(
+        {
+          class: classMap({
+            'cal-cell': true,
+            'cal-cell--current': item.current,
+            'cal-cell--disabled': item.disabled,
+            'cal-cell--adjacent': item.adjacent,
+            'cal-cell--selected': selected
+          })
+        },
+        item.name
+      )
+    );
   }
 
   #sheetHasRowNames(sheet: Sheet) {

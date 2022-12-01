@@ -9,13 +9,19 @@ export const newDatePickerDemo = () => '<new-date-picker></new-date-picker>';
 
 const styles = css`
   .cal-base {
+    display: flex;
+    flex-direction: column;
+    color: var(--cal-color);
+    background-color: var(--cal-background-color);
+    font-family: var(--cal-font-family);
+    font-size: var(--cal-font-size);
+    user-select: none;
   }
 
   .cal-header {
     display: grid;
     grid-template-columns: min-content auto min-content;
-    align-items: center;
-    border: 1px solid green;
+    align-items: stretch;
     color: var(--cal-nav-color);
     background-color: var(--cal-nav-active-background-color);
   }
@@ -61,20 +67,29 @@ const styles = css`
   .cal-title,
   .cal-prev,
   .cal-next {
-    padding: 0.2em 0.5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0.25em 0.5em;
   }
 
   .cal-prev--disabled,
   .cal-next--disabled {
-    display: hidden;
+    visibility: hidden;
   }
 
   .cal-sheet {
     display: grid;
+    grid-template-rows: min-content;
+    align-items: stretch;
+    flex-grow: 1;
   }
 
   .cal-column-name {
     text-align: center;
+    padding: 0.5em;
+    font-size: 90%;
   }
 
   .cal-column-name--highlighted {
@@ -85,11 +100,14 @@ const styles = css`
     text-align: center;
     padding: 0.25em 0.75em;
     font-size: 75%;
+    opacity: 80%;
   }
 
   .cal-cell-container {
     display: flex;
     align-items: stretch;
+    justify-items: stretch;
+    justify-content: stretch;
   }
 
   .cal-cell-container--highlighted {
@@ -99,10 +117,13 @@ const styles = css`
   .cal-cell {
     flex-grow: 1;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
-  .cal-cell::not(.cal-cell--disabled):hover {
-    background-color: var(--cal-cell-hover-color);
+  .cal-cell:not(.cal-cell--disabled):not(.cal-cell--selected):hover {
+    color: var(--cal-cell-hover-color);
     background-color: var(--cal-cell-hover-background-color);
   }
 
@@ -110,8 +131,37 @@ const styles = css`
     cursor: pointer;
   }
 
+  .cal-cell--selected:not(.cal-cell--disabled) {
+    color: var(--cal-cell-selected-color);
+    background-color: var(--cal-cell-selected-background-color);
+  }
+
+  .cal-cell--selected:not(.cal-cell--disabled):hover {
+    background-color: var(--cal-cell-selected-hover-background-color);
+  }
+
   .cal-cell--disabled {
     cursor: not-allowed;
+  }
+
+  .cal-cell--disabled.cal-cell--adjacent {
+    opacity: 10%;
+  }
+
+  .cal-cell--adjacent:not(.cal-cell--disabled):not(.cal-cell--selected) {
+    color: var(--cal-cell-adjacent-color);
+  }
+
+  .cal-cell--adjacent.cal-cell--selected {
+    color: var(--cal-cell-adjacent-selected-color);
+  }
+
+  .cal-cell--adjacent.cal-cell--disabled {
+    color: var(--cal-cell-adjacent-disable-color);
+  }
+
+  .cal-cell--current:not(.cal-cell-selected):not(:hover) {
+    background-color: var(--cal-cell-current-highlighted-background-color);
   }
 `;
 
