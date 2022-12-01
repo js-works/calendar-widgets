@@ -77,6 +77,16 @@ const styles = css`
     text-align: center;
   }
 
+  .cal-column-name--highlighted {
+    background-color: var(--cal-cell-highlighted-background-color);
+  }
+
+  .cal-row-name {
+    text-align: center;
+    padding: 0.25em 0.75em;
+    font-size: 75%;
+  }
+
   .cal-cell-container {
     display: flex;
     align-items: stretch;
@@ -91,8 +101,17 @@ const styles = css`
     text-align: center;
   }
 
+  .cal-cell::not(.cal-cell--disabled):hover {
+    background-color: var(--cal-cell-hover-color);
+    background-color: var(--cal-cell-hover-background-color);
+  }
+
   .cal-cell:not(.cal-cell--disabled) {
     cursor: pointer;
+  }
+
+  .cal-cell--disabled {
+    cursor: not-allowed;
   }
 `;
 

@@ -32,7 +32,9 @@ interface Sheet {
   nextDisabled: boolean;
   upDisabled: boolean;
   downDisabled: boolean;
-  columnNames: string[];
+  columnCount: number;
+  highlightedColumns: number[] | null;
+  columnNames: string[] | null;
   rowNames: string[] | null;
   items: SheetItem[];
 }
@@ -220,13 +222,28 @@ class Calendar {
     let rowNames: string[] | null = null;
 
     if (params.showWeekNumbers) {
-      rowNames = ['a', 'b', 'c', 'd', 'e']; // TODO!!!
+      rowNames = [];
+
+      for (let i = 0; i < dayItems.length / 7; ++i) {
+        // TODO!!!!!!!!!!!
+        const weekNumber = this.#i18n.getCalendarWeek(
+          new Date(dayItems[i * 7].key)
+        ).week;
+
+        rowNames.push(this.#i18n.formatWeekNumber(weekNumber));
+      }
     }
+
+    const highlightedColumns = params.highlightWeekends
+      ? this.#i18n.getWeekendDays().map((it) => (it + firstDayOfWeek) % 7)
+      : null;
 
     return {
       key: getYearMonthString(year, month),
       name: nameOfMonth,
       items: dayItems,
+      columnCount: 7,
+      highlightedColumns,
       columnNames: this.#i18n.getWeekdayNames('short', true),
       rowNames,
       prevDisabled,

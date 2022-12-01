@@ -126,8 +126,7 @@ class DatePicker {
     const hasRowNames = this.#sheetHasRowNames(sheet);
 
     let gridTemplateColumns =
-      (hasRowNames ? 'min-content ' : '') +
-      `repeat(${sheet.columnNames.length}, 1fr)`;
+      (hasRowNames ? 'min-content ' : '') + `repeat(${sheet.columnCount}, 1fr)`;
 
     return div(
       {
@@ -160,10 +159,14 @@ class DatePicker {
   }
 
   #renderTableHead(sheet: Sheet, props: DatePicker.Props) {
-    const headRow = sheet.columnNames.map((it) =>
+    const headRow = sheet.columnNames!.map((it, idx) =>
       div(
         {
-          class: 'cal-column-name'
+          class: classMap({
+            'cal-column-name': true,
+            'cal-column-name--highlighted':
+              sheet.highlightedColumns?.includes(idx)
+          })
         },
         it
       )
