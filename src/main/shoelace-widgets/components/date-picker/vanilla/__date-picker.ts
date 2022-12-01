@@ -1,46 +1,128 @@
 import { Calendar, Sheet, SheetItem } from './__calendar';
 import { h, renderToString, VNode } from './vdom';
+import { classMap } from './__utils';
+
+// icons
+import arrowLeftIcon from './icons/arrow-left.icon';
+import arrowRightIcon from './icons/arrow-right.icon';
+import timeIcon from './icons/time.icon';
+
+export { DatePicker };
+
+// === types =========================================================
+
+namespace DatePicker {
+  export type SelectionMode =
+    | 'date'
+    | 'dates'
+    | 'dateTime'
+    | 'dateRange'
+    | 'time'
+    | 'timeRange'
+    | 'dateTimeRange'
+    | 'week'
+    | 'weeks'
+    | 'month'
+    | 'months'
+    | 'monthRange'
+    | 'year'
+    | 'years'
+    | 'yearRange';
+
+  export type Props = {
+    selectionMode: SelectionMode;
+    accentuateHeader: boolean;
+    showWeekNumbers: boolean;
+    sheetSize: 'default' | 'minimal' | 'maximal';
+    highlightToday: boolean;
+    highlightWeekends: boolean;
+    disableWeekends: boolean;
+    enableCenturyView: boolean;
+    minDate: Date | null;
+    maxDate: Date | null;
+  };
+}
 
 const [a, div, img, input, span] = ['a', 'div', 'img', 'input', 'span'].map(
   (tag) => h.bind(null, tag)
 );
 
-export class DatePicker {
+class DatePicker {
+  #getLocale: () => string;
+  #getProps: () => DatePicker.Props;
+
+  constructor(params: {
+    getLocale: () => string;
+    getProps: () => DatePicker.Props; //
+  }) {
+    (this.#getLocale = params.getLocale), (this.#getProps = params.getProps);
+  }
+
   renderToString() {
-    const cal = new Calendar('de-DE');
+    const props = this.#getProps();
+    const cal = new Calendar(this.#getLocale());
 
     const monthSheet = cal.getMonthSheet({
       year: 2022,
-      month: 10,
-      showWeekNumbers: true,
-      selectWeeks: true
+      month: 11,
+      showWeekNumbers: props.showWeekNumbers,
+      selectWeeks: true,
+      disableWeekends: props.disableWeekends,
+      highlightWeekends: props.highlightWeekends
     });
 
-    return renderToString(this.#renderSheetView(monthSheet));
+    return renderToString(this.#renderSheetView(monthSheet, props));
   }
 
-  #renderSheetView(sheet: Sheet) {
+  #renderSheetView(sheet: Sheet, props: DatePicker.Props) {
     return div(
       {
         class: 'cal-base'
       },
-      this.#renderSheetNavi(sheet),
-      this.#renderSheet(sheet)
+      this.#renderSheetHeader(sheet, props),
+      this.#renderSheet(sheet, props)
     );
   }
 
-  #renderSheetNavi(sheet: Sheet) {
+  #renderSheetHeader(sheet: Sheet, props: DatePicker.Props) {
     return div(
       {
-        class: 'cal-sheet-navi'
+        class: classMap({
+          'cal-header': true,
+          'cal-header--accentuated': props.accentuateHeader
+        })
       },
-      div(null, '<-'),
-      div({ class: 'cal-sheet-title' }, sheet.name),
-      div(null, '->')
+      div(
+        {
+          class: classMap({
+            'cal-prev': true,
+            'cal-prev--disabled': sheet.prevDisabled
+          })
+        },
+        arrowLeftIcon
+      ),
+      div(
+        {
+          class: classMap({
+            'cal-title': true,
+            'cal-title--disabled': sheet.upDisabled
+          })
+        },
+        sheet.name
+      ),
+      div(
+        {
+          class: classMap({
+            'cal-prev': true,
+            'cal-prev--disabled': sheet.prevDisabled
+          })
+        },
+        arrowRightIcon
+      )
     );
   }
 
-  #renderSheet(sheet: Sheet) {
+  #renderSheet(sheet: Sheet, props: DatePicker.Props) {
     const hasRowNames = this.#sheetHasRowNames(sheet);
 
     let gridTemplateColumns =
@@ -52,31 +134,49 @@ export class DatePicker {
         class: 'cal-sheet',
         style: `grid-template-columns: ${gridTemplateColumns};`
       },
-      this.#renderHeader(sheet),
-      this.#renderBody(sheet)
+      this.#renderTableHead(sheet, props),
+      this.#renderTableBody(sheet, props)
     );
   }
 
-  #renderItemCell(item: SheetItem) {
+  #renderTableCell(item: SheetItem, props: DatePicker.Props) {
     return div(
       {
-        class: 'cal-cell'
+        class: classMap({
+          'cal-cell-container': true,
+          'cal-cell-container--highlighted': item.highlighted
+        })
       },
-      item.name
+      a(
+        {
+          class: classMap({
+            'cal-cell': true,
+            'cal-cell--disabled': item.disabled
+          })
+        },
+        item.name
+      )
     );
   }
 
-  #renderHeader(sheet: Sheet) {
-    const headerRow = sheet.columnNames.map((it) => h('div', null, it));
+  #renderTableHead(sheet: Sheet, props: DatePicker.Props) {
+    const headRow = sheet.columnNames.map((it) =>
+      div(
+        {
+          class: 'cal-column-name'
+        },
+        it
+      )
+    );
 
     if (this.#sheetHasRowNames(sheet)) {
-      headerRow.unshift(div());
+      headRow.unshift(div());
     }
 
-    return headerRow;
+    return headRow;
   }
 
-  #renderBody(sheet: Sheet) {
+  #renderTableBody(sheet: Sheet, props: DatePicker.Props) {
     const cells: VNode[] = [];
 
     sheet.items.forEach((item, idx) => {
@@ -86,7 +186,7 @@ export class DatePicker {
         );
       }
 
-      cells.push(this.#renderItemCell(item));
+      cells.push(this.#renderTableCell(item, props));
     });
 
     return cells;

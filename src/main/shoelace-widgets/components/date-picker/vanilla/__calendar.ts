@@ -16,6 +16,7 @@ type SheetItem = {
   selectionKey: string;
   name: string;
   current: boolean;
+  highlighted: boolean;
   adjacent: boolean;
   disabled: boolean;
   outOfMinMaxRange: boolean;
@@ -29,6 +30,8 @@ interface Sheet {
   name: string;
   prevDisabled: boolean;
   nextDisabled: boolean;
+  upDisabled: boolean;
+  downDisabled: boolean;
   columnNames: string[];
   rowNames: string[] | null;
   items: SheetItem[];
@@ -50,6 +53,7 @@ class Calendar {
     minDate?: Date | null;
     maxDate?: Date | null;
     showWeekNumbers?: boolean;
+    highlightWeekends?: boolean;
     disableWeekends?: boolean;
     selectWeeks?: boolean;
 
@@ -176,12 +180,14 @@ class Calendar {
         inSelectedRange,
         firstInSelectedRange,
         lastInSelectedRange,
-        adjacent,
 
         current:
           itemYear === currYear &&
           itemMonth === currMonth &&
-          itemDay === currDay
+          itemDay === currDay,
+
+        highlighted: !!(params.highlightWeekends && weekend),
+        adjacent
       });
     }
 
@@ -224,7 +230,9 @@ class Calendar {
       columnNames: this.#i18n.getWeekdayNames('short', true),
       rowNames,
       prevDisabled,
-      nextDisabled
+      nextDisabled,
+      upDisabled: false,
+      downDisabled: true
     };
   }
 }
