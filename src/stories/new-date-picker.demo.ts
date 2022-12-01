@@ -223,7 +223,7 @@ const styles = css`
   .cal-view--time {
     display: flex;
     flex-direction: column;
-    gap: 1em;
+    gap: 1.5em;
   }
 
   /* time */

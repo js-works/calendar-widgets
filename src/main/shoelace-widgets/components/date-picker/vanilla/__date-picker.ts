@@ -90,8 +90,8 @@ class DatePicker {
     });
 
     return renderToString(
-      this.#renderTimeView(props)
-      //this.#renderCalendarView(monthSheet, props)
+      this.#renderCalendarView(monthSheet, props)
+      // this.#renderTimeView(props)
     );
   }
 
@@ -102,10 +102,7 @@ class DatePicker {
       },
       this.#renderSheetHeader(sheet, props),
       this.#renderSheet(sheet, props),
-      //this.#renderTimeLinks(),
-      //this.#renderTimeSliders('time1', props)
-      this.#renderTimeTabs('time1', props)
-      //this.#renderBackToMonthLink()
+      this.#renderTimeLinks()
     );
   }
 
