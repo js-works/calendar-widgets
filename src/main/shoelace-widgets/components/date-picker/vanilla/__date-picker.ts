@@ -100,7 +100,8 @@ class DatePicker {
       this.#renderSheetHeader(sheet, props),
       this.#renderSheet(sheet, props),
       //this.#renderTimeLinks(),
-      this.#renderTimeSliders('time1', props)
+      //this.#renderTimeSliders('time1', props)
+      this.#renderTime('time1', props)
     );
   }
 
@@ -268,6 +269,68 @@ class DatePicker {
       },
       timeIcon,
       timeString === '' ? '--:--' : timeString
+    );
+  }
+
+  // --- time --------------------------------------------------------
+
+  #renderTime(type: 'time1' | 'time2', props: DatePicker.Props) {
+    const hour = type === 'time1' ? this.#activeHour1 : this.#activeHour2;
+
+    const minute = type === 'time1' ? this.#activeMinute1 : this.#activeHour2;
+
+    const timeDate = new Date(1970, 0, 1, hour, minute);
+
+    let time = this.#i18n.formatDate(timeDate, {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+
+    let timeHeader: VNode = null;
+
+    if (
+      props.selectionMode === 'dateTime' ||
+      props.selectionMode === 'dateTimeRange'
+    ) {
+      const date = new Date(); // TODO!!!!!!!!
+
+      const formattedDate = this.#i18n.formatDate(date, {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      });
+
+      let fromOrToLabel = '';
+
+      if (props.selectionMode === 'dateTimeRange') {
+        const selectionSize = this.#selection.size;
+
+        if (selectionSize > 1) {
+          fromOrToLabel = (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0';
+        }
+      }
+
+      timeHeader = h(
+        'div',
+        { class: 'cal-time-header' },
+        fromOrToLabel,
+        formattedDate
+      );
+    } else if (props.selectionMode === 'timeRange') {
+      timeHeader = h(
+        'div',
+        { class: 'cal-time-header' },
+        (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0'
+      );
+    }
+
+    return div(
+      {
+        'class': `cal-time cal-time--${type === 'time1' ? '1' : '2'}`,
+        'data-subject': `timeRange${type === 'time1' ? '1' : '2'}`
+      },
+      timeHeader,
+      div({ class: 'cal-time-value' }, time)
     );
   }
 

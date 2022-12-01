@@ -214,6 +214,27 @@ const styles = css`
     grid-column: 2;
   }
 
+  /* time */
+
+  .cal-time {
+    margin: 0.5rem 0 0 0;
+  }
+
+  .cal-time-header {
+    grid-area: header;
+    font-size: calc(100% - 1px);
+    margin-bottom: 0.25em;
+    font-weight: 200;
+    align-self: start;
+  }
+
+  .cal-time-value {
+    grid-area: time;
+    align-self: center;
+    justify-self: start;
+    font-size: 150%;
+  }
+
   /* time sliders */
 
   .cal-time-sliders {
@@ -362,7 +383,7 @@ class DatePicker2 extends LitElement {
     getLocale: () => this._localize.lang(),
 
     getProps: () => ({
-      selectionMode: 'date',
+      selectionMode: 'dateTime',
       accentuateHeader: true,
       showWeekNumbers: true,
       sheetSize: 'default',
