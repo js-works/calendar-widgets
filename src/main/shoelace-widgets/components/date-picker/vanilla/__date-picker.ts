@@ -101,8 +101,8 @@ class DatePicker {
       this.#renderSheet(sheet, props),
       //this.#renderTimeLinks(),
       //this.#renderTimeSliders('time1', props)
-      //this.#renderTimeTabs(props)
-      this.#renderBackToMonthLink()
+      this.#renderTimeTabs('time1', props)
+      //this.#renderBackToMonthLink()
     );
   }
 
@@ -148,7 +148,7 @@ class DatePicker {
     const hasRowNames = this.#sheetHasRowNames(sheet);
 
     let gridTemplateColumns =
-      (hasRowNames ? 'auto ' : '') + `repeat(${sheet.columnCount}, 1fr)`;
+      (hasRowNames ? 'min-content ' : '') + `repeat(${sheet.columnCount}, 1fr)`;
 
     return div(
       {
@@ -307,8 +307,7 @@ class DatePicker {
         const selectionSize = this.#selection.size;
 
         if (selectionSize > 1) {
-          fromOrToLabel =
-            (type === 'time1' ? 'xxxxfrom:' : 'xxxxxto:') + '\u00a0\u00a0';
+          fromOrToLabel = (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0';
         }
       }
 
@@ -338,10 +337,17 @@ class DatePicker {
 
   // --- time tabs ---------------------------------------------------
 
-  #renderTimeTabs(props: DatePicker.Props) {
+  #renderTimeTabs(type: 'time1' | 'time2', props: DatePicker.Props) {
+    const showsTwoTabs = this.#selection.size > 1;
+
     return div(
-      { class: 'cal-time-tabs' },
-      div({ class: 'xxxlink' }, this.#renderTime('time1', props)),
+      {
+        class: classMap({
+          'cal-time-tabs': true,
+          [`cal-time-tabs--active-tab-${type}`]: showsTwoTabs
+        })
+      },
+      this.#renderTime('time1', props),
       this.#selection.size > 1 ? this.#renderTime('time2', props) : null
     );
   }

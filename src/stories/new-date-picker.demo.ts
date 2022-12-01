@@ -18,6 +18,10 @@ const styles = css`
     user-select: none;
   }
 
+  .cal-base * {
+    box-spacing: border-box;
+  }
+
   /* calendar sheet and sheet header */
 
   .cal-header {
@@ -100,7 +104,7 @@ const styles = css`
 
   .cal-row-name {
     text-align: center;
-    margin: 0.25em !important;
+    margin: 0.25em 0.5em !important;
     font-size: 75%;
     opacity: 80%;
   }
@@ -218,7 +222,6 @@ const styles = css`
 
   .cal-time {
     margin: 0.5rem 0 0 0;
-    border: 1px solid red;
   }
 
   .cal-time-header {
@@ -235,19 +238,35 @@ const styles = css`
 
   .cal-time-tabs {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: 1fr 1fr;
   }
 
-  .xxxlink {
+  .cal-time-tabs > .cal-time {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border: 0 solid #aaa;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 2em;
+  }
+
+  .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2) {
+    font-size: 70%;
+    border-width: 0 0 1px 1px;
+    border: 0 solid #aaa; /* TODO!!! */
+    border-width: 0 0 1px 1px;
+    white-space: nowrap;
+    padding: 1em 2em;
+  }
+
+  .cal-time-tabs--active-tab-time2 > .cal-time:first-child {
+    font-size: 70%;
+    border: 0 solid #aaa; /* TODO!!! */
     border-width: 0 1px 1px 0;
-    font-size: 50%;
+    white-space: nowrap;
+    padding: 1em 2em;
   }
 
   /* back to month link */
+
   .cal-back-to-month-link {
     display: block;
     padding: 0.5em 2em;
