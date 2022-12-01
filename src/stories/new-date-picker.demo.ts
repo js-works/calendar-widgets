@@ -213,6 +213,91 @@ const styles = css`
     justify-self: end;
     grid-column: 2;
   }
+
+  /* time sliders */
+
+  .cal-time-sliders {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25em;
+  }
+
+  .time-slider-headline {
+    margin: 0.25em 0;
+  }
+
+  /* time slider */
+
+  .cal-time-slider {
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    height: 0.75px;
+    width: 100%;
+    margin: 1em 0;
+
+    background-image: linear-gradient(
+      var(--cal-slider-track-color),
+      var(--cal-slider-track-color)
+    );
+
+    background-position: 0 50%;
+    background-size: 100% 1px;
+    background-repeat: no-repeat;
+    box-sizing: border-box;
+    cursor: pointer;
+    background-color: var(--cal-background-color);
+  }
+
+  .cal-time-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1.25em;
+    width: 1.25em;
+    border-radius: var(--cal-slider-thumb-border-radius);
+    background-color: var(--cal-slider-thumb-background-color);
+    border: var(--cal-slider-thumb-border-width) solid
+      var(--cal-slider-thumb-border-color);
+  }
+
+  .cal-time-slider::-moz-range-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1.25em;
+    width: 1.25em;
+    border-radius: var(--cal-slider-thumb-border-radius);
+    background-color: var(--cal-slider-thumb-background-color);
+    border: var(--cal-slider-thumb-border-width) solid
+      var(--cal-slider-thumb-border-color);
+  }
+
+  .cal-time-slider::-webkit-slider-thumb:hover {
+    background-color: var(--cal-slider-thumb-hover-background-color);
+    border-color: var(--cal-slider-thumb-hover-border-color);
+  }
+
+  .cal-time-slider::-moz-range-thumb:hover {
+    background-color: var(--cal-slider-thumb-hover-background-color);
+    border-color: var(--cal-slider-thumb-hover-border-color);
+  }
+
+  .cal-time-slider:focus::-webkit-slider-thumb {
+    background-color: var(--cal-slider-thumb-focus-background-color);
+    border-color: var(--cal-slider-thumb-focus-border-color);
+  }
+
+  .cal-time-slider:focus::-moz-range-thumb {
+    background-color: var(--cal-slider-thumb-focus-background-color);
+    border-color: var(--cal-slider-thumb-focus-border-color);
+  }
+
+  .cal-time-slider::-webkit-slider-runnable-track,
+  .cal-time-slider::-moz-range-track {
+    -webkit-appearance: none;
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+  }
 `;
 
 const styles2 = css`

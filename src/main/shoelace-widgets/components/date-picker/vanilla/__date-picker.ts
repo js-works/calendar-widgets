@@ -44,9 +44,7 @@ namespace DatePicker {
   };
 }
 
-const [a, div, img, input, span] = ['a', 'div', 'img', 'input', 'span'].map(
-  (tag) => h.bind(null, tag)
-);
+const [a, div, input] = ['a', 'div', 'input'].map((tag) => h.bind(null, tag));
 
 class DatePicker {
   #i18n: I18n;
@@ -64,6 +62,10 @@ class DatePicker {
   }) {
     this.#i18n = new I18n(params.getLocale);
     this.#getProps = params.getProps;
+  }
+
+  #sheetHasRowNames(sheet: Sheet) {
+    return !!sheet.rowNames?.length;
   }
 
   renderToString() {
@@ -97,7 +99,8 @@ class DatePicker {
       },
       this.#renderSheetHeader(sheet, props),
       this.#renderSheet(sheet, props),
-      this.#renderTimeLinks()
+      //this.#renderTimeLinks(),
+      this.#renderTimeSliders('time1', props)
     );
   }
 
@@ -268,7 +271,57 @@ class DatePicker {
     );
   }
 
-  #sheetHasRowNames(sheet: Sheet) {
-    return !!sheet.rowNames?.length;
+  // --- time sliders ------------------------------------------------
+
+  #renderTimeSliders(type: 'time1' | 'time2', props: DatePicker.Props) {
+    const selectionMode = props.selectionMode;
+
+    let hour = 0;
+    let minute = 0;
+
+    if (type === 'time1') {
+      hour = this.#activeHour1;
+      minute = this.#activeMinute1;
+    } else {
+      hour = this.#activeHour2;
+      minute = this.#activeMinute2;
+    }
+
+    return div(
+      null,
+      div(
+        { class: 'cal-time-sliders' },
+        div(
+          null,
+          div({ class: 'cal-time-slider-headline' }, 'Hours'),
+          input({
+            'type': 'range',
+            'class': 'cal-time-slider',
+            'value': hour,
+            'min': 0,
+            'max': 23,
+            'data-subject': 'hours' + (type === 'time2' ? '2' : '')
+          })
+        ),
+        div(
+          null,
+          div({ class: 'cal-time-slider-headline' }, 'Minutes'),
+          input({
+            'type': 'range',
+            'class': 'cal-time-slider',
+            'value': minute,
+            'min': 0,
+            'max': 59,
+            'data-subject': 'minutes' + (type === 'time2' ? '2' : '')
+          })
+        )
+      ),
+      selectionMode !== 'dateTime' && selectionMode !== 'dateTimeRange'
+        ? null
+        : a(
+            { 'class': 'cal-back-link', 'data-subject': 'view-month' },
+            'Back to month'
+          )
+    );
   }
 }
