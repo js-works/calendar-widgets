@@ -89,13 +89,16 @@ class DatePicker {
       }
     });
 
-    return renderToString(this.#renderSheetView(monthSheet, props));
+    return renderToString(
+      this.#renderTimeView(props)
+      //this.#renderCalendarView(monthSheet, props)
+    );
   }
 
-  #renderSheetView(sheet: Sheet, props: DatePicker.Props) {
+  #renderCalendarView(sheet: Sheet, props: DatePicker.Props) {
     return div(
       {
-        class: 'cal-base'
+        class: 'cal-base cal-view--calendar'
       },
       this.#renderSheetHeader(sheet, props),
       this.#renderSheet(sheet, props),
@@ -103,6 +106,24 @@ class DatePicker {
       //this.#renderTimeSliders('time1', props)
       this.#renderTimeTabs('time1', props)
       //this.#renderBackToMonthLink()
+    );
+  }
+
+  #renderTimeView(props: DatePicker.Props) {
+    return div(
+      {
+        class: 'class-base cal-view--time'
+      },
+      this.#renderTimeTabs('time1', props),
+      this.#renderTimeSliders('time1', props),
+
+      props.selectionMode !== 'dateTime' &&
+        props.selectionMode !== 'dateTimeRange'
+        ? null
+        : a(
+            { 'class': 'cal-back-to-month-link', 'data-subject': 'view-month' },
+            'Back to month'
+          )
     );
   }
 
@@ -396,13 +417,7 @@ class DatePicker {
             'data-subject': 'minutes' + (type === 'time2' ? '2' : '')
           })
         )
-      ),
-      selectionMode !== 'dateTime' && selectionMode !== 'dateTimeRange'
-        ? null
-        : a(
-            { 'class': 'cal-back-link', 'data-subject': 'view-month' },
-            'Back to month'
-          )
+      )
     );
   }
 

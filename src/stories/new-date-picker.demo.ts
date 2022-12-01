@@ -218,6 +218,14 @@ const styles = css`
     grid-column: 2;
   }
 
+  /* time view */
+
+  .cal-view--time {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+  }
+
   /* time */
 
   .cal-time {
@@ -245,13 +253,19 @@ const styles = css`
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 0 2em;
+    white-space: nowrap;
+  }
+
+  .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2):hover,
+  .cal-time-tabs--active-tab-time2 > .cal-time:first-child:hover {
+    background-color: var(--cal-time-tab-hover-background-color);
+    cursor: pointer;
   }
 
   .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2) {
     font-size: 70%;
     border-width: 0 0 1px 1px;
-    border: 0 solid #aaa; /* TODO!!! */
+    border: 0 solid var(--cal-border-color);
     border-width: 0 0 1px 1px;
     white-space: nowrap;
     padding: 1em 2em;
@@ -259,7 +273,7 @@ const styles = css`
 
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child {
     font-size: 70%;
-    border: 0 solid #aaa; /* TODO!!! */
+    border: 0 solid var(--cal-border-color);
     border-width: 0 1px 1px 0;
     white-space: nowrap;
     padding: 1em 2em;
@@ -293,7 +307,6 @@ const styles = css`
   }
 
   .time-slider-headline {
-    margin: 0.25em 0;
   }
 
   /* time slider */
@@ -419,6 +432,8 @@ const styles2 = css`
     --cal-back-link-hover-background-color: var(--sl-color-primary-300);
     --cal-back-link-active-background-color: var(--sl-color-primary-400);
     --cal-back-link-border-radius: var(--sl-border-radius-medium);
+    --cal-time-tab-hover-background-color: var(--sl-color-primary-50);
+    --cal-border-color: var(--sl-color-neutral-300);
   }
 `;
 
