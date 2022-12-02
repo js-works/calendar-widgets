@@ -94,7 +94,7 @@ function renderToString(vnode: VNode): string {
   return tokens.join('');
 }
 
-function render(container: Element, velem: VElement) {
+function render(velem: VElement, container: Element) {
   const oldVElem = (container as any)[symbolVElem];
 
   if (!oldVElem) {

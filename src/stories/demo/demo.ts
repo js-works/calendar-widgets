@@ -7,7 +7,6 @@ import { dateFields } from '../date-field.demo';
 import { dialogs } from '../dialogs.demo';
 import { reactDemo } from '../react.demo';
 import { preactDemo } from '../preact.demo';
-import { newDatePickerDemo } from '../new-date-picker.demo';
 
 import {
   convertThemeToCss,
@@ -192,13 +191,6 @@ class DemoApp extends LitElement {
           >
             Preact
           </sl-tab>
-          <sl-tab
-            slot="nav"
-            panel="new-date-picker"
-            ?active=${this._activeTab === 'new-date-picker'}
-          >
-            New date picker
-          </sl-tab>
           <sl-tab-panel name="date-picker">
             ${demo(datePicker())}
           </sl-tab-panel>
@@ -208,9 +200,6 @@ class DemoApp extends LitElement {
           <sl-tab-panel name="dialogs">${demo(dialogs())}</sl-tab-panel>
           <sl-tab-panel name="react-demo">${demo(reactDemo())}</sl-tab-panel>
           <sl-tab-panel name="preact-demo">${demo(preactDemo())}</sl-tab-panel>
-          <sl-tab-panel name="new-date-picker"
-            >${demo(newDatePickerDemo())}</sl-tab-panel
-          >
         </sl-tab-group>
       </div>
     `;

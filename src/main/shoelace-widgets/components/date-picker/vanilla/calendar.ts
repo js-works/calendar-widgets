@@ -1,129 +1,75 @@
-// === exports =======================================================
+import { h, renderToString, VNode } from './vdom';
+import { I18n } from './i18n';
 
-export { Calendar };
+import {
+  getYearMonthString,
+  getYearMonthDayString,
+  getYearWeekString,
+  inDateRange,
+  inNumberRange,
+  today
+} from './utils';
 
-// === exported types ================================================
+export { Calendar, Sheet, SheetItem };
 
-namespace Calendar {
-  export type CalendarWeek = { year: number; week: number };
+type SheetItem = {
+  key: string;
+  selectionKey: string;
+  name: string;
+  current: boolean;
+  highlighted: boolean;
+  adjacent: boolean;
+  disabled: boolean;
+  outOfMinMaxRange: boolean;
+  inSelectedRange: boolean;
+  firstInSelectedRange: boolean;
+  lastInSelectedRange: boolean;
+};
 
-  export type Options = Readonly<{
-    firstDayOfWeek: number;
-    weekendDays: readonly number[];
-    getCalendarWeek: (date: Date, firstDayOfWeek: number) => CalendarWeek;
-    minDate: Date | null;
-    maxDate: Date | null;
-    disableWeekends: boolean;
-    alwaysShow42Days: boolean;
-  }>;
-
-  export type DayItem = Readonly<{
-    year: number;
-    month: number;
-    day: number;
-    calendarWeek: CalendarWeek;
-    current: boolean; // true if today, else false
-    weekend: boolean; // true if weekend day, else false
-    disabled: boolean;
-    outOfMinMaxRange: boolean;
-    inSelectionRange: boolean;
-    firstInSelectionRange: boolean;
-    lastInSelectionRange: boolean;
-    adjacent: boolean;
-  }>;
-
-  export type MonthItem = Readonly<{
-    year: number;
-    month: number; // 0 -> january, ..., 11 -> december
-    current: boolean; // true if current month, else false
-    outOfMinMaxRange: boolean;
-    inSelectionRange: boolean;
-    firstInSelectionRange: boolean;
-    lastInSelectionRange: boolean;
-    disabled: boolean;
-  }>;
-
-  export type YearItem = Readonly<{
-    year: number;
-    current: boolean; // true if current year, else false
-    adjacent: boolean;
-    outOfMinMaxRange: boolean;
-    inSelectionRange: boolean;
-    firstInSelectionRange: boolean;
-    lastInSelectionRange: boolean;
-    disabled: boolean;
-  }>;
-
-  export type DecadeItem = Readonly<{
-    firstYear: number;
-    lastYear: number;
-    current: boolean; // true if current decade, else false
-    adjacent: boolean;
-    outOfMinMaxRange: boolean;
-    disabled: boolean;
-  }>;
-
-  export type MonthData = Readonly<{
-    year: number;
-    month: number; // 0 -> january, ..., 11 -> december
-    days: DayItem[];
-    weekdays: number[];
-    prevDisabled: boolean;
-    nextDisabled: boolean;
-  }>;
-
-  export type YearData = Readonly<{
-    year: number;
-    months: readonly MonthItem[];
-    prevDisabled: boolean;
-    nextDisabled: boolean;
-  }>;
-
-  export type DecadeData = Readonly<{
-    startYear: number;
-    endYear: number;
-    years: readonly YearItem[];
-    prevDisabled: boolean;
-    nextDisabled: boolean;
-  }>;
-
-  export type CenturyData = Readonly<{
-    decades: readonly DecadeItem[];
-    prevDisabled: boolean;
-    nextDisabled: boolean;
-  }>;
+interface Sheet {
+  key: string;
+  name: string;
+  previous: { year: number; month?: number } | null;
+  next: { year: number; month?: number } | null;
+  columnCount: number;
+  highlightedColumns: number[] | null;
+  columnNames: string[] | null;
+  rowNames: string[] | null;
+  items: SheetItem[];
 }
 
-// === Calendar ==============================================
-
 class Calendar {
-  #options: Calendar.Options;
+  #i18n: I18n;
 
-  constructor(options: Calendar.Options) {
-    this.#options = options;
+  constructor(locale: string | (() => string)) {
+    this.#i18n = new I18n(locale);
   }
 
-  getMonthData(params: {
+  getMonthSheet(params: {
     year: number;
     month: number;
+    calendarSize?: 'default' | 'minimal' | 'maximal';
+    minDate?: Date | null;
+    maxDate?: Date | null;
+    showWeekNumbers?: boolean;
+    highlightCurrent?: boolean;
+    highlightWeekends?: boolean;
+    disableWeekends?: boolean;
+    selectWeeks?: boolean;
 
-    selectionRange?: {
+    selectedRange?: {
       start: { year: number; month: number; day: number };
       end: { year: number; month: number; day: number };
     } | null;
-  }): Calendar.MonthData {
+  }): Sheet {
     // we also allow month values less than 0 and greater than 11
     const n = params.year * 12 + params.month;
     const year = Math.floor(n / 12);
     const month = n % 12;
 
-    const options = this.#options;
-    const firstDayOfWeek = options.firstDayOfWeek;
+    const firstDayOfWeek = this.#i18n.getFirstDayOfWeek();
     const firstWeekdayOfMonth = new Date(year, month, 1).getDay();
     const now = new Date();
-    const currYear = now.getFullYear();
-    const currMonth = now.getMonth();
-    const currDay = now.getDate();
     const dayCountOfCurrMonth = getDayCountOfMonth(year, month);
     const dayCountOfLastMonth = getDayCountOfMonth(year, month - 1);
 
@@ -134,7 +80,7 @@ class Calendar {
 
     let daysToShow = 42;
 
-    if (!options.alwaysShow42Days) {
+    if (params.calendarSize !== 'maximal') {
       daysToShow = getDayCountOfMonth(year, month) + remainingDaysOfLastMonth;
 
       if (daysToShow % 7 > 0) {
@@ -142,7 +88,7 @@ class Calendar {
       }
     }
 
-    const days: Calendar.DayItem[] = [];
+    const dayItems: SheetItem[] = [];
 
     for (let i = 0; i < daysToShow; ++i) {
       let itemYear: number;
@@ -171,120 +117,161 @@ class Calendar {
       }
 
       const itemDate = new Date(itemYear, itemMonth, itemDay);
-      const weekend = options.weekendDays.includes(itemDate.getDay());
+      const weekend = this.#i18n.getWeekendDays().includes(itemDate.getDay());
 
       const outOfMinMaxRange = !inDateRange(
         itemDate,
-        options.minDate,
-        options.maxDate
+        params.minDate || null,
+        params.maxDate || null
       );
 
-      let inSelectionRange = false;
-      let firstInSelectionRange = false;
-      let lastInSelectionRange = false;
+      let inSelectedRange = false;
+      let firstInSelectedRange = false;
+      let lastInSelectedRange = false;
 
-      if (params.selectionRange) {
+      if (params.selectedRange) {
         const {
           year: startYear,
           month: startMonth,
           day: startDay
-        } = params.selectionRange.start;
+        } = params.selectedRange.start;
 
         const {
           year: endYear,
           month: endMonth,
           day: endDay
-        } = params.selectionRange.end;
+        } = params.selectedRange.end;
 
         const startDate = new Date(startYear, startMonth, startDay);
         const endDate = new Date(endYear, endMonth, endDay);
 
         if (startDate.getTime() <= endDate.getTime()) {
-          inSelectionRange = inDateRange(itemDate, startDate, endDate);
+          inSelectedRange = inDateRange(itemDate, startDate, endDate);
 
-          firstInSelectionRange =
-            inSelectionRange && itemDate.getTime() === startDate.getTime();
+          firstInSelectedRange =
+            inSelectedRange && itemDate.getTime() === startDate.getTime();
 
-          lastInSelectionRange =
-            inSelectionRange && itemDate.getTime() === endDate.getTime();
+          lastInSelectedRange =
+            inSelectedRange && itemDate.getTime() === endDate.getTime();
         }
       }
 
-      days.push({
-        year: itemYear,
-        month: itemMonth,
-        day: itemDay,
-        disabled: (options.disableWeekends && weekend) || outOfMinMaxRange,
+      const key = getYearMonthDayString(itemYear, itemMonth, itemDay);
+
+      let selectionKey = key;
+
+      if (params.selectWeeks) {
+        const calendarWeek = this.#i18n.getCalendarWeek(itemDate);
+
+        selectionKey = getYearWeekString(calendarWeek.year, calendarWeek.week);
+      }
+
+      dayItems.push({
+        key,
+        name: this.#i18n.formatDay(itemDay),
+        selectionKey,
+        disabled: (params.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
-        inSelectionRange,
-        firstInSelectionRange,
-        lastInSelectionRange,
-        adjacent,
-        weekend,
-
-        calendarWeek: options.getCalendarWeek(
-          new Date(itemYear, itemMonth, itemDay),
-          firstDayOfWeek
-        ),
-
-        current:
-          itemYear === currYear &&
-          itemMonth === currMonth &&
-          itemDay === currDay
+        inSelectedRange,
+        firstInSelectedRange,
+        lastInSelectedRange,
+        current: today().getTime() === itemDate.getTime(),
+        highlighted: !!(params.highlightWeekends && weekend),
+        adjacent
       });
     }
 
     const weekdays: number[] = [];
 
     for (let i = 0; i < 7; ++i) {
-      weekdays.push((i + options.firstDayOfWeek) % 7);
+      weekdays.push((i + this.#i18n.getFirstDayOfWeek()) % 7);
     }
 
-    const minMonth = options.minDate
-      ? options.minDate.getFullYear() * 12 + options.minDate.getMonth()
+    const minMonth = params.minDate
+      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
       : null;
 
-    const maxMonth = options.maxDate
-      ? options.maxDate.getFullYear() * 12 + options.maxDate.getMonth()
+    const maxMonth = params.maxDate
+      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
       : null;
 
     const mon = year * 12 + month;
 
-    const prevDisabled =
-      mon <= 24 || !inNumberRange(mon - 1, minMonth, maxMonth);
+    const previousAvailable =
+      mon > 24 && inNumberRange(mon - 1, minMonth, maxMonth);
 
-    const nextDisabled = !inNumberRange(mon + 1, minMonth, maxMonth);
+    const previous = !previousAvailable
+      ? null
+      : month === 0
+      ? { year: year - 1, month: 11 }
+      : { year, month: month - 1 };
+
+    const nextAvailable = inNumberRange(mon + 1, minMonth, maxMonth);
+
+    const next = !nextAvailable
+      ? null
+      : month === 11
+      ? { year: year + 1, month: 0 }
+      : { year, month: month + 1 };
+
+    const nameOfMonth = this.#i18n.formatDate(new Date(year, month, 1), {
+      year: 'numeric',
+      month: 'long'
+    });
+
+    let rowNames: string[] | null = null;
+
+    if (params.showWeekNumbers) {
+      rowNames = [];
+
+      for (let i = 0; i < dayItems.length / 7; ++i) {
+        // TODO!!!!!!!!!!!
+        const weekNumber = this.#i18n.getCalendarWeek(
+          new Date(dayItems[i * 7].key)
+        ).week;
+
+        rowNames.push(this.#i18n.formatWeekNumber(weekNumber));
+      }
+    }
+
+    const highlightedColumns = params.highlightWeekends
+      ? this.#i18n.getWeekendDays().map((it) => (it + firstDayOfWeek) % 7)
+      : null;
 
     return {
-      year,
-      month,
-      days,
-      weekdays,
-      prevDisabled,
-      nextDisabled
+      key: getYearMonthString(year, month),
+      name: nameOfMonth,
+      items: dayItems,
+      columnCount: 7,
+      highlightedColumns,
+      columnNames: this.#i18n.getWeekdayNames('short', true),
+      rowNames,
+      previous,
+      next
     };
   }
 
-  getYearData(params: {
+  getYearSheet(params: {
     year: number; //
-    selectionRange?: {
+    minDate: Date | null;
+    maxDate: Date | null;
+    selectedRange?: {
       start: { year: number; month: number };
       end: { year: number; month: number };
     } | null;
-  }): Calendar.YearData {
+  }): Sheet {
     const year = params.year;
-    const options = this.#options;
-    const months: Calendar.MonthItem[] = [];
+    const monthItems: SheetItem[] = [];
     const now = new Date();
     const currYear = now.getFullYear();
     const currMonth = now.getMonth();
 
-    const minMonth = options.minDate
-      ? options.minDate.getFullYear() * 12 + options.minDate.getMonth()
+    const minMonth = params.minDate
+      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
       : null;
 
-    const maxMonth = options.maxDate
-      ? options.maxDate.getFullYear() * 12 + options.maxDate.getMonth()
+    const maxMonth = params.maxDate
+      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
       : null;
 
     for (let itemMonth = 0; itemMonth < 12; ++itemMonth) {
@@ -294,15 +281,15 @@ class Calendar {
         maxMonth
       );
 
-      let inSelectionRange = false;
-      let firstInSelectionRange = false;
-      let lastInSelectionRange = false;
+      let inSelectedRange = false;
+      let firstInSelectedRange = false;
+      let lastInSelectedRange = false;
 
-      if (params.selectionRange) {
+      if (params.selectedRange) {
         const { year: startYear, month: startMonth } =
-          params.selectionRange.start;
+          params.selectedRange.start;
 
-        const { year: endYear, month: endMonth } = params.selectionRange.end;
+        const { year: endYear, month: endMonth } = params.selectedRange.end;
 
         const startValue = startYear * 12 + startMonth;
         const endValue = endYear * 12 + endMonth;
@@ -310,210 +297,227 @@ class Calendar {
         if (startValue <= endValue) {
           const itemValue = year * 12 + itemMonth;
 
-          inSelectionRange = inNumberRange(
+          inSelectedRange = inNumberRange(
             year * 12 + itemMonth,
             startValue,
             endValue
           );
 
-          firstInSelectionRange = inSelectionRange && itemValue === startValue;
-          lastInSelectionRange = inSelectionRange && itemValue === endValue;
+          firstInSelectedRange = inSelectedRange && itemValue === startValue;
+          lastInSelectedRange = inSelectedRange && itemValue === endValue;
         }
       }
 
-      months.push({
-        year,
-        month: itemMonth,
+      const key = getYearMonthString(year, itemMonth);
+
+      monthItems.push({
+        key: key,
+        selectionKey: key,
+        name: this.#i18n.getMonthName(itemMonth, 'short'),
         current: year === currYear && itemMonth === currMonth,
+        adjacent: false,
+        highlighted: false,
         outOfMinMaxRange,
-        inSelectionRange,
-        firstInSelectionRange,
-        lastInSelectionRange,
+        inSelectedRange,
+        firstInSelectedRange,
+        lastInSelectedRange,
         disabled: outOfMinMaxRange
       });
     }
 
-    const minYear = options.minDate ? options.minDate.getFullYear() : null;
-    const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
+    const minYear = params.minDate ? params.minDate.getFullYear() : null;
+    const maxYear = params.maxDate ? params.maxDate.getFullYear() : null;
 
-    const prevDisabled =
-      year <= 1 || !inNumberRange(year - 1, minYear, maxYear);
+    const previousAvailable =
+      year >= 1 && inNumberRange(year - 1, minYear, maxYear);
 
-    const nextDisabled = !inNumberRange(year + 1, minYear, maxYear);
+    const previous = !previousAvailable ? null : { year: year - 1 };
+    const nextAvailable = inNumberRange(year + 1, minYear, maxYear);
+    const next = !nextAvailable ? null : { year: year + 1 };
 
     return {
-      year,
-      months,
-      prevDisabled,
-      nextDisabled
+      key: String(year),
+      name: this.#i18n.formatYear(year),
+      columnCount: 4,
+      highlightedColumns: null,
+      columnNames: null,
+      rowNames: null,
+      previous,
+      next,
+      items: monthItems
     };
   }
 
-  getDecadeData(params: {
+  getDecadeSheet(params: {
     year: number; //
-    selectionRange?: {
+    minDate: Date | null;
+    maxDate: Date | null;
+    selectedRange?: {
       start: { year: number };
       end: { year: number };
     } | null;
-  }): Calendar.DecadeData {
+  }): Sheet {
     const year = params.year;
-    const options = this.#options;
     const startYear = year - (year % 10) - 1;
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
-    const years: Calendar.YearItem[] = [];
-    const minYear = options.minDate ? options.minDate.getFullYear() : null;
-    const maxYear = options.maxDate ? options.maxDate.getFullYear() : null;
+    const yearItems: SheetItem[] = [];
+    const minYear = params.minDate ? params.minDate.getFullYear() : null;
+    const maxYear = params.maxDate ? params.maxDate.getFullYear() : null;
 
     for (let itemYear = startYear; itemYear <= endYear; ++itemYear) {
       const adjacent = itemYear === startYear || itemYear === endYear;
       const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
-      let inSelectionRange = false;
-      let firstInSelectionRange = false;
-      let lastInSelectionRange = false;
+      let inSelectedRange = false;
+      let firstInSelectedRange = false;
+      let lastInSelectedRange = false;
 
-      if (params.selectionRange) {
-        const { year: startYear } = params.selectionRange.start;
+      if (params.selectedRange) {
+        const { year: startYear } = params.selectedRange.start;
 
-        const { year: endYear } = params.selectionRange.end;
+        const { year: endYear } = params.selectedRange.end;
 
         if (startYear <= endYear) {
-          inSelectionRange = inNumberRange(itemYear, startYear, endYear);
-          firstInSelectionRange = inSelectionRange && itemYear === startYear;
-          lastInSelectionRange = inSelectionRange && itemYear === endYear;
+          inSelectedRange = inNumberRange(itemYear, startYear, endYear);
+          firstInSelectedRange = inSelectedRange && itemYear === startYear;
+          lastInSelectedRange = inSelectedRange && itemYear === endYear;
         }
       }
 
-      years.push({
+      yearItems.push({
+        key: String(itemYear),
+        selectionKey: String(itemYear),
+
+        name: this.#i18n.formatYear(itemYear),
+
         current: itemYear === currYear,
-        year: itemYear,
+        highlighted: false,
         adjacent,
         outOfMinMaxRange,
-        inSelectionRange,
-        firstInSelectionRange,
-        lastInSelectionRange,
+        inSelectedRange,
+        firstInSelectedRange,
+        lastInSelectedRange,
         disabled: outOfMinMaxRange
       });
     }
 
-    const minDecade = options.minDate
-      ? Math.floor(options.minDate.getFullYear() / 10)
+    const minDecade = params.minDate
+      ? Math.floor(params.minDate.getFullYear() / 10)
       : null;
 
-    const maxDecade = options.maxDate
-      ? Math.floor(options.maxDate.getFullYear() / 10)
+    const maxDecade = params.maxDate
+      ? Math.floor(params.maxDate.getFullYear() / 10)
       : null;
 
     const decade = Math.floor(year / 10);
 
-    const prevDisabled =
-      year <= 1 || !inNumberRange(decade - 1, minDecade, maxDecade);
+    const prevAvailable =
+      year > 1 || inNumberRange(decade - 1, minDecade, maxDecade);
 
-    const nextDisabled = !inNumberRange(decade + 1, minDecade, maxDecade);
+    const previous = !prevAvailable
+      ? null
+      : { year: Math.floor(((year - 10) / 10) * 10) };
+
+    const nextAvailable = inNumberRange(decade + 1, minDecade, maxDecade);
+
+    const next = !nextAvailable
+      ? null
+      : { year: Math.floor(((year + 10) / 10) * 10) };
 
     return {
-      startYear,
-      endYear,
-      years,
-      prevDisabled,
-      nextDisabled
+      key: String(year),
+      name: this.#i18n.formatDecade(year),
+      columnCount: 4,
+      columnNames: null,
+      rowNames: null,
+      highlightedColumns: null,
+      previous,
+      next,
+      items: yearItems
     };
   }
 
-  getCenturyData(params: {
-    year: number; //
-  }): Calendar.CenturyData {
+  getCenturySheet(params: {
+    year: number; //,
+    minDate: Date | null;
+    maxDate: Date | null;
+  }): Sheet {
     const year = params.year;
-    const options = this.#options;
     const startYear = year - (year % 100) - 10;
     const endYear = startYear + 119;
     const currYear = new Date().getFullYear();
-    const decades: Calendar.DecadeItem[] = [];
+    const decadeItems: SheetItem[] = [];
 
-    const minYear = options.minDate
-      ? Math.floor(options.minDate.getFullYear() / 10) * 10
+    const minYear = params.minDate
+      ? Math.floor(params.minDate.getFullYear() / 10) * 10
       : null;
 
-    const maxYear = options.maxDate
-      ? Math.floor(options.maxDate.getFullYear() / 10) * 10 + 9
+    const maxYear = params.maxDate
+      ? Math.floor(params.maxDate.getFullYear() / 10) * 10 + 9
       : null;
 
     for (let itemYear = startYear; itemYear <= endYear; itemYear += 10) {
       const adjacent = itemYear === startYear || itemYear === endYear - 9;
       const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
-      decades.push({
+      decadeItems.push({
+        key: String(itemYear),
+        selectionKey: String(itemYear),
+
+        name: this.#i18n
+          .formatDecade(itemYear)
+          .replaceAll('\u2013', '\u2013\u200B'),
+
+        highlighted: false,
         current: itemYear <= currYear && itemYear + 10 > currYear,
-        firstYear: itemYear,
-        lastYear: itemYear + 9,
         adjacent,
         outOfMinMaxRange,
+        inSelectedRange: false,
+        firstInSelectedRange: false,
+        lastInSelectedRange: false,
         disabled: outOfMinMaxRange
       });
     }
 
-    const minCentury = options.minDate
-      ? Math.floor(options.minDate.getFullYear() / 100)
+    const minCentury = params.minDate
+      ? Math.floor(params.minDate.getFullYear() / 100)
       : null;
 
-    const maxCentury = options.maxDate
-      ? Math.floor(options.maxDate.getFullYear() / 100)
+    const maxCentury = params.maxDate
+      ? Math.floor(params.maxDate.getFullYear() / 100)
       : null;
 
     const century = Math.floor(year / 100);
 
-    const prevDisabled =
-      year <= 1 || !inNumberRange(century - 1, minCentury, maxCentury);
+    const prevAvailable =
+      year > 1 && inNumberRange(century - 1, minCentury, maxCentury);
 
-    const nextDisabled = !inNumberRange(century + 1, minCentury, maxCentury);
+    const previous = !prevAvailable
+      ? null
+      : { year: Math.floor(((year - 100) / 100) * 100) };
+
+    const nextAvailable = inNumberRange(century + 1, minCentury, maxCentury);
+
+    const next = !nextAvailable
+      ? null
+      : { year: Math.floor(((year + 100) / 100) * 100) };
 
     return {
-      decades,
-      prevDisabled,
-      nextDisabled
+      key: String(year),
+      name: this.#i18n.formatCentury(year),
+      columnCount: 4,
+      columnNames: null,
+      highlightedColumns: null,
+      rowNames: null,
+      items: decadeItems,
+      previous,
+      next
     };
   }
 }
 
-// === helpers =======================================================
-
-function inNumberRange(
-  value: number,
-  start: number | null,
-  end: number | null
-) {
-  if (start === null && end === null) {
-    return true;
-  }
-
-  if (start === null) {
-    return value <= end!;
-  } else if (end === null) {
-    return value >= start;
-  } else {
-    return value >= start && value <= end;
-  }
-}
-
-function inDateRange(value: Date, start: Date | null, end: Date | null) {
-  if (start === null && end === null) {
-    return true;
-  }
-
-  const toNumber = (date: Date) =>
-    date.getFullYear() * 10000 + date.getMonth() * 100 + date.getDate();
-
-  const val = toNumber(value);
-
-  if (start === null) {
-    return val <= toNumber(end!);
-  } else if (end === null) {
-    return val >= toNumber(start!);
-  } else {
-    return val >= toNumber(start) && val <= toNumber(end);
-  }
-}
+// === local helpers =================================================
 
 function getDayCountOfMonth(year: number, month: number) {
   // we also allow month values less than 0 and greater than 11

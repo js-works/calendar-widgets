@@ -19,19 +19,26 @@ namespace DatePicker {
 // === styles  =======================================================
 
 const datePickerCustomStyles = css`
-  .base {
+  :host {
     --cal-font-family: var(--sl-font-sans);
     --cal-font-size: var(--sl-font-size-medium);
     --cal-color: var(--sl-color-neutral-1000);
-    --cal-backgroundColor: transparent;
-    --cal-nav-color: var(--sl-color-neutral-1000);
-    --cal-nav-background-color: transparent;
-    --cal-nav-hover-background-color: var(--sl-color-primary-300);
-    --cal-nav-active-background-color: var(--sl-color-primary-400);
-    --cal-nav-accentuated-color: var(--sl-color-neutral-0);
-    --cal-nav-accentuated-background-color: var(--sl-color-primary-600);
-    --cal-nav-accentuated-hover-background-color: var(--sl-color-primary-700);
-    --cal-nav-accentuated-active-background-color: var(--sl-color-primary-800);
+    --cal-background-color: transparent;
+    --cal-header-color: var(--sl-color-neutral-1000);
+    --cal-header-background-color: transparent;
+    --cal-header-hover-background-color: var(--sl-color-primary-300);
+    --cal-header-active-background-color: var(--sl-color-primary-400);
+    --cal-header-accentuated-color: var(--sl-color-neutral-0);
+    --cal-header-accentuated-background-color: var(--sl-color-primary-600);
+
+    --cal-header-accentuated-hover-background-color: var(
+      --sl-color-primary-700
+    );
+
+    --cal-header-accentuated-active-background-color: var(
+      --sl-color-primary-800
+    );
+
     --cal-cell-hover-background-color: var(--sl-color-primary-200);
     --cal-cell-disabled-color: var(--sl-color-neutral-300);
     --cal-cell-highlighted-background-color: var(--sl-color-neutral-50);
@@ -60,9 +67,10 @@ const datePickerCustomStyles = css`
     --cal-back-link-hover-background-color: var(--sl-color-primary-300);
     --cal-back-link-active-background-color: var(--sl-color-primary-400);
     --cal-back-link-border-radius: var(--sl-border-radius-medium);
+    --cal-time-tab-hover-background-color: var(--sl-color-primary-50);
+    --cal-border-color: var(--sl-color-neutral-300);
   }
 `;
-
 // === components ====================================================
 
 @customElement('sx-date-picker')
@@ -123,7 +131,6 @@ class DatePicker extends LitElement {
 
     this._picker = new Picker(this, {
       requestUpdate: () => this.requestUpdate(),
-      getSelectionMode: () => this.selectionMode,
       onChange: this._onChange,
       getLocale: () => this._localize.lang(),
       getDirection: () => this._localize.dir(),
