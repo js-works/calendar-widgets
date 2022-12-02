@@ -8,12 +8,16 @@ export type { VElement, VNode };
 
 // === types =========================================================
 
-type Attrs = Record<string, string | number | boolean | null | undefined>;
+type Props = Record<
+  string,
+  string | number | boolean | ((ev: Event) => void) | null | undefined
+>;
+
 type Patch = (node: Element | Text) => void;
 
 type VElement = {
   tagName: string;
-  attrs: Attrs | null;
+  props: Props | null;
   children: VNode[];
 };
 
@@ -36,12 +40,12 @@ const svgNamespace = 'http://www.w3.org/2000/svg';
 
 function h(
   tagName: string,
-  attrs: Attrs | null = null,
+  props: Props | null = null,
   ...children: (VNode | VNode[])[]
 ): VElement {
   return {
     tagName,
-    attrs,
+    props,
     children: children.flat(100)
   };
 }
@@ -65,19 +69,19 @@ function renderToString(vnode: VNode): string {
     } else {
       push('<', vnode.tagName);
 
-      let attrs = vnode.attrs;
+      let props = vnode.props;
 
-      if (!attrs?.xmlns) {
+      if (!props?.xmlns) {
         const ns = getNamespace(vnode);
 
         if (ns) {
-          attrs = { ...vnode.attrs, xmlns: ns };
+          props = { ...vnode.props, xmlns: ns };
         }
       }
 
-      if (attrs) {
-        for (const [k, v] of Object.entries(attrs)) {
-          if (v !== null) {
+      if (props) {
+        for (const [k, v] of Object.entries(props)) {
+          if (typeof v === 'string' || typeof v === 'number') {
             push(' ', k, '="', encodeEntities(String(v)), '"');
           }
         }
@@ -121,10 +125,10 @@ function renderVElement(velem: VElement, ns?: string): Element {
     elem = document.createElementNS(ns, velem.tagName);
   }
 
-  if (velem.attrs) {
-    for (const [k, v] of Object.entries(velem.attrs)) {
+  if (velem.props) {
+    for (const [k, v] of Object.entries(velem.props)) {
       if (v != null && v !== false) {
-        elem.setAttribute(k, v === true ? '' : String(v));
+        updateProp(elem, k, v === true ? '' : v, ns);
       }
     }
   }
@@ -144,24 +148,24 @@ function renderVNode(vnode: VNode, ns: string): Element | Text {
     : renderVElement(vnode, ns);
 }
 
-function diffAttrs(oldAttrs: Attrs, newAttrs: Attrs): Patch {
+function diffProps(oldProps: Props, newProps: Props, ns: string): Patch {
   const patches: Patch[] = [];
 
-  for (const [k, v] of Object.entries(newAttrs)) {
-    if (v !== oldAttrs[k]) {
+  for (const [k, v] of Object.entries(newProps)) {
+    if (v !== oldProps[k]) {
       patches.push((node) => {
         if (node instanceof Element) {
-          updateAttribute(node, k, v);
+          updateProp(node, k, v, ns);
         }
       });
     }
   }
 
-  for (const k in oldAttrs) {
-    if (!(k in newAttrs)) {
+  for (const k in oldProps) {
+    if (!(k in newProps)) {
       patches.push((node) => {
         if (node instanceof Element) {
-          node.removeAttribute(k);
+          updateProp(node, k, null, ns);
         }
       });
     }
@@ -239,31 +243,47 @@ function diff(oldVTree: VNode, newVTree: VNode, ns: string): Patch {
     return (node) => node.replaceWith(renderVElement(newVTree, ns));
   }
 
-  const patchAttrs = diffAttrs(oldVTree.attrs || {}, newVTree.attrs || {});
+  const patchProps = diffProps(oldVTree.props || {}, newVTree.props || {}, ns);
   const patchChildren = diffChildren(oldVTree.children, newVTree.children, ns);
 
   return (node) => {
-    patchAttrs(node);
+    patchProps(node);
     patchChildren(node);
   };
 }
 
 // === local helpers =================================================
 
-function updateAttribute(
+function updateProp(
   elem: Element,
-  attrName: string,
-  value: string | number | boolean | null | undefined
+  propName: string,
+  value: Props[string],
+  ns: string
 ) {
-  if (value == null || value === false) {
-    elem.removeAttribute(attrName);
-  } else {
-    const val = value === true ? '' : String(value);
-    elem.setAttribute(attrName, val);
-
-    if (elem.tagName === 'INPUT' && attrName === 'value') {
-      (elem as HTMLInputElement).value = val;
+  if (elem.tagName === 'svg' || ns === svgNamespace) {
+    if (value == null) {
+      elem.removeAttribute(propName);
+    } else {
+      elem.setAttribute(propName, String(value));
     }
+
+    return;
+  }
+
+  if (propName === 'class') {
+    propName = 'className';
+  } else if (propName === 'style') {
+    elem.setAttribute('style', typeof value === 'string' ? String(value) : '');
+    return;
+  }
+
+  if (value == null || value === false) {
+    (elem as unknown as any)[propName] = null;
+  } else {
+    const val =
+      value === true ? '' : typeof value === 'function' ? value : String(value);
+
+    (elem as unknown as any)[propName] = val;
   }
 }
 

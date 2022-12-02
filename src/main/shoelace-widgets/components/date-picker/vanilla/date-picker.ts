@@ -66,51 +66,16 @@ class DatePicker {
   #view: View = 'month';
   #sheet: Sheet | null = null;
 
-  constructor(
-    host: HTMLElement | Promise<HTMLElement>,
-    params: {
-      getLocale: () => string;
-      getDirection: () => string;
-      getProps: () => DatePicker.Props; //
-      requestUpdate: () => void;
-      onChange: () => void;
-    }
-  ) {
+  constructor(params: {
+    getLocale: () => string;
+    getDirection: () => string;
+    getProps: () => DatePicker.Props; //
+    requestUpdate: () => void;
+    onChange: () => void;
+  }) {
     this.#i18n = new I18n(params.getLocale);
     this.#getProps = params.getProps;
     this.#requestUpdate = params.requestUpdate;
-
-    (host instanceof HTMLElement ? Promise.resolve(host) : host).then(
-      (elem) => {
-        const root = elem.shadowRoot || elem;
-
-        root.addEventListener('click', (ev: Event) => {
-          const target = ev.target;
-          const result = this.#getSubject(target);
-
-          if (!result) {
-            return;
-          }
-
-          const [subject, elem] = result;
-          const props = this.#getProps();
-
-          switch (subject) {
-            case 'parent':
-              return this.#onParentClick();
-
-            case 'next':
-              return this.#onNextClick();
-
-            case 'prev':
-              return this.#onPrevClick();
-
-            case 'item':
-              return this.#onItemClick(elem, props);
-          }
-        });
-      }
-    );
   }
 
   getValue() {
@@ -127,22 +92,6 @@ class DatePicker {
 
   resetView() {
     // TODO!!!!!
-  }
-
-  #getSubject(target: EventTarget | null): [string, HTMLElement] | null {
-    if (target && target instanceof Element) {
-      const elem = target.closest('[data-subject]');
-
-      if (elem instanceof HTMLElement) {
-        const subject = elem?.getAttribute('data-subject');
-
-        if (subject) {
-          return [subject, elem];
-        }
-      }
-    }
-
-    return null;
   }
 
   #sheetHasRowNames(sheet: Sheet) {
@@ -172,7 +121,7 @@ class DatePicker {
     }
   };
 
-  #onPrevClick = () => {
+  #onPreviousClick = () => {
     if (this.#sheet?.previous) {
       this.#activeYear = this.#sheet.previous.year;
       this.#activeMonth = this.#sheet.previous.month ?? this.#activeMonth;
@@ -180,7 +129,8 @@ class DatePicker {
     }
   };
 
-  #onItemClick = (elem: HTMLElement, props: DatePicker.Props) => {
+  #onItemClick = (ev: Event, props: DatePicker.Props) => {
+    const elem = ev.target as HTMLElement;
     const selectionKey = elem.getAttribute('data-selection-key');
 
     if (!selectionKey) {
@@ -225,6 +175,11 @@ class DatePicker {
       this.#selection.add(selectionKey);
     }
 
+    this.#requestUpdate();
+  };
+
+  #onBackToMonthClick = () => {
+    this.#view = 'month';
     this.#requestUpdate();
   };
 
@@ -310,7 +265,10 @@ class DatePicker {
         props.selectionMode !== 'dateTimeRange'
         ? null
         : a(
-            { 'class': 'cal-back-to-month-link', 'data-subject': 'view-month' },
+            {
+              class: 'cal-back-to-month-link',
+              onclick: this.#onBackToMonthClick
+            },
             'Back to month'
           )
     );
@@ -326,31 +284,31 @@ class DatePicker {
       },
       div(
         {
-          'class': classMap({
+          class: classMap({
             'cal-prev': true,
             'cal-prev--disabled': !sheet.previous
           }),
-          'data-subject': !sheet.previous ? null : 'prev'
+          onclick: !sheet.previous ? null : this.#onPreviousClick
         },
         arrowLeftIcon
       ),
       div(
         {
-          'class': classMap({
+          class: classMap({
             'cal-title': true,
             'cal-title--disabled': false
           }),
-          'data-subject': 'parent'
+          onclick: this.#onParentClick
         },
         sheet.name
       ),
       div(
         {
-          'class': classMap({
+          class: classMap({
             'cal-next': true,
             'cal-next--disabled': !sheet.next
           }),
-          'data-subject': !sheet.next ? null : 'next'
+          onclick: !sheet.next ? null : this.#onNextClick
         },
         arrowRightIcon
       )
@@ -435,7 +393,9 @@ class DatePicker {
 
           'data-key': item.key,
           'data-selection-key': item.selectionKey,
-          'data-subject': item.disabled ? null : 'item'
+          'onclick': item.disabled
+            ? null
+            : (ev: Event) => this.#onItemClick(ev, props)
         },
         item.name
       )

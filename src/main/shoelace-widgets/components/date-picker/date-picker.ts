@@ -129,7 +129,7 @@ class DatePicker extends LitElement {
   constructor() {
     super();
 
-    this._picker = new Picker(this, {
+    this._picker = new Picker({
       requestUpdate: () => this.requestUpdate(),
       onChange: this._onChange,
       getLocale: () => this._localize.lang(),
@@ -149,6 +149,10 @@ class DatePicker extends LitElement {
 
     this._picker.render(this._containerRef.value!);
     return false;
+  }
+
+  updated() {
+    this._picker.render(this._containerRef.value!);
   }
 
   resetView() {
