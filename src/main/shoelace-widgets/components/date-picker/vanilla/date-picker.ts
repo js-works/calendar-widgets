@@ -1,7 +1,14 @@
 import { Calendar, Sheet, SheetItem } from './calendar';
 import { h, render, renderToString, VNode } from './vdom';
-import { classMap } from './utils';
+import {
+  classMap,
+  getYearString,
+  getYearMonthDayString,
+  getYearMonthString,
+  getYearWeekString
+} from './utils';
 import { I18n } from './i18n';
+import { getHourMinuteString } from './utils';
 
 // icons
 import arrowLeftIcon from './icons/arrow-left.icon';
@@ -131,13 +138,15 @@ class DatePicker {
     }
   };
 
-  #onItemClick = (ev: Event, props: DatePicker.Props) => {
-    const elem = ev.target as HTMLElement;
-    const selectionKey = elem.getAttribute('data-selection-key');
-
-    if (!selectionKey) {
-      return;
-    }
+  #onItemClick = (ev: Event, props: DatePicker.Props, item: SheetItem) => {
+    const selectionKey = selectionModeMeta[props.selectionMode]
+      .getSelectionKey!({
+      year: item.year,
+      month: item.month,
+      day: item.day,
+      weekYear: item.weekYear,
+      weekNumber: item.weekNumber
+    });
 
     const selectType = selectionModeMeta[props.selectionMode].selectType;
     const initialView = selectionModeMeta[props.selectionMode].initialView;
@@ -149,15 +158,10 @@ class DatePicker {
       const nextView = idx < 1 ? null : calendarViewOrder[idx - 1];
 
       if (nextView) {
-        const year = parseInt(elem.getAttribute('data-year')!, 10);
-        const month = parseInt(elem.getAttribute('data-month')!, 10);
+        this.#activeYear = item.year;
 
-        if (!isNaN(year)) {
-          this.#activeYear = year;
-        }
-
-        if (!isNaN(month)) {
-          this.#activeMonth = month;
+        if (item.month) {
+          this.#activeMonth = item.month;
         }
 
         this.#view = nextView as View;
@@ -213,7 +217,11 @@ class DatePicker {
       this.#oldSelectionMode &&
       this.#oldSelectionMode !== props.selectionMode
     ) {
-      this.#selection.clear();
+      if (this.#selection.size > 0) {
+        this.#selection.clear();
+        this.#onChange?.();
+      }
+
       this.#view = selectionModeMeta[props.selectionMode].initialView;
     }
 
@@ -399,7 +407,10 @@ class DatePicker {
   }
 
   #renderTableCell(item: SheetItem, props: DatePicker.Props) {
-    const selected = this.#selection.has(item.selectionKey);
+    const selectionKey =
+      selectionModeMeta[props.selectionMode].getSelectionKey(item);
+
+    const selected = this.#selection.has(selectionKey);
 
     return div(
       {
@@ -410,7 +421,7 @@ class DatePicker {
       },
       a(
         {
-          'class': classMap({
+          class: classMap({
             'cal-cell': true,
             'cal-cell--current': !props.highlightCurrent ? null : item.current,
             'cal-cell--disabled': item.disabled,
@@ -421,14 +432,9 @@ class DatePicker {
             'cal-cell--last-in-selection-range': item.lastInSelectedRange
           }),
 
-          'data-year': item.year,
-          'data-month': item.month,
-          'data-day': item.day,
-          'data-selection-key': item.selectionKey,
-
-          'onclick': item.disabled
+          onclick: item.disabled
             ? null
-            : (ev: Event) => this.#onItemClick(ev, props)
+            : (ev: Event) => this.#onItemClick(ev, props, item)
         },
         item.name
       )
@@ -638,80 +644,123 @@ const selectionModeMeta: Record<
   {
     selectType: 'single' | 'multi' | 'range' | null;
     initialView: Exclude<View, 'time2'>;
+
+    getSelectionKey: (params: {
+      year?: number | undefined;
+      month?: number | undefined;
+      day?: number | undefined;
+      weekYear?: number | undefined;
+      weekNumber?: number | undefined;
+    }) => string;
   }
 > = {
   date: {
     selectType: 'single',
-    initialView: 'month'
+    initialView: 'month',
+
+    getSelectionKey: (params) =>
+      getYearMonthDayString(params.year!, params.month!, params.day!)
   },
 
   dates: {
     selectType: 'multi',
-    initialView: 'month'
+    initialView: 'month',
+
+    getSelectionKey: (params) =>
+      getYearMonthDayString(params.year!, params.month!, params.day!)
   },
 
   dateRange: {
     selectType: 'range',
-    initialView: 'month'
+    initialView: 'month',
+
+    getSelectionKey: (params) =>
+      getYearMonthDayString(params.year!, params.month!, params.day!)
   },
 
   dateTime: {
     selectType: 'single',
-    initialView: 'month'
+    initialView: 'month',
+
+    getSelectionKey: (params) =>
+      getYearMonthDayString(params.year!, params.month!, params.day!)
   },
 
   dateTimeRange: {
     selectType: 'range',
-    initialView: 'month'
+    initialView: 'month',
+
+    getSelectionKey: (params) =>
+      getYearMonthDayString(params.year!, params.month!, params.day!)
   },
 
   time: {
     selectType: null,
-    initialView: 'time1'
+    initialView: 'time1',
+    getSelectionKey: () => 'TODO!!!'
   },
 
   timeRange: {
     selectType: null,
-    initialView: 'time1'
+    initialView: 'time1',
+    getSelectionKey: () => 'TODO!!!'
   },
 
   week: {
     selectType: 'single',
-    initialView: 'month'
+    initialView: 'month',
+
+    getSelectionKey: (params) =>
+      getYearWeekString(params.weekYear!, params.weekNumber!)
   },
 
   weeks: {
     selectType: 'multi',
-    initialView: 'month'
+    initialView: 'month',
+
+    getSelectionKey: (params) =>
+      getYearWeekString(params.weekYear!, params.weekNumber!)
   },
 
   month: {
     selectType: 'single',
-    initialView: 'year'
+    initialView: 'year',
+
+    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
   },
 
   months: {
     selectType: 'multi',
-    initialView: 'year'
+    initialView: 'year',
+
+    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
   },
 
   monthRange: {
     selectType: 'range',
-    initialView: 'year'
+    initialView: 'year',
+
+    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
   },
 
   year: {
     selectType: 'single',
-    initialView: 'decade'
+    initialView: 'decade',
+
+    getSelectionKey: (params) => getYearString(params.year!)
   },
 
   years: {
     selectType: 'multi',
-    initialView: 'decade'
+    initialView: 'decade',
+
+    getSelectionKey: (params) => getYearString(params.year!)
   },
 
   yearRange: {
     selectType: 'range',
-    initialView: 'decade'
+    initialView: 'decade',
+
+    getSelectionKey: (params) => getYearString(params.year!)
   }
 };

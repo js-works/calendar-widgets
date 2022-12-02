@@ -16,7 +16,8 @@ type SheetItem = {
   year: number;
   month?: number;
   day?: number;
-  selectionKey: string;
+  weekYear?: number;
+  weekNumber?: number;
   name: string;
   current: boolean;
   highlighted: boolean;
@@ -157,20 +158,20 @@ class Calendar {
         }
       }
 
-      let selectionKey = getYearMonthDayString(itemYear, itemMonth, itemDay);
-
       if (params.selectWeeks) {
         const calendarWeek = this.#i18n.getCalendarWeek(itemDate);
-
-        selectionKey = getYearWeekString(calendarWeek.year, calendarWeek.week);
       }
+
+      const { year: weekYear, week: weekNumber } =
+        this.#i18n.getCalendarWeek(itemDate);
 
       dayItems.push({
         year: itemYear,
         month: itemMonth,
         day: itemDay,
+        weekYear,
+        weekNumber,
         name: this.#i18n.formatDay(itemDay),
-        selectionKey,
         disabled: (params.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
         inSelectedRange,
@@ -313,7 +314,6 @@ class Calendar {
       monthItems.push({
         year,
         month: itemMonth,
-        selectionKey: getYearMonthString(year, itemMonth),
         name: this.#i18n.getMonthName(itemMonth, 'short'),
         current: year === currYear && itemMonth === currMonth,
         adjacent: false,
@@ -387,7 +387,6 @@ class Calendar {
 
       yearItems.push({
         year: itemYear,
-        selectionKey: String(itemYear),
 
         name: this.#i18n.formatYear(itemYear),
 
@@ -462,7 +461,6 @@ class Calendar {
 
       decadeItems.push({
         year: itemYear,
-        selectionKey: String(itemYear),
 
         name: this.#i18n
           .formatDecade(itemYear)
