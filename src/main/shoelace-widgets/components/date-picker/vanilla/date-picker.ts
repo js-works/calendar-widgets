@@ -73,7 +73,7 @@ class DatePicker {
   #activeMinute2 = 0;
   #view: View = 'month';
   #sheet: Sheet | null = null;
-  #oldSelectionMode: DatePicker.SelectionMode | null = null;
+  #oldSelectionMode: DatePicker.SelectionMode = 'date';
 
   constructor(params: {
     getLocale: () => string;
@@ -89,7 +89,24 @@ class DatePicker {
   }
 
   getValue() {
-    return [...this.#selection].sort().join(',');
+    let selectionKeys = [...this.#selection].sort();
+
+    if (selectionKeys.length > 0) {
+      const mapSelectionKeys =
+        selectionModeMeta[this.#oldSelectionMode].mapSelectionKeys;
+
+      if (mapSelectionKeys) {
+        selectionKeys = mapSelectionKeys({
+          selectionKeys: selectionKeys,
+          hours1: this.#activeHour1,
+          minutes1: this.#activeMinute1,
+          hours2: this.#activeHour2,
+          minutes2: this.#activeMinute2
+        });
+      }
+    }
+
+    return selectionKeys.join(',');
   }
 
   setValue(value: string) {
@@ -272,8 +289,9 @@ class DatePicker {
       });
     }
 
-    return this.#renderCalendarView(this.#sheet!, props);
-    // this.#renderTimeView(props)
+    return props.selectionMode !== 'time' && props.selectionMode !== 'timeRange'
+      ? this.#renderCalendarView(this.#sheet!, props)
+      : this.#renderTimeView(props);
   }
 
   #renderCalendarView(sheet: Sheet, props: DatePicker.Props) {
@@ -652,6 +670,14 @@ const selectionModeMeta: Record<
       weekYear?: number | undefined;
       weekNumber?: number | undefined;
     }) => string;
+
+    mapSelectionKeys?: (params: {
+      selectionKeys: string[];
+      hours1: number;
+      minutes1: number;
+      hours2: number;
+      minutes2: number;
+    }) => string[];
   }
 > = {
   date: {
@@ -683,7 +709,13 @@ const selectionModeMeta: Record<
     initialView: 'month',
 
     getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!)
+      getYearMonthDayString(params.year!, params.month!, params.day!),
+
+    mapSelectionKeys: (params) => [
+      params.selectionKeys[0] +
+        'T' +
+        getHourMinuteString(params.hours1, params.minutes1)
+    ]
   },
 
   dateTimeRange: {
@@ -691,13 +723,36 @@ const selectionModeMeta: Record<
     initialView: 'month',
 
     getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!)
+      getYearMonthDayString(params.year!, params.month!, params.day!),
+
+    mapSelectionKeys: (params) => {
+      let ret = [
+        params.selectionKeys[0] +
+          'T' +
+          getHourMinuteString(params.hours1, params.minutes1)
+      ];
+
+      if (params.selectionKeys.length > 1) {
+        ret.push(
+          params.selectionKeys[1] +
+            'T' +
+            getHourMinuteString(params.hours2, params.minutes2)
+        );
+      }
+      return ret;
+    }
   },
 
   time: {
     selectType: null,
     initialView: 'time1',
-    getSelectionKey: () => 'TODO!!!'
+    getSelectionKey: () => 'TODO!!!',
+
+    mapSelectionKeys: (params) => [
+      params.selectionKeys[0] +
+        'T' +
+        getHourMinuteString(params.hours1, params.minutes1)
+    ]
   },
 
   timeRange: {
