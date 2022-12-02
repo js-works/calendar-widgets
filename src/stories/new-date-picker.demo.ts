@@ -121,12 +121,12 @@ const styles = css`
   }
 
   .cal-cell {
-    flex-grow: 1;
-    text-align: center;
     display: flex;
+    flex-grow: 1;
     justify-content: center;
-    align-items: center;
-    padding: 0.25em;
+    padding: 0.125em 0.75em;
+    text-transform: capitalize;
+    hyphens: auto;
   }
 
   .cal-cell:not(.cal-cell--disabled):not(.cal-cell--selected):hover {

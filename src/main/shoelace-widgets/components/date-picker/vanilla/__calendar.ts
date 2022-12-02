@@ -241,11 +241,11 @@ class Calendar {
     };
   }
 
-  getYearData(params: {
+  getYearSheet(params: {
     year: number; //
     minDate: Date | null;
     maxDate: Date | null;
-    selectionRange?: {
+    selectedRange?: {
       start: { year: number; month: number };
       end: { year: number; month: number };
     } | null;
@@ -275,11 +275,11 @@ class Calendar {
       let firstInSelectedRange = false;
       let lastInSelectedRange = false;
 
-      if (params.selectionRange) {
+      if (params.selectedRange) {
         const { year: startYear, month: startMonth } =
-          params.selectionRange.start;
+          params.selectedRange.start;
 
-        const { year: endYear, month: endMonth } = params.selectionRange.end;
+        const { year: endYear, month: endMonth } = params.selectedRange.end;
 
         const startValue = startYear * 12 + startMonth;
         const endValue = endYear * 12 + endMonth;
@@ -333,6 +333,158 @@ class Calendar {
       prevDisabled,
       nextDisabled,
       items: monthItems
+    };
+  }
+
+  getDecadeSheet(params: {
+    year: number; //
+    minDate: Date | null;
+    maxDate: Date | null;
+    selectedRange?: {
+      start: { year: number };
+      end: { year: number };
+    } | null;
+  }): Sheet {
+    const year = params.year;
+    const startYear = year - (year % 10) - 1;
+    const endYear = startYear + 11;
+    const currYear = new Date().getFullYear();
+    const yearItems: SheetItem[] = [];
+    const minYear = params.minDate ? params.minDate.getFullYear() : null;
+    const maxYear = params.maxDate ? params.maxDate.getFullYear() : null;
+
+    for (let itemYear = startYear; itemYear <= endYear; ++itemYear) {
+      const adjacent = itemYear === startYear || itemYear === endYear;
+      const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
+
+      let inSelectedRange = false;
+      let firstInSelectedRange = false;
+      let lastInSelectedRange = false;
+
+      if (params.selectedRange) {
+        const { year: startYear } = params.selectedRange.start;
+
+        const { year: endYear } = params.selectedRange.end;
+
+        if (startYear <= endYear) {
+          inSelectedRange = inNumberRange(itemYear, startYear, endYear);
+          firstInSelectedRange = inSelectedRange && itemYear === startYear;
+          lastInSelectedRange = inSelectedRange && itemYear === endYear;
+        }
+      }
+
+      yearItems.push({
+        key: String(itemYear),
+        selectionKey: String(itemYear),
+
+        name: this.#i18n.formatYear(itemYear),
+
+        current: itemYear === currYear,
+        highlighted: false,
+        adjacent,
+        outOfMinMaxRange,
+        inSelectedRange,
+        firstInSelectedRange,
+        lastInSelectedRange,
+        disabled: outOfMinMaxRange
+      });
+    }
+
+    const minDecade = params.minDate
+      ? Math.floor(params.minDate.getFullYear() / 10)
+      : null;
+
+    const maxDecade = params.maxDate
+      ? Math.floor(params.maxDate.getFullYear() / 10)
+      : null;
+
+    const decade = Math.floor(year / 10);
+
+    const prevDisabled =
+      year <= 1 || !inNumberRange(decade - 1, minDecade, maxDecade);
+
+    const nextDisabled = !inNumberRange(decade + 1, minDecade, maxDecade);
+
+    return {
+      key: String(year),
+      name: this.#i18n.formatDecade(year),
+      columnCount: 4,
+      columnNames: null,
+      rowNames: null,
+      highlightedColumns: null,
+      prevDisabled,
+      nextDisabled,
+      items: yearItems
+    };
+  }
+
+  getCenturySheet(params: {
+    year: number; //,
+    minDate: Date | null;
+    maxDate: Date | null;
+  }): Sheet {
+    const year = params.year;
+    const startYear = year - (year % 100) - 10;
+    const endYear = startYear + 119;
+    const currYear = new Date().getFullYear();
+    const decadeItems: SheetItem[] = [];
+
+    const minYear = params.minDate
+      ? Math.floor(params.minDate.getFullYear() / 10) * 10
+      : null;
+
+    const maxYear = params.maxDate
+      ? Math.floor(params.maxDate.getFullYear() / 10) * 10 + 9
+      : null;
+
+    for (let itemYear = startYear; itemYear <= endYear; itemYear += 10) {
+      const adjacent = itemYear === startYear || itemYear === endYear - 9;
+      const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
+
+      decadeItems.push({
+        key: String(itemYear),
+        selectionKey: String(itemYear),
+
+        name: this.#i18n
+          .formatDecade(itemYear)
+          .replaceAll('\u2013', '\u2013\u200B'),
+
+        highlighted: false,
+        current: itemYear <= currYear && itemYear + 10 > currYear,
+        adjacent,
+        outOfMinMaxRange,
+        inSelectedRange: false,
+        firstInSelectedRange: false,
+        lastInSelectedRange: false,
+        disabled: outOfMinMaxRange
+      });
+    }
+
+    const minCentury = params.minDate
+      ? Math.floor(params.minDate.getFullYear() / 100)
+      : null;
+
+    const maxCentury = params.maxDate
+      ? Math.floor(params.maxDate.getFullYear() / 100)
+      : null;
+
+    const century = Math.floor(year / 100);
+
+    const prevDisabled =
+      year <= 1 || !inNumberRange(century - 1, minCentury, maxCentury);
+
+    const nextDisabled = !inNumberRange(century + 1, minCentury, maxCentury);
+
+    return {
+      key: String(year),
+      name: this.#i18n.formatCentury(year),
+      columnCount: 4,
+      columnNames: null,
+      highlightedColumns: null,
+      rowNames: null,
+      items: decadeItems,
+      prevDisabled,
+      nextDisabled
     };
   }
 }

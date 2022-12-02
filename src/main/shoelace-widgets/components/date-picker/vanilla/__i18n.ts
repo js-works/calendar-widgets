@@ -105,6 +105,17 @@ class I18n {
     return new Intl.DateTimeFormat(this.#locale, options).format(date);
   }
 
+  formatDateRange(
+    date1: Date,
+    date2: Date,
+    options?: Intl.DateTimeFormatOptions
+  ) {
+    return new Intl.DateTimeFormat(this.#locale, options).formatRange(
+      date1,
+      date2
+    );
+  }
+
   formatNumber(num: number, options?: Intl.NumberFormatOptions) {
     return new Intl.NumberFormat(this.#locale, options).format(num);
   }
@@ -174,6 +185,28 @@ class I18n {
 
   formatYear(year: number) {
     return this.formatDate(new Date(year, 0, 1), { year: 'numeric' });
+  }
+
+  formatDecade(year: number) {
+    const startYear = Math.floor(year / 10) * 10;
+    const endYear = startYear + 9;
+
+    return this.formatDateRange(
+      new Date(startYear, 0, 1),
+      new Date(endYear, 0, 1),
+      { year: 'numeric' }
+    );
+  }
+
+  formatCentury(year: number) {
+    const startYear = Math.floor(year / 100) * 100;
+    const endYear = startYear + 99;
+
+    return this.formatDateRange(
+      new Date(startYear, 0, 1),
+      new Date(endYear, 0, 1),
+      { year: 'numeric' }
+    );
   }
 
   getMonthName(month: number, format: 'long' | 'short' | 'narrow' = 'long') {

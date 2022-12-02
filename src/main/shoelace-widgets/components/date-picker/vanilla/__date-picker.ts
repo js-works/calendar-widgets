@@ -59,7 +59,7 @@ class DatePicker {
   #activeHour2 = 0;
   #activeMinute1 = 0;
   #activeMinute2 = 0;
-  #view: View = 'year';
+  #view: View = 'century';
 
   constructor(
     host: HTMLElement | Promise<HTMLElement>,
@@ -104,7 +104,6 @@ class DatePicker {
   }
 
   #getSubject(target: EventTarget | null): [string, HTMLElement] | null {
-    console.log(111, target);
     if (target && target instanceof Element) {
       const elem = target.closest('[data-subject]');
 
@@ -134,6 +133,10 @@ class DatePicker {
       }
     } else if (this.#view === 'year') {
       ++this.#activeYear;
+    } else if (this.#view === 'decade') {
+      this.#activeYear = Math.floor(((this.#activeYear + 10) / 10) * 10);
+    } else if (this.#view === 'century') {
+      this.#activeYear = Math.floor(((this.#activeYear + 100) / 100) * 100);
     }
 
     this.#requestUpdate();
@@ -149,6 +152,10 @@ class DatePicker {
       }
     } else if (this.#view === 'year') {
       --this.#activeYear;
+    } else if (this.#view === 'decade') {
+      this.#activeYear = Math.floor(((this.#activeYear - 10) / 10) * 10);
+    } else if (this.#view === 'century') {
+      this.#activeYear = Math.floor(((this.#activeYear - 100) / 100) * 100);
     }
 
     this.#requestUpdate();
@@ -195,7 +202,7 @@ class DatePicker {
 
   renderToString() {
     const props = this.#getProps();
-    const cal = new Calendar(this.#i18n.getLocale());
+    const cal = new Calendar('de-DE'); //this.#i18n.getLocale());
 
     let sheet: Sheet;
 
@@ -219,11 +226,24 @@ class DatePicker {
         */
       });
     } else if (this.#view === 'year') {
-      sheet = cal.getYearData({
+      sheet = cal.getYearSheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null,
-        selectionRange: null
+        selectedRange: null
+      });
+    } else if (this.#view === 'decade') {
+      sheet = cal.getDecadeSheet({
+        year: this.#activeYear,
+        minDate: null,
+        maxDate: null,
+        selectedRange: null
+      });
+    } else if (this.#view === 'century') {
+      sheet = cal.getCenturySheet({
+        year: this.#activeYear,
+        minDate: null,
+        maxDate: null
       });
     }
 
@@ -575,7 +595,7 @@ class DatePicker {
   }
 }
 
-type View = 'month' | 'year' | 'decade' | 'time1' | 'time2';
+type View = 'month' | 'year' | 'decade' | 'century' | 'time1' | 'time2';
 
 const meta: Record<
   DatePicker.SelectionMode,
