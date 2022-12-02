@@ -9,6 +9,10 @@ export default /*css*/ `
     user-select: none;
   }
 
+  .cal-view--calendar {
+    min-height: 14em;
+  }
+
   .cal-base * {
     box-spacing: border-box;
   }
@@ -78,7 +82,7 @@ export default /*css*/ `
 
   .cal-sheet {
     display: grid;
-    grid-template-rows: min-content;
+    grid-template-rows: auto;
     align-items: stretch;
     flex-grow: 1;
   }
@@ -102,6 +106,8 @@ export default /*css*/ `
 
   .cal-cell-container {
     display: flex;
+    flex-grow: 1;
+    grow: 1;
     align-items: stretch;
     justify-items: stretch;
     justify-content: stretch;
@@ -115,6 +121,8 @@ export default /*css*/ `
     display: flex;
     flex-grow: 1;
     justify-content: center;
+    align-items: center;
+    justify-items: stretch;
     padding: 0.125em 0.75em;
     text-transform: capitalize;
     hyphens: auto;
@@ -293,9 +301,9 @@ export default /*css*/ `
   /* time sliders */
 
   .cal-time-sliders {
-    display: flex;
-    flex-direction: column;
-    gap: 0.25em;
+    display: grid;
+    grid-template-columns: min-content auto;
+    gap: 0 1em;
   }
 
   .time-slider-headline {

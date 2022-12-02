@@ -351,7 +351,7 @@ class DatePicker {
 
     return div(
       {
-        class: 'class-base cal-view--time'
+        class: 'cal-base cal-view--time'
       },
       this.#renderTimeTabs(this.#view === 'time2' ? 'time2' : 'time1', props),
       this.#renderTimeSliders(this.#view == 'time2' ? 'time2' : 'time1', props),
@@ -655,32 +655,25 @@ class DatePicker {
       null,
       div(
         { class: 'cal-time-sliders' },
-        div(
-          null,
-          div({ class: 'cal-time-slider-headline' }, 'Hours'),
-          input({
-            type: 'range',
-            class: 'cal-time-slider',
-            value: hour,
-            min: 0,
-            max: 23,
-            oninput:
-              type === 'time1' ? this.#onHour1Change : this.#onHour2Change
-          })
-        ),
-        div(
-          null,
-          div({ class: 'cal-time-slider-headline' }, 'Minutes'),
-          input({
-            type: 'range',
-            class: 'cal-time-slider',
-            value: minute,
-            min: 0,
-            max: 59,
-            oninput:
-              type === 'time1' ? this.#onMinute1Change : this.#onMinute2Change
-          })
-        )
+        div({ class: 'cal-time-slider-headline' }, 'Hours'),
+        input({
+          type: 'range',
+          class: 'cal-time-slider',
+          value: hour,
+          min: 0,
+          max: 23,
+          oninput: type === 'time1' ? this.#onHour1Change : this.#onHour2Change
+        }),
+        div({ class: 'cal-time-slider-headline' }, 'Minutes'),
+        input({
+          type: 'range',
+          class: 'cal-time-slider',
+          value: minute,
+          min: 0,
+          max: 59,
+          oninput:
+            type === 'time1' ? this.#onMinute1Change : this.#onMinute2Change
+        })
       )
     );
   }
