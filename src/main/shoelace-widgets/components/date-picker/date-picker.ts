@@ -98,8 +98,8 @@ class DatePicker extends LitElement {
   @property({ type: String, attribute: 'calendar-size' })
   calendarSize: 'default' | 'minimal' | 'maximal' = 'default';
 
-  @property({ type: Boolean, attribute: 'highlight-today' })
-  highlightToday = false;
+  @property({ type: Boolean, attribute: 'highlight-current' })
+  highlightCurrent = false;
 
   @property({ type: Boolean, attribute: 'highlight-weekends' })
   highlightWeekends = false;

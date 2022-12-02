@@ -490,7 +490,7 @@ class Calendar {
     const century = Math.floor(year / 100);
 
     const prevAvailable =
-      year > 1 && inNumberRange(century - 1, minCentury, maxCentury);
+      year > 300 && inNumberRange(century - 1, minCentury, maxCentury);
 
     const previous = !prevAvailable
       ? null

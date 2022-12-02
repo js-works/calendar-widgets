@@ -38,7 +38,7 @@ namespace DatePicker {
     accentuateHeader: boolean;
     showWeekNumbers: boolean;
     calendarSize: 'default' | 'minimal' | 'maximal';
-    highlightToday: boolean;
+    highlightCurrent: boolean;
     highlightWeekends: boolean;
     disableWeekends: boolean;
     enableCenturyView: boolean;
@@ -55,6 +55,7 @@ class DatePicker {
   #i18n: I18n;
   #getProps: () => DatePicker.Props;
   #requestUpdate: () => void;
+  #onChange: () => void;
 
   #selection = new Set<string>();
   #activeYear = 2022;
@@ -65,6 +66,7 @@ class DatePicker {
   #activeMinute2 = 0;
   #view: View = 'month';
   #sheet: Sheet | null = null;
+  #oldSelectionMode: DatePicker.SelectionMode | null = null;
 
   constructor(params: {
     getLocale: () => string;
@@ -76,6 +78,7 @@ class DatePicker {
     this.#i18n = new I18n(params.getLocale);
     this.#getProps = params.getProps;
     this.#requestUpdate = params.requestUpdate;
+    this.#onChange = params.onChange;
   }
 
   getValue() {
@@ -108,9 +111,8 @@ class DatePicker {
 
     if (nextView) {
       this.#view = nextView as View;
+      this.#requestUpdate();
     }
-
-    this.#requestUpdate();
   };
 
   #onNextClick = () => {
@@ -187,6 +189,8 @@ class DatePicker {
     }
 
     this.#requestUpdate();
+
+    this.#onChange?.();
   };
 
   #onBackToMonthClick = () => {
@@ -204,16 +208,27 @@ class DatePicker {
 
   #getVNode() {
     const props = this.#getProps();
-    const cal = new Calendar('de-DE'); //this.#i18n.getLocale());
 
+    if (
+      this.#oldSelectionMode &&
+      this.#oldSelectionMode !== props.selectionMode
+    ) {
+      this.#selection.clear();
+      this.#view = selectionModeMeta[props.selectionMode].initialView;
+    }
+
+    this.#oldSelectionMode = props.selectionMode;
     this.#sheet = null;
 
+    const calendar = new Calendar(this.#i18n.getLocale());
+
     if (this.#view === 'month') {
-      this.#sheet = cal.getMonthSheet({
+      this.#sheet = calendar.getMonthSheet({
         year: this.#activeYear,
         month: this.#activeMonth,
         showWeekNumbers: props.showWeekNumbers,
-        selectWeeks: false,
+        selectWeeks:
+          props.selectionMode === 'week' || props.selectionMode === 'weeks',
         disableWeekends: props.disableWeekends,
         highlightCurrent: true,
         highlightWeekends: props.highlightWeekends,
@@ -228,21 +243,21 @@ class DatePicker {
         */
       });
     } else if (this.#view === 'year') {
-      this.#sheet = cal.getYearSheet({
+      this.#sheet = calendar.getYearSheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null,
         selectedRange: null
       });
     } else if (this.#view === 'decade') {
-      this.#sheet = cal.getDecadeSheet({
+      this.#sheet = calendar.getDecadeSheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null,
         selectedRange: null
       });
     } else if (this.#view === 'century') {
-      this.#sheet = cal.getCenturySheet({
+      this.#sheet = calendar.getCenturySheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null
@@ -286,6 +301,10 @@ class DatePicker {
   }
 
   #renderSheetHeader(sheet: Sheet, props: DatePicker.Props) {
+    const parentViewDisabled =
+      this.#view === 'century' ||
+      (this.#view === 'decade' && !props.enableCenturyView);
+
     return div(
       {
         class: classMap({
@@ -307,9 +326,9 @@ class DatePicker {
         {
           class: classMap({
             'cal-title': true,
-            'cal-title--disabled': false
+            'cal-title--disabled': parentViewDisabled
           }),
-          onclick: this.#onParentClick
+          onclick: parentViewDisabled ? null : this.#onParentClick
         },
         sheet.name
       ),
@@ -393,7 +412,7 @@ class DatePicker {
         {
           'class': classMap({
             'cal-cell': true,
-            'cal-cell--current': item.current,
+            'cal-cell--current': !props.highlightCurrent ? null : item.current,
             'cal-cell--disabled': item.disabled,
             'cal-cell--adjacent': item.adjacent,
             'cal-cell--selected': selected,

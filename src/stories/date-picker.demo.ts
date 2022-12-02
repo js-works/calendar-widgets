@@ -62,7 +62,7 @@ class DatePickerDemo extends LitElement {
   private _selectionValue: string = '';
   private _selectionMode = 'date';
   private _accentuateHeader = true;
-  private _highlightToday = true;
+  private _highlightCurrent = true;
   private _highlightWeekends = true;
   private _disableWeekends = false;
   private _showWeekNumbers = true;
@@ -113,7 +113,7 @@ class DatePickerDemo extends LitElement {
             selection-mode=${this._selectionMode}
             calendar-size=${this._calendarSize}
             ?accentuate-header=${this._accentuateHeader}
-            ?highlight-today=${this._highlightToday}
+            ?highlight-current=${this._highlightCurrent}
             ?highlight-weekends=${this._highlightWeekends}
             ?disable-weekends=${this._disableWeekends}
             ?show-week-numbers=${this._showWeekNumbers}
@@ -197,10 +197,10 @@ class DatePickerDemo extends LitElement {
             ].includes(this._selectionMode),
             () => html`
               <sl-checkbox
-                data-subject="highlightToday"
-                ?checked=${this._highlightToday}
+                data-subject="highlightCurrent"
+                ?checked=${this._highlightCurrent}
               >
-                highlight today
+                highlight current
               </sl-checkbox>
               <sl-checkbox
                 data-subject="highlightWeekends"
