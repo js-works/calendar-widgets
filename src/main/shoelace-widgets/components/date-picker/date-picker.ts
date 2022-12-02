@@ -151,7 +151,7 @@ class DatePicker extends LitElement {
     return false;
   }
 
-  updated() {
+  firstUpdated() {
     this._picker.render(this._containerRef.value!);
   }
 

@@ -260,7 +260,12 @@ function updateProp(
   value: Props[string],
   ns: string
 ) {
-  if (elem.tagName === 'svg' || ns === svgNamespace) {
+  if (propName === 'style') {
+    elem.setAttribute('style', typeof value === 'string' ? value : '');
+    return;
+  }
+
+  if (!(propName in elem) || elem.tagName === 'svg' || ns === svgNamespace) {
     if (value == null) {
       elem.removeAttribute(propName);
     } else {
@@ -272,9 +277,6 @@ function updateProp(
 
   if (propName === 'class') {
     propName = 'className';
-  } else if (propName === 'style') {
-    elem.setAttribute('style', typeof value === 'string' ? String(value) : '');
-    return;
   }
 
   if (value == null || value === false) {

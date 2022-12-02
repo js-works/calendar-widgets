@@ -76,7 +76,7 @@ class Calendar {
     const remainingDaysOfLastMonth =
       firstDayOfWeek <= firstWeekdayOfMonth
         ? firstWeekdayOfMonth - firstDayOfWeek
-        : 6 - (firstDayOfWeek - firstWeekdayOfMonth);
+        : 7 - (firstDayOfWeek - firstWeekdayOfMonth);
 
     let daysToShow = 42;
 
@@ -235,7 +235,7 @@ class Calendar {
     }
 
     const highlightedColumns = params.highlightWeekends
-      ? this.#i18n.getWeekendDays().map((it) => (it + firstDayOfWeek) % 7)
+      ? this.#i18n.getWeekendDays().map((it) => (it - firstDayOfWeek + 7) % 7)
       : null;
 
     return {
