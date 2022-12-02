@@ -147,6 +147,17 @@ class DatePicker {
       const nextView = idx < 1 ? null : calendarViewOrder[idx - 1];
 
       if (nextView) {
+        const year = parseInt(elem.getAttribute('data-year')!, 10);
+        const month = parseInt(elem.getAttribute('data-month')!, 10);
+
+        if (!isNaN(year)) {
+          this.#activeYear = year;
+        }
+
+        if (!isNaN(month)) {
+          this.#activeMonth = month;
+        }
+
         this.#view = nextView as View;
         this.#requestUpdate();
       }
@@ -391,8 +402,11 @@ class DatePicker {
             'cal-cell--last-in-selection-range': item.lastInSelectedRange
           }),
 
-          'data-key': item.key,
+          'data-year': item.year,
+          'data-month': item.month,
+          'data-day': item.day,
           'data-selection-key': item.selectionKey,
+
           'onclick': item.disabled
             ? null
             : (ev: Event) => this.#onItemClick(ev, props)

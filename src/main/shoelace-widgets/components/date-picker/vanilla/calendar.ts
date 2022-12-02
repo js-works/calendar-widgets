@@ -13,7 +13,9 @@ import {
 export { Calendar, Sheet, SheetItem };
 
 type SheetItem = {
-  key: string;
+  year: number;
+  month?: number;
+  day?: number;
   selectionKey: string;
   name: string;
   current: boolean;
@@ -27,7 +29,6 @@ type SheetItem = {
 };
 
 interface Sheet {
-  key: string;
   name: string;
   previous: { year: number; month?: number } | null;
   next: { year: number; month?: number } | null;
@@ -156,9 +157,7 @@ class Calendar {
         }
       }
 
-      const key = getYearMonthDayString(itemYear, itemMonth, itemDay);
-
-      let selectionKey = key;
+      let selectionKey = getYearMonthDayString(itemYear, itemMonth, itemDay);
 
       if (params.selectWeeks) {
         const calendarWeek = this.#i18n.getCalendarWeek(itemDate);
@@ -167,7 +166,9 @@ class Calendar {
       }
 
       dayItems.push({
-        key,
+        year: itemYear,
+        month: itemMonth,
+        day: itemDay,
         name: this.#i18n.formatDay(itemDay),
         selectionKey,
         disabled: (params.disableWeekends && weekend) || outOfMinMaxRange,
@@ -226,8 +227,10 @@ class Calendar {
 
       for (let i = 0; i < dayItems.length / 7; ++i) {
         // TODO!!!!!!!!!!!
+        const item = dayItems[i * 7];
+
         const weekNumber = this.#i18n.getCalendarWeek(
-          new Date(dayItems[i * 7].key)
+          new Date(item.year, item.month!, item.day!)
         ).week;
 
         rowNames.push(this.#i18n.formatWeekNumber(weekNumber));
@@ -239,7 +242,6 @@ class Calendar {
       : null;
 
     return {
-      key: getYearMonthString(year, month),
       name: nameOfMonth,
       items: dayItems,
       columnCount: 7,
@@ -308,11 +310,10 @@ class Calendar {
         }
       }
 
-      const key = getYearMonthString(year, itemMonth);
-
       monthItems.push({
-        key: key,
-        selectionKey: key,
+        year,
+        month: itemMonth,
+        selectionKey: getYearMonthString(year, itemMonth),
         name: this.#i18n.getMonthName(itemMonth, 'short'),
         current: year === currYear && itemMonth === currMonth,
         adjacent: false,
@@ -336,7 +337,6 @@ class Calendar {
     const next = !nextAvailable ? null : { year: year + 1 };
 
     return {
-      key: String(year),
       name: this.#i18n.formatYear(year),
       columnCount: 4,
       highlightedColumns: null,
@@ -386,7 +386,7 @@ class Calendar {
       }
 
       yearItems.push({
-        key: String(itemYear),
+        year: itemYear,
         selectionKey: String(itemYear),
 
         name: this.#i18n.formatYear(itemYear),
@@ -426,7 +426,6 @@ class Calendar {
       : { year: Math.floor(((year + 10) / 10) * 10) };
 
     return {
-      key: String(year),
       name: this.#i18n.formatDecade(year),
       columnCount: 4,
       columnNames: null,
@@ -462,7 +461,7 @@ class Calendar {
       const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
       decadeItems.push({
-        key: String(itemYear),
+        year: itemYear,
         selectionKey: String(itemYear),
 
         name: this.#i18n
@@ -504,7 +503,6 @@ class Calendar {
       : { year: Math.floor(((year + 100) / 100) * 100) };
 
     return {
-      key: String(year),
       name: this.#i18n.formatCentury(year),
       columnCount: 4,
       columnNames: null,
