@@ -360,7 +360,7 @@ const logicBySelectionMode: Record<
         return '';
       }
 
-      const dates = value.split('|').map((it) => new Date(it));
+      const dates = value.split(',').map((it) => new Date(it));
 
       const ret = new Intl.DateTimeFormat(localize.lang(), {
         day: 'numeric',
@@ -408,7 +408,7 @@ const logicBySelectionMode: Record<
         return '';
       }
 
-      const dates = value.split('|').map((it) => new Date(it));
+      const dates = value.split(',').map((it) => new Date(it));
 
       if (dates.length < 2) {
         dates.push(dates[0]);
@@ -428,7 +428,7 @@ const logicBySelectionMode: Record<
         return '';
       }
 
-      const dates = value.split('|').map((it) => new Date(it));
+      const dates = value.split(',').map((it) => new Date(it));
 
       if (dates.length < 2) {
         dates.push(dates[0]);
@@ -472,7 +472,7 @@ const logicBySelectionMode: Record<
         return '';
       }
 
-      const values = value.split('|');
+      const values = value.split(',');
       const dates: Date[] = [];
 
       for (let i = 0; i < 2; ++i) {

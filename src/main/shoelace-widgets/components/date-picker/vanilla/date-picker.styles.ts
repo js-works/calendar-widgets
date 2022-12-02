@@ -215,6 +215,7 @@ export default /*css*/ `
     display: flex;
     flex-direction: column;
     gap: 1.5em;
+    padding: 0.5em 1em;
   }
 
   /* time */
@@ -249,7 +250,7 @@ export default /*css*/ `
 
   .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2):hover,
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child:hover {
-    background-color: var(--cal-time-tab-hover-background-color);
+    background-color: var(--cal-tab-hover-background-color);
     cursor: pointer;
   }
 

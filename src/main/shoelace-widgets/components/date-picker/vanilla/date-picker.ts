@@ -89,13 +89,13 @@ class DatePicker {
   }
 
   getValue() {
-    let selectionKeys = [...this.#selection].sort();
+    const { kind, mapSelectionKeys } =
+      selectionModeMeta[this.#oldSelectionMode];
 
-    if (selectionKeys.length > 0) {
-      const mapSelectionKeys =
-        selectionModeMeta[this.#oldSelectionMode].mapSelectionKeys;
+    if (kind !== 'time') {
+      let selectionKeys = [...this.#selection].sort();
 
-      if (mapSelectionKeys) {
+      if (selectionKeys.length > 0 && mapSelectionKeys) {
         selectionKeys = mapSelectionKeys({
           selectionKeys: selectionKeys,
           hours1: this.#activeHour1,
@@ -104,9 +104,23 @@ class DatePicker {
           minutes2: this.#activeMinute2
         });
       }
+
+      const x = selectionKeys.join(',');
+
+      return x;
     }
 
-    return selectionKeys.join(',');
+    if (mapSelectionKeys) {
+      return mapSelectionKeys({
+        selectionKeys: [],
+        hours1: this.#activeHour1,
+        minutes1: this.#activeMinute1,
+        hours2: this.#activeHour2,
+        minutes2: this.#activeMinute2
+      }).join(',');
+    }
+
+    return '';
   }
 
   setValue(value: string) {
@@ -214,6 +228,30 @@ class DatePicker {
     this.#onChange?.();
   };
 
+  #onHour1Change = (ev: Event) => {
+    this.#activeHour1 = (ev.target as HTMLInputElement).valueAsNumber;
+    this.#requestUpdate();
+    this.#onChange?.();
+  };
+
+  #onHour2Change = (ev: Event) => {
+    this.#activeHour2 = (ev.target as HTMLInputElement).valueAsNumber;
+    this.#requestUpdate();
+    this.#onChange?.();
+  };
+
+  #onMinute1Change = (ev: Event) => {
+    this.#activeMinute1 = (ev.target as HTMLInputElement).valueAsNumber;
+    this.#requestUpdate();
+    this.#onChange?.();
+  };
+
+  #onMinute2Change = (ev: Event) => {
+    this.#activeMinute2 = (ev.target as HTMLInputElement).valueAsNumber;
+    this.#requestUpdate();
+    this.#onChange?.();
+  };
+
   #onBackToMonthClick = () => {
     this.#view = 'month';
     this.#requestUpdate();
@@ -230,16 +268,17 @@ class DatePicker {
   #getVNode() {
     const props = this.#getProps();
 
-    if (
-      this.#oldSelectionMode &&
-      this.#oldSelectionMode !== props.selectionMode
-    ) {
+    if (this.#oldSelectionMode !== props.selectionMode) {
       if (this.#selection.size > 0) {
         this.#selection.clear();
         this.#onChange?.();
       }
 
       this.#view = selectionModeMeta[props.selectionMode].initialView;
+      this.#activeHour1 = 0;
+      this.#activeMinute1 = 0;
+      this.#activeHour2 = 0;
+      this.#activeMinute2;
     }
 
     this.#oldSelectionMode = props.selectionMode;
@@ -289,32 +328,35 @@ class DatePicker {
       });
     }
 
-    return props.selectionMode !== 'time' && props.selectionMode !== 'timeRange'
+    return this.#view !== 'time1' && this.#view !== 'time2'
       ? this.#renderCalendarView(this.#sheet!, props)
       : this.#renderTimeView(props);
   }
 
   #renderCalendarView(sheet: Sheet, props: DatePicker.Props) {
+    const kind = selectionModeMeta[props.selectionMode].kind;
+
     return div(
       {
         class: 'cal-base cal-view--calendar'
       },
       this.#renderSheetHeader(sheet, props),
       this.#renderSheet(sheet, props),
-      this.#renderTimeLinks()
+      kind === 'calendar' ? null : this.#renderTimeLinks()
     );
   }
 
   #renderTimeView(props: DatePicker.Props) {
+    const { kind, selectType } = selectionModeMeta[props.selectionMode];
+
     return div(
       {
         class: 'class-base cal-view--time'
       },
-      this.#renderTimeTabs('time1', props),
-      this.#renderTimeSliders('time1', props),
+      this.#renderTimeTabs(this.#view === 'time2' ? 'time2' : 'time1', props),
+      this.#renderTimeSliders(this.#view == 'time2' ? 'time2' : 'time1', props),
 
-      props.selectionMode !== 'dateTime' &&
-        props.selectionMode !== 'dateTimeRange'
+      kind !== 'calendar+time'
         ? null
         : a(
             {
@@ -496,11 +538,14 @@ class DatePicker {
 
     return a(
       {
-        'class': classMap({
+        class: classMap({
           'cal-time-link': true,
           'cal-time-link--disabled': timeString === ''
         }),
-        'data-subject': type
+        onclick: () => {
+          this.#view = type;
+          this.#requestUpdate();
+        }
       },
       timeIcon,
       timeString === '' ? '--:--' : timeString
@@ -572,6 +617,8 @@ class DatePicker {
   // --- time tabs ---------------------------------------------------
 
   #renderTimeTabs(type: 'time1' | 'time2', props: DatePicker.Props) {
+    const { kind, selectType } = selectionModeMeta[props.selectionMode];
+
     const showsTwoTabs = this.#selection.size > 1;
 
     return div(
@@ -582,7 +629,9 @@ class DatePicker {
         })
       },
       this.#renderTime('time1', props),
-      this.#selection.size > 1 ? this.#renderTime('time2', props) : null
+      (kind === 'time' && selectType === 'range') || this.#selection.size > 1
+        ? this.#renderTime('time2', props)
+        : null
     );
   }
 
@@ -610,38 +659,29 @@ class DatePicker {
           null,
           div({ class: 'cal-time-slider-headline' }, 'Hours'),
           input({
-            'type': 'range',
-            'class': 'cal-time-slider',
-            'value': hour,
-            'min': 0,
-            'max': 23,
-            'data-subject': 'hours' + (type === 'time2' ? '2' : '')
+            type: 'range',
+            class: 'cal-time-slider',
+            value: hour,
+            min: 0,
+            max: 23,
+            oninput:
+              type === 'time1' ? this.#onHour1Change : this.#onHour2Change
           })
         ),
         div(
           null,
           div({ class: 'cal-time-slider-headline' }, 'Minutes'),
           input({
-            'type': 'range',
-            'class': 'cal-time-slider',
-            'value': minute,
-            'min': 0,
-            'max': 59,
-            'data-subject': 'minutes' + (type === 'time2' ? '2' : '')
+            type: 'range',
+            class: 'cal-time-slider',
+            value: minute,
+            min: 0,
+            max: 59,
+            oninput:
+              type === 'time1' ? this.#onMinute1Change : this.#onMinute2Change
           })
         )
       )
-    );
-  }
-
-  // --- back link----------------------------------------------------
-
-  #renderBackToMonthLink() {
-    return a(
-      {
-        class: 'cal-back-to-month-link'
-      },
-      'Back to month'
     );
   }
 }
@@ -678,11 +718,14 @@ const selectionModeMeta: Record<
       hours2: number;
       minutes2: number;
     }) => string[];
+
+    kind: 'calendar' | 'time' | 'calendar+time';
   }
 > = {
   date: {
     selectType: 'single',
     initialView: 'month',
+    kind: 'calendar',
 
     getSelectionKey: (params) =>
       getYearMonthDayString(params.year!, params.month!, params.day!)
@@ -691,6 +734,7 @@ const selectionModeMeta: Record<
   dates: {
     selectType: 'multi',
     initialView: 'month',
+    kind: 'calendar',
 
     getSelectionKey: (params) =>
       getYearMonthDayString(params.year!, params.month!, params.day!)
@@ -699,6 +743,7 @@ const selectionModeMeta: Record<
   dateRange: {
     selectType: 'range',
     initialView: 'month',
+    kind: 'calendar',
 
     getSelectionKey: (params) =>
       getYearMonthDayString(params.year!, params.month!, params.day!)
@@ -707,6 +752,7 @@ const selectionModeMeta: Record<
   dateTime: {
     selectType: 'single',
     initialView: 'month',
+    kind: 'calendar+time',
 
     getSelectionKey: (params) =>
       getYearMonthDayString(params.year!, params.month!, params.day!),
@@ -721,6 +767,7 @@ const selectionModeMeta: Record<
   dateTimeRange: {
     selectType: 'range',
     initialView: 'month',
+    kind: 'calendar+time',
 
     getSelectionKey: (params) =>
       getYearMonthDayString(params.year!, params.month!, params.day!),
@@ -739,31 +786,33 @@ const selectionModeMeta: Record<
             getHourMinuteString(params.hours2, params.minutes2)
         );
       }
+
       return ret;
     }
   },
 
   time: {
-    selectType: null,
+    selectType: 'single',
     initialView: 'time1',
+    kind: 'time',
     getSelectionKey: () => 'TODO!!!',
 
     mapSelectionKeys: (params) => [
-      params.selectionKeys[0] +
-        'T' +
-        getHourMinuteString(params.hours1, params.minutes1)
+      getHourMinuteString(params.hours1, params.minutes1)
     ]
   },
 
   timeRange: {
-    selectType: null,
+    selectType: 'range',
     initialView: 'time1',
+    kind: 'time',
     getSelectionKey: () => 'TODO!!!'
   },
 
   week: {
     selectType: 'single',
     initialView: 'month',
+    kind: 'calendar',
 
     getSelectionKey: (params) =>
       getYearWeekString(params.weekYear!, params.weekNumber!)
@@ -772,6 +821,7 @@ const selectionModeMeta: Record<
   weeks: {
     selectType: 'multi',
     initialView: 'month',
+    kind: 'calendar',
 
     getSelectionKey: (params) =>
       getYearWeekString(params.weekYear!, params.weekNumber!)
@@ -780,6 +830,7 @@ const selectionModeMeta: Record<
   month: {
     selectType: 'single',
     initialView: 'year',
+    kind: 'calendar',
 
     getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
   },
@@ -787,6 +838,7 @@ const selectionModeMeta: Record<
   months: {
     selectType: 'multi',
     initialView: 'year',
+    kind: 'calendar',
 
     getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
   },
@@ -794,6 +846,7 @@ const selectionModeMeta: Record<
   monthRange: {
     selectType: 'range',
     initialView: 'year',
+    kind: 'calendar',
 
     getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
   },
@@ -801,6 +854,7 @@ const selectionModeMeta: Record<
   year: {
     selectType: 'single',
     initialView: 'decade',
+    kind: 'calendar',
 
     getSelectionKey: (params) => getYearString(params.year!)
   },
@@ -808,6 +862,7 @@ const selectionModeMeta: Record<
   years: {
     selectType: 'multi',
     initialView: 'decade',
+    kind: 'calendar',
 
     getSelectionKey: (params) => getYearString(params.year!)
   },
@@ -815,6 +870,7 @@ const selectionModeMeta: Record<
   yearRange: {
     selectType: 'range',
     initialView: 'decade',
+    kind: 'calendar',
 
     getSelectionKey: (params) => getYearString(params.year!)
   }

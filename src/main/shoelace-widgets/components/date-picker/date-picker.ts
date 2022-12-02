@@ -67,7 +67,7 @@ const datePickerCustomStyles = css`
     --cal-back-link-hover-background-color: var(--sl-color-primary-300);
     --cal-back-link-active-background-color: var(--sl-color-primary-400);
     --cal-back-link-border-radius: var(--sl-border-radius-medium);
-    --cal-time-tab-hover-background-color: var(--sl-color-primary-50);
+    --cal-tab-hover-background-color: var(--sl-color-primary-50);
     --cal-border-color: var(--sl-color-neutral-300);
   }
 `;
