@@ -17,12 +17,13 @@ const styles = css`
   }
 
   .choice {
+    display: block;
     display: inline-block;
     width: 12rem;
   }
 
   .columns {
-    display: grid;
+    display: inline-grid;
     grid-template-columns: 1fr 1fr;
     gap: 0 1rem;
   }
@@ -87,6 +88,7 @@ class DatePickerDemo extends LitElement {
           ]}
         >
         </sx-choice>
+        <br />
         <div class="columns">
           <sx-date-field
             label="Date"

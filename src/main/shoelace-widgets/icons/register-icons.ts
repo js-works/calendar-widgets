@@ -54,7 +54,7 @@ const icons = {
   'date-field.month': calendarMonthIcon,
   'date-field.month-range': monthRangeIcon,
   'date-field.quarter': quarterIcon,
-  'date-field.quarterRange': quarterRangeIcon,
+  'date-field.quarter-range': quarterRangeIcon,
   'date-field.year': calendarIcon,
   'date-field.year-range': yearRangeIcon,
 
