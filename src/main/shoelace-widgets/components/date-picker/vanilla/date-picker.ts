@@ -164,8 +164,10 @@ class DatePicker {
   };
 
   #onItemClick = (ev: Event, props: DatePicker.Props, item: SheetItem) => {
-    const selectionKey = selectionModeMeta[props.selectionMode]
-      .getSelectionKey!({
+    const getSelectionKey =
+      selectionModeMeta[props.selectionMode].getSelectionKey;
+
+    const selectionKey = getSelectionKey!({
       year: item.year,
       month: item.month,
       day: item.day,
@@ -217,31 +219,6 @@ class DatePicker {
       this.#selection.add(selectionKey);
     }
 
-    this.#requestUpdate();
-
-    this.#onChange?.();
-  };
-
-  #onHour1Change = (ev: Event) => {
-    this.#activeHour1 = (ev.target as HTMLInputElement).valueAsNumber;
-    this.#requestUpdate();
-    this.#onChange?.();
-  };
-
-  #onHour2Change = (ev: Event) => {
-    this.#activeHour2 = (ev.target as HTMLInputElement).valueAsNumber;
-    this.#requestUpdate();
-    this.#onChange?.();
-  };
-
-  #onMinute1Change = (ev: Event) => {
-    this.#activeMinute1 = (ev.target as HTMLInputElement).valueAsNumber;
-    this.#requestUpdate();
-    this.#onChange?.();
-  };
-
-  #onMinute2Change = (ev: Event) => {
-    this.#activeMinute2 = (ev.target as HTMLInputElement).valueAsNumber;
     this.#requestUpdate();
     this.#onChange?.();
   };
@@ -542,13 +519,19 @@ class DatePicker {
   // --- time --------------------------------------------------------
 
   #renderTime(type: 'time1' | 'time2', props: DatePicker.Props) {
+    const { kind } = selectionModeMeta[props.selectionMode];
     const hour = type === 'time1' ? this.#activeHour1 : this.#activeHour2;
+    const minute = type === 'time1' ? this.#activeMinute1 : this.#activeMinute2;
+    const items = [...this.#selection].sort();
 
-    const minute = type === 'time1' ? this.#activeMinute1 : this.#activeHour2;
+    const date = new Date(
+      items.length === 0 ? 0 : type === 'time1' ? items[0] : items[1]
+    );
 
-    const timeDate = new Date(1970, 0, 1, hour, minute);
+    date.setHours(hour);
+    date.setMinutes(minute);
 
-    let time = this.#i18n.formatDate(timeDate, {
+    let time = this.#i18n.formatDate(date, {
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -559,8 +542,6 @@ class DatePicker {
       props.selectionMode === 'dateTime' ||
       props.selectionMode === 'dateTimeRange'
     ) {
-      const date = new Date(); // TODO!!!!!!!!
-
       const formattedDate = this.#i18n.formatDate(date, {
         year: 'numeric',
         month: 'short',
@@ -608,7 +589,6 @@ class DatePicker {
 
   #renderTimeTabs(type: 'time1' | 'time2', props: DatePicker.Props) {
     const { kind, selectType } = selectionModeMeta[props.selectionMode];
-
     const showsTwoTabs = kind === 'time' || this.#selection.size > 1;
 
     return div(
@@ -652,7 +632,16 @@ class DatePicker {
           value: hour,
           min: 0,
           max: 23,
-          oninput: type === 'time1' ? this.#onHour1Change : this.#onHour2Change
+          oninput: (ev: Event) => {
+            if (type === 'time1') {
+              this.#activeHour1 = (ev.target as HTMLInputElement).valueAsNumber;
+            } else {
+              this.#activeHour2 = (ev.target as HTMLInputElement).valueAsNumber;
+            }
+
+            this.#requestUpdate();
+            this.#onChange?.();
+          }
         }),
         div({ class: 'cal-time-slider-headline' }, 'Minutes'),
         input({
@@ -661,8 +650,20 @@ class DatePicker {
           value: minute,
           min: 0,
           max: 59,
-          oninput:
-            type === 'time1' ? this.#onMinute1Change : this.#onMinute2Change
+          oninput: (ev: Event) => {
+            if (type === 'time1') {
+              this.#activeMinute1 = (
+                ev.target as HTMLInputElement
+              ).valueAsNumber;
+            } else {
+              this.#activeMinute2 = (
+                ev.target as HTMLInputElement
+              ).valueAsNumber;
+            }
+
+            this.#requestUpdate();
+            this.#onChange?.();
+          }
         })
       )
     );

@@ -269,6 +269,7 @@ export default /*css*/ `
 
   .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2):hover,
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child:hover {
+    cursor: pointer;
     background-color: var(--cal-tab-hover-background-color);
   }
 
