@@ -1,14 +1,13 @@
 import { Calendar, Sheet, SheetItem } from './calendar';
-import { h, render, renderToString, VNode } from './vdom';
-import {
-  classMap,
-  getYearString,
-  getYearMonthDayString,
-  getYearMonthString,
-  getYearWeekString
-} from './utils';
+import { h, render, renderToString } from './vdom';
+import { classMap } from './utils';
 import { I18n } from './i18n';
-import { getHourMinuteString } from './utils';
+import { selectionModeMeta, calendarViewOrder } from './meta';
+
+// types
+import type { VNode } from './vdom';
+import type { CalendarView, View } from './meta';
+import type { SelectionMode, SelectionMode as _SelectionMode } from './meta';
 
 // icons
 import arrowLeftIcon from './icons/arrow-left.icon';
@@ -18,27 +17,14 @@ import timeIcon from './icons/time.icon';
 // styles
 import datePickerBaseStyles from './date-picker.styles';
 
+// === exports =======================================================
+
 export { DatePicker };
 
-// === types =========================================================
+// === exported types ================================================
 
 namespace DatePicker {
-  export type SelectionMode =
-    | 'date'
-    | 'dates'
-    | 'dateTime'
-    | 'dateRange'
-    | 'time'
-    | 'timeRange'
-    | 'dateTimeRange'
-    | 'week'
-    | 'weeks'
-    | 'month'
-    | 'months'
-    | 'monthRange'
-    | 'year'
-    | 'years'
-    | 'yearRange';
+  export type SelectionMode = _SelectionMode;
 
   export type Props = {
     selectionMode: SelectionMode;
@@ -54,26 +40,31 @@ namespace DatePicker {
   };
 }
 
+// === local VDOM factories ==========================================
+
 const [a, div, input] = ['a', 'div', 'input'].map((tag) => h.bind(null, tag));
+
+// === exported classes ==============================================
 
 class DatePicker {
   static styles = datePickerBaseStyles;
 
   #i18n: I18n;
+  #calendar: Calendar;
   #getProps: () => DatePicker.Props;
   #requestUpdate: () => void;
   #onChange: () => void;
 
   #selection = new Set<string>();
-  #activeYear = 2022;
-  #activeMonth = 11;
+  #activeYear = new Date().getFullYear();
+  #activeMonth = new Date().getMonth();
   #activeHour1 = 0;
   #activeHour2 = 0;
   #activeMinute1 = 0;
   #activeMinute2 = 0;
   #view: View = 'month';
+  #selectionMode: SelectionMode = 'date';
   #sheet: Sheet | null = null;
-  #oldSelectionMode: DatePicker.SelectionMode = 'date';
 
   constructor(params: {
     getLocale: () => string;
@@ -83,14 +74,22 @@ class DatePicker {
     onChange: () => void;
   }) {
     this.#i18n = new I18n(params.getLocale);
+    this.#calendar = new Calendar(this.#i18n.getLocale());
     this.#getProps = params.getProps;
     this.#requestUpdate = params.requestUpdate;
     this.#onChange = params.onChange;
   }
 
+  render(target: HTMLElement) {
+    render(this.#renderDatePicker(), target);
+  }
+
+  renderToString() {
+    return renderToString(this.#renderDatePicker());
+  }
+
   getValue() {
-    const { kind, mapSelectionKeys } =
-      selectionModeMeta[this.#oldSelectionMode];
+    const { kind, mapSelectionKeys } = selectionModeMeta[this.#selectionMode];
 
     if (kind !== 'time') {
       let selectionKeys = [...this.#selection].sort();
@@ -105,9 +104,7 @@ class DatePicker {
         });
       }
 
-      const x = selectionKeys.join(',');
-
-      return x;
+      return selectionKeys.join(',');
     }
 
     if (mapSelectionKeys) {
@@ -132,11 +129,8 @@ class DatePicker {
   }
 
   resetView() {
-    // TODO!!!!!
-  }
-
-  #sheetHasRowNames(sheet: Sheet) {
-    return !!sheet.rowNames?.length;
+    this.#view = selectionModeMeta[this.#selectionMode].initialView;
+    this.#requestUpdate();
   }
 
   #onParentClick = () => {
@@ -257,18 +251,10 @@ class DatePicker {
     this.#requestUpdate();
   };
 
-  render(target: HTMLElement) {
-    render(this.#getVNode(), target);
-  }
-
-  renderToString() {
-    return renderToString(this.#getVNode());
-  }
-
-  #getVNode() {
+  #renderDatePicker() {
     const props = this.#getProps();
 
-    if (this.#oldSelectionMode !== props.selectionMode) {
+    if (this.#selectionMode !== props.selectionMode) {
       if (this.#selection.size > 0) {
         this.#selection.clear();
         this.#onChange?.();
@@ -281,13 +267,11 @@ class DatePicker {
       this.#activeMinute2;
     }
 
-    this.#oldSelectionMode = props.selectionMode;
+    this.#selectionMode = props.selectionMode;
     this.#sheet = null;
 
-    const calendar = new Calendar(this.#i18n.getLocale());
-
     if (this.#view === 'month') {
-      this.#sheet = calendar.getMonthSheet({
+      this.#sheet = this.#calendar.getMonthSheet({
         year: this.#activeYear,
         month: this.#activeMonth,
         showWeekNumbers: props.showWeekNumbers,
@@ -307,21 +291,21 @@ class DatePicker {
         */
       });
     } else if (this.#view === 'year') {
-      this.#sheet = calendar.getYearSheet({
+      this.#sheet = this.#calendar.getYearSheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null,
         selectedRange: null
       });
     } else if (this.#view === 'decade') {
-      this.#sheet = calendar.getDecadeSheet({
+      this.#sheet = this.#calendar.getDecadeSheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null,
         selectedRange: null
       });
     } else if (this.#view === 'century') {
-      this.#sheet = calendar.getCenturySheet({
+      this.#sheet = this.#calendar.getCenturySheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null
@@ -414,7 +398,7 @@ class DatePicker {
   }
 
   #renderSheet(sheet: Sheet, props: DatePicker.Props) {
-    const hasRowNames = this.#sheetHasRowNames(sheet);
+    const hasRowNames = !!sheet.rowNames?.length;
 
     let gridTemplateColumns =
       (hasRowNames ? 'min-content ' : '') + `repeat(${sheet.columnCount}, 1fr)`;
@@ -430,6 +414,8 @@ class DatePicker {
   }
 
   #renderTableHead(sheet: Sheet, props: DatePicker.Props) {
+    const hasRowNames = !!sheet.rowNames?.length;
+
     const headRow = sheet.columnNames!.map((it, idx) =>
       div(
         {
@@ -443,7 +429,7 @@ class DatePicker {
       )
     );
 
-    if (this.#sheetHasRowNames(sheet)) {
+    if (hasRowNames) {
       headRow.unshift(div());
     }
 
@@ -451,10 +437,11 @@ class DatePicker {
   }
 
   #renderTableBody(sheet: Sheet, props: DatePicker.Props) {
+    const hasRowNames = !!sheet.rowNames?.length;
     const cells: VNode[] = [];
 
     sheet.items.forEach((item, idx) => {
-      if (this.#sheetHasRowNames(sheet) && idx % 7 === 0) {
+      if (hasRowNames && idx % 7 === 0) {
         cells.push(
           div({ class: 'cal-cell cal-row-name' }, sheet.rowNames![idx / 7])
         );
@@ -606,8 +593,11 @@ class DatePicker {
 
     return div(
       {
-        'class': `cal-time cal-time--${type === 'time1' ? '1' : '2'}`,
-        'data-subject': `timeRange${type === 'time1' ? '1' : '2'}`
+        class: `cal-time cal-time--${type === 'time1' ? '1' : '2'}`,
+        onclick: () => {
+          this.#view = type;
+          this.#requestUpdate();
+        }
       },
       timeHeader,
       div({ class: 'cal-time-value' }, time)
@@ -619,7 +609,7 @@ class DatePicker {
   #renderTimeTabs(type: 'time1' | 'time2', props: DatePicker.Props) {
     const { kind, selectType } = selectionModeMeta[props.selectionMode];
 
-    const showsTwoTabs = this.#selection.size > 1;
+    const showsTwoTabs = kind === 'time' || this.#selection.size > 1;
 
     return div(
       {
@@ -678,193 +668,3 @@ class DatePicker {
     );
   }
 }
-
-type CalendarView = 'month' | 'year' | 'decade' | 'century';
-type TimeView = 'time1' | 'time2';
-type View = CalendarView | TimeView;
-
-const calendarViewOrder: CalendarView[] = [
-  'month',
-  'year',
-  'decade',
-  'century'
-];
-
-const selectionModeMeta: Record<
-  DatePicker.SelectionMode,
-  {
-    selectType: 'single' | 'multi' | 'range' | null;
-    initialView: Exclude<View, 'time2'>;
-
-    getSelectionKey: (params: {
-      year?: number | undefined;
-      month?: number | undefined;
-      day?: number | undefined;
-      weekYear?: number | undefined;
-      weekNumber?: number | undefined;
-    }) => string;
-
-    mapSelectionKeys?: (params: {
-      selectionKeys: string[];
-      hours1: number;
-      minutes1: number;
-      hours2: number;
-      minutes2: number;
-    }) => string[];
-
-    kind: 'calendar' | 'time' | 'calendar+time';
-  }
-> = {
-  date: {
-    selectType: 'single',
-    initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!)
-  },
-
-  dates: {
-    selectType: 'multi',
-    initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!)
-  },
-
-  dateRange: {
-    selectType: 'range',
-    initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!)
-  },
-
-  dateTime: {
-    selectType: 'single',
-    initialView: 'month',
-    kind: 'calendar+time',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!),
-
-    mapSelectionKeys: (params) => [
-      params.selectionKeys[0] +
-        'T' +
-        getHourMinuteString(params.hours1, params.minutes1)
-    ]
-  },
-
-  dateTimeRange: {
-    selectType: 'range',
-    initialView: 'month',
-    kind: 'calendar+time',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!),
-
-    mapSelectionKeys: (params) => {
-      let ret = [
-        params.selectionKeys[0] +
-          'T' +
-          getHourMinuteString(params.hours1, params.minutes1)
-      ];
-
-      if (params.selectionKeys.length > 1) {
-        ret.push(
-          params.selectionKeys[1] +
-            'T' +
-            getHourMinuteString(params.hours2, params.minutes2)
-        );
-      }
-
-      return ret;
-    }
-  },
-
-  time: {
-    selectType: 'single',
-    initialView: 'time1',
-    kind: 'time',
-    getSelectionKey: () => 'TODO!!!',
-
-    mapSelectionKeys: (params) => [
-      getHourMinuteString(params.hours1, params.minutes1)
-    ]
-  },
-
-  timeRange: {
-    selectType: 'range',
-    initialView: 'time1',
-    kind: 'time',
-    getSelectionKey: () => 'TODO!!!'
-  },
-
-  week: {
-    selectType: 'single',
-    initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearWeekString(params.weekYear!, params.weekNumber!)
-  },
-
-  weeks: {
-    selectType: 'multi',
-    initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearWeekString(params.weekYear!, params.weekNumber!)
-  },
-
-  month: {
-    selectType: 'single',
-    initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
-  },
-
-  months: {
-    selectType: 'multi',
-    initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
-  },
-
-  monthRange: {
-    selectType: 'range',
-    initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
-  },
-
-  year: {
-    selectType: 'single',
-    initialView: 'decade',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearString(params.year!)
-  },
-
-  years: {
-    selectType: 'multi',
-    initialView: 'decade',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearString(params.year!)
-  },
-
-  yearRange: {
-    selectType: 'range',
-    initialView: 'decade',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearString(params.year!)
-  }
-};

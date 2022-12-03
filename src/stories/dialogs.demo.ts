@@ -116,7 +116,7 @@ class DialogsDemo extends LitElement {
     });
 
     if (approved) {
-      this._dialogs.show('approve', {
+      this._dialogs.show('info', {
         message: 'Account has been deactivated'
       });
     }

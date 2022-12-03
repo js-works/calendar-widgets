@@ -85,6 +85,7 @@ export default /*css*/ `
     grid-template-rows: auto;
     align-items: stretch;
     flex-grow: 1;
+    padding: 0.25em;
   }
 
   .cal-column-name {
@@ -256,10 +257,19 @@ export default /*css*/ `
     white-space: nowrap;
   }
 
+  .cal-time-tabs > .cal-time:only-child {
+    text-align: center;
+    grid-column: span 2;
+  }
+
+  .cal-time-tabs--active-tab-time1 > .cal-time:first-child,
+  .cal-time-tabs--active-tab-time2 > .cal-time:nth-child(2) {
+    pointer-events: none;
+  }
+
   .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2):hover,
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child:hover {
     background-color: var(--cal-tab-hover-background-color);
-    cursor: pointer;
   }
 
   .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2) {
@@ -271,6 +281,10 @@ export default /*css*/ `
     padding: 1em 2em;
   }
 
+  .cal-time-tabs > .cal-time:nth-child(2) {
+    padding-left: 1em;
+  }
+  
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child {
     font-size: 70%;
     border: 0 solid var(--cal-border-color);
