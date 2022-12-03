@@ -3,6 +3,7 @@ import {
   getYearMonthDayString,
   getYearMonthString,
   getYearWeekString,
+  getYearQuarterString,
   getHourMinuteString
 } from './utils';
 
@@ -26,6 +27,9 @@ export type SelectionMode =
   | 'month'
   | 'months'
   | 'monthRange'
+  | 'quarter'
+  | 'quarters'
+  | 'quarterRange'
   | 'year'
   | 'years'
   | 'yearRange';
@@ -195,6 +199,33 @@ const selectionModeMeta: Record<
     kind: 'calendar',
 
     getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
+  },
+
+  quarter: {
+    selectType: 'single',
+    initialView: 'year',
+    kind: 'calendar',
+
+    getSelectionKey: (params) =>
+      getYearQuarterString(params.year!, Math.floor(params.month! / 3) + 1)
+  },
+
+  quarters: {
+    selectType: 'multi',
+    initialView: 'year',
+    kind: 'calendar',
+
+    getSelectionKey: (params) =>
+      getYearQuarterString(params.year!, Math.floor(params.month! / 3) + 1)
+  },
+
+  quarterRange: {
+    selectType: 'range',
+    initialView: 'year',
+    kind: 'calendar',
+
+    getSelectionKey: (params) =>
+      getYearQuarterString(params.year!, Math.floor(params.month! / 3) + 1)
   },
 
   year: {

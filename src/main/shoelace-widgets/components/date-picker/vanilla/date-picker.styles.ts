@@ -167,7 +167,7 @@ export default /*css*/ `
     color: var(--cal-cell-adjacent-disable-color);
   }
 
-  .cal-cell--current:not(.cal-cell-selected):not(:hover) {
+  .cal-cell--current:not(.cal-cell--selected):not(:hover) {
     background-color: var(--cal-cell-current-highlighted-background-color);
   }
 
@@ -195,6 +195,8 @@ export default /*css*/ `
     min-height: 2em;
     box-sizing: border-box;
     margin: 0.5em;
+    gap: 0 2em;
+    white-space: nowrap;
   }
 
   .cal-time-link {
@@ -202,20 +204,17 @@ export default /*css*/ `
     align-items: center;
     gap: 0.5em;
     cursor: pointer;
+    text-align: center;
+    justify-self: center;
+    padding: 0.25em 0.5em;
   }
 
+  .cal-time-link:hover {
+    background-color: var(--cal-button-background-color);
+  }
+  
   .cal-time-link--disabled {
     pointer-events: none;
-  }
-
-  .cal-time-link:first-child {
-    grid-column: 1;
-    justify-self: start;
-  }
-
-  .cal-time-link:nth-child(2) {
-    justify-self: end;
-    grid-column: 2;
   }
 
   /* time view */
@@ -236,7 +235,6 @@ export default /*css*/ `
   .cal-time-header {
     font-size: calc(100% - 1px);
     margin-bottom: 0.25em;
-    font-weight: 200;
   }
 
   .cal-time-value {
@@ -270,7 +268,8 @@ export default /*css*/ `
   .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2):hover,
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child:hover {
     cursor: pointer;
-    background-color: var(--cal-tab-hover-background-color);
+    background-color: var(--cal-button-background-color);
+    border-color: var(--cal-button-background-color);
   }
 
   .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2) {
@@ -284,6 +283,10 @@ export default /*css*/ `
 
   .cal-time-tabs > .cal-time:nth-child(2) {
     padding-left: 1em;
+  }
+  
+  .cal-time-tabs--active-tab-time1 > .cal-time:first-child:not(:only-child) {
+    padding-left: 0.5em;
   }
   
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child {
@@ -300,17 +303,17 @@ export default /*css*/ `
     display: block;
     padding: 0.5em 2em;
     text-align: center;
-    background-color: var(--cal-back-link-background-color);
-    border-radius: var(--cal-back-link-border-radius, 3px);
+    background-color: var(--cal-button-background-color);
+    border-radius: var(--cal-button-border-radius, 3px);
     cursor: pointer;
   }
 
   .cal-back-to-month-link:hover {
-    background-color: var(--cal-back-link-hover-background-color);
+    background-color: var(--cal-button-hover-background-color);
   }
 
   .cal-back-to-month-link:active {
-    background-color: var(--cal-back-link-active-background-color);
+    background-color: var(--cal-button-active-background-color);
   }
 
   /* time sliders */
@@ -318,10 +321,7 @@ export default /*css*/ `
   .cal-time-sliders {
     display: grid;
     grid-template-columns: min-content auto;
-    gap: 0 1em;
-  }
-
-  .time-slider-headline {
+    gap: 0.5em 1em;
   }
 
   /* time slider */

@@ -50,7 +50,6 @@ class DatePicker {
   static styles = datePickerBaseStyles;
 
   #i18n: I18n;
-  #calendar: Calendar;
   #getProps: () => DatePicker.Props;
   #requestUpdate: () => void;
   #onChange: () => void;
@@ -74,7 +73,6 @@ class DatePicker {
     onChange: () => void;
   }) {
     this.#i18n = new I18n(params.getLocale);
-    this.#calendar = new Calendar(this.#i18n.getLocale());
     this.#getProps = params.getProps;
     this.#requestUpdate = params.requestUpdate;
     this.#onChange = params.onChange;
@@ -230,6 +228,7 @@ class DatePicker {
 
   #renderDatePicker() {
     const props = this.#getProps();
+    const calendar = new Calendar(this.#i18n.getLocale());
 
     if (this.#selectionMode !== props.selectionMode) {
       if (this.#selection.size > 0) {
@@ -248,7 +247,7 @@ class DatePicker {
     this.#sheet = null;
 
     if (this.#view === 'month') {
-      this.#sheet = this.#calendar.getMonthSheet({
+      this.#sheet = calendar.getMonthSheet({
         year: this.#activeYear,
         month: this.#activeMonth,
         showWeekNumbers: props.showWeekNumbers,
@@ -268,21 +267,26 @@ class DatePicker {
         */
       });
     } else if (this.#view === 'year') {
-      this.#sheet = this.#calendar.getYearSheet({
+      this.#sheet = calendar.getYearSheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null,
-        selectedRange: null
+        selectedRange: null,
+
+        selectQuarters:
+          props.selectionMode === 'quarter' ||
+          props.selectionMode === 'quarters' ||
+          props.selectionMode === 'quarterRange'
       });
     } else if (this.#view === 'decade') {
-      this.#sheet = this.#calendar.getDecadeSheet({
+      this.#sheet = calendar.getDecadeSheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null,
         selectedRange: null
       });
     } else if (this.#view === 'century') {
-      this.#sheet = this.#calendar.getCenturySheet({
+      this.#sheet = calendar.getCenturySheet({
         year: this.#activeYear,
         minDate: null,
         maxDate: null

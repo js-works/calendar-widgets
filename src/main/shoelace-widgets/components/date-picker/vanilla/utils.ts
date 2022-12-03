@@ -5,6 +5,7 @@ export {
   getYearMonthString,
   getYearString,
   getYearWeekString,
+  getYearQuarterString,
   inDateRange,
   inNumberRange,
   today
@@ -23,6 +24,12 @@ function getYearMonthString(year: number, month: number) {
   const m = (month + 1).toString().padStart(2, '0');
 
   return `${y}-${m}`;
+}
+
+function getYearQuarterString(year: number, quarter: number) {
+  const y = year.toString().padStart(4, '0');
+
+  return `${y}-Q${quarter}`;
 }
 
 function getYearWeekString(year: number, week: number) {

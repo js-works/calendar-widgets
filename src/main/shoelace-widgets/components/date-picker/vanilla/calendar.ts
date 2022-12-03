@@ -1,14 +1,7 @@
 import { h, renderToString, VNode } from './vdom';
 import { I18n } from './i18n';
 
-import {
-  getYearMonthString,
-  getYearMonthDayString,
-  getYearWeekString,
-  inDateRange,
-  inNumberRange,
-  today
-} from './utils';
+import { inDateRange, inNumberRange, today } from './utils';
 
 export { Calendar, Sheet, SheetItem };
 
@@ -43,7 +36,7 @@ interface Sheet {
 class Calendar {
   #i18n: I18n;
 
-  constructor(locale: string | (() => string)) {
+  constructor(locale: string) {
     this.#i18n = new I18n(locale);
   }
 
@@ -158,10 +151,6 @@ class Calendar {
         }
       }
 
-      if (params.selectWeeks) {
-        const calendarWeek = this.#i18n.getCalendarWeek(itemDate);
-      }
-
       const { year: weekYear, week: weekNumber } =
         this.#i18n.getCalendarWeek(itemDate);
 
@@ -258,13 +247,14 @@ class Calendar {
     year: number; //
     minDate: Date | null;
     maxDate: Date | null;
+    selectQuarters?: boolean;
     selectedRange?: {
       start: { year: number; month: number };
       end: { year: number; month: number };
     } | null;
   }): Sheet {
     const year = params.year;
-    const monthItems: SheetItem[] = [];
+    const items: SheetItem[] = [];
     const now = new Date();
     const currYear = now.getFullYear();
     const currMonth = now.getMonth();
@@ -277,53 +267,71 @@ class Calendar {
       ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
       : null;
 
-    for (let itemMonth = 0; itemMonth < 12; ++itemMonth) {
-      const outOfMinMaxRange = !inNumberRange(
-        year * 12 + itemMonth,
-        minMonth,
-        maxMonth
-      );
+    if (!params.selectQuarters) {
+      for (let itemMonth = 0; itemMonth < 12; ++itemMonth) {
+        const outOfMinMaxRange = !inNumberRange(
+          year * 12 + itemMonth,
+          minMonth,
+          maxMonth
+        );
 
-      let inSelectedRange = false;
-      let firstInSelectedRange = false;
-      let lastInSelectedRange = false;
+        let inSelectedRange = false;
+        let firstInSelectedRange = false;
+        let lastInSelectedRange = false;
 
-      if (params.selectedRange) {
-        const { year: startYear, month: startMonth } =
-          params.selectedRange.start;
+        if (params.selectedRange) {
+          const { year: startYear, month: startMonth } =
+            params.selectedRange.start;
 
-        const { year: endYear, month: endMonth } = params.selectedRange.end;
+          const { year: endYear, month: endMonth } = params.selectedRange.end;
 
-        const startValue = startYear * 12 + startMonth;
-        const endValue = endYear * 12 + endMonth;
+          const startValue = startYear * 12 + startMonth;
+          const endValue = endYear * 12 + endMonth;
 
-        if (startValue <= endValue) {
-          const itemValue = year * 12 + itemMonth;
+          if (startValue <= endValue) {
+            const itemValue = year * 12 + itemMonth;
 
-          inSelectedRange = inNumberRange(
-            year * 12 + itemMonth,
-            startValue,
-            endValue
-          );
+            inSelectedRange = inNumberRange(
+              year * 12 + itemMonth,
+              startValue,
+              endValue
+            );
 
-          firstInSelectedRange = inSelectedRange && itemValue === startValue;
-          lastInSelectedRange = inSelectedRange && itemValue === endValue;
+            firstInSelectedRange = inSelectedRange && itemValue === startValue;
+            lastInSelectedRange = inSelectedRange && itemValue === endValue;
+          }
         }
-      }
 
-      monthItems.push({
-        year,
-        month: itemMonth,
-        name: this.#i18n.getMonthName(itemMonth, 'short'),
-        current: year === currYear && itemMonth === currMonth,
-        adjacent: false,
-        highlighted: false,
-        outOfMinMaxRange,
-        inSelectedRange,
-        firstInSelectedRange,
-        lastInSelectedRange,
-        disabled: outOfMinMaxRange
-      });
+        items.push({
+          year,
+          month: itemMonth,
+          name: this.#i18n.getMonthName(itemMonth, 'short'),
+          current: year === currYear && itemMonth === currMonth,
+          adjacent: false,
+          highlighted: false,
+          outOfMinMaxRange,
+          inSelectedRange,
+          firstInSelectedRange,
+          lastInSelectedRange,
+          disabled: outOfMinMaxRange
+        });
+      }
+    } else {
+      for (let quarter = 1; quarter <= 4; ++quarter) {
+        items.push({
+          year,
+          month: quarter * 3 - 2,
+          name: 'Quarter ' + quarter,
+          current: false, // TODO
+          adjacent: false,
+          highlighted: false,
+          outOfMinMaxRange: false, // TODO
+          inSelectedRange: false, // TODO
+          firstInSelectedRange: false, // TODO
+          lastInSelectedRange: false, // TODO
+          disabled: false // TODO
+        });
+      }
     }
 
     const minYear = params.minDate ? params.minDate.getFullYear() : null;
@@ -338,13 +346,13 @@ class Calendar {
 
     return {
       name: this.#i18n.formatYear(year),
-      columnCount: 4,
+      columnCount: params.selectQuarters ? 2 : 4,
       highlightedColumns: null,
       columnNames: null,
       rowNames: null,
       previous,
       next,
-      items: monthItems
+      items: items
     };
   }
 
