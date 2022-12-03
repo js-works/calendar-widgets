@@ -48,7 +48,11 @@ export class DateField extends LitElement {
     | 'timeRange'
     | 'week'
     | 'month'
-    | 'year' = 'date';
+    | 'monthRange'
+    | 'quarter'
+    | 'quarterRange'
+    | 'year'
+    | 'yearRange' = 'date';
 
   @property()
   name = '';
@@ -190,8 +194,12 @@ export class DateField extends LitElement {
         time: 'time',
         timeRange: 'time-range',
         week: 'week',
+        quarter: 'quarter',
+        quarterRange: 'quarter-range',
         month: 'month',
-        year: 'year'
+        monthRange: 'month-range',
+        year: 'year',
+        yearRange: 'year-range'
       }[this.selectionMode];
 
     let value = '';
@@ -540,6 +548,61 @@ const logicBySelectionMode: Record<
     }
   },
 
+  monthRange: {
+    formatValue(value, localize) {
+      return logicBySelectionMode['monthRange'].getPopupTitle(value, localize);
+    },
+
+    getPopupTitle(value, localize) {
+      if (!value) {
+        return '';
+      }
+
+      const dates = value.split(',').map((it) => new Date(it));
+
+      const ret = new Intl.DateTimeFormat(localize.lang(), {
+        year: 'numeric',
+        month: 'short'
+      }).formatRange(dates[0], dates[dates.length - 1]);
+
+      return ret;
+    }
+  },
+
+  quarter: {
+    formatValue(value) {
+      return value;
+    },
+
+    getPopupTitle(value) {
+      return value;
+    }
+  },
+
+  quarterRange: {
+    formatValue(value, localize) {
+      return logicBySelectionMode['quarterRange'].getPopupTitle(
+        value,
+        localize
+      );
+    },
+
+    getPopupTitle(value, localize) {
+      if (!value) {
+        return '';
+      }
+
+      const dates = value.split(',').map((it) => new Date(it));
+
+      const ret = new Intl.DateTimeFormat(localize.lang(), {
+        year: 'numeric',
+        month: 'short'
+      }).formatRange(dates[0], dates[dates.length - 1]);
+
+      return ret;
+    }
+  },
+
   year: {
     formatValue(value) {
       return value;
@@ -547,6 +610,26 @@ const logicBySelectionMode: Record<
 
     getPopupTitle(value) {
       return value;
+    }
+  },
+
+  yearRange: {
+    formatValue(value, localize) {
+      return logicBySelectionMode['yearRange'].getPopupTitle(value, localize);
+    },
+
+    getPopupTitle(value, localize) {
+      if (!value) {
+        return '';
+      }
+
+      const dates = value.split(',').map((it) => new Date(it));
+
+      const ret = new Intl.DateTimeFormat(localize.lang(), {
+        year: 'numeric'
+      }).formatRange(dates[0], dates[dates.length - 1]);
+
+      return ret;
     }
   }
 };

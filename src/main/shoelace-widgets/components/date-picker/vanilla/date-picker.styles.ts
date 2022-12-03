@@ -151,6 +151,7 @@ export default /*css*/ `
 
   .cal-cell--disabled {
     cursor: not-allowed;
+    color: var(--cal-cell-disabled-color);
   }
 
   .cal-cell--disabled.cal-cell--adjacent {

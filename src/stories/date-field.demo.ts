@@ -12,10 +12,19 @@ export const dateFields = () => '<date-field-demo></date-field-demo>';
 
 const styles = css`
   .base {
-    display: block;
     font-family: var(--sl-font-sans);
     font-size: var(--sl-font-size-medium);
-    max-width: 30rem;
+  }
+
+  .choice {
+    display: inline-block;
+    width: 12rem;
+  }
+
+  .columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 1rem;
   }
 `;
 
@@ -49,6 +58,7 @@ class DatePickerDemo extends LitElement {
           label="Locale"
           value=${this._locale}
           @sl-change=${this._onChange}
+          class="choice"
           .options=${[
             {
               value: 'en-US',
@@ -77,56 +87,78 @@ class DatePickerDemo extends LitElement {
           ]}
         >
         </sx-choice>
-        <br />
-        <sx-date-field
-          label="Date"
-          show-week-numbers
-          highlight-current
-          highlight-weekends
-          lang=${this._locale}
-        ></sx-date-field>
-        <sx-date-field
-          label="Date and time"
-          selection-mode="dateTime"
-          lang=${this._locale}
-        ></sx-date-field>
-        <sx-date-field
-          label="Date range"
-          selection-mode="dateRange"
-          lang=${this._locale}
-        ></sx-date-field>
-        <sx-date-field
-          label="Date time range"
-          selection-mode="dateTimeRange"
-          lang=${this._locale}
-        ></sx-date-field>
-        <sx-date-field
-          label="Time"
-          selection-mode="time"
-          lang=${this._locale}
-        ></sx-date-field>
-        <sx-date-field
-          label="Time range"
-          selection-mode="timeRange"
-          lang=${this._locale}
-        ></sx-date-field>
-        <sx-date-field
-          label="Week"
-          selection-mode="week"
-          show-week-numbers
-          lang=${this._locale}
-        ></sx-date-field>
-        <sx-date-field
-          label="Month"
-          selection-mode="month"
-          lang=${this._locale}
-        ></sx-date-field>
-        <sx-date-field
-          label="Year"
-          selection-mode="year"
-          enable-century-view
-          lang=${this._locale}
-        ></sx-date-field>
+        <div class="columns">
+          <sx-date-field
+            label="Date"
+            show-week-numbers
+            highlight-current
+            highlight-weekends
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Date and time"
+            selection-mode="dateTime"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Date range"
+            selection-mode="dateRange"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Date time range"
+            selection-mode="dateTimeRange"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Time"
+            selection-mode="time"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Time range"
+            selection-mode="timeRange"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Week"
+            selection-mode="week"
+            show-week-numbers
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Month"
+            selection-mode="month"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Month range"
+            selection-mode="monthRange"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Quarter"
+            selection-mode="quarter"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Quarter range"
+            selection-mode="quarterRange"
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Year"
+            selection-mode="year"
+            enable-century-view
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
+            label="Year range"
+            selection-mode="yearRange"
+            enable-century-view
+            lang=${this._locale}
+          ></sx-date-field>
+        </div>
       </sx-fieldset>
     `;
   }

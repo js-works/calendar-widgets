@@ -34,6 +34,10 @@ import calendarWeekIcon from './bootstrap/calendar-week.icon';
 import dateIcon from './custom/date.icon';
 import timeRangeIcon from './custom/time-range.icon';
 import weekIcon from './custom/week.icon';
+import yearRangeIcon from './custom/year-range.icon';
+import monthRangeIcon from './custom/month-range.icon';
+import quarterIcon from './custom/quarter-range.icon';
+import quarterRangeIcon from './custom/quarter-range.icon';
 
 const icons = {
   'text-field.email': emailIcon,
@@ -48,7 +52,11 @@ const icons = {
   'date-field.time-range': timeRangeIcon,
   'date-field.week': weekIcon,
   'date-field.month': calendarMonthIcon,
+  'date-field.month-range': monthRangeIcon,
+  'date-field.quarter': quarterIcon,
+  'date-field.quarterRange': quarterRangeIcon,
   'date-field.year': calendarIcon,
+  'date-field.year-range': yearRangeIcon,
 
   'dialogs.info': infoCircleIcon,
   'dialogs.success': check2SquareIcon,

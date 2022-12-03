@@ -562,15 +562,13 @@ class DatePicker {
         }
       }
 
-      timeHeader = h(
-        'div',
+      timeHeader = div(
         { class: 'cal-time-header' },
         fromOrToLabel,
         formattedDate
       );
     } else if (props.selectionMode === 'timeRange') {
-      timeHeader = h(
-        'div',
+      timeHeader = div(
         { class: 'cal-time-header' },
         (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0'
       );
