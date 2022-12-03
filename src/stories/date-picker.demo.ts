@@ -24,14 +24,14 @@ const styles = css`
   }
 
   .first-column {
-    width: 21rem;
+    width: 24rem;
   }
 
   .picker {
     display: block;
     border: 1px solid var(--sl-color-primary-100);
     box-shadow: var(--sl-shadow-large);
-    width: 21rem;
+    width: 24rem;
   }
 
   .selection {
@@ -46,6 +46,12 @@ const styles = css`
 
   .mode-selector {
     min-width: 18rem;
+  }
+
+  .date-range {
+    display: grid;
+    grid-template-columns: 12rem 12rem;
+    gap: 1rem;
   }
 `;
 
@@ -223,18 +229,20 @@ class DatePickerDemo extends LitElement {
               >
                 show week numbers
               </sl-checkbox>
-              <sl-checkbox
-                data-subject="enableCenturyView"
-                ?checked=${this._enableCenturyView}
-              >
-                enable century view
-              </sl-checkbox>
-              <sx-date-field label="Min. date" data-subject="minDate">
-              </sx-date-field>
-              <sx-date-field label="Max. date" data-subject="maxDate">
-              </sx-date-field>
             `
           )}
+          <sl-checkbox
+            data-subject="enableCenturyView"
+            ?checked=${this._enableCenturyView}
+          >
+            enable century view
+          </sl-checkbox>
+          <div class="date-range">
+            <sx-date-field label="Min. date" data-subject="minDate">
+            </sx-date-field>
+            <sx-date-field label="Max. date" data-subject="maxDate">
+            </sx-date-field>
+          </div>
         </div>
       </div>
     `;

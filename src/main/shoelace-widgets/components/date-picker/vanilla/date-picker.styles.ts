@@ -63,6 +63,7 @@ export default /*css*/ `
 
   .cal-title {
     text-align: center;
+    text-transform: capitalize;
   }
 
   .cal-title,
@@ -92,6 +93,7 @@ export default /*css*/ `
     text-align: center;
     padding: 0.5em;
     font-size: 90%;
+    text-transform: capitalize;
   }
 
   .cal-column-name--highlighted {
@@ -235,6 +237,7 @@ export default /*css*/ `
   .cal-time-header {
     font-size: calc(100% - 1px);
     margin-bottom: 0.25em;
+    font-weight: 200;
   }
 
   .cal-time-value {
