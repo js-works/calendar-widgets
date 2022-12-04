@@ -19,7 +19,7 @@ const styles = css`
   .choice {
     display: block;
     display: inline-block;
-    width: 15rem;
+    width: 17rem;
   }
 
   .columns {

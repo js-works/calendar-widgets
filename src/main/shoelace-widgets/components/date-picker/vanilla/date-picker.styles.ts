@@ -114,7 +114,6 @@ export default /*css*/ `
     grid-template-rows: auto;
     align-items: stretch;
     flex-grow: 1;
-    padding: 0.125em;
   }
 
   .cal-column-name {

@@ -326,7 +326,12 @@ class Calendar {
         items.push({
           year,
           month: quarter * 3 - 2,
-          name: 'Quarter ' + quarter,
+          name:
+            new Intl.DisplayNames(this.#i18n.getLocale(), {
+              type: 'dateTimeField'
+            }).of('quarter') +
+            ' ' +
+            this.#i18n.formatNumber(quarter),
           current: false, // TODO
           adjacent: false,
           highlighted: false,

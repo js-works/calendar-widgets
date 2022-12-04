@@ -272,6 +272,22 @@ class DatePicker {
 
     this.#selectionMode = props.selectionMode;
     this.#sheet = null;
+    const { kind, selectType } = selectionModeMeta[props.selectionMode];
+    const selectionSize = this.#selection.size;
+
+    const selectedMinMax =
+      selectType !== 'range' || kind === 'time' || selectionSize !== 2
+        ? null
+        : [...this.#selection].sort();
+
+    // TODO
+    const selectedRange: any =
+      selectedMinMax === null
+        ? null
+        : {
+            start: dateStringToObject(selectedMinMax[0]),
+            end: dateStringToObject(selectedMinMax[1])
+          };
 
     if (this.#view === 'month') {
       this.#sheet = calendar.getMonthSheet({
@@ -284,21 +300,15 @@ class DatePicker {
         highlightCurrent: true,
         highlightWeekends: props.highlightWeekends,
         minDate: props.minDate,
-        maxDate: props.maxDate
-
-        /*
-        selectedRange: {
-          start: { year: 2022, month: 11, day: 12 },
-          end: { year: 2022, month: 11, day: 22 }
-        }
-        */
+        maxDate: props.maxDate,
+        selectedRange
       });
     } else if (this.#view === 'year') {
       this.#sheet = calendar.getYearSheet({
         year: this.#year,
         minDate: props.minDate,
         maxDate: props.maxDate,
-        selectedRange: null,
+        selectedRange,
 
         selectQuarters:
           props.selectionMode === 'quarter' ||
@@ -310,7 +320,7 @@ class DatePicker {
         year: this.#year,
         minDate: props.minDate,
         maxDate: props.maxDate,
-        selectedRange: null
+        selectedRange
       });
     } else if (this.#view === 'century') {
       this.#sheet = calendar.getCenturySheet({
@@ -705,4 +715,23 @@ function getHourMinuteString(hour: number, minute: number) {
   const m = minute.toString().padStart(2, '0');
 
   return `${h}:${m}`;
+}
+
+function dateStringToObject(dateString: string): {
+  year: number;
+  month?: number;
+  day?: number;
+} {
+  const tokens = dateString.split('-').map((it) => parseInt(it, 10));
+  const ret: any = { year: tokens[0] };
+
+  if (tokens.length > 1) {
+    ret.month = tokens[1] - 1;
+  }
+
+  if (tokens.length > 2) {
+    ret.day = tokens[2];
+  }
+
+  return ret;
 }
