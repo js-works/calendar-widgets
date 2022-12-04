@@ -40,6 +40,10 @@ namespace DatePicker {
   };
 }
 
+// === local types ===================================================
+
+type Time = Readonly<{ hours: number; minutes: number }>;
+
 // === local VDOM factories ==========================================
 
 const a = h.bind(null, 'a');
@@ -59,8 +63,8 @@ class DatePicker {
   #selection = new Set<string>();
   #year = new Date().getFullYear();
   #month = new Date().getMonth();
-  #time1 = { hours: 0, minutes: 0 };
-  #time2 = { hours: 0, minutes: 0 };
+  #time1: Time = { hours: 0, minutes: 0 };
+  #time2: Time = { hours: 0, minutes: 0 };
 
   #selectionMode: SelectionMode = 'date';
   #view: View = 'month';
@@ -83,36 +87,52 @@ class DatePicker {
     render(this.#renderDatePicker(), target);
   }
 
-  renderToString() {
+  renderToString(): string {
     return renderToString(this.#renderDatePicker());
   }
 
-  getValue() {
-    const { kind, mapSelectionKeys } = selectionModeMeta[this.#selectionMode];
+  getValue(): string {
+    const items = [...this.#selection].sort();
+    const { kind, selectType } = selectionModeMeta[this.#selectionMode];
 
-    if (kind !== 'time') {
-      let selectionKeys = [...this.#selection].sort();
+    if (kind !== 'time' && items.length === 0) {
+      return '';
+    }
 
-      if (selectionKeys.length > 0 && mapSelectionKeys) {
-        selectionKeys = mapSelectionKeys({
-          selectionKeys: selectionKeys,
-          time1: this.#getTime('time1'),
-          time2: this.#getTime('time2')
-        });
+    if (kind === 'calendar') {
+      return items.join(',');
+    }
+
+    if (kind === 'calendar+time') {
+      const items2: string[] = [];
+
+      items2.push(
+        items[0] +
+          'T' +
+          getHourMinuteString(this.#time1.hours, this.#time1.minutes)
+      );
+
+      if (items.length > 1) {
+        items2.push(
+          items[1] +
+            'T' +
+            getHourMinuteString(this.#time2.hours, this.#time2.minutes)
+        );
       }
 
-      return selectionKeys.join(',');
+      return items2.join(',');
     }
 
-    if (mapSelectionKeys) {
-      return mapSelectionKeys({
-        selectionKeys: [],
-        time1: this.#getTime('time1'),
-        time2: this.#getTime('time2')
-      }).join(',');
+    if (selectType === 'single') {
+      console.log(222);
+      return getHourMinuteString(this.#time1.hours, this.#time1.minutes);
     }
 
-    return '';
+    return (
+      getHourMinuteString(this.#time1.hours, this.#time1.minutes) +
+      ',' +
+      getHourMinuteString(this.#time2.hours, this.#time2.minutes)
+    );
   }
 
   setValue(value: string) {
@@ -182,17 +202,7 @@ class DatePicker {
   };
 
   #onItemClick = (ev: Event, props: DatePicker.Props, item: SheetItem) => {
-    const getSelectionKey =
-      selectionModeMeta[props.selectionMode].getSelectionKey;
-
-    const selectionKey = getSelectionKey!({
-      year: item.year,
-      month: item.month,
-      day: item.day,
-      weekYear: item.weekYear,
-      weekNumber: item.weekNumber
-    });
-
+    const selectionKey = getSelectionKey(item, this.#selectionMode);
     const selectType = selectionModeMeta[props.selectionMode].selectType;
     const initialView = selectionModeMeta[props.selectionMode].initialView;
     const selected = this.#selection.has(selectionKey);
@@ -453,10 +463,9 @@ class DatePicker {
   }
 
   #renderTableCell(item: SheetItem, props: DatePicker.Props) {
-    const selectionKey =
-      selectionModeMeta[props.selectionMode].getSelectionKey(item);
-
-    const selected = this.#selection.has(selectionKey);
+    const selected = this.#selection.has(
+      getSelectionKey(item, this.#selectionMode)
+    );
 
     return div(
       {
@@ -657,8 +666,44 @@ class DatePicker {
 
 // === local helpers =================================================
 
-function assert(condition: boolean) {
-  if (!condition) {
-    throw new Error('Assertion error');
+function getSelectionKey(
+  items: SheetItem,
+  selectionMode: DatePicker.SelectionMode
+) {
+  let ret;
+
+  if (typeof items.weekNumber !== 'number') {
+    ret = String(items.year).padStart(4, '0');
+
+    // TODO!!!
+    if (
+      selectionMode !== 'quarter' &&
+      selectionMode !== 'quarters' &&
+      selectionMode !== 'quarterRange'
+    ) {
+      if (typeof items.month === 'number') {
+        ret += '-' + String(items.month + 1).padStart(2, '0');
+      }
+
+      if (typeof items.day === 'number') {
+        ret += '-' + String(items.day).padStart(2, '0');
+      }
+    } else {
+      ret += '-Q' + String(Math.floor(items.month! / 3) + 1);
+    }
+  } else {
+    ret =
+      String(items.weekYear).padStart(4, '0') +
+      '-W' +
+      String(items.weekNumber).padStart(2, '0');
   }
+
+  return ret;
+}
+
+function getHourMinuteString(hour: number, minute: number) {
+  const h = hour.toString().padStart(2, '0');
+  const m = minute.toString().padStart(2, '0');
+
+  return `${h}:${m}`;
 }

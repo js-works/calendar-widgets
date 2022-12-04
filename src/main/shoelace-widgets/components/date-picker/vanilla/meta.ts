@@ -1,12 +1,3 @@
-import {
-  getYearString,
-  getYearMonthDayString,
-  getYearMonthString,
-  getYearWeekString,
-  getYearQuarterString,
-  getHourMinuteString
-} from './utils';
-
 // === exports =======================================================
 
 export { selectionModeMeta, calendarViewOrder };
@@ -52,201 +43,114 @@ const selectionModeMeta: Record<
   {
     selectType: 'single' | 'multi' | 'range';
     initialView: Exclude<View, 'time2'>;
-
-    getSelectionKey: (params: {
-      year?: number | undefined;
-      month?: number | undefined;
-      day?: number | undefined;
-      weekYear?: number | undefined;
-      weekNumber?: number | undefined;
-    }) => string;
-
-    mapSelectionKeys?: (params: {
-      selectionKeys: string[];
-      time1: { hours: number; minutes: number };
-      time2: { hours: number; minutes: number };
-    }) => string[];
-
     kind: 'calendar' | 'time' | 'calendar+time';
   }
 > = {
   date: {
     selectType: 'single',
     initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!)
+    kind: 'calendar'
   },
 
   dates: {
     selectType: 'multi',
     initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!)
+    kind: 'calendar'
   },
 
   dateRange: {
     selectType: 'range',
     initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!)
+    kind: 'calendar'
   },
 
   dateTime: {
     selectType: 'single',
     initialView: 'month',
-    kind: 'calendar+time',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!),
-
-    mapSelectionKeys: (params) => [
-      params.selectionKeys[0] +
-        'T' +
-        getHourMinuteString(params.time1.hours, params.time1.minutes)
-    ]
+    kind: 'calendar+time'
   },
 
   dateTimeRange: {
     selectType: 'range',
     initialView: 'month',
-    kind: 'calendar+time',
-
-    getSelectionKey: (params) =>
-      getYearMonthDayString(params.year!, params.month!, params.day!),
-
-    mapSelectionKeys: (params) => {
-      let ret = [
-        params.selectionKeys[0] +
-          'T' +
-          getHourMinuteString(params.time1.hours, params.time1.minutes)
-      ];
-
-      if (params.selectionKeys.length > 1) {
-        ret.push(
-          params.selectionKeys[1] +
-            'T' +
-            getHourMinuteString(params.time2.hours, params.time2.minutes)
-        );
-      }
-
-      return ret;
-    }
+    kind: 'calendar+time'
   },
 
   time: {
     selectType: 'single',
     initialView: 'time1',
-    kind: 'time',
-    getSelectionKey: () => 'TODO!!!',
-
-    mapSelectionKeys: (params) => [
-      getHourMinuteString(params.time1.hours, params.time1.minutes)
-    ]
+    kind: 'time'
   },
 
   timeRange: {
     selectType: 'range',
     initialView: 'time1',
-    kind: 'time',
-    getSelectionKey: () => 'TODO!!!'
+    kind: 'time'
   },
 
   week: {
     selectType: 'single',
     initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearWeekString(params.weekYear!, params.weekNumber!)
+    kind: 'calendar'
   },
 
   weeks: {
     selectType: 'multi',
     initialView: 'month',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearWeekString(params.weekYear!, params.weekNumber!)
+    kind: 'calendar'
   },
 
   month: {
     selectType: 'single',
     initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
+    kind: 'calendar'
   },
 
   months: {
     selectType: 'multi',
     initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
+    kind: 'calendar'
   },
 
   monthRange: {
     selectType: 'range',
     initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearMonthString(params.year!, params.month!)
+    kind: 'calendar'
   },
 
   quarter: {
     selectType: 'single',
     initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearQuarterString(params.year!, Math.floor(params.month! / 3) + 1)
+    kind: 'calendar'
   },
 
   quarters: {
     selectType: 'multi',
     initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearQuarterString(params.year!, Math.floor(params.month! / 3) + 1)
+    kind: 'calendar'
   },
 
   quarterRange: {
     selectType: 'range',
     initialView: 'year',
-    kind: 'calendar',
-
-    getSelectionKey: (params) =>
-      getYearQuarterString(params.year!, Math.floor(params.month! / 3) + 1)
+    kind: 'calendar'
   },
 
   year: {
     selectType: 'single',
     initialView: 'decade',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearString(params.year!)
+    kind: 'calendar'
   },
 
   years: {
     selectType: 'multi',
     initialView: 'decade',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearString(params.year!)
+    kind: 'calendar'
   },
 
   yearRange: {
     selectType: 'range',
     initialView: 'decade',
-    kind: 'calendar',
-
-    getSelectionKey: (params) => getYearString(params.year!)
+    kind: 'calendar'
   }
 };

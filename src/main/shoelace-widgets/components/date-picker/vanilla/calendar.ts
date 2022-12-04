@@ -151,15 +151,20 @@ class Calendar {
         }
       }
 
-      const { year: weekYear, week: weekNumber } =
-        this.#i18n.getCalendarWeek(itemDate);
+      const calendarWeek = params.selectWeeks
+        ? this.#i18n.getCalendarWeek(itemDate)
+        : null;
 
       dayItems.push({
         year: itemYear,
         month: itemMonth,
         day: itemDay,
-        weekYear,
-        weekNumber,
+        ...(!calendarWeek
+          ? null
+          : {
+              weekYear: calendarWeek.year,
+              weekNumber: calendarWeek.week
+            }),
         name: this.#i18n.formatDay(itemDay),
         disabled: (params.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
