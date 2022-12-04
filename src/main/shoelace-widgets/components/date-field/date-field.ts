@@ -225,7 +225,7 @@ export class DateField extends LitElement {
       >
         <sl-dropdown
           class="dropdown"
-          placement="bottom-center"
+          placement="top-center"
           distance=${2}
           skidding=${2}
           .containingElement=${this}

@@ -330,7 +330,7 @@ class DatePicker {
 
     return div(
       {
-        class: 'cal-base cal-view--calendar'
+        class: 'cal-base cal-view--' + this.#view
       },
       this.#renderSheetHeader(sheet, props),
       this.#renderSheet(sheet, props),
@@ -343,7 +343,7 @@ class DatePicker {
 
     return div(
       {
-        class: 'cal-base cal-view--time'
+        class: 'cal-base cal-view--' + this.#view
       },
       this.#renderTimeTabs(this.#view === 'time2' ? 'time2' : 'time1', props),
       this.#renderTimeSliders(this.#view == 'time2' ? 'time2' : 'time1', props),

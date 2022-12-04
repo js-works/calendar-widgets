@@ -7,14 +7,24 @@ export default /*css*/ `
     font-family: var(--cal-font-family);
     font-size: var(--cal-font-size);
     user-select: none;
+    min-width: 20em;
   }
-
-  .cal-view--calendar {
-    min-height: 14em;
-  }
-
+  
   .cal-base * {
     box-spacing: border-box;
+  }
+
+  .cal-view--month .cal-sheet {
+    min-height: 12em;
+  }
+
+  .cal-view--year .cal-sheet,
+  .cal-view--decade .cal-sheet {
+    min-height: 8em;
+  }
+
+  .cal-view--century .cal-sheet {
+    min-height: 12em;
   }
 
   /* calendar sheet and sheet header */
@@ -240,7 +250,8 @@ export default /*css*/ `
 
   /* time view */
 
-  .cal-view--time {
+  .cal-view--time1,
+  .cal-view--time2 {
     display: flex;
     flex-direction: column;
     gap: 1.5em;
