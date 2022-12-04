@@ -124,7 +124,6 @@ class DatePicker {
     }
 
     if (selectType === 'single') {
-      console.log(222);
       return getHourMinuteString(this.#time1.hours, this.#time1.minutes);
     }
 
@@ -284,8 +283,8 @@ class DatePicker {
         disableWeekends: props.disableWeekends,
         highlightCurrent: true,
         highlightWeekends: props.highlightWeekends,
-        minDate: null,
-        maxDate: null
+        minDate: props.minDate,
+        maxDate: props.maxDate
 
         /*
         selectedRange: {
@@ -297,8 +296,8 @@ class DatePicker {
     } else if (this.#view === 'year') {
       this.#sheet = calendar.getYearSheet({
         year: this.#year,
-        minDate: null,
-        maxDate: null,
+        minDate: props.minDate,
+        maxDate: props.maxDate,
         selectedRange: null,
 
         selectQuarters:
@@ -309,15 +308,15 @@ class DatePicker {
     } else if (this.#view === 'decade') {
       this.#sheet = calendar.getDecadeSheet({
         year: this.#year,
-        minDate: null,
-        maxDate: null,
+        minDate: props.minDate,
+        maxDate: props.maxDate,
         selectedRange: null
       });
     } else if (this.#view === 'century') {
       this.#sheet = calendar.getCenturySheet({
         year: this.#year,
-        minDate: null,
-        maxDate: null
+        minDate: props.minDate,
+        maxDate: props.maxDate
       });
     }
 
