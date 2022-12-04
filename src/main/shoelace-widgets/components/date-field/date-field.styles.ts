@@ -26,7 +26,8 @@ export default css`
   }
 
   .popup-header {
-    display: flex;
+    display: grid;
+    grid-template-columns: min-content auto min-content;
     align-items: center;
     gap: 0.75rem;
     color: var(--sl-color-neutral-0);
@@ -36,7 +37,6 @@ export default css`
   }
 
   .popup-title {
-    flex-grow: 1;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;

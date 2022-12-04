@@ -423,9 +423,9 @@ const logicBySelectionMode: Record<
       }
 
       return new Intl.DateTimeFormat(localize.lang(), {
-        day: 'numeric',
-        month: 'short',
         year: 'numeric',
+        month: 'short',
+        day: 'numeric',
         hour: 'numeric',
         minute: 'numeric'
       }).formatRange(dates[0], dates[1]);
@@ -443,9 +443,11 @@ const logicBySelectionMode: Record<
       }
 
       return new Intl.DateTimeFormat(localize.lang(), {
-        day: 'numeric',
+        year: 'numeric',
         month: 'short',
-        year: 'numeric'
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
       }).formatRange(dates[0], dates[1]);
     }
   },
@@ -482,6 +484,10 @@ const logicBySelectionMode: Record<
 
       const values = value.split(',');
       const dates: Date[] = [];
+
+      if (values.length === 1) {
+        values[1] = values[0];
+      }
 
       for (let i = 0; i < 2; ++i) {
         const date = new Date();

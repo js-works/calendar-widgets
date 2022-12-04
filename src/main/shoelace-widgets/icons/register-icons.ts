@@ -36,7 +36,7 @@ import timeRangeIcon from './custom/time-range.icon';
 import weekIcon from './custom/week.icon';
 import yearRangeIcon from './custom/year-range.icon';
 import monthRangeIcon from './custom/month-range.icon';
-import quarterIcon from './custom/quarter-range.icon';
+import quarterIcon from './custom/quarter.icon';
 import quarterRangeIcon from './custom/quarter-range.icon';
 
 const icons = {
