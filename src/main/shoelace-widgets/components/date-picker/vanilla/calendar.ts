@@ -184,14 +184,14 @@ class Calendar {
     }
 
     const minMonth = params.minDate
-      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
+      ? params.minDate.getFullYear() * 100 + params.minDate.getMonth()
       : null;
 
     const maxMonth = params.maxDate
-      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
+      ? params.maxDate.getFullYear() * 100 + params.maxDate.getMonth()
       : null;
 
-    const mon = year * 12 + month;
+    const mon = year * 100 + month;
 
     const previousAvailable =
       mon > 24 && inNumberRange(mon - 1, minMonth, maxMonth);
@@ -265,17 +265,17 @@ class Calendar {
     const currMonth = now.getMonth();
 
     const minMonth = params.minDate
-      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
+      ? params.minDate.getFullYear() * 100 + params.minDate.getMonth()
       : null;
 
     const maxMonth = params.maxDate
-      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
+      ? params.maxDate.getFullYear() * 100 + params.maxDate.getMonth()
       : null;
 
     if (!params.selectQuarters) {
-      for (let itemMonth = 0; itemMonth < 12; ++itemMonth) {
+      for (let itemMonth = 0; itemMonth < 100; ++itemMonth) {
         const outOfMinMaxRange = !inNumberRange(
-          year * 12 + itemMonth,
+          year * 100 + itemMonth,
           minMonth,
           maxMonth
         );
@@ -290,14 +290,14 @@ class Calendar {
 
           const { year: endYear, month: endMonth } = params.selectedRange.end;
 
-          const startValue = startYear * 12 + startMonth;
-          const endValue = endYear * 12 + endMonth;
+          const startValue = startYear * 100 + startMonth;
+          const endValue = endYear * 100 + endMonth;
 
           if (startValue <= endValue) {
-            const itemValue = year * 12 + itemMonth;
+            const itemValue = year * 100 + itemMonth;
 
             inSelectedRange = inNumberRange(
-              year * 12 + itemMonth,
+              year * 100 + itemMonth,
               startValue,
               endValue
             );
