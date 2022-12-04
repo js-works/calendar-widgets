@@ -22,6 +22,7 @@ export default css`
     border-radius: 0 0 4px 4px;
     background-color: var(--sl-color-neutral-0);
     border: 1px solid var(--sl-color-primary-100);
+    width: 23em;
   }
 
   .popup-header {
