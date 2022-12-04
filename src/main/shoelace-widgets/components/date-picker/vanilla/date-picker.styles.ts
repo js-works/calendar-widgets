@@ -32,14 +32,32 @@ export default /*css*/ `
     background-color: var(--cal-header-accentuated-background-color);
   }
 
-  .cal-header--accentuated
+  .cal-title:not(.cal-title--disabled),
+  .cal-prev:not(.cal-prev--disabled),
+  .cal-next:not(.cal-next--disabled) {
+    cursor: pointer;
+  }
+
+  .cal-header:not(.cal-header--accentuated)
     > :where(
       .cal-title:not(.cal-title--disabled),
       .cal-prev:not(.cal-prev--disabled),
       .cal-next:not(.cal-next--disabled)
-    ) {
-    cursor: pointer;
+    ):hover {
+    color: var(--cal-header-hover-color);
+    background-color: var(--cal-header-hover-background-color);
   }
+  
+  .cal-header:not(.cal-header--accentuated)
+    > :where(
+      .cal-title:not(.cal-title--disabled),
+      .cal-prev:not(.cal-prev--disabled),
+      .cal-next:not(.cal-next--disabled)
+    ):active {
+    color: var(--cal-header-active-color);
+    background-color: var(--cal-header-active-background-color);
+  }
+
 
   .cal-header--accentuated
     > :where(
@@ -215,7 +233,7 @@ export default /*css*/ `
   .cal-time-link:hover {
     background-color: var(--cal-button-background-color);
   }
-  
+
   .cal-time-link--disabled {
     pointer-events: none;
   }
@@ -288,11 +306,11 @@ export default /*css*/ `
   .cal-time-tabs > .cal-time:nth-child(2) {
     padding-left: 1em;
   }
-  
+
   .cal-time-tabs--active-tab-time1 > .cal-time:first-child:not(:only-child) {
     padding-left: 0.5em;
   }
-  
+
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child {
     font-size: 70%;
     border: 0 solid var(--cal-border-color);
