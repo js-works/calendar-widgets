@@ -42,7 +42,9 @@ namespace DatePicker {
 
 // === local VDOM factories ==========================================
 
-const [a, div, input] = ['a', 'div', 'input'].map((tag) => h.bind(null, tag));
+const a = h.bind(null, 'a');
+const div = h.bind(null, 'div');
+const input = h.bind(null, 'input');
 
 // === exported classes ==============================================
 
@@ -55,14 +57,13 @@ class DatePicker {
   #onChange: () => void;
 
   #selection = new Set<string>();
-  #activeYear = new Date().getFullYear();
-  #activeMonth = new Date().getMonth();
-  #activeHour1 = 0;
-  #activeHour2 = 0;
-  #activeMinute1 = 0;
-  #activeMinute2 = 0;
-  #view: View = 'month';
+  #year = new Date().getFullYear();
+  #month = new Date().getMonth();
+  #time1 = { hours: 0, minutes: 0 };
+  #time2 = { hours: 0, minutes: 0 };
+
   #selectionMode: SelectionMode = 'date';
+  #view: View = 'month';
   #sheet: Sheet | null = null;
 
   constructor(params: {
@@ -95,10 +96,8 @@ class DatePicker {
       if (selectionKeys.length > 0 && mapSelectionKeys) {
         selectionKeys = mapSelectionKeys({
           selectionKeys: selectionKeys,
-          hours1: this.#activeHour1,
-          minutes1: this.#activeMinute1,
-          hours2: this.#activeHour2,
-          minutes2: this.#activeMinute2
+          time1: this.#getTime('time1'),
+          time2: this.#getTime('time2')
         });
       }
 
@@ -108,10 +107,8 @@ class DatePicker {
     if (mapSelectionKeys) {
       return mapSelectionKeys({
         selectionKeys: [],
-        hours1: this.#activeHour1,
-        minutes1: this.#activeMinute1,
-        hours2: this.#activeHour2,
-        minutes2: this.#activeMinute2
+        time1: this.#getTime('time1'),
+        time2: this.#getTime('time2')
       }).join(',');
     }
 
@@ -131,6 +128,29 @@ class DatePicker {
     this.#requestUpdate();
   }
 
+  #getTime(type: 'time1' | 'time2') {
+    return type === 'time1' ? this.#time1 : this.#time2;
+  }
+
+  #setTime(
+    type: 'time1' | 'time2',
+    hours: number | null,
+    minutes: number | null
+  ) {
+    const oldTime = type === 'time1' ? this.#time1 : this.#time2;
+
+    const newTime = {
+      hours: hours ?? oldTime.hours,
+      minutes: minutes ?? oldTime.minutes
+    };
+
+    if (type === 'time1') {
+      this.#time1 = newTime;
+    } else {
+      this.#time2 = newTime;
+    }
+  }
+
   #onParentClick = () => {
     const idx = calendarViewOrder.indexOf(this.#view as CalendarView);
 
@@ -147,16 +167,16 @@ class DatePicker {
 
   #onNextClick = () => {
     if (this.#sheet?.next) {
-      this.#activeYear = this.#sheet.next.year;
-      this.#activeMonth = this.#sheet.next.month ?? this.#activeMonth;
+      this.#year = this.#sheet.next.year;
+      this.#month = this.#sheet.next.month ?? this.#month;
       this.#requestUpdate();
     }
   };
 
   #onPreviousClick = () => {
     if (this.#sheet?.previous) {
-      this.#activeYear = this.#sheet.previous.year;
-      this.#activeMonth = this.#sheet.previous.month ?? this.#activeMonth;
+      this.#year = this.#sheet.previous.year;
+      this.#month = this.#sheet.previous.month ?? this.#month;
       this.#requestUpdate();
     }
   };
@@ -183,10 +203,10 @@ class DatePicker {
       const nextView = idx < 1 ? null : calendarViewOrder[idx - 1];
 
       if (nextView) {
-        this.#activeYear = item.year;
+        this.#year = item.year;
 
         if (item.month) {
-          this.#activeMonth = item.month;
+          this.#month = item.month;
         }
 
         this.#view = nextView as View;
@@ -237,10 +257,8 @@ class DatePicker {
       }
 
       this.#view = selectionModeMeta[props.selectionMode].initialView;
-      this.#activeHour1 = 0;
-      this.#activeMinute1 = 0;
-      this.#activeHour2 = 0;
-      this.#activeMinute2;
+      this.#setTime('time1', 0, 0);
+      this.#setTime('time2', 0, 0);
     }
 
     this.#selectionMode = props.selectionMode;
@@ -248,15 +266,15 @@ class DatePicker {
 
     if (this.#view === 'month') {
       this.#sheet = calendar.getMonthSheet({
-        year: this.#activeYear,
-        month: this.#activeMonth,
+        year: this.#year,
+        month: this.#month,
         showWeekNumbers: props.showWeekNumbers,
         selectWeeks:
           props.selectionMode === 'week' || props.selectionMode === 'weeks',
         disableWeekends: props.disableWeekends,
         highlightCurrent: true,
         highlightWeekends: props.highlightWeekends,
-        minDate: null, //new Date(2022, 11, 15),
+        minDate: null,
         maxDate: null
 
         /*
@@ -268,7 +286,7 @@ class DatePicker {
       });
     } else if (this.#view === 'year') {
       this.#sheet = calendar.getYearSheet({
-        year: this.#activeYear,
+        year: this.#year,
         minDate: null,
         maxDate: null,
         selectedRange: null,
@@ -280,14 +298,14 @@ class DatePicker {
       });
     } else if (this.#view === 'decade') {
       this.#sheet = calendar.getDecadeSheet({
-        year: this.#activeYear,
+        year: this.#year,
         minDate: null,
         maxDate: null,
         selectedRange: null
       });
     } else if (this.#view === 'century') {
       this.#sheet = calendar.getCenturySheet({
-        year: this.#activeYear,
+        year: this.#year,
         minDate: null,
         maxDate: null
       });
@@ -482,21 +500,11 @@ class DatePicker {
   }
 
   #renderTimeLink(type: 'time1' | 'time2') {
-    let hour = 0;
-    let minute = 0;
-
     let timeString = '';
 
     if (this.#selection.size > 0) {
-      if (type === 'time1') {
-        hour = this.#activeHour1;
-        minute = this.#activeMinute1;
-      } else {
-        hour = this.#activeHour2;
-        minute = this.#activeMinute2;
-      }
-
-      const date = new Date(2000, 0, 1, hour, minute);
+      const { hours, minutes } = this.#getTime(type);
+      const date = new Date(2000, 0, 1, hours, minutes);
 
       timeString = this.#i18n.formatDate(date, {
         hour: '2-digit',
@@ -523,51 +531,49 @@ class DatePicker {
   // --- time --------------------------------------------------------
 
   #renderTime(type: 'time1' | 'time2', props: DatePicker.Props) {
-    const { kind } = selectionModeMeta[props.selectionMode];
-    const hour = type === 'time1' ? this.#activeHour1 : this.#activeHour2;
-    const minute = type === 'time1' ? this.#activeMinute1 : this.#activeMinute2;
+    const { kind, selectType } = selectionModeMeta[this.#selectionMode];
+    const time = this.#getTime(type);
     const items = [...this.#selection].sort();
+    const fallbackDate = new Date(1970, 0, 1);
 
-    const date = new Date(
-      items.length === 0 ? 0 : type === 'time1' ? items[0] : items[1]
-    );
+    const date =
+      type === 'time1' && items.length > 0
+        ? new Date(items[0])
+        : type === 'time2' && items.length > 1
+        ? new Date(items[1])
+        : fallbackDate;
 
-    date.setHours(hour);
-    date.setMinutes(minute);
+    date.setHours(time.hours);
+    date.setMinutes(time.minutes);
 
-    let time = this.#i18n.formatDate(date, {
+    let formattedTime = this.#i18n.formatDate(date, {
       hour: '2-digit',
       minute: '2-digit'
     });
 
     let timeHeader: VNode = null;
 
-    if (
-      props.selectionMode === 'dateTime' ||
-      props.selectionMode === 'dateTimeRange'
-    ) {
+    if (date !== fallbackDate) {
       const formattedDate = this.#i18n.formatDate(date, {
         year: 'numeric',
         month: 'short',
         day: 'numeric'
       });
 
-      let fromOrToLabel = '';
-
-      if (props.selectionMode === 'dateTimeRange') {
-        const selectionSize = this.#selection.size;
-
-        if (selectionSize > 1) {
-          fromOrToLabel = (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0';
-        }
-      }
+      const fromOrToLabel =
+        selectType === 'range' && this.#selection.size > 1
+          ? (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0'
+          : '';
 
       timeHeader = div(
         { class: 'cal-time-header' },
         fromOrToLabel,
         formattedDate
       );
-    } else if (props.selectionMode === 'timeRange') {
+    } else if (
+      this.#selection.size > 1 ||
+      (kind === 'time' && selectType === 'range')
+    ) {
       timeHeader = div(
         { class: 'cal-time-header' },
         (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0'
@@ -576,14 +582,14 @@ class DatePicker {
 
     return div(
       {
-        class: `cal-time cal-time--${type === 'time1' ? '1' : '2'}`,
+        class: 'cal-time',
         onclick: () => {
           this.#view = type;
           this.#requestUpdate();
         }
       },
       timeHeader,
-      div({ class: 'cal-time-value' }, time)
+      div({ class: 'cal-time-value' }, formattedTime)
     );
   }
 
@@ -610,18 +616,7 @@ class DatePicker {
   // --- time sliders ------------------------------------------------
 
   #renderTimeSliders(type: 'time1' | 'time2', props: DatePicker.Props) {
-    const selectionMode = props.selectionMode;
-
-    let hour = 0;
-    let minute = 0;
-
-    if (type === 'time1') {
-      hour = this.#activeHour1;
-      minute = this.#activeMinute1;
-    } else {
-      hour = this.#activeHour2;
-      minute = this.#activeMinute2;
-    }
+    const time = this.#getTime(type);
 
     return div(
       null,
@@ -631,16 +626,12 @@ class DatePicker {
         input({
           type: 'range',
           class: 'cal-time-slider',
-          value: hour,
+          value: time.hours,
           min: 0,
           max: 23,
           oninput: (ev: Event) => {
-            if (type === 'time1') {
-              this.#activeHour1 = (ev.target as HTMLInputElement).valueAsNumber;
-            } else {
-              this.#activeHour2 = (ev.target as HTMLInputElement).valueAsNumber;
-            }
-
+            const hours = (ev.target as HTMLInputElement).valueAsNumber;
+            this.#setTime(type, hours, null);
             this.#requestUpdate();
             this.#onChange?.();
           }
@@ -649,25 +640,25 @@ class DatePicker {
         input({
           type: 'range',
           class: 'cal-time-slider',
-          value: minute,
+          value: time.minutes,
           min: 0,
           max: 59,
           oninput: (ev: Event) => {
-            if (type === 'time1') {
-              this.#activeMinute1 = (
-                ev.target as HTMLInputElement
-              ).valueAsNumber;
-            } else {
-              this.#activeMinute2 = (
-                ev.target as HTMLInputElement
-              ).valueAsNumber;
-            }
-
+            const minutes = (ev.target as HTMLInputElement).valueAsNumber;
+            this.#setTime(type, null, minutes);
             this.#requestUpdate();
             this.#onChange?.();
           }
         })
       )
     );
+  }
+}
+
+// === local helpers =================================================
+
+function assert(condition: boolean) {
+  if (!condition) {
+    throw new Error('Assertion error');
   }
 }

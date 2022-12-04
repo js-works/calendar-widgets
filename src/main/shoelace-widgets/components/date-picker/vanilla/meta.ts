@@ -63,10 +63,8 @@ const selectionModeMeta: Record<
 
     mapSelectionKeys?: (params: {
       selectionKeys: string[];
-      hours1: number;
-      minutes1: number;
-      hours2: number;
-      minutes2: number;
+      time1: { hours: number; minutes: number };
+      time2: { hours: number; minutes: number };
     }) => string[];
 
     kind: 'calendar' | 'time' | 'calendar+time';
@@ -110,7 +108,7 @@ const selectionModeMeta: Record<
     mapSelectionKeys: (params) => [
       params.selectionKeys[0] +
         'T' +
-        getHourMinuteString(params.hours1, params.minutes1)
+        getHourMinuteString(params.time1.hours, params.time1.minutes)
     ]
   },
 
@@ -126,14 +124,14 @@ const selectionModeMeta: Record<
       let ret = [
         params.selectionKeys[0] +
           'T' +
-          getHourMinuteString(params.hours1, params.minutes1)
+          getHourMinuteString(params.time1.hours, params.time1.minutes)
       ];
 
       if (params.selectionKeys.length > 1) {
         ret.push(
           params.selectionKeys[1] +
             'T' +
-            getHourMinuteString(params.hours2, params.minutes2)
+            getHourMinuteString(params.time2.hours, params.time2.minutes)
         );
       }
 
@@ -148,7 +146,7 @@ const selectionModeMeta: Record<
     getSelectionKey: () => 'TODO!!!',
 
     mapSelectionKeys: (params) => [
-      getHourMinuteString(params.hours1, params.minutes1)
+      getHourMinuteString(params.time1.hours, params.time1.minutes)
     ]
   },
 
