@@ -423,11 +423,8 @@ const logicBySelectionMode: Record<
       }
 
       return new Intl.DateTimeFormat(localize.lang(), {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
+        dateStyle: 'short',
+        timeStyle: 'short'
       }).formatRange(dates[0], dates[1]);
     },
 
@@ -443,11 +440,8 @@ const logicBySelectionMode: Record<
       }
 
       return new Intl.DateTimeFormat(localize.lang(), {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
+        dateStyle: 'short',
+        timeStyle: 'short'
       }).formatRange(dates[0], dates[1]);
     }
   },

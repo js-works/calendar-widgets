@@ -22,14 +22,13 @@ export default css`
     border-radius: 0 0 4px 4px;
     background-color: var(--sl-color-neutral-0);
     border: 1px solid var(--sl-color-primary-100);
-    width: 23em;
+    width: 24em;
   }
 
   .popup-header {
     display: grid;
     grid-template-columns: min-content auto min-content;
     align-items: center;
-    gap: 0.75rem;
     color: var(--sl-color-neutral-0);
     background-color: var(--sl-color-primary-600);
     padding: 0 0 0 0.75rem;
@@ -40,6 +39,7 @@ export default css`
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    padding: 0 0.25em 0 0.5em;
   }
 
   .popup-close-button {
