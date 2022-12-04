@@ -184,17 +184,17 @@ class Calendar {
     }
 
     const minMonth = params.minDate
-      ? params.minDate.getFullYear() * 100 + params.minDate.getMonth()
+      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
       : null;
 
     const maxMonth = params.maxDate
-      ? params.maxDate.getFullYear() * 100 + params.maxDate.getMonth()
+      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
       : null;
 
-    const mon = year * 100 + month;
+    const mon = year * 12 + month;
 
     const previousAvailable =
-      mon > 24 && inNumberRange(mon - 1, minMonth, maxMonth);
+      mon > 24 && inNumberRange(mon - 1, minMonth, null);
 
     const previous = !previousAvailable
       ? null
@@ -202,7 +202,7 @@ class Calendar {
       ? { year: year - 1, month: 11 }
       : { year, month: month - 1 };
 
-    const nextAvailable = inNumberRange(mon + 1, minMonth, maxMonth);
+    const nextAvailable = inNumberRange(mon + 1, null, maxMonth);
 
     const next = !nextAvailable
       ? null
@@ -265,17 +265,17 @@ class Calendar {
     const currMonth = now.getMonth();
 
     const minMonth = params.minDate
-      ? params.minDate.getFullYear() * 100 + params.minDate.getMonth()
+      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
       : null;
 
     const maxMonth = params.maxDate
-      ? params.maxDate.getFullYear() * 100 + params.maxDate.getMonth()
+      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
       : null;
 
     if (!params.selectQuarters) {
-      for (let itemMonth = 0; itemMonth < 100; ++itemMonth) {
+      for (let itemMonth = 0; itemMonth < 12; ++itemMonth) {
         const outOfMinMaxRange = !inNumberRange(
-          year * 100 + itemMonth,
+          year * 12 + itemMonth,
           minMonth,
           maxMonth
         );
@@ -290,14 +290,14 @@ class Calendar {
 
           const { year: endYear, month: endMonth } = params.selectedRange.end;
 
-          const startValue = startYear * 100 + startMonth;
-          const endValue = endYear * 100 + endMonth;
+          const startValue = startYear * 12 + startMonth;
+          const endValue = endYear * 12 + endMonth;
 
           if (startValue <= endValue) {
-            const itemValue = year * 100 + itemMonth;
+            const itemValue = year * 12 + itemMonth;
 
             inSelectedRange = inNumberRange(
-              year * 100 + itemMonth,
+              year * 12 + itemMonth,
               startValue,
               endValue
             );
@@ -343,10 +343,10 @@ class Calendar {
     const maxYear = params.maxDate ? params.maxDate.getFullYear() : null;
 
     const previousAvailable =
-      year >= 1 && inNumberRange(year - 1, minYear, maxYear);
+      year >= 1 && inNumberRange(year - 1, minYear, null);
 
     const previous = !previousAvailable ? null : { year: year - 1 };
-    const nextAvailable = inNumberRange(year + 1, minYear, maxYear);
+    const nextAvailable = inNumberRange(year + 1, null, maxYear);
     const next = !nextAvailable ? null : { year: year + 1 };
 
     return {
@@ -425,13 +425,13 @@ class Calendar {
     const decade = Math.floor(year / 10);
 
     const prevAvailable =
-      year > 1 || inNumberRange(decade - 1, minDecade, maxDecade);
+      year > 1 || inNumberRange(decade - 1, minDecade, null);
 
     const previous = !prevAvailable
       ? null
       : { year: Math.floor(((year - 10) / 10) * 10) };
 
-    const nextAvailable = inNumberRange(decade + 1, minDecade, maxDecade);
+    const nextAvailable = inNumberRange(decade + 1, null, maxDecade);
 
     const next = !nextAvailable
       ? null
