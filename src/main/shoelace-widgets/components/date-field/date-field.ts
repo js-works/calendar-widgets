@@ -162,8 +162,8 @@ export class DateField extends LitElement {
 
   private _onClearClick = () => {
     this.value = '';
-    this._dropdownRef.value!.hide();
     this._pickerRef.value!.value = '';
+    this._acceptSelection();
   };
 
   private _onPickerChange = (ev: Event) => {
