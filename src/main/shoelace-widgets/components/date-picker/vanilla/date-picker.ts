@@ -275,20 +275,6 @@ class DatePicker {
     const { kind, selectType } = selectionModeMeta[props.selectionMode];
     const selectionSize = this.#selection.size;
 
-    const selectedMinMax =
-      selectType !== 'range' || kind === 'time' || selectionSize !== 2
-        ? null
-        : [...this.#selection].sort();
-
-    // TODO
-    const selectedRange: any =
-      selectedMinMax === null
-        ? null
-        : {
-            start: dateStringToObject(selectedMinMax[0]),
-            end: dateStringToObject(selectedMinMax[1])
-          };
-
     if (this.#view === 'month') {
       this.#sheet = calendar.getMonthSheet({
         year: this.#year,
@@ -300,15 +286,13 @@ class DatePicker {
         highlightCurrent: true,
         highlightWeekends: props.highlightWeekends,
         minDate: props.minDate,
-        maxDate: props.maxDate,
-        selectedRange
+        maxDate: props.maxDate
       });
     } else if (this.#view === 'year') {
       this.#sheet = calendar.getYearSheet({
         year: this.#year,
         minDate: props.minDate,
         maxDate: props.maxDate,
-        selectedRange,
 
         selectQuarters:
           props.selectionMode === 'quarter' ||
@@ -319,8 +303,7 @@ class DatePicker {
       this.#sheet = calendar.getDecadeSheet({
         year: this.#year,
         minDate: props.minDate,
-        maxDate: props.maxDate,
-        selectedRange
+        maxDate: props.maxDate
       });
     } else if (this.#view === 'century') {
       this.#sheet = calendar.getCenturySheet({
@@ -423,7 +406,7 @@ class DatePicker {
 
     return div(
       {
-        class: 'cal-sheet',
+        class: 'cal-sheet xxx1',
         style: `grid-template-columns: ${gridTemplateColumns};`
       },
       sheet.columnNames?.length ? this.#renderTableHead(sheet, props) : null,
@@ -472,36 +455,43 @@ class DatePicker {
   }
 
   #renderTableCell(item: SheetItem, props: DatePicker.Props) {
-    const selected = this.#selection.has(
-      getSelectionKey(item, this.#selectionMode)
-    );
+    const selectionKey = getSelectionKey(item, this.#selectionMode);
+    const selected = this.#selection.has(selectionKey);
 
-    return div(
+    const { selectType } = selectionModeMeta[this.#selectionMode];
+
+    const hasSelectedRange = this.#selection.size > 0 && selectType === 'range';
+    const items = [...this.#selection].sort();
+    const startSelectionKey = items[0];
+    const endSelectionKey = items.length < 2 ? items[0] : items[1];
+
+    return a(
       {
         class: classMap({
-          'cal-cell-container': true,
-          'cal-cell-container--highlighted': item.highlighted
-        })
-      },
-      a(
-        {
-          class: classMap({
-            'cal-cell': true,
-            'cal-cell--current': !props.highlightCurrent ? null : item.current,
-            'cal-cell--disabled': item.disabled,
-            'cal-cell--adjacent': item.adjacent,
-            'cal-cell--selected': selected,
-            'cal-cell--in-selection-range': item.inSelectedRange,
-            'cal-cell--first-in-selection-range': item.firstInSelectedRange,
-            'cal-cell--last-in-selection-range': item.lastInSelectedRange
-          }),
+          'cal-cell': true,
+          'cal-cell--current': !props.highlightCurrent ? null : item.current,
+          'cal-cell--disabled': item.disabled,
+          'cal-cell--adjacent': item.adjacent,
+          'cal-cell--highlighted': item.highlighted,
+          'cal-cell--selected': selected,
 
-          onclick: item.disabled
-            ? null
-            : (ev: Event) => this.#onItemClick(ev, props, item)
-        },
-        item.name
-      )
+          'cal-cell--in-selection-range':
+            hasSelectedRange &&
+            selectionKey >= startSelectionKey &&
+            selectionKey <= endSelectionKey,
+
+          'cal-cell--first-in-selection-range':
+            hasSelectedRange && selectionKey === startSelectionKey,
+
+          'cal-cell--last-in-selection-range':
+            hasSelectedRange && selectionKey === endSelectionKey
+        }),
+
+        onclick: item.disabled
+          ? null
+          : (ev: Event) => this.#onItemClick(ev, props, item)
+      },
+      item.name
     );
   }
 
@@ -715,23 +705,4 @@ function getHourMinuteString(hour: number, minute: number) {
   const m = minute.toString().padStart(2, '0');
 
   return `${h}:${m}`;
-}
-
-function dateStringToObject(dateString: string): {
-  year: number;
-  month?: number;
-  day?: number;
-} {
-  const tokens = dateString.split('-').map((it) => parseInt(it, 10));
-  const ret: any = { year: tokens[0] };
-
-  if (tokens.length > 1) {
-    ret.month = tokens[1] - 1;
-  }
-
-  if (tokens.length > 2) {
-    ret.day = tokens[2];
-  }
-
-  return ret;
 }

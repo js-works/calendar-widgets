@@ -134,16 +134,7 @@ export default /*css*/ `
     opacity: 80%;
   }
 
-  .cal-cell-container {
-    display: flex;
-    flex-grow: 1;
-    grow: 1;
-    align-items: stretch;
-    justify-items: stretch;
-    justify-content: stretch;
-  }
-
-  .cal-cell-container--highlighted {
+  .cal-cell--highlighted {
     background-color: var(--cal-cell-highlighted-background-color);
   }
 

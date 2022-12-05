@@ -1,8 +1,5 @@
-import { h, renderToString, VNode } from './vdom';
 import { I18n } from './i18n';
-
 import { inDateRange, inNumberRange, today } from './utils';
-
 export { Calendar, Sheet, SheetItem };
 
 type SheetItem = {
@@ -17,9 +14,6 @@ type SheetItem = {
   adjacent: boolean;
   disabled: boolean;
   outOfMinMaxRange: boolean;
-  inSelectedRange: boolean;
-  firstInSelectedRange: boolean;
-  lastInSelectedRange: boolean;
 };
 
 interface Sheet {
@@ -51,11 +45,6 @@ class Calendar {
     highlightWeekends?: boolean;
     disableWeekends?: boolean;
     selectWeeks?: boolean;
-
-    selectedRange?: {
-      start: { year: number; month: number; day: number };
-      end: { year: number; month: number; day: number };
-    } | null;
   }): Sheet {
     // we also allow month values less than 0 and greater than 11
     const n = params.year * 12 + params.month;
@@ -120,37 +109,6 @@ class Calendar {
         params.maxDate || null
       );
 
-      let inSelectedRange = false;
-      let firstInSelectedRange = false;
-      let lastInSelectedRange = false;
-
-      if (params.selectedRange) {
-        const {
-          year: startYear,
-          month: startMonth,
-          day: startDay
-        } = params.selectedRange.start;
-
-        const {
-          year: endYear,
-          month: endMonth,
-          day: endDay
-        } = params.selectedRange.end;
-
-        const startDate = new Date(startYear, startMonth, startDay);
-        const endDate = new Date(endYear, endMonth, endDay);
-
-        if (startDate.getTime() <= endDate.getTime()) {
-          inSelectedRange = inDateRange(itemDate, startDate, endDate);
-
-          firstInSelectedRange =
-            inSelectedRange && itemDate.getTime() === startDate.getTime();
-
-          lastInSelectedRange =
-            inSelectedRange && itemDate.getTime() === endDate.getTime();
-        }
-      }
-
       const calendarWeek = params.selectWeeks
         ? this.#i18n.getCalendarWeek(itemDate)
         : null;
@@ -168,9 +126,6 @@ class Calendar {
         name: this.#i18n.formatDay(itemDay),
         disabled: (params.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
-        inSelectedRange,
-        firstInSelectedRange,
-        lastInSelectedRange,
         current: today().getTime() === itemDate.getTime(),
         highlighted: !!(params.highlightWeekends && weekend),
         adjacent
@@ -253,10 +208,6 @@ class Calendar {
     minDate: Date | null;
     maxDate: Date | null;
     selectQuarters?: boolean;
-    selectedRange?: {
-      start: { year: number; month: number };
-      end: { year: number; month: number };
-    } | null;
   }): Sheet {
     const year = params.year;
     const items: SheetItem[] = [];
@@ -280,33 +231,6 @@ class Calendar {
           maxMonth
         );
 
-        let inSelectedRange = false;
-        let firstInSelectedRange = false;
-        let lastInSelectedRange = false;
-
-        if (params.selectedRange) {
-          const { year: startYear, month: startMonth } =
-            params.selectedRange.start;
-
-          const { year: endYear, month: endMonth } = params.selectedRange.end;
-
-          const startValue = startYear * 12 + startMonth;
-          const endValue = endYear * 12 + endMonth;
-
-          if (startValue <= endValue) {
-            const itemValue = year * 12 + itemMonth;
-
-            inSelectedRange = inNumberRange(
-              year * 12 + itemMonth,
-              startValue,
-              endValue
-            );
-
-            firstInSelectedRange = inSelectedRange && itemValue === startValue;
-            lastInSelectedRange = inSelectedRange && itemValue === endValue;
-          }
-        }
-
         items.push({
           year,
           month: itemMonth,
@@ -315,9 +239,6 @@ class Calendar {
           adjacent: false,
           highlighted: false,
           outOfMinMaxRange,
-          inSelectedRange,
-          firstInSelectedRange,
-          lastInSelectedRange,
           disabled: outOfMinMaxRange
         });
       }
@@ -336,9 +257,6 @@ class Calendar {
           adjacent: false,
           highlighted: false,
           outOfMinMaxRange: false, // TODO
-          inSelectedRange: false, // TODO
-          firstInSelectedRange: false, // TODO
-          lastInSelectedRange: false, // TODO
           disabled: false // TODO
         });
       }
@@ -370,10 +288,6 @@ class Calendar {
     year: number; //
     minDate: Date | null;
     maxDate: Date | null;
-    selectedRange?: {
-      start: { year: number };
-      end: { year: number };
-    } | null;
   }): Sheet {
     const year = params.year;
     const startYear = year - (year % 10) - 1;
@@ -387,22 +301,6 @@ class Calendar {
       const adjacent = itemYear === startYear || itemYear === endYear;
       const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
-      let inSelectedRange = false;
-      let firstInSelectedRange = false;
-      let lastInSelectedRange = false;
-
-      if (params.selectedRange) {
-        const { year: startYear } = params.selectedRange.start;
-
-        const { year: endYear } = params.selectedRange.end;
-
-        if (startYear <= endYear) {
-          inSelectedRange = inNumberRange(itemYear, startYear, endYear);
-          firstInSelectedRange = inSelectedRange && itemYear === startYear;
-          lastInSelectedRange = inSelectedRange && itemYear === endYear;
-        }
-      }
-
       yearItems.push({
         year: itemYear,
 
@@ -412,9 +310,6 @@ class Calendar {
         highlighted: false,
         adjacent,
         outOfMinMaxRange,
-        inSelectedRange,
-        firstInSelectedRange,
-        lastInSelectedRange,
         disabled: outOfMinMaxRange
       });
     }
@@ -488,9 +383,6 @@ class Calendar {
         current: itemYear <= currYear && itemYear + 10 > currYear,
         adjacent,
         outOfMinMaxRange,
-        inSelectedRange: false,
-        firstInSelectedRange: false,
-        lastInSelectedRange: false,
         disabled: outOfMinMaxRange
       });
     }
