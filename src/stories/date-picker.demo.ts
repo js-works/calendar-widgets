@@ -183,10 +183,10 @@ class DatePickerDemo extends LitElement {
               default (show adjacent days/years/decades)
             </sl-menu-item>
             <sl-menu-item value="minimal">
-              minimal (no adjacent days/years/decades)
+              minimal (hide adjacent days/years/decades)
             </sl-menu-item>
             <sl-menu-item value="maximal">
-              maximal (show always 42 days in month view)
+              maximal (always show 42 days in month view)
             </sl-menu-item>
           </sl-select>
           <sl-checkbox
