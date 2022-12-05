@@ -45,11 +45,7 @@ const datePickerCustomStyles = css`
     --cal-cell-adjacent-color: var(--sl-color-neutral-400);
     --cal-cell-adjacent-disabled-color: var(--sl-color-neutral-200);
     --cal-cell-adjacent-selected-color: var(--sl-color-neutral-800);
-
-    --cal-cell-current-highlighted-background-color: var(
-      --sl-color-neutral-200
-    );
-
+    --cal-cell-current-highlighted-color: var(--sl-color-primary-600);
     --cal-cell-selected-color: var(--sl-color-neutral-0);
     --cal-cell-selected-background-color: var(--sl-color-primary-500);
     --cal-cell-selected-hover-background-color: var(--sl-color-primary-600);

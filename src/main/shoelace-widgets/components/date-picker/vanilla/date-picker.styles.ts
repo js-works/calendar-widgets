@@ -188,8 +188,10 @@ export default /*css*/ `
     color: var(--cal-cell-adjacent-disable-color);
   }
 
-  .cal-cell--current:not(.cal-cell--selected):not(:hover) {
-    background-color: var(--cal-cell-current-highlighted-background-color);
+  .cal-cell--current {
+    font-weight: 700;
+    font-style: italic;
+    color: var(--cal-cell-current-highlighted-color, inherit);
   }
 
   .cal-cell--in-selection-range:not(.cal-cell--selected) {
