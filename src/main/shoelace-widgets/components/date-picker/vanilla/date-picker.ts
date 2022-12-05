@@ -49,6 +49,7 @@ type Time = Readonly<{ hours: number; minutes: number }>;
 const a = h.bind(null, 'a');
 const div = h.bind(null, 'div');
 const input = h.bind(null, 'input');
+const span = h.bind(null, 'span');
 
 // === exported classes ==============================================
 
@@ -531,7 +532,7 @@ class DatePicker {
           ? null
           : (ev: Event) => this.#onItemClick(ev, props, item)
       },
-      item.name
+      span(null, item.name)
     );
   }
 

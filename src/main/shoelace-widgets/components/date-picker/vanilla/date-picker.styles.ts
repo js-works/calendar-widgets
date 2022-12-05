@@ -131,7 +131,6 @@ export default /*css*/ `
     text-align: center;
     min-width: 1.5em;
     font-size: 75%;
-    opacity: 80%;
   }
 
   .cal-cell--highlighted {
@@ -172,7 +171,7 @@ export default /*css*/ `
     color: var(--cal-cell-disabled-color);
   }
 
-  .cal-cell--disabled.cal-cell--adjacent {
+  .cal-cell--disabled.cal-cell--adjacent > span{
     opacity: 10%;
   }
 
