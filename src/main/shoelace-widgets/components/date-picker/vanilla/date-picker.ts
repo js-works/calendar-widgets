@@ -458,17 +458,26 @@ class DatePicker {
         );
       }
 
-      cells.push(this.#renderTableCell(item, props));
+      cells.push(this.#renderTableCell(item, sheet, props, idx));
     });
 
     return cells;
   }
 
-  #renderTableCell(item: SheetItem, props: DatePicker.Props) {
+  #renderTableCell(
+    item: SheetItem,
+    sheet: Sheet,
+    props: DatePicker.Props,
+    columnIndex: number
+  ) {
     if (props.calendarSize === 'minimal' && item.adjacent) {
+      const highlighted = !!sheet.highlightedColumns?.includes(
+        columnIndex % sheet.columnCount
+      );
+
       return div({
         class: classMap({
-          'cal-cell--highlighted': item.highlighted
+          'cal-cell--highlighted': highlighted
         })
       });
     }
