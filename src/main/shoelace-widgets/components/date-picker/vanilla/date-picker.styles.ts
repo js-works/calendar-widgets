@@ -191,6 +191,9 @@ export default /*css*/ `
   .cal-cell--current {
     font-weight: 700;
     font-style: italic;
+  }
+  
+  .cal-cell--current:not(.cal-cell--selected):not(.cal-cell--disabled) {
     color: var(--cal-cell-current-highlighted-color, inherit);
   }
 
@@ -244,7 +247,8 @@ export default /*css*/ `
     cursor: pointer;
     text-align: center;
     justify-self: center;
-    padding: 0.25em 0.5em;
+    padding: 0.25em 0.75em;
+    border-radius: 1em;
   }
 
   .cal-time-link:hover {

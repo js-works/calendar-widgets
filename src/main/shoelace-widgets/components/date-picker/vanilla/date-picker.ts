@@ -135,11 +135,16 @@ class DatePicker {
   }
 
   setValue(value: string) {
-    if (!value) {
-      this.#selection.clear();
-    } else {
-      // TODO!!!!!!!
+    this.#selection.clear();
+
+    if (value) {
+      // TODO!!!!!!!!!!!!!!!!!!
+      value.split(',').forEach((item) => {
+        this.#selection.add(item);
+      });
     }
+
+    this.#requestUpdate();
   }
 
   resetView() {

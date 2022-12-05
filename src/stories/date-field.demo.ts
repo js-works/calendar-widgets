@@ -129,6 +129,12 @@ class DatePickerDemo extends LitElement {
             lang=${this._locale}
           ></sx-date-field>
           <sx-date-field
+            label="Week range"
+            selection-mode="weekRange"
+            show-week-numbers
+            lang=${this._locale}
+          ></sx-date-field>
+          <sx-date-field
             label="Month"
             selection-mode="month"
             lang=${this._locale}

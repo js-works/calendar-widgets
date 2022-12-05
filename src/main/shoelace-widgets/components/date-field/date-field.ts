@@ -47,6 +47,7 @@ export class DateField extends LitElement {
     | 'dateTimeRange'
     | 'timeRange'
     | 'week'
+    | 'weekRange'
     | 'month'
     | 'monthRange'
     | 'quarter'
@@ -87,6 +88,9 @@ export class DateField extends LitElement {
 
   @property({ type: String, attribute: 'calendar-size' })
   calendarSize: 'default' | 'minimal' | 'maximal' = 'default';
+
+  @property({ type: Boolean, attribute: 'highlight-current' })
+  highlightCurrent = false;
 
   @property({ type: Boolean, attribute: 'highlight-weekends' })
   highlightWeekends = false;
@@ -171,6 +175,11 @@ export class DateField extends LitElement {
     this._dropdownRef.value!.hide();
   };
 
+  private _onAfterPopupHide = () => {
+    this._pickerRef.value!.resetView();
+    this._pickerRef.value!.value = this.value;
+  };
+
   get validationMessage(): string {
     return this._formField.validate() || '';
   }
@@ -194,6 +203,7 @@ export class DateField extends LitElement {
         time: 'time',
         timeRange: 'time-range',
         week: 'week',
+        weekRange: 'week-range',
         quarter: 'quarter',
         quarterRange: 'quarter-range',
         month: 'month',
@@ -231,7 +241,7 @@ export class DateField extends LitElement {
           .containingElement=${this}
           hoist
           ${ref(this._dropdownRef)}
-          @sl-after-hide=${() => this._pickerRef.value?.resetView()}
+          @sl-after-hide=${this._onAfterPopupHide}
         >
           <sl-input
             slot="trigger"
@@ -281,6 +291,7 @@ export class DateField extends LitElement {
               selection-mode=${this.selectionMode}
               calendar-size=${this.calendarSize}
               ?show-week-numbers=${this.showWeekNumbers}
+              ?highlight-current=${this.highlightCurrent}
               ?highlight-weekends=${this.highlightWeekends}
               ?disable-weekends=${this.disableWeekends}
               ?enable-century-view=${this.enableCenturyView}
@@ -512,7 +523,7 @@ const logicBySelectionMode: Record<
         return '';
       }
 
-      return value.replace('-W', '/');
+      return value.replace('-W', '/W');
     },
 
     getPopupTitle(value) {
@@ -520,7 +531,17 @@ const logicBySelectionMode: Record<
         return '';
       }
 
-      return value.replace('-W', '/');
+      return value.replace('-W', '/W');
+    }
+  },
+
+  weekRange: {
+    formatValue(value) {
+      return value.replaceAll('-', '/').replace(',', ' - ');
+    },
+
+    getPopupTitle(value) {
+      return value.replaceAll('-', '/').replace(',', ' - ');
     }
   },
 
@@ -588,18 +609,7 @@ const logicBySelectionMode: Record<
     },
 
     getPopupTitle(value, localize) {
-      if (!value) {
-        return '';
-      }
-
-      const dates = value.split(',').map((it) => new Date(it));
-
-      const ret = new Intl.DateTimeFormat(localize.lang(), {
-        year: 'numeric',
-        month: 'short'
-      }).formatRange(dates[0], dates[dates.length - 1]);
-
-      return ret;
+      return value.replaceAll('-', '/').replace(',', ' - ');
     }
   },
 

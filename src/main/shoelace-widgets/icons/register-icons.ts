@@ -34,6 +34,7 @@ import calendarWeekIcon from './bootstrap/calendar-week.icon';
 import dateIcon from './custom/date.icon';
 import timeRangeIcon from './custom/time-range.icon';
 import weekIcon from './custom/week.icon';
+import weekRangeIcon from './custom/week-range.icon';
 import yearRangeIcon from './custom/year-range.icon';
 import monthRangeIcon from './custom/month-range.icon';
 import quarterIcon from './custom/quarter.icon';
@@ -51,6 +52,7 @@ const icons = {
   'date-field.time': clockIcon,
   'date-field.time-range': timeRangeIcon,
   'date-field.week': weekIcon,
+  'date-field.week-range': weekRangeIcon,
   'date-field.month': calendarMonthIcon,
   'date-field.month-range': monthRangeIcon,
   'date-field.quarter': quarterIcon,
