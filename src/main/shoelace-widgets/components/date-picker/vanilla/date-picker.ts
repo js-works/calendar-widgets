@@ -689,7 +689,8 @@ class DatePicker {
           class: 'cal-time-slider',
           value: time.minutes,
           min: 0,
-          max: 59,
+          max: 55,
+          step: 5,
           oninput: (ev: Event) => {
             const minutes = (ev.target as HTMLInputElement).valueAsNumber;
             this.#setTime(type, null, minutes);
