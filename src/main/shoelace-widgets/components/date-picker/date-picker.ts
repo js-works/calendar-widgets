@@ -91,7 +91,7 @@ class DatePicker extends LitElement {
   showWeekNumbers = false;
 
   @property({ type: String, attribute: 'calendar-size' })
-  calendarSize: 'default' | 'minimal' | 'maximal' = 'default';
+  calendarSize: 'default' | 'minimal' | 'maximal' = 'minimal';
 
   @property({ type: Boolean, attribute: 'highlight-current' })
   highlightCurrent = false;

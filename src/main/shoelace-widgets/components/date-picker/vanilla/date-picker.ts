@@ -291,6 +291,7 @@ class DatePicker {
           props.selectionMode === 'weeks' ||
           props.selectionMode === 'weekRange',
 
+        calendarSize: props.calendarSize,
         disableWeekends: props.disableWeekends,
         highlightCurrent: true,
         highlightWeekends: props.highlightWeekends,
@@ -415,7 +416,7 @@ class DatePicker {
 
     return div(
       {
-        class: 'cal-sheet xxx1',
+        class: 'cal-sheet',
         style: `grid-template-columns: ${gridTemplateColumns};`
       },
       sheet.columnNames?.length ? this.#renderTableHead(sheet, props) : null,
@@ -464,6 +465,14 @@ class DatePicker {
   }
 
   #renderTableCell(item: SheetItem, props: DatePicker.Props) {
+    if (props.calendarSize === 'minimal' && item.adjacent) {
+      return div({
+        class: classMap({
+          'cal-cell--highlighted': item.highlighted
+        })
+      });
+    }
+
     const selectionKey = getSelectionKey(item, this.#selectionMode);
     const selected = this.#selection.has(selectionKey);
     const { selectType } = selectionModeMeta[this.#selectionMode];

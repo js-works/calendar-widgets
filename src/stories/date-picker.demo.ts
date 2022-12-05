@@ -117,7 +117,7 @@ class DatePickerDemo extends LitElement {
           <sx-date-picker
             data-subject="datePicker"
             selection-mode=${this._selectionMode}
-            calendar-size=${this._calendarSize}
+            .calendarSize=${this._calendarSize}
             ?accentuate-header=${this._accentuateHeader}
             ?highlight-current=${this._highlightCurrent}
             ?highlight-weekends=${this._highlightWeekends}
@@ -180,13 +180,13 @@ class DatePickerDemo extends LitElement {
             value=${this._calendarSize}
           >
             <sl-menu-item value="default">
-              default (with adjacent days)
+              default (show adjacent days/years/decades)
             </sl-menu-item>
             <sl-menu-item value="minimal">
-              minimal (without adjacent days)
+              minimal (no adjacent days/years/decades)
             </sl-menu-item>
             <sl-menu-item value="maximal">
-              maximal (always 42 days)
+              maximal (show always 42 days in month view)
             </sl-menu-item>
           </sl-select>
           <sl-checkbox
