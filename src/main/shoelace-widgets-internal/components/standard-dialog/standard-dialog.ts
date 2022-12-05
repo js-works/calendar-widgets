@@ -279,6 +279,10 @@ class StandardDialog extends LitElement {
       }
     };
 
+    const onRequestClose = () => {
+      this._lastClickedAction = '';
+    };
+
     return html`
       <style>
         .dialog::part(panel) {
@@ -307,6 +311,7 @@ class StandardDialog extends LitElement {
           })}
           @sl-after-show=${onAfterShow}
           @sl-after-hide=${onAfterHide}
+          @sl-request-close=${onRequestClose}
           ${ref(this._dialogRef)}
         >
           <div slot="label" class="header">

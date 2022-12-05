@@ -454,9 +454,7 @@ class DatePicker {
 
     sheet.items.forEach((item, idx) => {
       if (hasRowNames && idx % 7 === 0) {
-        cells.push(
-          div({ class: 'cal-cell cal-row-name' }, sheet.rowNames![idx / 7])
-        );
+        cells.push(div({ class: 'cal-row-name' }, sheet.rowNames![idx / 7]));
       }
 
       cells.push(this.#renderTableCell(item, sheet, props, idx));

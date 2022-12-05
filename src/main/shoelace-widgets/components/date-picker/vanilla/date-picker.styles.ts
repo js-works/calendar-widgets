@@ -129,8 +129,9 @@ export default /*css*/ `
 
   .cal-row-name {
     text-align: center;
-    min-width: 1.5em;
+    min-width: 3em;
     font-size: 75%;
+    padding: 0.125em;
   }
 
   .cal-cell--highlighted {
@@ -316,7 +317,7 @@ export default /*css*/ `
   }
 
   .cal-time-tabs--active-tab-time1 > .cal-time:nth-child(2) {
-    font-size: 70%;
+    font-size: 75%;
     border-width: 0 0 1px 1px;
     border: 0 solid var(--cal-border-color);
     border-width: 0 0 1px 1px;
@@ -333,7 +334,7 @@ export default /*css*/ `
   }
 
   .cal-time-tabs--active-tab-time2 > .cal-time:first-child {
-    font-size: 70%;
+    font-size: 75%;
     border: 0 solid var(--cal-border-color);
     border-width: 0 1px 1px 0;
     white-space: nowrap;
