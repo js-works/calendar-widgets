@@ -280,8 +280,12 @@ class DatePicker {
         year: this.#year,
         month: this.#month,
         showWeekNumbers: props.showWeekNumbers,
+
         selectWeeks:
-          props.selectionMode === 'week' || props.selectionMode === 'weeks',
+          props.selectionMode === 'week' ||
+          props.selectionMode === 'weeks' ||
+          props.selectionMode === 'weekRange',
+
         disableWeekends: props.disableWeekends,
         highlightCurrent: true,
         highlightWeekends: props.highlightWeekends,
@@ -457,13 +461,12 @@ class DatePicker {
   #renderTableCell(item: SheetItem, props: DatePicker.Props) {
     const selectionKey = getSelectionKey(item, this.#selectionMode);
     const selected = this.#selection.has(selectionKey);
-
     const { selectType } = selectionModeMeta[this.#selectionMode];
-
     const hasSelectedRange = this.#selection.size > 0 && selectType === 'range';
-    const items = [...this.#selection].sort();
-    const startSelectionKey = items[0];
-    const endSelectionKey = items.length < 2 ? items[0] : items[1];
+    const selectedItems = [...this.#selection].sort();
+    const startSelectionKey = selectedItems[0];
+    const endSelectionKey =
+      selectedItems.length < 2 ? selectedItems[0] : selectedItems[1];
 
     return a(
       {
@@ -481,10 +484,24 @@ class DatePicker {
             selectionKey <= endSelectionKey,
 
           'cal-cell--first-in-selection-range':
-            hasSelectedRange && selectionKey === startSelectionKey,
+            hasSelectedRange &&
+            selectionKey === startSelectionKey &&
+            this.#selectionMode !== 'weekRange',
 
           'cal-cell--last-in-selection-range':
-            hasSelectedRange && selectionKey === endSelectionKey
+            hasSelectedRange &&
+            selectionKey === endSelectionKey &&
+            this.#selectionMode !== 'weekRange',
+
+          'cal-cell--before-singleton-selection-range':
+            hasSelectedRange &&
+            selectedItems.length === 1 &&
+            selectionKey < startSelectionKey,
+
+          'cal-cell--after-singleton-selection-range':
+            hasSelectedRange &&
+            selectedItems.length === 1 &&
+            selectionKey > endSelectionKey
         }),
 
         onclick: item.disabled

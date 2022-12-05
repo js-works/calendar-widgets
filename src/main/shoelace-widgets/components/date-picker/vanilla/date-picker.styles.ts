@@ -200,11 +200,26 @@ export default /*css*/ `
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
   }
-
+  
+  .cal-cell--first-in-selection-range ~ .cal-cell--first-in-selection-range {
+    border-top-left-radius: 0; 
+    border-bottom-left-radius: 0;
+  }
+  
   .cal-cell--last-in-selection-range:not(.cal-cell--first-in-selection-range) {
     border-top-right-radius: 6px;
     border-bottom-right-radius: 6px;
   }
+
+
+  .cal-cell--before-singleton-selection-range:has(~ .cal-cell):hover ~ .cal-cell--before-singleton-selection-range {
+    background-color: var(--cal-cell-selection-range-background-color) !important;
+  }
+  
+  .cal-cell--after-singleton-selection-range:has(~ .cal-cell--after-singleton-selection-range:hover) { 
+    background-color: var(--cal-cell-selection-range-background-color) !important;
+  }
+  
 
   /* time links */
 

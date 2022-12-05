@@ -15,6 +15,7 @@ export type SelectionMode =
   | 'dateTimeRange'
   | 'week'
   | 'weeks'
+  | 'weekRange'
   | 'month'
   | 'months'
   | 'monthRange'
@@ -96,6 +97,12 @@ const selectionModeMeta: Record<
 
   weeks: {
     selectType: 'multi',
+    initialView: 'month',
+    kind: 'calendar'
+  },
+
+  weekRange: {
+    selectType: 'range',
     initialView: 'month',
     kind: 'calendar'
   },
