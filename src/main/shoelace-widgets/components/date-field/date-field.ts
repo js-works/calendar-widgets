@@ -274,7 +274,7 @@ export class DateField extends LitElement {
               ${this.label}
             </span>
           </sl-input>
-          <div class="popup-content">
+          <div class="popup-content" tabindex="0">
             <div class="popup-header">
               <sl-icon library="shoelace-widgets" name=${icon}></sl-icon>
               <div class="popup-title">${this._getPopupTitle()}</div>

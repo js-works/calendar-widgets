@@ -189,8 +189,7 @@ export default /*css*/ `
   }
 
   .cal-cell--current {
-    font-weight: 700;
-    font-style: italic;
+    font-weight: 600;
   }
   
   .cal-cell--current:not(.cal-cell--selected):not(.cal-cell--disabled) {
