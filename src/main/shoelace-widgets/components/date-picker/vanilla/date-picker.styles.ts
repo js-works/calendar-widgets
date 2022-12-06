@@ -172,7 +172,7 @@ export default /*css*/ `
     color: var(--cal-cell-disabled-color);
   }
 
-  .cal-cell--disabled.cal-cell--adjacent > span{
+  .cal-cell--disabled.cal-cell--adjacent > .cal-cell-text {
     opacity: 10%;
   }
 

@@ -49,7 +49,6 @@ type Time = Readonly<{ hours: number; minutes: number }>;
 const a = h.bind(null, 'a');
 const div = h.bind(null, 'div');
 const input = h.bind(null, 'input');
-const span = h.bind(null, 'span');
 
 // === exported classes ==============================================
 
@@ -432,6 +431,7 @@ class DatePicker {
       div(
         {
           class: classMap({
+            'cal-meta-cell': true,
             'cal-column-name': true,
             'cal-column-name--highlighted':
               sheet.highlightedColumns?.includes(idx)
@@ -442,7 +442,7 @@ class DatePicker {
     );
 
     if (hasRowNames) {
-      headRow.unshift(div());
+      headRow.unshift(div({ class: 'cal-meta-cell' }));
     }
 
     return headRow;
@@ -454,7 +454,9 @@ class DatePicker {
 
     sheet.items.forEach((item, idx) => {
       if (hasRowNames && idx % 7 === 0) {
-        cells.push(div({ class: 'cal-row-name' }, sheet.rowNames![idx / 7]));
+        cells.push(
+          div({ class: 'cal-meta-cell cal-row-name' }, sheet.rowNames![idx / 7])
+        );
       }
 
       cells.push(this.#renderTableCell(item, sheet, props, idx));
@@ -530,7 +532,7 @@ class DatePicker {
           ? null
           : (ev: Event) => this.#onItemClick(ev, props, item)
       },
-      span(null, item.name)
+      div({ class: 'cal-cell-text' }, item.name)
     );
   }
 
