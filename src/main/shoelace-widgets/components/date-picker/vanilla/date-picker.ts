@@ -1,7 +1,6 @@
 import { Calendar } from './calendar';
 import { h, render, renderToString } from './vdom';
 import { classMap } from './utils';
-import { I18n } from './calendars/gregorian/i18n';
 import { selectionModeMeta, calendarViewOrder } from './meta';
 
 // types
@@ -35,8 +34,8 @@ namespace DatePicker {
     highlightWeekends: boolean;
     disableWeekends: boolean;
     enableCenturyView: boolean;
-    minDate: Date | null;
-    maxDate: Date | null;
+    minDate: Date | Calendar.Date | null;
+    maxDate: Date | Calendar.Date | null;
   };
 }
 
@@ -56,7 +55,6 @@ class DatePicker {
   static styles = datePickerBaseStyles;
 
   #calendar: Calendar;
-  #i18n: I18n;
   #getProps: () => DatePicker.Props;
   #requestUpdate: () => void;
   #onChange: () => void;
@@ -83,7 +81,6 @@ class DatePicker {
     const today = this.#calendar.today();
     this.#year = today.year;
     this.#month = today.month;
-    this.#i18n = new I18n(params.getLocale);
     this.#getProps = params.getProps;
     this.#requestUpdate = params.requestUpdate;
     this.#onChange = params.onChange;
@@ -273,6 +270,16 @@ class DatePicker {
   #renderDatePicker() {
     const props = this.#getProps();
 
+    const minDate =
+      props.minDate === null || !(props.minDate instanceof Date)
+        ? props.minDate
+        : this.#calendar.convertDate(props.minDate);
+
+    const maxDate =
+      props.maxDate === null || !(props.maxDate instanceof Date)
+        ? props.maxDate
+        : this.#calendar.convertDate(props.maxDate);
+
     if (this.#selectionMode !== props.selectionMode) {
       if (this.#selection.size > 0) {
         this.#selection.clear();
@@ -304,14 +311,14 @@ class DatePicker {
           props.selectionMode === 'weekRange',
 
         calendarSize: props.calendarSize,
-        minDate: props.minDate,
-        maxDate: props.maxDate
+        minDate,
+        maxDate
       });
     } else if (this.#view === 'year') {
       this.#sheet = this.#calendar.getYearSheet({
         year: this.#year,
-        minDate: props.minDate,
-        maxDate: props.maxDate,
+        minDate,
+        maxDate,
 
         selectQuarters:
           props.selectionMode === 'quarter' ||
@@ -321,14 +328,14 @@ class DatePicker {
     } else if (this.#view === 'decade') {
       this.#sheet = this.#calendar.getDecadeSheet({
         year: this.#year,
-        minDate: props.minDate,
-        maxDate: props.maxDate
+        minDate,
+        maxDate
       });
     } else if (this.#view === 'century') {
       this.#sheet = this.#calendar.getCenturySheet({
         year: this.#year,
-        minDate: props.minDate,
-        maxDate: props.maxDate
+        minDate,
+        maxDate
       });
     }
 

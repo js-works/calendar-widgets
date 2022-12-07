@@ -1,6 +1,5 @@
 import { Calendar } from '../../calendar';
 import { I18n } from './i18n';
-import { inDateRange, inNumberRange } from '../../utils';
 
 export { GregorianCalendar };
 
@@ -40,12 +39,27 @@ class GregorianCalendar implements Calendar {
     });
   }
 
+  convertDate(date: Date): Calendar.Date;
+  convertDate(date: Calendar.Date): Date;
+  convertDate(date: Date | Calendar.Date): Date | Calendar.Date {
+    if (date instanceof Date) {
+      return {
+        year: date.getFullYear(),
+        month: date.getMonth(),
+        day: date.getDate()
+      };
+    }
+
+    const calendarDate = date as Calendar.Date;
+    return new Date(calendarDate.year, calendarDate.month, calendarDate.day);
+  }
+
   getMonthSheet(params: {
     year: number;
     month: number;
     calendarSize?: 'default' | 'minimal' | 'maximal';
-    minDate?: Date | null;
-    maxDate?: Date | null;
+    minDate?: Calendar.Date | null;
+    maxDate?: Calendar.Date | null;
     showWeekNumbers?: boolean;
     highlightCurrent?: boolean;
     highlightWeekends?: boolean;
@@ -106,8 +120,11 @@ class GregorianCalendar implements Calendar {
         }
       }
 
-      const itemDate = new Date(itemYear, itemMonth, itemDay);
-      const weekend = this.#i18n.getWeekendDays().includes(itemDate.getDay());
+      const itemDate = { year: itemYear, month: itemMonth, day: itemDay };
+
+      const weekend = this.#i18n
+        .getWeekendDays()
+        .includes(new Date(itemYear, itemMonth, itemDay).getDay());
 
       const outOfMinMaxRange = !inDateRange(
         itemDate,
@@ -116,14 +133,10 @@ class GregorianCalendar implements Calendar {
       );
 
       const calendarWeek = params.selectWeeks
-        ? this.#i18n.getCalendarWeek(itemDate)
+        ? this.#i18n.getCalendarWeek(toNativeDate(itemDate))
         : null;
 
-      const today = new Date();
-      today.setHours(0);
-      today.setMinutes(0);
-      today.setSeconds(0);
-      today.setMilliseconds(0);
+      const today = this.today();
 
       dayItems.push({
         year: itemYear,
@@ -138,7 +151,7 @@ class GregorianCalendar implements Calendar {
         name: this.#i18n.formatDay(itemDay),
         disabled: (params.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
-        current: today.getTime() === itemDate.getTime(),
+        current: isSameDate(today, itemDate),
         highlighted: !!(params.highlightWeekends && weekend),
         adjacent
       });
@@ -151,11 +164,11 @@ class GregorianCalendar implements Calendar {
     }
 
     const minMonth = params.minDate
-      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
+      ? params.minDate.year * 12 + params.minDate.month
       : null;
 
     const maxMonth = params.maxDate
-      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
+      ? params.maxDate.year * 12 + params.maxDate.month
       : null;
 
     const mon = year * 12 + month;
@@ -217,8 +230,8 @@ class GregorianCalendar implements Calendar {
 
   getYearSheet(params: {
     year: number; //
-    minDate: Date | null;
-    maxDate: Date | null;
+    minDate: Calendar.Date | null;
+    maxDate: Calendar.Date | null;
     selectQuarters?: boolean;
   }): Calendar.Sheet {
     const year = params.year;
@@ -228,11 +241,11 @@ class GregorianCalendar implements Calendar {
     const currMonth = now.getMonth();
 
     const minMonth = params.minDate
-      ? params.minDate.getFullYear() * 12 + params.minDate.getMonth()
+      ? params.minDate.year * 12 + params.minDate.month
       : null;
 
     const maxMonth = params.maxDate
-      ? params.maxDate.getFullYear() * 12 + params.maxDate.getMonth()
+      ? params.maxDate.year * 12 + params.maxDate.month
       : null;
 
     if (!params.selectQuarters) {
@@ -274,8 +287,8 @@ class GregorianCalendar implements Calendar {
       }
     }
 
-    const minYear = params.minDate ? params.minDate.getFullYear() : null;
-    const maxYear = params.maxDate ? params.maxDate.getFullYear() : null;
+    const minYear = params.minDate ? params.minDate.year : null;
+    const maxYear = params.maxDate ? params.maxDate.year : null;
 
     const previousAvailable =
       year >= 1 && inNumberRange(year - 1, minYear, null);
@@ -298,16 +311,16 @@ class GregorianCalendar implements Calendar {
 
   getDecadeSheet(params: {
     year: number; //
-    minDate: Date | null;
-    maxDate: Date | null;
+    minDate: Calendar.Date | null;
+    maxDate: Calendar.Date | null;
   }): Calendar.Sheet {
     const year = params.year;
     const startYear = year - (year % 10) - 1;
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
     const yearItems: Calendar.SheetItem[] = [];
-    const minYear = params.minDate ? params.minDate.getFullYear() : null;
-    const maxYear = params.maxDate ? params.maxDate.getFullYear() : null;
+    const minYear = params.minDate ? params.minDate.year : null;
+    const maxYear = params.maxDate ? params.maxDate.year : null;
 
     for (let itemYear = startYear; itemYear <= endYear; ++itemYear) {
       const adjacent = itemYear === startYear || itemYear === endYear;
@@ -327,11 +340,11 @@ class GregorianCalendar implements Calendar {
     }
 
     const minDecade = params.minDate
-      ? Math.floor(params.minDate.getFullYear() / 10)
+      ? Math.floor(params.minDate.year / 10)
       : null;
 
     const maxDecade = params.maxDate
-      ? Math.floor(params.maxDate.getFullYear() / 10)
+      ? Math.floor(params.maxDate.year / 10)
       : null;
 
     const decade = Math.floor(year / 10);
@@ -363,8 +376,8 @@ class GregorianCalendar implements Calendar {
 
   getCenturySheet(params: {
     year: number; //,
-    minDate: Date | null;
-    maxDate: Date | null;
+    minDate: Calendar.Date | null;
+    maxDate: Calendar.Date | null;
   }): Calendar.Sheet {
     const year = params.year;
     const startYear = year - (year % 100) - 10;
@@ -373,11 +386,11 @@ class GregorianCalendar implements Calendar {
     const decadeItems: Calendar.SheetItem[] = [];
 
     const minYear = params.minDate
-      ? Math.floor(params.minDate.getFullYear() / 10) * 10
+      ? Math.floor(params.minDate.year / 10) * 10
       : null;
 
     const maxYear = params.maxDate
-      ? Math.floor(params.maxDate.getFullYear() / 10) * 10 + 9
+      ? Math.floor(params.maxDate.year / 10) * 10 + 9
       : null;
 
     for (let itemYear = startYear; itemYear <= endYear; itemYear += 10) {
@@ -400,11 +413,11 @@ class GregorianCalendar implements Calendar {
     }
 
     const minCentury = params.minDate
-      ? Math.floor(params.minDate.getFullYear() / 100)
+      ? Math.floor(params.minDate.year / 100)
       : null;
 
     const maxCentury = params.maxDate
-      ? Math.floor(params.maxDate.getFullYear() / 100)
+      ? Math.floor(params.maxDate.year / 100)
       : null;
 
     const century = Math.floor(year / 100);
@@ -448,4 +461,53 @@ function getDayCountOfMonth(year: number, month: number) {
   }
 
   return year % 4 !== 0 || (year % 100 === 0 && year % 400 !== 0) ? 28 : 29;
+}
+
+function isSameDate(date1: Calendar.Date, date2: Calendar.Date) {
+  return (
+    date1.year === date2.year &&
+    date1.month === date2.month &&
+    date1.day === date2.day
+  );
+}
+
+function toNativeDate(date: Calendar.Date) {
+  return new Date(date.year, date.month, date.day);
+}
+
+function inDateRange(
+  value: Calendar.Date,
+  start: Calendar.Date | null,
+  end: Calendar.Date | null
+) {
+  if (start === null && end === null) {
+    return true;
+  }
+
+  const toNumberOrNull = (date: Calendar.Date | null) =>
+    date === null ? null : date.year * 10000 + date.month * 100 + date.day;
+
+  return inNumberRange(
+    toNumberOrNull(value)!,
+    toNumberOrNull(start),
+    toNumberOrNull(end)
+  );
+}
+
+function inNumberRange(
+  value: number,
+  start: number | null,
+  end: number | null
+) {
+  if (start === null && end === null) {
+    return true;
+  }
+
+  if (start === null) {
+    return value <= end!;
+  } else if (end === null) {
+    return value >= start;
+  } else {
+    return value >= start && value <= end;
+  }
 }

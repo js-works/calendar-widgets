@@ -6,6 +6,7 @@ import { LocalizeController } from '@shoelace-style/localize/dist/index';
 import { DatePicker as Picker } from './vanilla/date-picker';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
 import { GregorianCalendar } from './vanilla/calendars/gregorian/gregorian-calendar';
+import type { Calendar } from './vanilla/calendar';
 
 // === exports =======================================================
 
@@ -110,7 +111,7 @@ class DatePicker extends LitElement {
   minDate: Date | null = null;
 
   @property({ converter: dateAttributeConverter, attribute: 'max-date' })
-  maxDate: Date | null = null;
+  maxDate: Date | Calendar.Date | null = null;
 
   @property()
   lang = '';

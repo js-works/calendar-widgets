@@ -42,6 +42,8 @@ interface Calendar {
   today(): Calendar.Date;
   formatDate(date: Calendar.Date): string;
   formatTime(time: Calendar.Time): string;
+  convertDate(date: Date): Calendar.Date;
+  convertDate(date: Calendar.Date): Date;
 
   getMonthSheet(params: {
     year: number;
@@ -52,26 +54,26 @@ interface Calendar {
     highlightCurrent: boolean;
     highlightWeekends: boolean;
     disableWeekends: boolean;
-    minDate: Date | null;
-    maxDate: Date | null;
+    minDate: Calendar.Date | null;
+    maxDate: Calendar.Date | null;
   }): Calendar.Sheet;
 
   getYearSheet(params: {
     year: number;
     selectQuarters: boolean;
-    minDate: Date | null;
-    maxDate: Date | null;
+    minDate: Calendar.Date | null;
+    maxDate: Calendar.Date | null;
   }): Calendar.Sheet;
 
   getDecadeSheet(params: {
     year: number;
-    minDate: Date | null;
-    maxDate: Date | null;
+    minDate: Calendar.Date | null;
+    maxDate: Calendar.Date | null;
   }): Calendar.Sheet;
 
   getCenturySheet(params: {
     year: number;
-    minDate: Date | null;
-    maxDate: Date | null;
+    minDate: Calendar.Date | null;
+    maxDate: Calendar.Date | null;
   }): Calendar.Sheet;
 }
