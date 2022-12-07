@@ -20,18 +20,6 @@ namespace Calendar {
   export type Sheet = MonthSheet | YearSheet | DecadeSheet | CenturySheet;
   export type Item = DayItem | MonthItem | YearItem | DecadeItem;
 
-  interface BaseSheet<S extends string, T extends BaseItem<string>> {
-    type: S;
-    name: string;
-    previous: { year: number; month?: number } | null;
-    next: { year: number; month?: number } | null;
-    columnCount: number;
-    highlightedColumns: number[] | null;
-    columnNames: string[] | null;
-    rowNames: string[] | null;
-    items: T[];
-  }
-
   export interface DayItem extends BaseItem<'day'> {
     year: number;
     month: number;
@@ -52,6 +40,20 @@ namespace Calendar {
   export interface DecadeItem extends BaseItem<'decade'> {
     year: number;
   }
+
+  // --- local types -------------------------------------------------
+
+  type BaseSheet<S extends string, T extends BaseItem<string>> = {
+    type: S;
+    name: string;
+    previous: { year: number; month?: number } | null;
+    next: { year: number; month?: number } | null;
+    columnCount: number;
+    highlightedColumns: number[] | null;
+    columnNames: string[] | null;
+    rowNames: string[] | null;
+    items: T[];
+  };
 
   type BaseItem<T extends string> = {
     type: T;
