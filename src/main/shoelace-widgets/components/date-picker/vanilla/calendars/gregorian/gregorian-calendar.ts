@@ -1,4 +1,4 @@
-import { Calendar, Sheet, SheetItem } from '../../calendar';
+import { Calendar } from '../../calendar';
 import { I18n } from './i18n';
 import { inDateRange, inNumberRange } from '../../utils';
 
@@ -11,7 +11,7 @@ class GregorianCalendar implements Calendar {
     this.#i18n = new I18n(getLocale);
   }
 
-  getToday() {
+  today() {
     const now = new Date();
 
     return {
@@ -21,20 +21,20 @@ class GregorianCalendar implements Calendar {
     };
   }
 
-  formatDate(year: number, month: number, day: number) {
-    const date = new Date(year, month - 1, day);
+  formatDate(date: Calendar.Date) {
+    const nativeDate = new Date(date.year, date.month - 1, date.day);
 
-    return this.#i18n.formatDate(date, {
+    return this.#i18n.formatDate(nativeDate, {
       year: 'numeric',
       month: 'short',
       day: 'numeric'
     });
   }
 
-  formatTime(hours: number, minutes: number) {
-    const date = new Date(2000, 0, 1, hours, minutes);
+  formatTime(time: Calendar.Time) {
+    const nativeDate = new Date(2000, 0, 1, time.hours, time.minutes);
 
-    return this.#i18n.formatDate(date, {
+    return this.#i18n.formatDate(nativeDate, {
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -51,7 +51,7 @@ class GregorianCalendar implements Calendar {
     highlightWeekends?: boolean;
     disableWeekends?: boolean;
     selectWeeks?: boolean;
-  }): Sheet {
+  }): Calendar.Sheet {
     // we also allow month values less than 0 and greater than 11
     const n = params.year * 12 + params.month;
     const year = Math.floor(n / 12);
@@ -78,7 +78,7 @@ class GregorianCalendar implements Calendar {
       }
     }
 
-    const dayItems: SheetItem[] = [];
+    const dayItems: Calendar.SheetItem[] = [];
 
     for (let i = 0; i < daysToShow; ++i) {
       let itemYear: number;
@@ -220,9 +220,9 @@ class GregorianCalendar implements Calendar {
     minDate: Date | null;
     maxDate: Date | null;
     selectQuarters?: boolean;
-  }): Sheet {
+  }): Calendar.Sheet {
     const year = params.year;
-    const items: SheetItem[] = [];
+    const items: Calendar.SheetItem[] = [];
     const now = new Date();
     const currYear = now.getFullYear();
     const currMonth = now.getMonth();
@@ -300,12 +300,12 @@ class GregorianCalendar implements Calendar {
     year: number; //
     minDate: Date | null;
     maxDate: Date | null;
-  }): Sheet {
+  }): Calendar.Sheet {
     const year = params.year;
     const startYear = year - (year % 10) - 1;
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
-    const yearItems: SheetItem[] = [];
+    const yearItems: Calendar.SheetItem[] = [];
     const minYear = params.minDate ? params.minDate.getFullYear() : null;
     const maxYear = params.maxDate ? params.maxDate.getFullYear() : null;
 
@@ -365,12 +365,12 @@ class GregorianCalendar implements Calendar {
     year: number; //,
     minDate: Date | null;
     maxDate: Date | null;
-  }): Sheet {
+  }): Calendar.Sheet {
     const year = params.year;
     const startYear = year - (year % 100) - 10;
     const endYear = startYear + 119;
     const currYear = new Date().getFullYear();
-    const decadeItems: SheetItem[] = [];
+    const decadeItems: Calendar.SheetItem[] = [];
 
     const minYear = params.minDate
       ? Math.floor(params.minDate.getFullYear() / 10) * 10

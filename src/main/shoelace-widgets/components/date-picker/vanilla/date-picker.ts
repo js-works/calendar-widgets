@@ -1,4 +1,4 @@
-import { Calendar, Sheet, SheetItem } from './calendar';
+import { Calendar } from './calendar';
 import { h, render, renderToString } from './vdom';
 import { classMap } from './utils';
 import { I18n } from './calendars/gregorian/i18n';
@@ -69,7 +69,7 @@ class DatePicker {
 
   #selectionMode: SelectionMode = 'date';
   #view: View = 'month';
-  #sheet: Sheet | null = null;
+  #sheet: Calendar.Sheet | null = null;
 
   constructor(params: {
     calendar: Calendar;
@@ -80,7 +80,7 @@ class DatePicker {
     onChange: () => void;
   }) {
     this.#calendar = params.calendar;
-    const today = this.#calendar.getToday();
+    const today = this.#calendar.today();
     this.#year = today.year;
     this.#month = today.month;
     this.#i18n = new I18n(params.getLocale);
@@ -211,7 +211,11 @@ class DatePicker {
     }
   };
 
-  #onItemClick = (ev: Event, props: DatePicker.Props, item: SheetItem) => {
+  #onItemClick = (
+    ev: Event,
+    props: DatePicker.Props,
+    item: Calendar.SheetItem
+  ) => {
     const selectionKey = getSelectionKey(item, this.#selectionMode);
     const selectType = selectionModeMeta[props.selectionMode].selectType;
     const initialView = selectionModeMeta[props.selectionMode].initialView;
@@ -333,7 +337,7 @@ class DatePicker {
       : this.#renderTimeView(props);
   }
 
-  #renderCalendarView(sheet: Sheet, props: DatePicker.Props) {
+  #renderCalendarView(sheet: Calendar.Sheet, props: DatePicker.Props) {
     const kind = selectionModeMeta[props.selectionMode].kind;
 
     return div(
@@ -368,7 +372,7 @@ class DatePicker {
     );
   }
 
-  #renderSheetHeader(sheet: Sheet, props: DatePicker.Props) {
+  #renderSheetHeader(sheet: Calendar.Sheet, props: DatePicker.Props) {
     const parentViewDisabled =
       this.#view === 'century' ||
       (this.#view === 'decade' && !props.enableCenturyView);
@@ -413,7 +417,7 @@ class DatePicker {
     );
   }
 
-  #renderSheet(sheet: Sheet, props: DatePicker.Props) {
+  #renderSheet(sheet: Calendar.Sheet, props: DatePicker.Props) {
     const hasRowNames = !!sheet.rowNames?.length;
 
     let gridTemplateColumns =
@@ -429,7 +433,7 @@ class DatePicker {
     );
   }
 
-  #renderTableHead(sheet: Sheet, props: DatePicker.Props) {
+  #renderTableHead(sheet: Calendar.Sheet, props: DatePicker.Props) {
     const hasRowNames = !!sheet.rowNames?.length;
 
     const headRow = sheet.columnNames!.map((it, idx) =>
@@ -453,7 +457,7 @@ class DatePicker {
     return headRow;
   }
 
-  #renderTableBody(sheet: Sheet, props: DatePicker.Props) {
+  #renderTableBody(sheet: Calendar.Sheet, props: DatePicker.Props) {
     const hasRowNames = !!sheet.rowNames?.length;
     const cells: VNode[] = [];
 
@@ -471,8 +475,8 @@ class DatePicker {
   }
 
   #renderTableCell(
-    item: SheetItem,
-    sheet: Sheet,
+    item: Calendar.SheetItem,
+    sheet: Calendar.Sheet,
     props: DatePicker.Props,
     columnIndex: number
   ) {
@@ -558,7 +562,7 @@ class DatePicker {
 
     let timeString =
       this.#selection.size > 0 //
-        ? this.#calendar.formatTime(time.hours, time.minutes)
+        ? this.#calendar.formatTime(time)
         : '';
 
     return a(
@@ -592,12 +596,20 @@ class DatePicker {
 
     const formattedDate =
       type === 'time1' && items.length > 0
-        ? this.#calendar.formatDate(items[0][0], items[0][1], items[0][2])
+        ? this.#calendar.formatDate({
+            year: items[0][0],
+            month: items[0][1],
+            day: items[0][2]
+          })
         : type === 'time2' && items.length > 1
-        ? this.#calendar.formatDate(items[1][0], items[1][1], items[1][2])
+        ? this.#calendar.formatDate({
+            year: items[1][0],
+            month: items[1][1],
+            day: items[1][2]
+          })
         : '';
 
-    const formattedTime = this.#calendar.formatTime(time.hours, time.minutes);
+    const formattedTime = this.#calendar.formatTime(time);
     let timeHeader: VNode = null;
 
     if (formattedDate) {
@@ -700,7 +712,7 @@ class DatePicker {
 // === local helpers =================================================
 
 function getSelectionKey(
-  items: SheetItem,
+  items: Calendar.SheetItem,
   selectionMode: DatePicker.SelectionMode
 ) {
   let ret;

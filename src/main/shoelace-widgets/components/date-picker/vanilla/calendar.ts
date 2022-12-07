@@ -1,39 +1,47 @@
-export type { Calendar, Sheet, SheetItem };
+export type { Calendar };
 
-type SheetItem = {
-  year: number;
-  month?: number;
-  day?: number;
-  weekYear?: number;
-  weekNumber?: number;
-  name: string;
-  current: boolean;
-  highlighted: boolean;
-  adjacent: boolean;
-  disabled: boolean;
-  outOfMinMaxRange: boolean;
-};
-
-interface Sheet {
-  name: string;
-  previous: { year: number; month?: number } | null;
-  next: { year: number; month?: number } | null;
-  columnCount: number;
-  highlightedColumns: number[] | null;
-  columnNames: string[] | null;
-  rowNames: string[] | null;
-  items: SheetItem[];
-}
-
-interface Calendar {
-  getToday(): {
+namespace Calendar {
+  export type Date = {
     year: number;
     month: number;
     day: number;
   };
 
-  formatDate(year: number, month: number, day: number): string;
-  formatTime(hours: number, month: number): string;
+  export type Time = {
+    hours: number;
+    minutes: number;
+  };
+
+  export type SheetItem = {
+    year: number;
+    month?: number;
+    day?: number;
+    weekYear?: number;
+    weekNumber?: number;
+    name: string;
+    current: boolean;
+    highlighted: boolean;
+    adjacent: boolean;
+    disabled: boolean;
+    outOfMinMaxRange: boolean;
+  };
+
+  export interface Sheet {
+    name: string;
+    previous: { year: number; month?: number } | null;
+    next: { year: number; month?: number } | null;
+    columnCount: number;
+    highlightedColumns: number[] | null;
+    columnNames: string[] | null;
+    rowNames: string[] | null;
+    items: SheetItem[];
+  }
+}
+
+interface Calendar {
+  today(): Calendar.Date;
+  formatDate(date: Calendar.Date): string;
+  formatTime(time: Calendar.Time): string;
 
   getMonthSheet(params: {
     year: number;
@@ -46,24 +54,24 @@ interface Calendar {
     disableWeekends: boolean;
     minDate: Date | null;
     maxDate: Date | null;
-  }): Sheet;
+  }): Calendar.Sheet;
 
   getYearSheet(params: {
     year: number;
     selectQuarters: boolean;
     minDate: Date | null;
     maxDate: Date | null;
-  }): Sheet;
+  }): Calendar.Sheet;
 
   getDecadeSheet(params: {
     year: number;
     minDate: Date | null;
     maxDate: Date | null;
-  }): Sheet;
+  }): Calendar.Sheet;
 
   getCenturySheet(params: {
     year: number;
     minDate: Date | null;
     maxDate: Date | null;
-  }): Sheet;
+  }): Calendar.Sheet;
 }
