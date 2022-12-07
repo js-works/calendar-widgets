@@ -30,6 +30,7 @@ import questionDiamondIcon from './bootstrap/question-diamond.icon';
 import questionLgIcon from './bootstrap/question-lg.icon';
 import telephoneIcon from './bootstrap/telephone.icon';
 import calendarWeekIcon from './bootstrap/calendar-week.icon';
+import xIcon from './bootstrap/x.icon';
 
 import dateIcon from './custom/date.icon';
 import timeRangeIcon from './custom/time-range.icon';
@@ -67,6 +68,8 @@ const icons = {
   'dialogs.prompt': keyboardIcon,
   'dialogs.confirm': questionDiamondIcon,
   'dialogs.approve': questionDiamondIcon,
+
+  'popups.close': xIcon,
 
   'toasts.info': infoCircleIcon,
   'toasts.success': checkCircleIcon,

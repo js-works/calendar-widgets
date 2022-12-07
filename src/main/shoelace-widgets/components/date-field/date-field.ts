@@ -280,8 +280,8 @@ export class DateField extends LitElement {
               <div class="popup-title">${this._getPopupTitle()}</div>
               <sl-icon-button
                 class="popup-close-button"
-                library="system"
-                name="x"
+                library="shoelace-widgets"
+                name="popups.close"
                 @click=${this._onClosePopupClick}
               ></sl-icon-button>
             </div>
