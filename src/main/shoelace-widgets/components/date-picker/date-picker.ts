@@ -5,6 +5,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '@shoelace-style/localize/dist/index';
 import { DatePicker as Picker } from './vanilla/date-picker';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
+import { GregorianCalendar } from './vanilla/calendars/gregorian/gregorian-calendar';
 
 // === exports =======================================================
 
@@ -125,6 +126,7 @@ class DatePicker extends LitElement {
     super();
 
     this._picker = new Picker({
+      calendar: new GregorianCalendar(this._localize.lang()),
       requestUpdate: () => this.requestUpdate(),
       onChange: this._onChange,
       getLocale: () => this._localize.lang(),

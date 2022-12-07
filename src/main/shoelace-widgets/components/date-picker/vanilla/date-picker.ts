@@ -1,7 +1,7 @@
 import { Calendar, Sheet, SheetItem } from './calendar';
 import { h, render, renderToString } from './vdom';
 import { classMap } from './utils';
-import { I18n } from './i18n';
+import { I18n } from './calendars/gregorian/i18n';
 import { selectionModeMeta, calendarViewOrder } from './meta';
 
 // types
@@ -55,6 +55,7 @@ const input = h.bind(null, 'input');
 class DatePicker {
   static styles = datePickerBaseStyles;
 
+  #calendar: Calendar;
   #i18n: I18n;
   #getProps: () => DatePicker.Props;
   #requestUpdate: () => void;
@@ -71,13 +72,15 @@ class DatePicker {
   #sheet: Sheet | null = null;
 
   constructor(params: {
+    calendar: Calendar;
     getLocale: () => string;
     getDirection: () => string;
     getProps: () => DatePicker.Props; //
     requestUpdate: () => void;
     onChange: () => void;
   }) {
-    this.#i18n = new I18n(params.getLocale);
+    (this.#calendar = params.calendar),
+      (this.#i18n = new I18n(params.getLocale));
     this.#getProps = params.getProps;
     this.#requestUpdate = params.requestUpdate;
     this.#onChange = params.onChange;
@@ -262,7 +265,6 @@ class DatePicker {
 
   #renderDatePicker() {
     const props = this.#getProps();
-    const calendar = new Calendar(this.#i18n.getLocale());
 
     if (this.#selectionMode !== props.selectionMode) {
       if (this.#selection.size > 0) {
@@ -281,10 +283,13 @@ class DatePicker {
     const selectionSize = this.#selection.size;
 
     if (this.#view === 'month') {
-      this.#sheet = calendar.getMonthSheet({
+      this.#sheet = this.#calendar.getMonthSheet({
         year: this.#year,
         month: this.#month,
         showWeekNumbers: props.showWeekNumbers,
+        highlightWeekends: props.highlightWeekends,
+        highlightCurrent: props.highlightCurrent,
+        disableWeekends: props.disableWeekends,
 
         selectWeeks:
           props.selectionMode === 'week' ||
@@ -292,14 +297,11 @@ class DatePicker {
           props.selectionMode === 'weekRange',
 
         calendarSize: props.calendarSize,
-        disableWeekends: props.disableWeekends,
-        highlightCurrent: true,
-        highlightWeekends: props.highlightWeekends,
         minDate: props.minDate,
         maxDate: props.maxDate
       });
     } else if (this.#view === 'year') {
-      this.#sheet = calendar.getYearSheet({
+      this.#sheet = this.#calendar.getYearSheet({
         year: this.#year,
         minDate: props.minDate,
         maxDate: props.maxDate,
@@ -310,13 +312,13 @@ class DatePicker {
           props.selectionMode === 'quarterRange'
       });
     } else if (this.#view === 'decade') {
-      this.#sheet = calendar.getDecadeSheet({
+      this.#sheet = this.#calendar.getDecadeSheet({
         year: this.#year,
         minDate: props.minDate,
         maxDate: props.maxDate
       });
     } else if (this.#view === 'century') {
-      this.#sheet = calendar.getCenturySheet({
+      this.#sheet = this.#calendar.getCenturySheet({
         year: this.#year,
         minDate: props.minDate,
         maxDate: props.maxDate
