@@ -208,11 +208,7 @@ class DatePicker {
     }
   };
 
-  #onItemClick = (
-    ev: Event,
-    props: DatePicker.Props,
-    item: Calendar.SheetItem
-  ) => {
+  #onItemClick = (ev: Event, props: DatePicker.Props, item: Calendar.Item) => {
     const selectionKey = getSelectionKey(item, this.#selectionMode);
     const selectType = selectionModeMeta[props.selectionMode].selectType;
     const initialView = selectionModeMeta[props.selectionMode].initialView;
@@ -226,7 +222,7 @@ class DatePicker {
       if (nextView) {
         this.#year = item.year;
 
-        if (item.month) {
+        if (item.type === 'day' || item.type === 'month') {
           this.#month = item.month;
         }
 
@@ -482,7 +478,7 @@ class DatePicker {
   }
 
   #renderTableCell(
-    item: Calendar.SheetItem,
+    item: Calendar.Item,
     sheet: Calendar.Sheet,
     props: DatePicker.Props,
     columnIndex: number
@@ -719,35 +715,36 @@ class DatePicker {
 // === local helpers =================================================
 
 function getSelectionKey(
-  items: Calendar.SheetItem,
+  item: Calendar.Item,
   selectionMode: DatePicker.SelectionMode
 ) {
   let ret;
 
-  if (typeof items.weekNumber !== 'number') {
-    ret = String(items.year).padStart(4, '0');
+  if (item.type !== 'day' || typeof item.weekNumber !== 'number') {
+    ret = String(item.year).padStart(4, '0');
 
     // TODO!!!
     if (
-      selectionMode !== 'quarter' &&
-      selectionMode !== 'quarters' &&
-      selectionMode !== 'quarterRange'
+      (selectionMode !== 'quarter' &&
+        selectionMode !== 'quarters' &&
+        selectionMode !== 'quarterRange') ||
+      item.type !== 'month'
     ) {
-      if (typeof items.month === 'number') {
-        ret += '-' + String(items.month + 1).padStart(2, '0');
+      if (item.type === 'day' || item.type === 'month') {
+        ret += '-' + String(item.month + 1).padStart(2, '0');
       }
 
-      if (typeof items.day === 'number') {
-        ret += '-' + String(items.day).padStart(2, '0');
+      if (item.type === 'day') {
+        ret += '-' + String(item.day).padStart(2, '0');
       }
     } else {
-      ret += '-Q' + String(Math.floor(items.month! / 3) + 1);
+      ret += '-Q' + String(Math.floor(item.month! / 3) + 1);
     }
   } else {
     ret =
-      String(items.weekYear).padStart(4, '0') +
+      String(item.weekYear).padStart(4, '0') +
       '-W' +
-      String(items.weekNumber).padStart(2, '0');
+      String(item.weekNumber).padStart(2, '0');
   }
 
   return ret;

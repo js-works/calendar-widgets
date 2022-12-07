@@ -65,7 +65,7 @@ class GregorianCalendar implements Calendar {
     highlightWeekends?: boolean;
     disableWeekends?: boolean;
     selectWeeks?: boolean;
-  }): Calendar.Sheet {
+  }): Calendar.MonthSheet {
     // we also allow month values less than 0 and greater than 11
     const n = params.year * 12 + params.month;
     const year = Math.floor(n / 12);
@@ -92,7 +92,7 @@ class GregorianCalendar implements Calendar {
       }
     }
 
-    const dayItems: Calendar.SheetItem[] = [];
+    const dayItems: Calendar.DayItem[] = [];
 
     for (let i = 0; i < daysToShow; ++i) {
       let itemYear: number;
@@ -139,6 +139,7 @@ class GregorianCalendar implements Calendar {
       const today = this.today();
 
       dayItems.push({
+        type: 'day',
         year: itemYear,
         month: itemMonth,
         day: itemDay,
@@ -217,6 +218,7 @@ class GregorianCalendar implements Calendar {
       : null;
 
     return {
+      type: 'month',
       name: nameOfMonth,
       items: dayItems,
       columnCount: 7,
@@ -233,9 +235,9 @@ class GregorianCalendar implements Calendar {
     minDate: Calendar.Date | null;
     maxDate: Calendar.Date | null;
     selectQuarters?: boolean;
-  }): Calendar.Sheet {
+  }): Calendar.YearSheet {
     const year = params.year;
-    const items: Calendar.SheetItem[] = [];
+    const items: Calendar.MonthItem[] = [];
     const now = new Date();
     const currYear = now.getFullYear();
     const currMonth = now.getMonth();
@@ -257,6 +259,7 @@ class GregorianCalendar implements Calendar {
         );
 
         items.push({
+          type: 'month',
           year,
           month: itemMonth,
           name: this.#i18n.getMonthName(itemMonth, 'short'),
@@ -270,6 +273,7 @@ class GregorianCalendar implements Calendar {
     } else {
       for (let quarter = 1; quarter <= 4; ++quarter) {
         items.push({
+          type: 'month',
           year,
           month: quarter * 3 - 2,
           name:
@@ -298,6 +302,7 @@ class GregorianCalendar implements Calendar {
     const next = !nextAvailable ? null : { year: year + 1 };
 
     return {
+      type: 'year',
       name: this.#i18n.formatYear(year),
       columnCount: params.selectQuarters ? 2 : 4,
       highlightedColumns: null,
@@ -313,12 +318,12 @@ class GregorianCalendar implements Calendar {
     year: number; //
     minDate: Calendar.Date | null;
     maxDate: Calendar.Date | null;
-  }): Calendar.Sheet {
+  }): Calendar.DecadeSheet {
     const year = params.year;
     const startYear = year - (year % 10) - 1;
     const endYear = startYear + 11;
     const currYear = new Date().getFullYear();
-    const yearItems: Calendar.SheetItem[] = [];
+    const yearItems: Calendar.YearItem[] = [];
     const minYear = params.minDate ? params.minDate.year : null;
     const maxYear = params.maxDate ? params.maxDate.year : null;
 
@@ -327,6 +332,7 @@ class GregorianCalendar implements Calendar {
       const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
       yearItems.push({
+        type: 'year',
         year: itemYear,
 
         name: this.#i18n.formatYear(itemYear),
@@ -363,6 +369,7 @@ class GregorianCalendar implements Calendar {
       : { year: Math.floor(((year + 10) / 10) * 10) };
 
     return {
+      type: 'decade',
       name: this.#i18n.formatDecade(year),
       columnCount: 4,
       columnNames: null,
@@ -378,12 +385,12 @@ class GregorianCalendar implements Calendar {
     year: number; //,
     minDate: Calendar.Date | null;
     maxDate: Calendar.Date | null;
-  }): Calendar.Sheet {
+  }): Calendar.CenturySheet {
     const year = params.year;
     const startYear = year - (year % 100) - 10;
     const endYear = startYear + 119;
     const currYear = new Date().getFullYear();
-    const decadeItems: Calendar.SheetItem[] = [];
+    const decadeItems: Calendar.DecadeItem[] = [];
 
     const minYear = params.minDate
       ? Math.floor(params.minDate.year / 10) * 10
@@ -398,6 +405,7 @@ class GregorianCalendar implements Calendar {
       const outOfMinMaxRange = !inNumberRange(itemYear, minYear, maxYear);
 
       decadeItems.push({
+        type: 'decade',
         year: itemYear,
 
         name: this.#i18n
@@ -436,6 +444,7 @@ class GregorianCalendar implements Calendar {
       : { year: Math.floor(((year + 100) / 100) * 100) };
 
     return {
+      type: 'century',
       name: this.#i18n.formatCentury(year),
       columnCount: 4,
       columnNames: null,
