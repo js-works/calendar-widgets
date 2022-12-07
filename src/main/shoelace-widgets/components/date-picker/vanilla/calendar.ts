@@ -33,6 +33,7 @@ interface Calendar {
   };
 
   formatDate(year: number, month: number, day: number): string;
+  formatTime(hours: number, month: number): string;
 
   getMonthSheet(params: {
     year: number;

@@ -181,16 +181,6 @@ class DatePicker {
     }
   }
 
-  #formatTime(type: 'time1' | 'time2') {
-    const { hours, minutes } = this.#getTime(type);
-    const date = new Date(2000, 0, 1, hours, minutes);
-
-    return this.#i18n.formatDate(date, {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
-  }
-
   #onParentClick = () => {
     const idx = calendarViewOrder.indexOf(this.#view as CalendarView);
 
@@ -564,9 +554,11 @@ class DatePicker {
   }
 
   #renderTimeLink(type: 'time1' | 'time2') {
+    const time = this.#getTime(type);
+
     let timeString =
       this.#selection.size > 0 //
-        ? this.#formatTime(type)
+        ? this.#calendar.formatTime(time.hours, time.minutes)
         : '';
 
     return a(
@@ -605,8 +597,7 @@ class DatePicker {
         ? this.#calendar.formatDate(items[1][0], items[1][1], items[1][2])
         : '';
 
-    const formattedTime = this.#formatTime(type);
-
+    const formattedTime = this.#calendar.formatTime(time.hours, time.minutes);
     let timeHeader: VNode = null;
 
     if (formattedDate) {

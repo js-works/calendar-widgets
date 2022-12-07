@@ -31,6 +31,15 @@ class GregorianCalendar implements Calendar {
     });
   }
 
+  formatTime(hours: number, minutes: number) {
+    const date = new Date(2000, 0, 1, hours, minutes);
+
+    return this.#i18n.formatDate(date, {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  }
+
   getMonthSheet(params: {
     year: number;
     month: number;
