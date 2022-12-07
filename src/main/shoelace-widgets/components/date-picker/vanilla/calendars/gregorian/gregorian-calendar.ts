@@ -66,11 +66,7 @@ class GregorianCalendar implements Calendar {
     disableWeekends?: boolean;
     selectWeeks?: boolean;
   }): Calendar.MonthSheet {
-    // we also allow month values less than 0 and greater than 11
-    const n = params.year * 12 + params.month;
-    const year = Math.floor(n / 12);
-    const month = n % 12;
-
+    const { year, month } = params;
     const firstDayOfWeek = this.#i18n.getFirstDayOfWeek();
     const firstWeekdayOfMonth = new Date(year, month, 1).getDay();
     const now = new Date();
