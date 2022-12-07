@@ -126,7 +126,7 @@ class DatePicker extends LitElement {
     super();
 
     this._picker = new Picker({
-      calendar: new GregorianCalendar(this._localize.lang()),
+      calendar: new GregorianCalendar(() => this._localize.lang()),
       requestUpdate: () => this.requestUpdate(),
       onChange: this._onChange,
       getLocale: () => this._localize.lang(),

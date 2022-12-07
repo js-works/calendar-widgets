@@ -62,8 +62,8 @@ class DatePicker {
   #onChange: () => void;
 
   #selection = new Set<string>();
-  #year = new Date().getFullYear();
-  #month = new Date().getMonth();
+  #year: number;
+  #month: number;
   #time1: Time = { hours: 0, minutes: 0 };
   #time2: Time = { hours: 0, minutes: 0 };
 
@@ -79,8 +79,11 @@ class DatePicker {
     requestUpdate: () => void;
     onChange: () => void;
   }) {
-    (this.#calendar = params.calendar),
-      (this.#i18n = new I18n(params.getLocale));
+    this.#calendar = params.calendar;
+    const today = this.#calendar.getToday();
+    this.#year = today.year;
+    this.#month = today.month;
+    this.#i18n = new I18n(params.getLocale);
     this.#getProps = params.getProps;
     this.#requestUpdate = params.requestUpdate;
     this.#onChange = params.onChange;
@@ -176,6 +179,16 @@ class DatePicker {
     } else {
       this.#time2 = newTime;
     }
+  }
+
+  #formatTime(type: 'time1' | 'time2') {
+    const { hours, minutes } = this.#getTime(type);
+    const date = new Date(2000, 0, 1, hours, minutes);
+
+    return this.#i18n.formatDate(date, {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
   }
 
   #onParentClick = () => {
@@ -551,17 +564,10 @@ class DatePicker {
   }
 
   #renderTimeLink(type: 'time1' | 'time2') {
-    let timeString = '';
-
-    if (this.#selection.size > 0) {
-      const { hours, minutes } = this.#getTime(type);
-      const date = new Date(2000, 0, 1, hours, minutes);
-
-      timeString = this.#i18n.formatDate(date, {
-        hour: '2-digit',
-        minute: '2-digit'
-      });
-    }
+    let timeString =
+      this.#selection.size > 0 //
+        ? this.#formatTime(type)
+        : '';
 
     return a(
       {
@@ -584,33 +590,26 @@ class DatePicker {
   #renderTime(type: 'time1' | 'time2', props: DatePicker.Props) {
     const { kind, selectType } = selectionModeMeta[this.#selectionMode];
     const time = this.#getTime(type);
-    const items = [...this.#selection].sort();
-    const fallbackDate = new Date(1970, 0, 1);
 
-    const date =
+    const items = [...this.#selection].sort().map((it) =>
+      it
+        .split('T')[0]
+        .split('-')
+        .map((s) => parseInt(s, 10))
+    );
+
+    const formattedDate =
       type === 'time1' && items.length > 0
-        ? new Date(items[0])
+        ? this.#calendar.formatDate(items[0][0], items[0][1], items[0][2])
         : type === 'time2' && items.length > 1
-        ? new Date(items[1])
-        : fallbackDate;
+        ? this.#calendar.formatDate(items[1][0], items[1][1], items[1][2])
+        : '';
 
-    date.setHours(time.hours);
-    date.setMinutes(time.minutes);
-
-    let formattedTime = this.#i18n.formatDate(date, {
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+    const formattedTime = this.#formatTime(type);
 
     let timeHeader: VNode = null;
 
-    if (date !== fallbackDate) {
-      const formattedDate = this.#i18n.formatDate(date, {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-      });
-
+    if (formattedDate) {
       const fromOrToLabel =
         selectType === 'range' && this.#selection.size > 1
           ? (type === 'time1' ? 'from:' : 'to:') + '\u00a0\u00a0'

@@ -1,14 +1,34 @@
 import { Calendar, Sheet, SheetItem } from '../../calendar';
 import { I18n } from './i18n';
-import { inDateRange, inNumberRange, today } from '../../utils';
+import { inDateRange, inNumberRange } from '../../utils';
 
 export { GregorianCalendar };
 
 class GregorianCalendar implements Calendar {
   #i18n: I18n;
 
-  constructor(locale: string) {
-    this.#i18n = new I18n(locale);
+  constructor(getLocale: () => string) {
+    this.#i18n = new I18n(getLocale);
+  }
+
+  getToday() {
+    const now = new Date();
+
+    return {
+      year: now.getFullYear(),
+      month: now.getMonth(),
+      day: now.getDate()
+    };
+  }
+
+  formatDate(year: number, month: number, day: number) {
+    const date = new Date(year, month - 1, day);
+
+    return this.#i18n.formatDate(date, {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric'
+    });
   }
 
   getMonthSheet(params: {
@@ -90,6 +110,12 @@ class GregorianCalendar implements Calendar {
         ? this.#i18n.getCalendarWeek(itemDate)
         : null;
 
+      const today = new Date();
+      today.setHours(0);
+      today.setMinutes(0);
+      today.setSeconds(0);
+      today.setMilliseconds(0);
+
       dayItems.push({
         year: itemYear,
         month: itemMonth,
@@ -103,7 +129,7 @@ class GregorianCalendar implements Calendar {
         name: this.#i18n.formatDay(itemDay),
         disabled: (params.disableWeekends && weekend) || outOfMinMaxRange,
         outOfMinMaxRange,
-        current: today().getTime() === itemDate.getTime(),
+        current: today.getTime() === itemDate.getTime(),
         highlighted: !!(params.highlightWeekends && weekend),
         adjacent
       });

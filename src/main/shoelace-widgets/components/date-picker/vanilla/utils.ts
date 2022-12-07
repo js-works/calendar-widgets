@@ -1,4 +1,4 @@
-export { classMap, inDateRange, inNumberRange, today };
+export { classMap, inDateRange, inNumberRange };
 
 function inDateRange(value: Date, start: Date | null, end: Date | null) {
   if (start === null && end === null) {
@@ -47,15 +47,4 @@ function classMap(classes: Record<string, unknown>): string {
   }
 
   return arr.join(' ');
-}
-
-function today(): Date {
-  const ret = new Date();
-
-  ret.setHours(0);
-  ret.setMinutes(0);
-  ret.setSeconds(0);
-  ret.setMilliseconds(0);
-
-  return ret;
 }

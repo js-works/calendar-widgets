@@ -26,6 +26,14 @@ interface Sheet {
 }
 
 interface Calendar {
+  getToday(): {
+    year: number;
+    month: number;
+    day: number;
+  };
+
+  formatDate(year: number, month: number, day: number): string;
+
   getMonthSheet(params: {
     year: number;
     month: number;
