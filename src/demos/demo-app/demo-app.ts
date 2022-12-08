@@ -4,6 +4,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
 import { datePicker } from '../date-picker.demo';
 import { dateFields } from '../date-field.demo';
+import { formDemo } from '../form.demo';
 import { dialogs } from '../dialogs.demo';
 import { reactDemo } from '../react.demo';
 import { preactDemo } from '../preact.demo';
@@ -26,8 +27,8 @@ import SlRadioButton from '@shoelace-style/shoelace/dist/components/radio-button
 import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 
-import demoStyles from './demo.styles';
-import demoIcon from './demo.icon';
+import demoStyles from './demo-app.styles';
+import demoIcon from './demo-app.icon';
 
 // @ts-ignore
 import lightTheme from '@shoelace-style/shoelace/dist/themes/light.styles';
@@ -172,6 +173,13 @@ class DemoApp extends LitElement {
           </sl-tab>
           <sl-tab
             slot="nav"
+            panel="forms"
+            ?active=${this._activeTab === 'forms'}
+          >
+            Forms
+          </sl-tab>
+          <sl-tab
+            slot="nav"
             panel="dialogs"
             ?active=${this._activeTab === 'dialogs'}
           >
@@ -198,6 +206,7 @@ class DemoApp extends LitElement {
             ${demo(dateFields())}
           </sl-tab-panel>
           <sl-tab-panel name="dialogs">${demo(dialogs())}</sl-tab-panel>
+          <sl-tab-panel name="forms">${demo(formDemo())}</sl-tab-panel>
           <sl-tab-panel name="react-demo">${demo(reactDemo())}</sl-tab-panel>
           <sl-tab-panel name="preact-demo">${demo(preactDemo())}</sl-tab-panel>
         </sl-tab-group>

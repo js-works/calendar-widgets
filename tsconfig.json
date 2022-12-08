@@ -28,6 +28,6 @@
     "typeRoots": ["node_modules/@types"],
     "types": []
   },
-  "include": ["./src/main/**/*.*", "src/stories/demo/**/*.*"],
+  "include": ["./src/main/**/*.*", "src/demos/**/*.*"],
   "exclude": ["node_modules"]
 }

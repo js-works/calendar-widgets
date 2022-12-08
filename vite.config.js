@@ -2,8 +2,8 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
   server: {
-    port: 4000,
-    open: '/src/stories/demo/demo.html'
+    port: 4444,
+    open: '/src/demos/demo-app/demo-app.html'
   },
   resolve: {
     alias: {
