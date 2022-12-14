@@ -1,9 +1,11 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, PropertyValueMap } from 'lit';
+import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement } from 'lit/decorators.js';
 
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlCard from '@shoelace-style/shoelace/dist/components/card/card';
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import { TextField } from 'shoelace-widgets';
 
 export const formDemo = () => '<form-demo></form-demo>';
 
@@ -14,13 +16,21 @@ const styles = /*css*/ `
 class FormDemo extends LitElement {
   static {
     // required dependencies (to prevent too much tree shaking)
-    void [SlButton, SlCard, SlInput];
+    void [SlButton, SlCard, SlInput, TextField];
   }
 
+  private _formRef = createRef<HTMLFormElement>();
+
   private _onFormSubmit = (ev: Event) => {
+    const form = ev.target as HTMLFormElement;
     ev.preventDefault();
+
     alert('All field valid');
   };
+
+  protected override firstUpdated(): void {
+    this._formRef.value!.onsubmit = this._onFormSubmit;
+  }
 
   render() {
     return html`
@@ -70,12 +80,15 @@ class FormDemo extends LitElement {
       </style>
       <sl-card>
         <div slot="header">Form demo</div>
-        <form class="validity-styles" @submit=${this._onFormSubmit}>
-          <sl-input name="firstName" label="First name" required></sl-input>
-          <sl-input name="lastName" label="Last name" required></sl-input>
-          <sl-input name="city" label="City" required></sl-input>
+        <form class="input-validation-required" ${ref(this._formRef)}}>
+          <sl-input name="firstName" value="xxx" label="First name" required>
+          </sl-input>
+          <sx-text-field
+            name="lastName"
+            label="Last name"
+            required
+          ></sx-text-field>
           <br />
-          <sl-button type="reset">Reset</sl-button>
           <sl-button type="submit" variant="primary">Submit</sl-button>
         </form>
       </sl-card>

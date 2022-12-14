@@ -128,6 +128,7 @@ export default /*css*/ `
   }
 
   .cal-row-name {
+    align-self: center;
     text-align: center;
     min-width: 3em;
     font-size: 75%;

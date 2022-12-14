@@ -56,20 +56,20 @@
     "@web/dev-server-import-maps": "^0.0.7",
     "archiver": "^5.3.1",
     "del": "^7.0.0",
-    "esbuild": "^0.15.18",
-    "lit-html": "^2.4.0",
+    "esbuild": "^0.16.3",
+    "lit-html": "^2.5.0",
     "preact": "^10.11.3",
-    "prettier": "^2.8.0",
+    "prettier": "^2.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "shoelace-themes": "^0.0.9",
+    "shoelace-themes": "^0.0.10",
     "terser": "^5.16.1",
-    "typescript": "4.9.3",
+    "typescript": "4.9.4",
     "vite": "^3.2.5"
   },
   "dependencies": {
     "@shoelace-style/localize": "^3.0.3",
     "@shoelace-style/shoelace": "^2.0.0-beta.86",
-    "lit": "^2.4.1"
+    "lit": "^2.5.0"
   }
 }

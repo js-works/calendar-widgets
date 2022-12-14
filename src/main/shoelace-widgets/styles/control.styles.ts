@@ -33,7 +33,7 @@ export default css`
 
   .form-control-label--required:after,
   .sl-control-label--required::after {
-    font-family: var(--sl-font-mono);
+    xxxfont-family: var(--sl-font-mono);
     font-size: var(--sl-font-size-medium);
     position: relative;
     top: -2px;
@@ -42,8 +42,8 @@ export default css`
     width: 1ex;
     max-width: 1ex;
     overflow: hidden;
-    content: '*';
-    color: var(--sl-color-danger-800);
+    content: var(--sl-input-required-content);
+    color: var(--sl-input-required-content-color);
     box-sizing: border-box;
   }
 

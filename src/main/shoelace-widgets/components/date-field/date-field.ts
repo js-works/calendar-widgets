@@ -13,10 +13,12 @@ import SlIconButton from '@shoelace-style/shoelace/dist/components/icon-button/i
 import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown';
 import { DatePicker } from '../date-picker/date-picker';
 
+/*
 import {
   FormFieldController,
   Validators
 } from '../../form-fields/form-field-controller';
+*/
 
 // styles
 import dateFieldStyles from './date-field.styles';
@@ -121,11 +123,13 @@ export class DateField extends LitElement {
   private _inputRef = createRef<SlInput>();
   private _localize = new LocalizeController(this);
 
+  /*
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
 
     validation: [Validators.required((value) => !this.required || !!value)]
   });
+  */
 
   private _acceptSelection() {
     this.value = this._pickerRef.value!.value;
@@ -180,9 +184,11 @@ export class DateField extends LitElement {
     this._pickerRef.value!.value = this.value;
   };
 
+  /*
   get validationMessage(): string {
     return this._formField.validate() || '';
   }
+  */
 
   focus() {
     this._inputRef.value!.focus();
@@ -229,8 +235,8 @@ export class DateField extends LitElement {
       <div
         class=${classMap({
           base: true,
-          required: this.required,
-          invalid: this._formField.showsError()
+          required: this.required
+          //          invalid: this._formField.showsError()
         })}
       >
         <sl-dropdown
@@ -328,9 +334,11 @@ export class DateField extends LitElement {
             </div>
           </div>
         </sl-dropdown>
-        ${when(this._formField.getValidationMode() === 'inline', () =>
+        <!--
+        \${when(this._formField.getValidationMode() === 'inline', () =>
           this._formField.renderErrorMsg()
         )}
+        -->
       </div>
     `;
   }

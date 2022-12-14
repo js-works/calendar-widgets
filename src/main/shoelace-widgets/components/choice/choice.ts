@@ -6,10 +6,12 @@ import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
 
+/*
 import {
   FormFieldController,
   Validators
 } from '../../form-fields/form-field-controller';
+*/
 
 // custom elements
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
@@ -76,15 +78,18 @@ class Choice extends LitElement {
 
   private _localize = new LocalizeController(this);
 
+  /*
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
 
     validation: [Validators.required((value) => !this.required || !!value)]
   });
+  
 
   get validationMessage(): string {
     return this._formField.validate() || '';
   }
+  
 
   private _onInput = () => this._formField.signalInput();
 
@@ -106,6 +111,7 @@ class Choice extends LitElement {
       this._formField.signalSubmit();
     }
   };
+  */
 
   render() {
     const type = ['radios', 'horizontal-radios'].includes(this.type)
@@ -116,7 +122,7 @@ class Choice extends LitElement {
       <div
         class="base ${classMap({
           required: this.required,
-          invalid: this._formField.showsError(),
+          //         invalid: this._formField.showsError(),
           [type]: true
         })}"
       >
@@ -126,8 +132,7 @@ class Choice extends LitElement {
             <sl-select
               class="sl-control"
               hoist
-              @sl-change=${this._onChange}
-              @keydown=${this._onKeyDown}
+              @sl-change=${null /*this._onChange*/}
               value=${this.value}
             >
               <span
@@ -174,9 +179,11 @@ class Choice extends LitElement {
             </div>
           `
         )}
-        ${when(this._formField.getValidationMode() === 'inline', () =>
+        <!--
+        \${when(this._formField.getValidationMode() === 'inline', () =>
           this._formField.renderErrorMsg()
         )}
+        -->
       </div>
     `;
   }

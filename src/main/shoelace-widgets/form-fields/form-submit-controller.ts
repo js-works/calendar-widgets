@@ -1,18 +1,5 @@
 import type { ReactiveController, ReactiveControllerHost } from 'lit';
-
-interface FormControl extends ReactiveControllerHost, HTMLElement {
-  name: string;
-  value: unknown;
-  disabled: boolean;
-  defaultValue?: unknown;
-  invalid: boolean;
-  required: boolean;
-
-  checkValidity: () => boolean;
-  reportValidity: () => boolean;
-  setCustomValidity: (message: string) => void;
-}
-
+import type { FormControl } from '../misc/forms';
 //
 // We store a WeakMap of forms + controls so we can keep references to all Shoelace controls within a given form. As
 // elements connect and disconnect to/from the DOM, their containing form is used as the key and the form control is
@@ -38,20 +25,20 @@ const reportValidityOverloads: WeakMap<HTMLFormElement, () => boolean> =
 
 export interface FormSubmitControllerOptions {
   /** A function that returns the form containing the form control. */
-  form: (input: FormControl) => HTMLFormElement | null;
+  getForm: (input: FormControl) => HTMLFormElement | null;
   /** A function that returns the form control's name, which will be submitted with the form data. */
-  name: (input: FormControl) => string;
+  getName: (input: FormControl) => string;
   /** A function that returns the form control's current value. */
-  value: (input: FormControl) => unknown;
+  getValue: (input: FormControl) => unknown;
   /** A function that returns the form control's default value. */
-  defaultValue: (input: FormControl) => unknown;
+  getDefaultValue: (input: FormControl) => unknown;
   /** A function that returns the form control's current disabled state. If disabled, the value won't be submitted. */
-  disabled: (input: FormControl) => boolean;
+  isDisabled: (input: FormControl) => boolean;
   /**
    * A function that maps to the form control's reportValidity() function. When the control is invalid, this will
    * prevent submission and trigger the browser's constraint violation warning.
    */
-  reportValidity: (input: FormControl) => boolean;
+  getReportValidity: (input: FormControl) => boolean;
   /** A function that sets the form control's value */
   setValue: (input: FormControl, value: unknown) => void;
 }
@@ -68,12 +55,12 @@ export class FormSubmitController implements ReactiveController {
     (this.host = host).addController(this);
 
     this.options = {
-      form: (input) => input.closest('form'),
-      name: (input) => input.name,
-      value: (input) => input.value,
-      defaultValue: (input) => input.defaultValue,
-      disabled: (input) => input.disabled ?? false,
-      reportValidity: (input) =>
+      getForm: (input) => input.closest('form'),
+      getName: (input) => input.name,
+      getValue: (input) => input.value,
+      getDefaultValue: (input) => input.defaultValue,
+      isDisabled: (input) => input.disabled ?? false,
+      getReportValidity: (input) =>
         typeof input.reportValidity === 'function'
           ? input.reportValidity()
           : true,
@@ -90,7 +77,7 @@ export class FormSubmitController implements ReactiveController {
   }
 
   hostConnected() {
-    this.form = this.options.form(this.host);
+    this.form = this.options.getForm(this.host);
 
     if (this.form) {
       // Add this element to the form's collection
@@ -144,8 +131,8 @@ export class FormSubmitController implements ReactiveController {
     //
     const host = this.host;
     const hasInteracted = Boolean(userInteractedControls.get(host));
-    const invalid = Boolean(host.invalid);
     const required = Boolean(host.required);
+    const invalid = !this.options.getReportValidity(this.host);
 
     if (this.form?.noValidate) {
       // Form validation is disabled, remove the attributes
@@ -167,9 +154,9 @@ export class FormSubmitController implements ReactiveController {
   }
 
   handleFormData(event: FormDataEvent) {
-    const disabled = this.options.disabled(this.host);
-    const name = this.options.name(this.host);
-    const value = this.options.value(this.host);
+    const disabled = this.options.isDisabled(this.host);
+    const name = this.options.getName(this.host);
+    const value = this.options.getValue(this.host);
 
     if (!disabled && typeof name === 'string' && typeof value !== 'undefined') {
       if (Array.isArray(value)) {
@@ -189,8 +176,8 @@ export class FormSubmitController implements ReactiveController {
   }
 
   handleFormSubmit(event: Event) {
-    const disabled = this.options.disabled(this.host);
-    const reportValidity = this.options.reportValidity;
+    const disabled = this.options.isDisabled(this.host);
+    const reportValidity = this.options.getReportValidity;
 
     // Update the interacted state for all controls when the form is submitted
     if (this.form && !this.form.noValidate) {
@@ -211,7 +198,7 @@ export class FormSubmitController implements ReactiveController {
   }
 
   handleFormReset() {
-    this.options.setValue(this.host, this.options.defaultValue(this.host));
+    this.options.setValue(this.host, this.options.getDefaultValue(this.host));
     this.setUserInteracted(this.host, false);
   }
 
