@@ -4,7 +4,7 @@ import { when } from 'lit/directives/when.js';
 import SlCard from '@shoelace-style/shoelace/dist/components/card/card';
 import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkbox';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 
 import { DatePicker } from '../main/shoelace-widgets';
 import { DateField } from '../main/shoelace-widgets';
@@ -59,7 +59,7 @@ const styles = css`
 class DatePickerDemo extends LitElement {
   static {
     // dependencies (to prevent too much tree shaking)
-    void [DateField, DatePicker, SlCard, SlCheckbox, SlMenuItem, SlSelect];
+    void [DateField, DatePicker, SlCard, SlCheckbox, SlOption, SlSelect];
   }
 
   static styles = styles;
@@ -137,16 +137,16 @@ class DatePickerDemo extends LitElement {
         </div>
         <div class="second-column">
           <sl-select label="Locale" data-subject="locale" value=${this._locale}>
-            <sl-menu-item value="en-US">en-US</sl-menu-item>
-            <sl-menu-item value="en-GB">en-GB</sl-menu-item>
-            <sl-menu-item value="en-GB-u-hc-h12">en-GB-u-hc-h12</sl-menu-item>
-            <sl-menu-item value="es-ES">es-ES</sl-menu-item>
-            <sl-menu-item value="fr-FR">fr-FR</sl-menu-item>
-            <sl-menu-item value="de-DE">de-DE</sl-menu-item>
-            <sl-menu-item value="de-AT">de-AT</sl-menu-item>
-            <sl-menu-item value="de-CH">de-CH</sl-menu-item>
-            <sl-menu-item value="it-IT">it-IT</sl-menu-item>
-            <sl-menu-item value="ar-SA">ar-SA</sl-menu-item>
+            <sl-option value="en-US">en-US</sl-option>
+            <sl-option value="en-GB">en-GB</sl-option>
+            <sl-option value="en-GB-u-hc-h12">en-GB-u-hc-h12</sl-option>
+            <sl-option value="es-ES">es-ES</sl-option>
+            <sl-option value="fr-FR">fr-FR</sl-option>
+            <sl-option value="de-DE">de-DE</sl-option>
+            <sl-option value="de-AT">de-AT</sl-option>
+            <sl-option value="de-CH">de-CH</sl-option>
+            <sl-option value="it-IT">it-IT</sl-option>
+            <sl-option value="ar-SA">ar-SA</sl-option>
           </sl-select>
           <sl-select
             class="mode-selector"
@@ -154,40 +154,40 @@ class DatePickerDemo extends LitElement {
             label="Selection mode"
             value=${this._selectionMode}
           >
-            <sl-menu-item value="date">date</sl-menu-item>
-            <sl-menu-item value="dates">dates</sl-menu-item>
-            <sl-menu-item value="dateTime">dateTime</sl-menu-item>
-            <sl-menu-item value="dateRange">dateRange</sl-menu-item>
-            <sl-menu-item value="dateTimeRange">dateTimeRange</sl-menu-item>
-            <sl-menu-item value="time">time</sl-menu-item>
-            <sl-menu-item value="timeRange">timeRange</sl-menu-item>
-            <sl-menu-item value="week">week</sl-menu-item>
-            <sl-menu-item value="weeks">weeks</sl-menu-item>
-            <sl-menu-item value="weekRange">weekRange</sl-menu-item>
-            <sl-menu-item value="month">month</sl-menu-item>
-            <sl-menu-item value="months">months</sl-menu-item>
-            <sl-menu-item value="monthRange">monthRange</sl-menu-item>
-            <sl-menu-item value="quarter">quarter</sl-menu-item>
-            <sl-menu-item value="quarters">quarters</sl-menu-item>
-            <sl-menu-item value="quarterRange">quarterRange</sl-menu-item>
-            <sl-menu-item value="year">year</sl-menu-item>
-            <sl-menu-item value="years">years</sl-menu-item>
-            <sl-menu-item value="yearRange">yearRange</sl-menu-item>
+            <sl-option value="date">date</sl-option>
+            <sl-option value="dates">dates</sl-option>
+            <sl-option value="dateTime">dateTime</sl-option>
+            <sl-option value="dateRange">dateRange</sl-option>
+            <sl-option value="dateTimeRange">dateTimeRange</sl-option>
+            <sl-option value="time">time</sl-option>
+            <sl-option value="timeRange">timeRange</sl-option>
+            <sl-option value="week">week</sl-option>
+            <sl-option value="weeks">weeks</sl-option>
+            <sl-option value="weekRange">weekRange</sl-option>
+            <sl-option value="month">month</sl-option>
+            <sl-option value="months">months</sl-option>
+            <sl-option value="monthRange">monthRange</sl-option>
+            <sl-option value="quarter">quarter</sl-option>
+            <sl-option value="quarters">quarters</sl-option>
+            <sl-option value="quarterRange">quarterRange</sl-option>
+            <sl-option value="year">year</sl-option>
+            <sl-option value="years">years</sl-option>
+            <sl-option value="yearRange">yearRange</sl-option>
           </sl-select>
           <sl-select
             label="Calendar size"
             data-subject="calendarSize"
             value=${this._calendarSize}
           >
-            <sl-menu-item value="default">
+            <sl-option value="default">
               default (show adjacent days/years/decades)
-            </sl-menu-item>
-            <sl-menu-item value="minimal">
+            </sl-option>
+            <sl-option value="minimal">
               minimal (hide adjacent days/years/decades)
-            </sl-menu-item>
-            <sl-menu-item value="maximal">
+            </sl-option>
+            <sl-option value="maximal">
               maximal (always show 42 days in month view)
-            </sl-menu-item>
+            </sl-option>
           </sl-select>
           <sl-checkbox
             data-subject="accentuateHeader"

@@ -370,7 +370,7 @@ class DatePicker {
               class: 'cal-back-to-month-link',
               onclick: this.#onBackToMonthClick
             },
-            'Back to month'
+            '\u{1f860} Back to month'
           )
     );
   }

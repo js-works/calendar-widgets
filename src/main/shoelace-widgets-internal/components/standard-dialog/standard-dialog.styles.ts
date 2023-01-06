@@ -174,14 +174,14 @@ export default css`
     color: var(--sl-color-primary-600);
 
     background-color: var(--dialog--light, var(--sl-color-primary-100))
-      var(--dialog--dark, var(--sl-color-neutral-100));
+      var(--dialog--dark, var(--sl-color-neutral-200));
   }
 
   .dialog--success .icon {
     color: var(--sl-color-success-600);
 
     background-color: var(--dialog--light, var(--sl-color-success-100))
-      var(--dialog--dark, var(--sl-color-neutral-100));
+      var(--dialog--dark, var(--sl-color-neutral-200));
   }
 
   .dialog--warn .icon,
@@ -190,7 +190,7 @@ export default css`
     color: var(--sl-color-danger-600);
 
     background-color: var(--dialog--light, var(--sl-color-danger-100))
-      var(--dialog--dark, var(--sl-color-neutral-100));
+      var(--dialog--dark, var(--sl-color-neutral-200));
   }
 
   .dialog--input .header {

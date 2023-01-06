@@ -19,7 +19,7 @@ import {
 
 import SlDivider from '@shoelace-style/shoelace/dist/components/divider/divider';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
@@ -73,7 +73,7 @@ class DemoApp extends LitElement {
     void [
       SlDivider,
       SlIcon,
-      SlMenuItem,
+      SlOption,
       SlRadioButton,
       SlRadioGroup,
       SlSelect,
@@ -145,13 +145,13 @@ class DemoApp extends LitElement {
             value=${this._activeTheme}
             @sl-change=${this._onThemeChange}
           >
-            <sl-menu-item value="light">Standard (light)</sl-menu-item>
-            <sl-menu-item value="dark">Standard (dark)</sl-menu-item>
+            <sl-option value="light">Standard (light)</sl-option>
+            <sl-option value="dark">Standard (dark)</sl-option>
             <sl-divider></sl-divider>
             ${repeat(
               Object.entries(customThemes),
               ([key, { name }]) => html`
-                <sl-menu-item value=${key}>${name}</sl-menu-item>
+                <sl-option value=${key}>${name}</sl-option>
               `
             )}
           </sl-select>

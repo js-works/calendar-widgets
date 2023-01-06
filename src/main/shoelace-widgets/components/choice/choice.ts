@@ -15,7 +15,7 @@ import {
 
 // custom elements
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
-import SlMenuItem from '@shoelace-style/shoelace/dist/components/menu-item/menu-item';
+import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 import SlRadio from '@shoelace-style/shoelace/dist/components/radio/radio';
 import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
 
@@ -49,7 +49,7 @@ class Choice extends LitElement {
 
   static {
     // dependencies (to prevent too much tree shaking)
-    void [SlSelect, SlMenuItem, SlRadio, SlRadioGroup];
+    void [SlSelect, SlOption, SlRadio, SlRadioGroup];
   }
 
   @property()
@@ -113,6 +113,10 @@ class Choice extends LitElement {
   };
   */
 
+  private _onChange = (ev: Event) => {
+    this.value = (ev.target as any).value;
+  };
+
   render() {
     const type = ['radios', 'horizontal-radios'].includes(this.type)
       ? this.type
@@ -132,7 +136,7 @@ class Choice extends LitElement {
             <sl-select
               class="sl-control"
               hoist
-              @sl-change=${null /*this._onChange*/}
+              @sl-change=${this._onChange}
               value=${this.value}
             >
               <span
@@ -148,9 +152,7 @@ class Choice extends LitElement {
               ${repeat(
                 this.options,
                 (option) => html`
-                  <sl-menu-item value=${option.value}
-                    >${option.text}</sl-menu-item
-                  >
+                  <sl-option value=${option.value}>${option.text}</sl-option>
                 `
               )}
             </sl-select>
