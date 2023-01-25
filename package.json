@@ -56,7 +56,7 @@
     "@web/dev-server-import-maps": "^0.0.7",
     "archiver": "^5.3.1",
     "del": "^7.0.0",
-    "esbuild": "^0.17.3",
+    "esbuild": "^0.17.4",
     "lit-html": "^2.6.1",
     "preact": "^10.11.3",
     "prettier": "^2.8.3",
@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@shoelace-style/localize": "^3.0.4",
-    "@shoelace-style/shoelace": "^2.0.0-beta.88",
+    "@shoelace-style/shoelace": "^2.0.0",
     "lit": "^2.6.1"
   }
 }

@@ -26,24 +26,27 @@ export default css`
     */
 
     position: relative;
-    background-color: var(--sl-color-neutral-100);
+    background-color: var(--sl-color-neutral-50);
     border-radius: 1px;
-    border-left: 1px solid var(--sl-color-primary-600);
+    xxxborder-left: 1px solid var(--sl-color-neutral-600);
+    border: 1px solid var(--sl-color-neutral-100);
+    border-bottom: 1px solid var(--sl-color-neutral-200);
     box-sizing: border-box;
-    border-radius: 1px;
-    color: var(--sl-color-primary-950);
+    border-radius: 2px;
+    color: var(--sl-color-neutral-1000);
     font-size: calc(100% - 1px);
+    font-weight: var(--sl-font-weight-semibold);
   }
 
   .caption:before {
     position: absolute;
     display: block;
     content: '';
-    border: 1px solid var(--sl-color-primary-600);
+    border-left: 0px solid var(--sl-color-neutral-300);
     opacity: 0.5;
-    border-width: 0 0 0 1px;
     height: 100%;
     width: 100%;
+    border-radius: 3px;
     box-sizing: border-box;
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
