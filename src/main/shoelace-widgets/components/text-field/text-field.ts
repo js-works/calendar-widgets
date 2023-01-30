@@ -4,92 +4,15 @@ import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
-import { FormControlController } from '@shoelace-style/shoelace/dist/internal/form';
+
+import { FormFieldController } from '../../form-fields/form-field-controller';
+import { Validators } from '../../form-fields/form-fields';
+import type { FormField } from '../../form-fields/form-fields';
 
 // custom elements
 import '@shoelace-style/shoelace/dist/components/icon/icon';
 import '@shoelace-style/shoelace/dist/components/input/input';
 import type SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-
-interface FormField<V extends string | string[]>
-  extends HTMLElement,
-    ReactiveControllerHost {
-  form: string;
-  name: string;
-  value: V;
-  disabled: boolean;
-  required: boolean;
-
-  checkValidity: () => boolean;
-  reportValidity: () => boolean;
-  setCustomValidity: (message: string) => void;
-}
-
-class FormFieldController<V extends string | string[], W> {
-  #formField: FormField<V>;
-  #formControlController: FormControlController;
-  #getDefaultValue: () => W;
-  #setValue: (value: W) => void;
-
-  constructor(
-    formField: FormField<V>,
-    config: {
-      getDefaultValue: () => W;
-      setValue: (value: W) => void;
-    }
-  ) {
-    this.#formField = formField;
-    this.#getDefaultValue = config.getDefaultValue;
-    this.#setValue = config.setValue;
-
-    // TODO!!!
-    this.#formControlController = new FormControlController(
-      formField as unknown as any,
-      {
-        name: () => formField.name + 'xxx',
-        defaultValue: () => this.#setValue(this.#getDefaultValue()),
-        setValue: (_, value) => this.#setValue(value as W),
-        disabled: () => formField.disabled,
-        form: () => {
-          // If there's a form attribute, use it to find the target form by id
-          if (
-            formField.hasAttribute('form') &&
-            formField.getAttribute('form') !== ''
-          ) {
-            const root = formField.getRootNode() as Document | ShadowRoot;
-            const formId = formField.getAttribute('form');
-
-            if (formId) {
-              return root.getElementById(formId) as HTMLFormElement;
-            }
-          }
-
-          return formField.closest('form');
-        },
-
-        reportValidity: () => formField.reportValidity(),
-        value: () => formField.value + 'aaaa'
-      }
-    );
-
-    formField.addController({
-      hostConnected() {
-        formField.addEventListener('formdata', (ev) => {
-          alert('x');
-          ev.stopPropagation();
-        });
-      }
-    });
-  }
-
-  submit() {
-    this.#formControlController.submit();
-  }
-
-  reset() {
-    this.#formControlController.reset();
-  }
-}
 
 // styles
 import textFieldStyles from './text-field.styles';
@@ -173,8 +96,14 @@ class TextField extends LitElement implements FormField<string> {
     });
   }
 
-  private _onKeyDown = (ev: KeyboardEvent) =>
+  private _onKeyDown = (ev: KeyboardEvent) => {
+    //this._formFieldCtrl.suppressError(false);
     void (ev.key === 'Enter' && this._formFieldCtrl.submit());
+  };
+
+  private _onBlur = () => {
+    this._formFieldCtrl.suppressError(false);
+  };
 
   render() {
     const icon =
@@ -200,6 +129,7 @@ class TextField extends LitElement implements FormField<string> {
           value=${this.value}
           ?autofocus=${this.autofocus}
           @keydown=${this._onKeyDown}
+          @blur=${this._onBlur}
           ?required=${this.required}
           .label=${this.label}
         >
@@ -227,22 +157,27 @@ class TextField extends LitElement implements FormField<string> {
               ></sl-icon> `
           )}
         </sl-input>
-        <!--
-        {when(this._formField.getValidationMode() === 'inline', () =>
-          this._formField.renderErrorMsg()
+
+        ${when(
+          this._formFieldCtrl.hasError(),
+          () => html`
+            <div class="validation-error">
+              ${this._formFieldCtrl.getErrorMessage()}
+            </div>
+          `
         )}
-        -->
       </div>
     `;
   }
 
   checkValidity(): boolean {
-    // alert('checkValidity');
-    return true;
+    return this._formFieldCtrl.checkValidity();
   }
 
   reportValidity(): boolean {
+    this._formFieldCtrl.suppressError(false);
     //alert('reportValidity');
+    console.log('reportValidity');
     return true;
   }
 

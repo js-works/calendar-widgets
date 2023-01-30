@@ -14,14 +14,12 @@ import {
 export { StandardDialog };
 
 import { LocalizeController } from '../../../shoelace-widgets/i18n/i18n';
-import type { FormSubmitEvent } from 'shoelace-widgets';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
-import { Form } from '../../../shoelace-widgets/components/form/form';
 import { TextField } from '../../../shoelace-widgets/components/text-field/text-field';
 
 // styles
@@ -143,7 +141,7 @@ class StandardDialog extends LitElement {
 
   static {
     // required components (to prevent too much tree shaking)
-    void [Form, SlAlert, SlButton, SlDialog, SlIcon, TextField];
+    void [SlAlert, SlButton, SlDialog, SlIcon, TextField];
   }
 
   @property({ attribute: false })
@@ -166,10 +164,11 @@ class StandardDialog extends LitElement {
   private _translate = (key: string) =>
     this._localize.term(`shoelaceWidgets.dialogs/${key}`);
 
-  private _formRef = createRef<Form>();
+  private _formRef = createRef<HTMLFormElement>();
   private _dialogRef = createRef<SlDialog>();
   private _lastClickedAction = '';
 
+  /*
   private _onFormSubmit = (ev: FormSubmitEvent) => {
     if (!this._lastClickedAction) {
       this._lastClickedAction = 'ok';
@@ -192,6 +191,7 @@ class StandardDialog extends LitElement {
       this.resolve!(result);
     });
   };
+  */
 
   private async _cancelForm() {
     await this._dialogRef.value!.hide();
@@ -299,7 +299,7 @@ class StandardDialog extends LitElement {
           'label-layout-horizontal': labelLayout === 'horizontal'
         })}
         dir=${this._localize.dir()}
-        @sx-form-submit=${this._onFormSubmit}
+        @sx-form-submit=${null /* this._onFormSubmit */}
         @sx-form-invalid=${this._onFormInvalid}
         ${ref(this._formRef)}
       >

@@ -5,10 +5,12 @@ import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
 
+/*
 import {
   FormFieldController,
   Validators
 } from '../../form-fields/__form-field-controller';
+*/
 
 // custom elements
 import SlTextarea from '@shoelace-style/shoelace/dist/components/textarea/textarea';
@@ -62,10 +64,12 @@ class TextArea extends LitElement {
 
   private _slTextareaRef = createRef<SlTextarea>();
 
+  /*
   private _formField = new FormFieldController(this, {
     getValue: () => this.value,
     validation: [Validators.required((value) => !this.required || !!value)]
   });
+  */
 
   focus() {
     this._slTextareaRef.value!.focus();
@@ -82,21 +86,25 @@ class TextArea extends LitElement {
     });
   }
 
+  /*
   get validationMessage(): string {
     return this._formField.validate() || '';
   }
+  */
 
+  /*
   private _onInput = () => this._formField.signalInput();
   private _onChange = () => this._formField.signalChange();
   private _onFocus = () => this._formField.signalFocus();
   private _onBlur = () => this._formField.signalBlur();
+  */
 
   render() {
     return html`
       <div
         class="base ${classMap({
           required: this.required,
-          invalid: this._formField.showsError()
+          invalid: false // this._formField.showsError()
         })}"
       >
         <sl-textarea
@@ -104,10 +112,6 @@ class TextArea extends LitElement {
           ${ref(this._slTextareaRef)}
           value=${this.value}
           rows=${this.rows}
-          @sl-input=${this._onInput}
-          @sl-change=${this._onChange}
-          @focus=${this._onFocus}
-          @blur=${this._onBlur}
         >
           ${when(
             this.label,
@@ -124,7 +128,6 @@ class TextArea extends LitElement {
             `
           )}
         </sl-textarea>
-        ${this._formField.renderErrorMsg()}
       </div>
     `;
   }

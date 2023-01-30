@@ -11,7 +11,6 @@ import { TextArea } from '../main/shoelace-widgets';
 import { Choice } from '../main/shoelace-widgets';
 import { CompoundField } from '../main/shoelace-widgets';
 import { Fieldset } from '../main/shoelace-widgets';
-import { Form } from '../main/shoelace-widgets';
 import { FormSection } from '../main/shoelace-widgets';
 
 export default {
@@ -50,7 +49,6 @@ class DialogsDemo extends LitElement {
       CompoundField,
       Choice,
       Fieldset,
-      Form,
       FormSection,
       TextArea,
       TextField,
