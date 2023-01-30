@@ -70,7 +70,12 @@ class TextField extends LitElement implements FormField<string> {
 
   private _formFieldCtrl = new FormFieldController(this, {
     getDefaultValue: () => this.defaultValue,
-    setValue: (value: string) => (this.value = value)
+    setValue: (value: string) => (this.value = value),
+
+    validation: [
+      Validators.required((value) => !this.required || !!value),
+      (value) => (this.type !== 'email' ? null : Validators.email()(value))
+    ]
   });
 
   focus() {
@@ -97,7 +102,6 @@ class TextField extends LitElement implements FormField<string> {
   }
 
   private _onKeyDown = (ev: KeyboardEvent) => {
-    //this._formFieldCtrl.suppressError(false);
     void (ev.key === 'Enter' && this._formFieldCtrl.submit());
   };
 
@@ -177,12 +181,6 @@ class TextField extends LitElement implements FormField<string> {
   reportValidity(): boolean {
     this._formFieldCtrl.suppressError(false);
     //alert('reportValidity');
-    console.log('reportValidity');
-    return true;
-  }
-
-  setCustomValidity(msg: string) {
-    //alert('setCustomValidity');
-    //
+    return this.checkValidity();
   }
 }

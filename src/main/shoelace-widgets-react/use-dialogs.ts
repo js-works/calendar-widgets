@@ -80,7 +80,7 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
                 }
               }
             },
-            options.content
+            h('form', null, options.content)
           )
         );
 
@@ -93,25 +93,21 @@ class DialogsController extends AbstractDialogsController<ReactNode> {
         let contentElement: HTMLElement | null;
 
         if (options.content) {
-          contentElement = document.createElement('span');
+          contentElement = document.createElement('div');
           const root = createRoot(contentElement);
           root.render(options.content);
         }
 
         const rendererId = this.#addRenderer((key) => {
-          return h(
-            DynamicComponent,
-            {
-              key,
-              type: 'sx-standard-toast--internal',
-              params: {
-                config: { type, ...options },
-                contentElement,
-                dismissToast: () => this.#removeRenderer(rendererId)
-              }
-            },
-            options.content
-          );
+          return h(DynamicComponent, {
+            key,
+            type: 'sx-standard-toast--internal',
+            params: {
+              config: { type, ...options },
+              contentElement,
+              dismissToast: () => this.#removeRenderer(rendererId)
+            }
+          });
         });
       }
     });

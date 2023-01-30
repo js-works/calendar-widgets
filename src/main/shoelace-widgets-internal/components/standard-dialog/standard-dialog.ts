@@ -1,4 +1,4 @@
-import { html, LitElement, TemplateResult } from 'lit';
+import { html, render, LitElement, TemplateResult } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { styleMap } from 'lit/directives/style-map.js';
@@ -164,34 +164,8 @@ class StandardDialog extends LitElement {
   private _translate = (key: string) =>
     this._localize.term(`shoelaceWidgets.dialogs/${key}`);
 
-  private _formRef = createRef<HTMLFormElement>();
   private _dialogRef = createRef<SlDialog>();
   private _lastClickedAction = '';
-
-  /*
-  private _onFormSubmit = (ev: FormSubmitEvent) => {
-    if (!this._lastClickedAction) {
-      this._lastClickedAction = 'ok';
-    }
-
-    ev.preventDefault();
-    const data = { ...ev.detail.data };
-
-    setTimeout(async () => {
-      const action = this._lastClickedAction;
-      await this._dialogRef.value!.hide();
-
-      let result = undefined;
-      const mapResult = dialogSettingsByType[this.config!.type].mapResult;
-
-      if (mapResult) {
-        result = mapResult(action, data);
-      }
-
-      this.resolve!(result);
-    });
-  };
-  */
 
   private async _cancelForm() {
     await this._dialogRef.value!.hide();
@@ -206,11 +180,8 @@ class StandardDialog extends LitElement {
     this.resolve!(result);
   }
 
-  private _onFormInvalid = async () => {
-    // TODO!!!
-  };
-
   override willUpdate() {
+    // TODO - this is not always working
     const colorScheme = getComputedStyle(this).colorScheme;
 
     if (colorScheme === 'dark') {
@@ -220,6 +191,60 @@ class StandardDialog extends LitElement {
       this.style.setProperty('--dialog--light', 'initial');
       this.style.setProperty('--dialog--dark', ' ');
     }
+  }
+
+  override firstUpdated() {
+    if (!this.config) {
+      return;
+    }
+
+    const form = this.querySelector('form');
+
+    let additionalContent: TemplateResult = html``;
+
+    if (this.config.type === 'prompt') {
+      const value = this.config.value === 'string' ? this.config.value : '';
+
+      additionalContent = html`
+        <sx-text-field name="input" size="small" autofocus value=${value}>
+        </sx-text-field>
+      `;
+
+      const additionalContainer = document.createElement('div');
+
+      render(additionalContent, additionalContainer);
+      form!.append(additionalContainer);
+    }
+
+    form!.addEventListener('submit', (ev: Event) => {
+      ev.preventDefault();
+      this._lastClickedAction = 'ok';
+      form!.submit();
+    });
+
+    form!.submit = () => {
+      const formData = new FormData(form!);
+
+      const values: Record<string, string> = {};
+
+      for (const [key, value] of formData.entries()) {
+        values[key] = String(formData.getAll(key));
+      }
+
+      setTimeout(async () => {
+        const action = this._lastClickedAction;
+        await this._dialogRef.value!.hide();
+
+        let result = undefined;
+        const mapResult = dialogSettingsByType[this.config!.type].mapResult;
+
+        if (mapResult) {
+          result = mapResult(action, values);
+        }
+
+        this.resolve!(result);
+      });
+    };
   }
 
   override updated() {
@@ -246,17 +271,6 @@ class StandardDialog extends LitElement {
             this.config.type[0].toUpperCase() +
             this.config.type.substring(1)
         );
-
-    let additionalContent: TemplateResult = html``;
-
-    if (this.config.type === 'prompt') {
-      const value = this.config.value === 'string' ? this.config.value : '';
-
-      additionalContent = html`
-        <sx-text-field name="input" size="small" autofocus value=${value}>
-        </sx-text-field>
-      `;
-    }
 
     const labelLayout =
       this.config.type !== 'input'
@@ -292,16 +306,13 @@ class StandardDialog extends LitElement {
           max-height: ${this.config.maxHeight ? this.config.maxHeight : 'auto'};
         }
       </style>
-      <sx-form
+      <div
         class=${classMap({
           'form': true,
           'label-layout-vertical': labelLayout === 'vertical',
           'label-layout-horizontal': labelLayout === 'horizontal'
         })}
         dir=${this._localize.dir()}
-        @sx-form-submit=${null /* this._onFormSubmit */}
-        @sx-form-invalid=${this._onFormInvalid}
-        ${ref(this._formRef)}
       >
         <sl-dialog
           ?open=${this.open}
@@ -346,7 +357,6 @@ class StandardDialog extends LitElement {
             )}
             <div class="content">
               <slot></slot>
-              ${additionalContent}
             </div>
           </div>
           <div slot="footer">
@@ -360,7 +370,11 @@ class StandardDialog extends LitElement {
                     if (action === 'cancel') {
                       this._cancelForm();
                     } else {
-                      this._formRef.value!.submit();
+                      const form = this.querySelector('form');
+
+                      if (form && form.reportValidity()) {
+                        form.submit();
+                      }
                     }
                   };
 
@@ -388,9 +402,8 @@ class StandardDialog extends LitElement {
               )}
             </div>
           </div>
-          </div>
         </sl-dialog>
-      </sx-form>
+      </div>
     `;
   }
 }

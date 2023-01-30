@@ -78,7 +78,7 @@ class DialogsController extends AbstractDialogsController<VNode> {
                 dialogResolve!(result);
               }
             },
-            options.content
+            h('form', null, options.content)
           )
         );
 

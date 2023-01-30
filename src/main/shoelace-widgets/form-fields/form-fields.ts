@@ -16,7 +16,6 @@ interface FormField<V extends string | string[]>
 
   checkValidity: () => boolean;
   reportValidity: () => boolean;
-  setCustomValidity: (message: string) => void;
 }
 
 type Validator<T> = (value: T) => string | null;
@@ -30,14 +29,15 @@ const regexEmail =
 
 const Validators = {
   required: createValidatorFactory(
-    (isSatisfied?: (value: unknown) => boolean) => (value) => {
-      let valid = isSatisfied ? !!isSatisfied(value) : !!value;
+    (isSatisfied?: (value: unknown) => boolean) =>
+      (value): string | null => {
+        let valid = isSatisfied ? !!isSatisfied(value) : !!value;
 
-      return valid ? null : 'Field is mandatory'; // TODO!!!
-    }
+        return valid ? null : 'Field is mandatory'; // TODO!!!
+      }
   ),
 
-  email: createValidatorFactory(() => (value) => {
+  email: createValidatorFactory(() => (value): string | null => {
     let valid = typeof value === 'string' && regexEmail.test(value);
 
     return valid ? null : 'Invalid email address'; // TODO!!!
