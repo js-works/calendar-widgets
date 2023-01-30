@@ -71,11 +71,16 @@ class DialogsController extends AbstractDialogsController<VNode> {
             'sx-standard-dialog--internal',
             {
               key,
-              config: { type, ...options },
 
-              resolve: (result: unknown) => {
-                this.#removeRenderer(rendererId);
-                dialogResolve!(result);
+              ref: (elem: any) => {
+                if (elem) {
+                  elem.config = { type, ...options };
+
+                  elem.resolve = (result: unknown) => {
+                    this.#removeRenderer(rendererId);
+                    dialogResolve!(result);
+                  };
+                }
               }
             },
             h('form', null, options.content)
@@ -98,9 +103,14 @@ class DialogsController extends AbstractDialogsController<VNode> {
         const rendererId = this.#addRenderer((key) => {
           return h('sx-standard-toast--internal', {
             key,
-            config: { type, ...options },
-            contentElement,
-            dismissToast: () => this.#removeRenderer(rendererId)
+
+            ref: (elem: any) => {
+              if (elem) {
+                elem.config = { type, ...options };
+                elem.contentElement = contentElement;
+                elem.dismissToast = () => this.#removeRenderer(rendererId);
+              }
+            }
           });
         });
       }

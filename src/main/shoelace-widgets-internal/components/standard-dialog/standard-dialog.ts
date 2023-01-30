@@ -159,6 +159,7 @@ class StandardDialog extends LitElement {
   @property()
   dir: string = '';
 
+  private _started = false;
   private _localize = new LocalizeController(this);
   // TODO
   private _translate = (key: string) =>
@@ -193,12 +194,13 @@ class StandardDialog extends LitElement {
     }
   }
 
-  override firstUpdated() {
-    if (!this.config) {
-      return;
-    }
-
+  private _start() {
+    this._started = true;
     const form = this.querySelector('form');
+
+    if (!form || !this.config || !this.resolve) {
+      throw 'Dialog not properly initialized';
+    }
 
     let additionalContent: TemplateResult = html``;
 
@@ -246,11 +248,28 @@ class StandardDialog extends LitElement {
       });
     };
   }
+  private _onAfterShow = () => {
+    (this.querySelector('[autofocus]') as unknown as any)?.focus?.();
+  };
+
+  private _onAfterHide = (ev: Event) => {
+    if (ev.target === this._dialogRef.value) {
+      if (!this._lastClickedAction) {
+        this._cancelForm();
+      }
+    }
+  };
+
+  private _onRequestClose = () => {
+    this._lastClickedAction = '';
+  };
 
   override updated() {
-    if (!this._dialogRef.value) {
+    if (!this._started && !this.config) {
       return;
     }
+
+    this._start();
 
     requestAnimationFrame(() => {
       this._dialogRef.value!.show();
@@ -281,22 +300,6 @@ class StandardDialog extends LitElement {
         ? 'horizontal'
         : 'auto';
 
-    const onAfterShow = () => {
-      (this.querySelector('[autofocus]') as unknown as any)?.focus?.();
-    };
-
-    const onAfterHide = (ev: Event) => {
-      if (ev.target === this._dialogRef.value) {
-        if (!this._lastClickedAction) {
-          this._cancelForm();
-        }
-      }
-    };
-
-    const onRequestClose = () => {
-      this._lastClickedAction = '';
-    };
-
     return html`
       <style>
         .dialog::part(panel) {
@@ -320,9 +323,9 @@ class StandardDialog extends LitElement {
             dialog: true,
             [`dialog--${this.config.type}`]: true
           })}
-          @sl-after-show=${onAfterShow}
-          @sl-after-hide=${onAfterHide}
-          @sl-request-close=${onRequestClose}
+          @sl-after-show=${this._onAfterShow}
+          @sl-after-hide=${this._onAfterHide}
+          @sl-request-close=${this._onRequestClose}
           ${ref(this._dialogRef)}
         >
           <div slot="label" class="header">
@@ -347,13 +350,15 @@ class StandardDialog extends LitElement {
           >
             ${when(
               this.config.message,
-              () => html` <div class="message">
-                ${textToResultTemplate(
-                  typeof this.config!.message === 'function'
-                    ? this.config!.message()
-                    : this.config!.message
-                )}
-              </div>`
+              () => html`
+                <div class="message">
+                  ${textToResultTemplate(
+                    typeof this.config!.message === 'function'
+                      ? this.config!.message()
+                      : this.config!.message
+                  )}
+                </div>
+              `
             )}
             <div class="content">
               <slot></slot>
