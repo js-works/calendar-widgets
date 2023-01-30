@@ -2,10 +2,12 @@ import { css, html, LitElement, PropertyValueMap } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement } from 'lit/decorators.js';
 
-import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
-import SlCard from '@shoelace-style/shoelace/dist/components/card/card';
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-import { TextField } from 'shoelace-widgets';
+import '@shoelace-style/shoelace/dist/components/button/button';
+import '@shoelace-style/shoelace/dist/components/card/card';
+import '@shoelace-style/shoelace/dist/components/input/input';
+import '@shoelace-style/shoelace/dist/components/select/select';
+import '@shoelace-style/shoelace/dist/components/option/option';
+import 'shoelace-widgets';
 
 export const formDemo = () => '<form-demo></form-demo>';
 
@@ -14,22 +16,31 @@ const styles = /*css*/ `
 
 @customElement('form-demo')
 class FormDemo extends LitElement {
-  static {
-    // required dependencies (to prevent too much tree shaking)
-    void [SlButton, SlCard, SlInput, TextField];
-  }
-
   private _formRef = createRef<HTMLFormElement>();
 
-  private _onFormSubmit = (ev: Event) => {
-    const form = ev.target as HTMLFormElement;
+  private _onFormSubmit = (ev: SubmitEvent) => {
     ev.preventDefault();
+    const form = ev.target as HTMLFormElement;
 
-    alert('All field valid');
+    const formData = new FormData(form);
+
+    const values: Record<string, string> = {};
+
+    for (const [key, value] of formData.entries()) {
+      if (typeof value === 'string') {
+        const value = formData.getAll(key);
+        console.log(value);
+        values[key] = String(value);
+      } else {
+        console.log(key, value);
+      }
+    }
+
+    alert(JSON.stringify(values, null, 2));
   };
 
-  protected override firstUpdated(): void {
-    this._formRef.value!.onsubmit = this._onFormSubmit;
+  override firstUpdated() {
+    this._formRef.value!.addEventListener('submit', this._onFormSubmit);
   }
 
   render() {
@@ -80,15 +91,38 @@ class FormDemo extends LitElement {
       </style>
       <sl-card>
         <div slot="header">Form demo</div>
-        <form class="input-validation-required" ${ref(this._formRef)}}>
-          <sl-input name="firstName" value="xxx" label="First name" required>
+        <form class="input-validation-required" ${ref(this._formRef)}>
+          <sl-input name="firstName" value="Jane" label="First name" required>
           </sl-input>
-          <sx-text-field
+          <sl-input
             name="lastName"
+            value="Doe"
             label="Last name"
             required
+          ></sl-input>
+
+          <!--
+          <sl-select name="selection" value="v1 v2" multiple>
+            <sl-option value="v1">Value 1</sl-option>
+            <sl-option value="v2">Value 2</sl-option>
+          </sl-select>
+          -->
+
+          <!--
+          <select name="selection2" multiple>
+            <option selected>x1</option>
+            <option selected>x2</option>
+          </select>
+          -->
+
+          <sx-text-field
+            name="email"
+            value="zzz"
+            type="email"
+            label="Email (sx-text-field)"
+            required
           ></sx-text-field>
-          <br />
+
           <sl-button type="submit" variant="primary">Submit</sl-button>
         </form>
       </sl-card>

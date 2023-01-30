@@ -4,33 +4,95 @@ import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
+import { FormControlController } from '@shoelace-style/shoelace/dist/internal/form';
 
-interface FormField extends HTMLElement, ReactiveControllerHost {
-  checkValidity(): boolean;
-  reportValidity(): boolean;
+// custom elements
+import '@shoelace-style/shoelace/dist/components/icon/icon';
+import '@shoelace-style/shoelace/dist/components/input/input';
+import type SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+
+interface FormField<V extends string | string[]>
+  extends HTMLElement,
+    ReactiveControllerHost {
+  form: string;
+  name: string;
+  value: V;
   disabled: boolean;
-  value: string;
-  defaultValue: string;
   required: boolean;
+
   checkValidity: () => boolean;
   reportValidity: () => boolean;
   setCustomValidity: (message: string) => void;
 }
 
-/*
-import {
-  FormFieldController,
-  Validators
-} from '../../form-fields/form-field-controller';
-*/
+class FormFieldController<V extends string | string[], W> {
+  #formField: FormField<V>;
+  #formControlController: FormControlController;
+  #getDefaultValue: () => W;
+  #setValue: (value: W) => void;
 
-// custom elements
-import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+  constructor(
+    formField: FormField<V>,
+    config: {
+      getDefaultValue: () => W;
+      setValue: (value: W) => void;
+    }
+  ) {
+    this.#formField = formField;
+    this.#getDefaultValue = config.getDefaultValue;
+    this.#setValue = config.setValue;
+
+    // TODO!!!
+    this.#formControlController = new FormControlController(
+      formField as unknown as any,
+      {
+        name: () => formField.name + 'xxx',
+        defaultValue: () => this.#setValue(this.#getDefaultValue()),
+        setValue: (_, value) => this.#setValue(value as W),
+        disabled: () => formField.disabled,
+        form: () => {
+          // If there's a form attribute, use it to find the target form by id
+          if (
+            formField.hasAttribute('form') &&
+            formField.getAttribute('form') !== ''
+          ) {
+            const root = formField.getRootNode() as Document | ShadowRoot;
+            const formId = formField.getAttribute('form');
+
+            if (formId) {
+              return root.getElementById(formId) as HTMLFormElement;
+            }
+          }
+
+          return formField.closest('form');
+        },
+
+        reportValidity: () => formField.reportValidity(),
+        value: () => formField.value + 'aaaa'
+      }
+    );
+
+    formField.addController({
+      hostConnected() {
+        formField.addEventListener('formdata', (ev) => {
+          alert('x');
+          ev.stopPropagation();
+        });
+      }
+    });
+  }
+
+  submit() {
+    this.#formControlController.submit();
+  }
+
+  reset() {
+    this.#formControlController.reset();
+  }
+}
 
 // styles
 import textFieldStyles from './text-field.styles';
-import { FormFieldController } from '../../form-fields/form-field-controller';
 
 // === exports =======================================================
 
@@ -44,28 +106,14 @@ declare global {
   }
 }
 
-/*
-class FormFieldController {
-  #formField: FormField
-  #formSubmitCtrl: FormSubmitController
-
-  constructor(formField: FormField) {
-    this.#formField = formField
-    this.#formSubmitCtrl = new FormSubmitController(formField)
-  }
-}
-*/
-
 // === TextField =====================================================
 
 @customElement('sx-text-field')
-class TextField extends LitElement implements FormField {
+class TextField extends LitElement implements FormField<string> {
   static styles = textFieldStyles;
 
-  static {
-    // dependencies (to prevent too much tree shaking)
-    void [SlIcon, SlInput];
-  }
+  @property()
+  form = '';
 
   @property()
   type: 'text' | 'password' | 'email' | 'phone' | 'cellphone' = 'text';
@@ -96,17 +144,11 @@ class TextField extends LitElement implements FormField {
 
   private _slInputRef = createRef<SlInput>();
   private _localize = new LocalizeController(this);
-  private _formFieldCtrl = new FormFieldController(this);
 
-  /*
-  private _formField = new FormFieldController(this, {
-    getValue: () => this.value,
-    validation: [
-      Validators.required((value) => !this.required || !!value),
-      (value) => (this.type !== 'email' ? null : Validators.email()(value))
-    ]
+  private _formFieldCtrl = new FormFieldController(this, {
+    getDefaultValue: () => this.defaultValue,
+    setValue: (value: string) => (this.value = value)
   });
-  */
 
   focus() {
     this._slInputRef.value!.focus();
@@ -116,25 +158,20 @@ class TextField extends LitElement implements FormField {
     this._slInputRef.value?.blur();
   }
 
+  get invalid() {
+    return false;
+  }
+
+  emit(): CustomEvent {
+    return null as any; // TODO
+  }
+
   protected override firstUpdated() {
     Object.defineProperty(this, 'value', {
       get: () => this._slInputRef.value!.value,
       set: (value: string) => void (this._slInputRef.value!.value = value)
     });
   }
-
-  /*
-  get validationMessage(): string {
-    return this._formField.validate() || '';
-  }
-  */
-
-  /*
-  private _onInput = () => this._formField.signalInput();
-  private _onChange = () => this._formField.signalChange();
-  private _onFocus = () => this._formField.signalFocus();
-  private _onBlur = () => this._formField.signalBlur();
-  */
 
   private _onKeyDown = (ev: KeyboardEvent) =>
     void (ev.key === 'Enter' && this._formFieldCtrl.submit());
@@ -163,6 +200,8 @@ class TextField extends LitElement implements FormField {
           value=${this.value}
           ?autofocus=${this.autofocus}
           @keydown=${this._onKeyDown}
+          ?required=${this.required}
+          .label=${this.label}
         >
           ${when(
             this.label,
@@ -198,15 +237,17 @@ class TextField extends LitElement implements FormField {
   }
 
   checkValidity(): boolean {
-    return false; // TODO!!!!
-    //    return this._formField.
+    // alert('checkValidity');
+    return true;
   }
 
   reportValidity(): boolean {
-    return this.checkValidity();
+    //alert('reportValidity');
+    return true;
   }
 
   setCustomValidity(msg: string) {
+    //alert('setCustomValidity');
     //
   }
 }
