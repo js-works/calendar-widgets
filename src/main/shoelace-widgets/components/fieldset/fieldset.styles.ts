@@ -38,7 +38,7 @@ export default css`
 
     background-color: var(--sl-color-primary-100);
     border-bottom: 1px solid var(--sl-color-primary-400);
-    filter: saturate(5%) brightness(101%);
+    filter: saturate(5%) brightness(102%);
   }
 
   .caption:before {
