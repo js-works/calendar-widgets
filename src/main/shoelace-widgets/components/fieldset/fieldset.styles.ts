@@ -37,8 +37,8 @@ export default css`
     font-weight: var(--sl-font-weight-semibold);
 
     background-color: var(--sl-color-primary-100);
-    border-bottom: 1px solid var(--sl-color-primary-400);
-    filter: saturate(5%) brightness(102%);
+    border-bottom: 1px solid var(--sl-color-primary-300);
+    filter: saturate(5%) brightness(103%);
   }
 
   .caption:before {
