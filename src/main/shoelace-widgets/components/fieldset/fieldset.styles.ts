@@ -35,6 +35,10 @@ export default css`
     color: var(--sl-color-neutral-1000);
     font-size: calc(100% - 1px);
     font-weight: var(--sl-font-weight-semibold);
+
+    background-color: var(--sl-color-primary-100);
+    border-bottom: 1px solid var(--sl-color-primary-400);
+    filter: saturate(5%) brightness(101%);
   }
 
   .caption:before {
