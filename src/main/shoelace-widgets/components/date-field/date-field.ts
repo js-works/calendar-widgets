@@ -263,6 +263,7 @@ export class DateField extends LitElement {
               'input': true,
               'input--disabled': this.disabled
             })}
+            exportparts="form-control, form-control-label, form-control-help-text"
           >
             <sl-icon
               slot="suffix"

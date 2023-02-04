@@ -1,10 +1,8 @@
 import { css } from 'lit';
 import componentStyles from '../../styles/component.styles';
-import labelLayoutStyles from '../../styles/label-layout.styles';
 
 export default css`
   ${componentStyles}
-  ${labelLayoutStyles}
 
   .base {
     border: 0 solid var(--sl-color-neutral-200);

@@ -1,6 +1,5 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { Choice } from '../main/shoelace-widgets/components/choice/choice';
 import { DateField } from '../main/shoelace-widgets/components/date-field/date-field';
 import { Fieldset } from '../main/shoelace-widgets/components/fieldset/fieldset';
 
@@ -16,16 +15,19 @@ const styles = css`
     font-size: var(--sl-font-size-medium);
   }
 
-  .choice {
-    display: block;
+  .locale-selector {
     display: inline-block;
-    width: 17rem;
+    width: 10em;
+  }
+
+  sx-date-field {
+    width: 15em;
   }
 
   .columns {
     display: inline-grid;
     grid-template-columns: 1fr 1fr;
-    gap: 0 1rem;
+    gap: 0 3em;
   }
 `;
 
@@ -35,7 +37,7 @@ class DatePickerDemo extends LitElement {
 
   static {
     // dependencies (to prevent to much tree shaking)
-    void [Choice, DateField, Fieldset];
+    void [DateField, Fieldset];
   }
 
   @property()
@@ -55,39 +57,19 @@ class DatePickerDemo extends LitElement {
   render() {
     return html`
       <sx-fieldset label-layout="horizontal" class="base">
-        <sx-choice
+        <sl-select
           label="Locale"
           value=${this._locale}
           @sl-change=${this._onChange}
-          class="choice"
-          .options=${[
-            {
-              value: 'en-US',
-              text: 'en-US'
-            },
-            {
-              value: 'en-GB',
-              text: 'en-GB'
-            },
-            {
-              value: 'es',
-              text: 'es'
-            },
-            {
-              value: 'fr',
-              text: 'fr'
-            },
-            {
-              value: 'de',
-              text: 'de'
-            },
-            {
-              value: 'it',
-              text: 'it'
-            }
-          ]}
+          class="locale-selector"
         >
-        </sx-choice>
+          <sl-option value="en-US">en-US</sl-option>
+          <sl-option value="en-GB">en-GB</sl-option>
+          <sl-option value="es">es</sl-option>
+          <sl-option value="fr">fr</sl-option>
+          <sl-option value="de">de</sl-option>
+          <sl-option value="it">it</sl-option>
+        </sl-select>
         <br />
         <div class="columns">
           <sx-date-field

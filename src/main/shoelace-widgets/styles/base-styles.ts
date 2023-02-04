@@ -1,5 +1,6 @@
 const allFields = /*css*/ `
-  :is(sl-input, sl-select, sx-text-field, sx-date-field)
+  :is(sl-input, sl-select, sl-radio-group, sx-text-field, sx-date-field,
+    sx-compound-field)
 `;
 
 const fieldSelector = /*css*/ `:is(
@@ -12,13 +13,20 @@ const fieldSelector = /*css*/ `:is(
     )`;
 
 export default /*css*/ `
+  sl-radio-group[data-horizontal] sl-radio {
+    display: inline-block;
+  }
+
+
+    /* sx-fieldset */
+
     sx-fieldset {
       --label-width: 140px;
       --gap-width: 10px;
     }
 
     ${fieldSelector} + ${fieldSelector} {
-      margin-top: var(--sl-spacing-small);
+      margin-top: var(--sl-spacing-x-small);
     }
 
     ${fieldSelector}::part(form-control) {

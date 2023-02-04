@@ -24,7 +24,7 @@ type DialogType =
   | 'prompt'
   | 'input';
 
-interface DialogBaseOptions<C> {
+type DialogBaseOptions<C> = {
   title?: string | (() => string);
   message?: string | (() => string);
   content?: C | null;
@@ -33,45 +33,45 @@ interface DialogBaseOptions<C> {
   height?: string | null;
   maxHeight?: string | null;
   padding?: string | null;
-}
+};
 
-interface InfoDialogOptions<C> extends DialogBaseOptions<C> {
+type InfoDialogOptions<C> = DialogBaseOptions<C> & {
   okText?: string | (() => string) | null;
-}
+};
 
-interface SuccessDialogOptions<C> extends DialogBaseOptions<C> {
+type SuccessDialogOptions<C> = DialogBaseOptions<C> & {
   okText?: string | (() => string) | null;
-}
+};
 
-interface WarnDialogOptions<C> extends DialogBaseOptions<C> {
+type WarnDialogOptions<C> = DialogBaseOptions<C> & {
   okText?: string | (() => string) | null;
-}
+};
 
-interface ErrorDialogOptions<C> extends DialogBaseOptions<C> {
+type ErrorDialogOptions<C> = DialogBaseOptions<C> & {
   okText?: string | (() => string) | null;
-}
+};
 
-interface ConfirmDialogOptions<C> extends DialogBaseOptions<C> {
-  okText?: string | (() => string) | null;
-  cancelText?: string | (() => string) | null;
-}
-
-interface ApproveDialogOptions<C> extends DialogBaseOptions<C> {
+type ConfirmDialogOptions<C> = DialogBaseOptions<C> & {
   okText?: string | (() => string) | null;
   cancelText?: string | (() => string) | null;
-}
+};
 
-interface PromptDialogOptions<C> extends DialogBaseOptions<C> {
+type ApproveDialogOptions<C> = DialogBaseOptions<C> & {
+  okText?: string | (() => string) | null;
+  cancelText?: string | (() => string) | null;
+};
+
+type PromptDialogOptions<C> = DialogBaseOptions<C> & {
   okText?: string | (() => string) | null;
   cancelText?: string | (() => string) | null;
   value?: string | null;
-}
+};
 
-interface InputDialogOptions<C> extends DialogBaseOptions<C> {
+type InputDialogOptions<C> = DialogBaseOptions<C> & {
   okText?: string | (() => string) | null;
   cancelText?: string | (() => string) | null;
   labelLayout?: 'auto' | 'vertical' | 'horizontal' | null;
-}
+};
 
 interface InfoDialogConfig<C> extends InfoDialogOptions<C> {
   type: 'info';

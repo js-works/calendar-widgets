@@ -21,7 +21,7 @@ declare global {
   }
 }
 
-// === Choice ========================================================
+// === Compound field ================================================
 
 @customElement('sx-compound-field')
 class CompoundField extends LitElement {
@@ -50,9 +50,11 @@ class CompoundField extends LitElement {
           .join(' ');
 
     return html`
-      <div class="base form-control">
-        <label class="form-control-label">${this.label}</label>
-        <div class="form-control-input">
+      <div class="base form-control" part="form-control">
+        <label class="form-control-label" part="form-control-label"
+          >${this.label}</label
+        >
+        <div class="form-control-input" part="form-control-input">
           <slot class="default-slot fields" style=${slotStyle}></slot>
         </div>
       </div>

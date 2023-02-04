@@ -6,6 +6,10 @@ export default css`
   ${componentStyles}
   ${controlStyles}
 
+  :host {
+    display: block;
+  }
+
   .input:not(.input--disabled),
   .input:not(.input--disabled)::part(input),
   .input:not(.input-disabled)::part(suffix) {

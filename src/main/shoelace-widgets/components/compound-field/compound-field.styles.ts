@@ -6,6 +6,9 @@ export default css`
   ${componentStyles}
   ${controlStyles}
 
+  :host {
+    display: block;
+  }
 
   .fields {
     display: grid;

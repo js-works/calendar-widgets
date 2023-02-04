@@ -8,8 +8,6 @@ import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-g
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
 import { DialogsController, ToastType } from '../main/shoelace-widgets-lit';
 import { TextField } from '../main/shoelace-widgets';
-import { TextArea } from '../main/shoelace-widgets';
-import { Choice } from '../main/shoelace-widgets';
 import { CompoundField } from '../main/shoelace-widgets';
 import { Fieldset } from '../main/shoelace-widgets';
 import { FormSection } from '../main/shoelace-widgets';
@@ -49,10 +47,8 @@ class DialogsDemo extends Component {
     // depenencies (to prevent too much tree shaking)
     void [
       CompoundField,
-      Choice,
       Fieldset,
       FormSection,
-      TextArea,
       TextField,
       SlTab,
       SlTabGroup,
@@ -171,7 +167,6 @@ class DialogsDemo extends Component {
   private _onInput2Click = async () => {
     const data = await this._dialogs.show('input', {
       title: 'Add new user',
-      labelLayout: 'horizontal',
       width: '34rem',
       height: '34rem',
       padding: '0.25rem 1rem',
@@ -179,15 +174,11 @@ class DialogsDemo extends Component {
       content: html`
         <sx-fieldset label-layout="horizontal">
           <sx-fieldset caption="User">
-            <sx-choice
-              label="Salutation"
-              type="horizontal-radios"
-              .options=${[
-                { value: 'mrs', text: 'Mrs.' },
-                { value: 'mr', text: 'Mr.' },
-                { value: 'x', text: 'Other' }
-              ]}
-            ></sx-choice>
+            <sl-radio-group label="Salutation" required data-horizontal>
+              <sl-radio value="mrs">Mrs.</sl-radio>
+              <sl-radio value="mr">Mr.</sl-radio>
+              <sl-radio value="other">Other</sl-radio>
+            </sl-radio-group>
             <sx-text-field
               label="First name"
               name="firstName"
@@ -211,14 +202,10 @@ class DialogsDemo extends Component {
               <sx-text-field name="zip"></sx-text-field>
               <sx-text-field name="city"></sx-text-field>
             </sx-compound-field>
-            <sx-choice
-              label="Country"
-              required
-              .options=${[
-                { value: 'gb', text: 'Great Britain' },
-                { value: 'us', text: 'USA' }
-              ]}
-            ></sx-choice>
+            <sl-select label="Country" required>
+              <sl-option value="gb">Great Britain</sl-option>
+              <sl-option value="us">United States</sl-option>
+            </sl-select>
           </sx-fieldset>
           <sx-fieldset caption="Phone + email">
             <sx-text-field name="phone" type="phone" label="Phone" required>
@@ -243,19 +230,14 @@ class DialogsDemo extends Component {
               </sx-text-field>
               <sx-text-field name="companyCity" aria-required> </sx-text-field>
             </sx-compound-field>
-            <sx-choice
-              label="Country"
-              name="companyCountry"
-              required
-              .options=${[
-                { value: 'gb', text: 'Great Britain' },
-                { value: 'us', text: 'USA' }
-              ]}
-            ></sx-choice>
+            <sl-select label="Country" name="companyCountry" required>
+              <sl-option value="gb">Great Britain</sl-option>
+              <sl-option value="us">USA</sl-option>
+            </sl-select>
           </sx-fieldset>
           <sx-fieldset caption="Notes and comments" label-layout="vertical">
-            <sx-text-area label="General notes" rows="5"></sx-text-area>
-            <sx-text-area label="Comments" rows="5"></sx-text-area>
+            <sl-textarea label="General notes" rows="5"></sx-textarea>
+            <sl-textarea label="Comments" rows="5"></sx-textarea>
           </sx-fieldset>
         </sx-fieldset>
       `,
