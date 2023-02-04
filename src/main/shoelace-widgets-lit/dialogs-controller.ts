@@ -3,6 +3,8 @@ import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import type { DialogConfig, ToastConfig } from 'shoelace-widgets/internal';
 
+import baseStyles from '../shoelace-widgets/styles/base-styles';
+
 import {
   AbstractDialogsController,
   StandardDialog,
@@ -68,6 +70,9 @@ class DialogsController extends AbstractDialogsController<TemplateResult> {
               resolveDialogResult!(result);
             }}
           >
+            <style>
+              ${baseStyles}
+            </style>
             <form id=${Date.now()}>${config.content}</form>
           </sx-standard-dialog--internal>
         `

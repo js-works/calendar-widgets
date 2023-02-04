@@ -1,5 +1,6 @@
-import { css, html, LitElement } from 'lit';
+import { css, html } from 'lit';
 import { customElement } from 'lit/decorators.js';
+import { Component } from './demo-app/component';
 
 // components
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
@@ -12,6 +13,7 @@ import { Choice } from '../main/shoelace-widgets';
 import { CompoundField } from '../main/shoelace-widgets';
 import { Fieldset } from '../main/shoelace-widgets';
 import { FormSection } from '../main/shoelace-widgets';
+import 'shoelace-widgets';
 
 export default {
   title: 'shoelace-widgets'
@@ -40,7 +42,7 @@ const styles = css`
 `;
 
 @customElement('dialogs-demo')
-class DialogsDemo extends LitElement {
+class DialogsDemo extends Component {
   static styles = styles;
 
   static {
@@ -139,21 +141,22 @@ class DialogsDemo extends LitElement {
   private _onInputClick = async () => {
     const data = await this._dialogs.show('input', {
       title: 'Switch user',
-      labelLayout: 'horizontal',
       width: '15rem',
       content: html`
-        <sx-text-field
-          label="Username"
-          name="username"
-          required
-          autofocus
-        ></sx-text-field>
-        <sx-text-field
-          label="Password"
-          type="password"
-          name="password"
-          required
-        ></sx-text-field>
+        <sx-fieldset label-layout="horizontal">
+          <sx-text-field
+            label="Username"
+            name="username"
+            required
+            autofocus
+          ></sx-text-field>
+          <sx-text-field
+            label="Password"
+            type="password"
+            name="password"
+            required
+          ></sx-text-field>
+        </sx-fieldset>
       `
     });
 
@@ -174,35 +177,35 @@ class DialogsDemo extends LitElement {
       padding: '0.25rem 1rem',
 
       content: html`
-        <sx-fieldset caption="User">
-          <sx-choice
-            label="Salutation"
-            type="horizontal-radios"
-            .options=${[
-              { value: 'mrs', text: 'Mrs.' },
-              { value: 'mr', text: 'Mr.' },
-              { value: 'x', text: 'Other' }
-            ]}
-          ></sx-choice>
-          <sx-text-field
-            label="First name"
-            name="firstName"
-            required
-          ></sx-text-field>
-          <sx-text-field
-            label="Last name"
-            name="lastName"
-            required
-          ></sx-text-field>
-          <sx-date-field
-            label="Date of birth"
-            name="dayOfBirth"
-            show-adjacent-days
-            fixed-day-count
-          ></sx-date-field>
-        </sx-fieldset>
-        <sx-fieldset caption="Address">
-          <sx-vbox>
+        <sx-fieldset label-layout="horizontal">
+          <sx-fieldset caption="User">
+            <sx-choice
+              label="Salutation"
+              type="horizontal-radios"
+              .options=${[
+                { value: 'mrs', text: 'Mrs.' },
+                { value: 'mr', text: 'Mr.' },
+                { value: 'x', text: 'Other' }
+              ]}
+            ></sx-choice>
+            <sx-text-field
+              label="First name"
+              name="firstName"
+              required
+            ></sx-text-field>
+            <sx-text-field
+              label="Last name"
+              name="lastName"
+              required
+            ></sx-text-field>
+            <sx-date-field
+              label="Date of birth"
+              name="dayOfBirth"
+              show-adjacent-days
+              fixed-day-count
+            ></sx-date-field>
+          </sx-fieldset>
+          <sx-fieldset caption="Address">
             <sx-text-field label="Street"></sx-text-field>
             <sx-compound-field label="Zip / City" column-widths="30% 70%">
               <sx-text-field name="zip"></sx-text-field>
@@ -216,44 +219,44 @@ class DialogsDemo extends LitElement {
                 { value: 'us', text: 'USA' }
               ]}
             ></sx-choice>
-          </sx-vbox>
-        </sx-fieldset>
-        <sx-fieldset caption="Phone + email">
-          <sx-text-field name="phone" type="phone" label="Phone" required>
-          </sx-text-field>
-          <sx-text-field name="cellphone" type="cellphone" label="Mobile">
-          </sx-text-field>
-          <sx-text-field
-            name="email"
-            type="email"
-            label="Email address"
-            required
-          >
-          </sx-text-field>
-        </sx-fieldset>
-        <sx-fieldset caption="Company">
-          <sx-text-field name="company" label="Company" aria-required>
-          </sx-text-field>
-          <sx-text-field name="companyStreet" label="Street" aria-required>
-          </sx-text-field>
-          <sx-compound-field label="Zip / City" column-widths="30% 70%">
-            <sx-text-field name="companyPostalCode" aria-required>
+          </sx-fieldset>
+          <sx-fieldset caption="Phone + email">
+            <sx-text-field name="phone" type="phone" label="Phone" required>
             </sx-text-field>
-            <sx-text-field name="companyCity" aria-required> </sx-text-field>
-          </sx-compound-field>
-          <sx-choice
-            label="Country"
-            name="companyCountry"
-            required
-            .options=${[
-              { value: 'gb', text: 'Great Britain' },
-              { value: 'us', text: 'USA' }
-            ]}
-          ></sx-choice>
-        </sx-fieldset>
-        <sx-fieldset caption="Notes and comments" label-layout="vertical">
-          <sx-text-area label="General notes" rows="5"></sx-text-area>
-          <sx-text-area label="Comments" rows="5"></sx-text-area>
+            <sx-text-field name="cellphone" type="cellphone" label="Mobile">
+            </sx-text-field>
+            <sx-text-field
+              name="email"
+              type="email"
+              label="Email address"
+              required
+            >
+            </sx-text-field>
+          </sx-fieldset>
+          <sx-fieldset caption="Company">
+            <sx-text-field name="company" label="Company" aria-required>
+            </sx-text-field>
+            <sx-text-field name="companyStreet" label="Street" aria-required>
+            </sx-text-field>
+            <sx-compound-field label="Zip / City" column-widths="30% 70%">
+              <sx-text-field name="companyPostalCode" aria-required>
+              </sx-text-field>
+              <sx-text-field name="companyCity" aria-required> </sx-text-field>
+            </sx-compound-field>
+            <sx-choice
+              label="Country"
+              name="companyCountry"
+              required
+              .options=${[
+                { value: 'gb', text: 'Great Britain' },
+                { value: 'us', text: 'USA' }
+              ]}
+            ></sx-choice>
+          </sx-fieldset>
+          <sx-fieldset caption="Notes and comments" label-layout="vertical">
+            <sx-text-area label="General notes" rows="5"></sx-text-area>
+            <sx-text-area label="Comments" rows="5"></sx-text-area>
+          </sx-fieldset>
         </sx-fieldset>
       `,
 
