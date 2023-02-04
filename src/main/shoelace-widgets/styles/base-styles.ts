@@ -21,8 +21,8 @@ export default /*css*/ `
     /* sx-fieldset */
 
     sx-fieldset {
-      --label-width: 140px;
-      --gap-width: 10px;
+      --label-width: 10em;
+      --gap-width: 1em;
     }
 
     ${fieldSelector} + ${fieldSelector} {
@@ -41,8 +41,7 @@ export default /*css*/ `
     }
 
     ${fieldSelector}::part(form-control-help-text) {
-      grid-column: span 2;
-      padding-left: calc(var(--label-width) + var(--gap-width));
+      grid-column-start: 2;
       margin: 0;
     }
 
