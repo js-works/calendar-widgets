@@ -1,6 +1,7 @@
-import { css, html, LitElement, PropertyValueMap } from 'lit';
+import { css, html, PropertyValueMap } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement } from 'lit/decorators.js';
+import { Component } from './demo-app/component';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/card/card';
@@ -9,13 +10,13 @@ import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
 import 'shoelace-widgets';
 
-export const formDemo = () => '<form-demo></form-demo>';
+export const formDemo = () => '<form-demo2></form-demo2>';
 
 const styles = /*css*/ `
 `;
 
 @customElement('form-demo')
-class FormDemo extends LitElement {
+class FormDemo extends Component {
   private _formRef = createRef<HTMLFormElement>();
 
   private _onFormSubmit = (ev: SubmitEvent) => {
@@ -128,4 +129,88 @@ class FormDemo extends LitElement {
       </sl-card>
     `;
   }
+}
+
+@customElement('form-demo2')
+class DialogsDemo2 extends Component {
+  static styles = css`
+    ${super.styles}
+  `;
+
+  firstUpdated() {
+    const form = this.shadowRoot!.querySelector('form')!;
+
+    alterValidation(form);
+  }
+
+  render() {
+    return html`
+      <form>
+        <sx-fieldset label-layout="horizontal">
+          <sx-fieldset caption="Address">
+            <sl-input name="firstName" label="First name" required></sl-input>
+            <sl-input
+              name="lastName"
+              label="Last name"
+              help-text="We will always call you by your last name"
+              required
+            ></sl-input>
+            <sl-select
+              name="country"
+              label="Country"
+              help-text="Only Great Britain and USA allowed"
+              required
+              clearable
+            >
+              <sl-option value="gb">Great Britain</sl-option>
+              <sl-option value="us">United States</sl-option>
+            </sl-select>
+          </sx-fieldset>
+          <sx-fieldset caption="Phone + Email">
+            <sx-text-field
+              name="phone"
+              type="phone"
+              label="Phone"
+              required
+            ></sx-text-field>
+            <sx-text-field
+              name="email"
+              type="email"
+              label="Email"
+              required
+            ></sx-text-field>
+          </sx-fieldset>
+        </sx-fieldset>
+        <br />
+        <sl-button type="submit" variant="primary">Submit</sl-button>
+        <sl-button type="reset">Reset</sl-button>
+      </form>
+    `;
+  }
+}
+
+function alterValidation(form: HTMLFormElement) {
+  //form.setAttribute('novalidate', '');
+
+  form.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+
+    const input = form.querySelector<HTMLInputElement>("[name='firstName']")!;
+
+    alert(input.shadowRoot!.querySelector('input')?.validity.valid);
+    //alert('submit');
+  });
+
+  form.addEventListener(
+    'invalid',
+    (ev: Event) => {
+      alert('invalid');
+      ev.preventDefault();
+    },
+    true
+  );
+
+  form.addEventListener('input', (ev: Event) =>
+    console.log('input', (ev.target as any).value)
+  );
 }

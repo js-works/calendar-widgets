@@ -1,4 +1,4 @@
-import { html, LitElement } from 'lit';
+import { html, unsafeCSS, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { unsafeHTML } from 'lit/directives/unsafe-html.js';
@@ -27,6 +27,7 @@ import SlRadioButton from '@shoelace-style/shoelace/dist/components/radio-button
 import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 
+import baseStyles from '../../main/shoelace-widgets/styles/base-styles';
 import demoStyles from './demo-app.styles';
 import demoIcon from './demo-app.icon';
 
@@ -66,7 +67,7 @@ function demo(content: string | Element) {
 
 @customElement('demo-app')
 class DemoApp extends LitElement {
-  static styles = demoStyles;
+  static styles = [unsafeCSS(baseStyles), demoStyles];
 
   static {
     // required components (to prevent too much tree-shaking)

@@ -45,11 +45,10 @@ function Demo() {
   const onInputDialogClick = async () => {
     const data = await showDialog('input', {
       title: 'Switch user',
-      labelLayout: 'horizontal',
       width: '25rem',
 
       content: (
-        <>
+        <sx-fieldset label-layout="horizontal">
           <sx-text-field label="Username" name="username" required autofocus />
 
           <sx-text-field
@@ -58,7 +57,7 @@ function Demo() {
             name="password"
             required
           />
-        </>
+        </sx-fieldset>
       )
     });
 

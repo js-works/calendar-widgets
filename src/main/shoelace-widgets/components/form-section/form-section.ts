@@ -3,9 +3,6 @@ import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 
-// styles
-import fieldsetStyles from './form-section.styles';
-
 // === exports =======================================================
 
 export { FormSection };
@@ -14,8 +11,6 @@ export { FormSection };
 
 @customElement('sx-form-section')
 class FormSection extends LitElement {
-  static styles = fieldsetStyles;
-
   @property()
   caption = '';
 

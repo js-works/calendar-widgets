@@ -169,7 +169,7 @@ class DialogsDemo extends LitElement {
     const data = await this._dialogs.show('input', {
       title: 'Add new user',
       labelLayout: 'horizontal',
-      width: '30rem',
+      width: '34rem',
       height: '34rem',
       padding: '0.25rem 1rem',
 

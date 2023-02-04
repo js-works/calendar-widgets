@@ -86,14 +86,6 @@ class TextField extends LitElement implements FormField<string> {
     this._slInputRef.value?.blur();
   }
 
-  get invalid() {
-    return false;
-  }
-
-  emit(): CustomEvent {
-    return null as any; // TODO
-  }
-
   protected override firstUpdated() {
     Object.defineProperty(this, 'value', {
       get: () => this._slInputRef.value!.value,
@@ -118,59 +110,32 @@ class TextField extends LitElement implements FormField<string> {
         : null;
 
     return html`
-      <div
-        class="base ${classMap({
-          required: this.required
-          // invalid: this._formField.showsError()
-        })}"
+      <sl-input
+        type=${this.type === 'password' ? 'password' : 'text'}
+        ?password-toggle=${this.type === 'password'}
+        class="sl-control"
+        size=${this.size}
+        ${ref(this._slInputRef)}
+        value=${this.value}
+        ?autofocus=${this.autofocus}
+        @keydown=${this._onKeyDown}
+        @blur=${this._onBlur}
+        ?required=${this.required}
+        label=${this.label}
+        exportparts="form-control,form-control-label,form-control-input"
       >
-        <sl-input
-          type=${this.type === 'password' ? 'password' : 'text'}
-          ?password-toggle=${this.type === 'password'}
-          class="sl-control"
-          size=${this.size}
-          ${ref(this._slInputRef)}
-          value=${this.value}
-          ?autofocus=${this.autofocus}
-          @keydown=${this._onKeyDown}
-          @blur=${this._onBlur}
-          ?required=${this.required}
-          .label=${this.label}
-        >
-          ${when(
-            this.label,
-            () => html`
-              <span
-                slot="label"
-                class=${classMap({
-                  'sl-control-label': true,
-                  'sl-control-label--required': this.required
-                })}
-              >
-                ${this.label}
-              </span>
-            `
-          )}
-          ${when(
-            icon,
-            () =>
-              html`<sl-icon
+        ${when(
+          icon,
+          () =>
+            html`
+              <sl-icon
                 slot="suffix"
                 library="shoelace-widgets"
                 name=${icon}
-              ></sl-icon> `
-          )}
-        </sl-input>
-
-        ${when(
-          this._formFieldCtrl.hasError(),
-          () => html`
-            <div class="validation-error">
-              ${this._formFieldCtrl.getErrorMessage()}
-            </div>
-          `
+              ></sl-icon>
+            `
         )}
-      </div>
+      </sl-input>
     `;
   }
 

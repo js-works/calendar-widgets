@@ -12,6 +12,14 @@ export { Fieldset };
 
 // === exported types ==========================================
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'sx-fieldset': Fieldset;
+  }
+}
+
+// === Fieldset ======================================================
+
 @customElement('sx-fieldset')
 class Fieldset extends LitElement {
   static styles = fieldsetStyles;
@@ -19,7 +27,7 @@ class Fieldset extends LitElement {
   @property()
   caption = '';
 
-  @property({ attribute: 'label-layout' })
+  @property({ attribute: 'label-layout', reflect: true })
   labelLayout: 'vertical' | 'horizontal' | 'auto' = 'auto';
 
   render() {
