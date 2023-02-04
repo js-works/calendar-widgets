@@ -70,7 +70,6 @@ type PromptDialogOptions<C> = DialogBaseOptions<C> & {
 type InputDialogOptions<C> = DialogBaseOptions<C> & {
   okText?: string | (() => string) | null;
   cancelText?: string | (() => string) | null;
-  labelLayout?: 'auto' | 'vertical' | 'horizontal' | null;
 };
 
 interface InfoDialogConfig<C> extends InfoDialogOptions<C> {

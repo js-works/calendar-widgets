@@ -291,15 +291,6 @@ class StandardDialog extends LitElement {
             this.config.type.substring(1)
         );
 
-    const labelLayout =
-      this.config.type !== 'input'
-        ? 'auto'
-        : this.config.labelLayout === 'vertical'
-        ? 'vertical'
-        : this.config.labelLayout === 'horizontal'
-        ? 'horizontal'
-        : 'auto';
-
     return html`
       <style>
         .dialog::part(panel) {
@@ -309,14 +300,7 @@ class StandardDialog extends LitElement {
           max-height: ${this.config.maxHeight ? this.config.maxHeight : 'auto'};
         }
       </style>
-      <div
-        class=${classMap({
-          'form': true,
-          'label-layout-vertical': labelLayout === 'vertical',
-          'label-layout-horizontal': labelLayout === 'horizontal'
-        })}
-        dir=${this._localize.dir()}
-      >
+      <div class="form" dir=${this._localize.dir()}>
         <sl-dialog
           ?open=${this.open}
           class=${classMap({

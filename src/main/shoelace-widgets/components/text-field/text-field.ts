@@ -1,6 +1,5 @@
 import { html, LitElement, ReactiveControllerHost } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
@@ -140,12 +139,10 @@ class TextField extends LitElement implements FormField<string> {
   }
 
   checkValidity(): boolean {
-    return this._formFieldCtrl.checkValidity();
+    return this._slInputRef.value?.reportValidity() || false;
   }
 
   reportValidity(): boolean {
-    this._formFieldCtrl.suppressError(false);
-    //alert('reportValidity');
-    return this.checkValidity();
+    return this._slInputRef.value?.reportValidity() || false;
   }
 }
