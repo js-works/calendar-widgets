@@ -139,7 +139,7 @@ class TextField extends LitElement implements FormField<string> {
   }
 
   checkValidity(): boolean {
-    return this._slInputRef.value?.reportValidity() || false;
+    return this._slInputRef.value?.checkValidity() || false;
   }
 
   reportValidity(): boolean {
