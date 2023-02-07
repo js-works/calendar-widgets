@@ -12,11 +12,19 @@ import 'shoelace-widgets';
 
 export const formDemo = () => '<form-demo2></form-demo2>';
 
-const styles = /*css*/ `
+const styles = css`
+  .demo-form {
+    max-width: 30rem;
+  }
 `;
 
 @customElement('form-demo')
 class FormDemo extends Component {
+  static styles = css`
+    ${super.styles}
+    ${styles}
+  `;
+
   private _formRef = createRef<HTMLFormElement>();
 
   private _onFormSubmit = (ev: SubmitEvent) => {
@@ -93,14 +101,19 @@ class FormDemo extends Component {
       <sl-card>
         <div slot="header">Form demo</div>
         <form class="input-validation-required" ${ref(this._formRef)}>
-          <sl-input name="firstName" value="Jane" label="First name" required>
-          </sl-input>
-          <sl-input
+          <sx-text-field
+            name="firstName"
+            value="Jane"
+            label="First name"
+            required
+          >
+          </sx-text-field>
+          <sx-text-field
             name="lastName"
             value="Doe"
             label="Last name"
             required
-          ></sl-input>
+          ></sx-text-field>
 
           <!--
           <sl-select name="selection" value="v1 v2" multiple>
@@ -135,6 +148,7 @@ class FormDemo extends Component {
 class DialogsDemo2 extends Component {
   static styles = css`
     ${super.styles}
+    ${styles}
   `;
 
   firstUpdated() {
@@ -145,16 +159,20 @@ class DialogsDemo2 extends Component {
 
   render() {
     return html`
-      <form>
+      <form class="demo-form">
         <sx-fieldset label-layout="horizontal">
           <sx-fieldset caption="Address">
-            <sl-input name="firstName" label="First name" required></sl-input>
-            <sl-input
+            <sx-text-field
+              name="firstName"
+              label="First name"
+              required
+            ></sx-text-field>
+            <sx-text-field
               name="lastName"
               label="Last name"
               help-text="We will always call you by your last name"
               required
-            ></sl-input>
+            ></sx-text-field>
             <sl-select
               name="country"
               label="Country"
