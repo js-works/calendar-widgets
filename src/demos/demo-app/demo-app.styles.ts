@@ -42,7 +42,7 @@ export default css`
   }
 
   .theme-selector {
-    width: 16em;
+    width: 20em;
   }
 
   .label-on-left::part(form-control) {

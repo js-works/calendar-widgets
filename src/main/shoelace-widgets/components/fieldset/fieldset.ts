@@ -30,6 +30,23 @@ class Fieldset extends LitElement {
   @property({ attribute: 'label-layout', reflect: true })
   labelLayout: 'vertical' | 'horizontal' | 'auto' = 'auto';
 
+  @property({ attribute: 'validation-mode', reflect: true })
+  validationMode: 'default' | 'inline' | null = null;
+
+  firstUpdated() {
+    this.closest('form')?.addEventListener(
+      'invalid',
+      (ev) => {
+        alert('juhu');
+        console.log(1, 'invalid', ev.target);
+        if (this.validationMode === 'inline') {
+          //  ev.preventDefault();
+        }
+      },
+      true
+    );
+  }
+
   render() {
     return html`
       <fieldset

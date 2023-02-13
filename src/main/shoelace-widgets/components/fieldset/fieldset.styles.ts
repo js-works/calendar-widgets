@@ -14,6 +14,7 @@ export default css`
     width: 100%;
     margin-bottom: 0.5rem;
     padding: 2px 0.75em 4px 0.75em;
+    filter: brightness(103%) saturate(10%);
 
     /*
     background: linear-gradient(
@@ -36,7 +37,6 @@ export default css`
 
     background-color: var(--sl-color-primary-100);
     border-bottom: 1px solid var(--sl-color-primary-300);
-    filter: saturate(5%) brightness(103%);
   }
 
   .caption:before {

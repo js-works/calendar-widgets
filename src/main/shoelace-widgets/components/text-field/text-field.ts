@@ -100,6 +100,12 @@ class TextField extends LitElement implements FormField<string> {
     this._formFieldCtrl.suppressError(false);
   };
 
+  private _onInvalid = (ev: Event) => {
+    console.log('onInvalid');
+    alert(111);
+    this.dispatchEvent(ev);
+  };
+
   render() {
     const icon =
       this.type === 'email' ||

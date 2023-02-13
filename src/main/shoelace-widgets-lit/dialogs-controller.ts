@@ -73,7 +73,9 @@ class DialogsController extends AbstractDialogsController<TemplateResult> {
             <style>
               ${baseStyles}
             </style>
-            <form id=${Date.now()}>${config.content}</form>
+            <form id=${Date.now()}">
+              ${config.content}
+            </form>
           </sx-standard-dialog--internal>
         `
     );

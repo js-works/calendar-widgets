@@ -12,6 +12,8 @@ import { preactDemo } from '../preact.demo';
 import {
   convertThemeToCss,
   customizeTheme,
+  defaultTheme,
+  lilTheme,
   ColorSetups,
   ThemeModifiers,
   Theme
@@ -40,6 +42,7 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
   'custom-light': {
     name: 'Custom (light)',
     theme: customizeTheme(
+      defaultTheme,
       ThemeModifiers.builder()
         .colors(ColorSetups.bostonBlue)
         .modern()
@@ -51,8 +54,43 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
   'custom-dark': {
     name: 'Custom (dark)',
     theme: customizeTheme(
+      defaultTheme,
       ThemeModifiers.builder()
         .colors(ColorSetups.skyBlue)
+        .modern()
+        .compact()
+        .dark()
+        .build()
+    )
+  },
+  'lil-theme-light': {
+    name: 'Lil theme (light)',
+    theme: lilTheme
+  },
+  'lil-theme-dark': {
+    name: 'Lil theme (dark)',
+    theme: customizeTheme(
+      lilTheme,
+      ThemeModifiers.builder() //
+        .dark()
+        .build()
+    )
+  },
+  'lil-theme-custom-light': {
+    name: 'Lil theme custom (light)',
+    theme: customizeTheme(
+      lilTheme,
+      ThemeModifiers.builder() //
+        .modern()
+        .compact()
+        .build()
+    )
+  },
+  'lil-theme-custom-dark': {
+    name: 'Lil theme custom (dark)',
+    theme: customizeTheme(
+      lilTheme,
+      ThemeModifiers.builder() //
         .modern()
         .compact()
         .dark()

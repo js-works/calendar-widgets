@@ -172,7 +172,7 @@ class DialogsDemo extends Component {
       padding: '0.25rem 1rem',
 
       content: html`
-        <sx-fieldset label-layout="horizontal">
+        <sx-fieldset label-layout="horizontal" validation-mode="inline">
           <sx-fieldset caption="User">
             <sl-radio-group label="Salutation" required data-horizontal>
               <sl-radio value="mrs">Mrs.</sl-radio>

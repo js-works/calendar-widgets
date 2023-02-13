@@ -49,6 +49,13 @@ class FormDemo extends Component {
   };
 
   override firstUpdated() {
+    this._formRef.value!.addEventListener(
+      'invalid',
+      (ev) => {
+        console.log('invalid ->', ev.target);
+      },
+      true
+    );
     this._formRef.value!.addEventListener('submit', this._onFormSubmit);
   }
 
@@ -213,10 +220,7 @@ function alterValidation(form: HTMLFormElement) {
   form.addEventListener('submit', (ev) => {
     ev.preventDefault();
 
-    const input = form.querySelector<HTMLInputElement>("[name='firstName']")!;
-
-    alert(input.shadowRoot!.querySelector('input')?.validity.valid);
-    //alert('submit');
+    alert('All fields are valid');
   });
 
   form.addEventListener(
