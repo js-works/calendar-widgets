@@ -14,7 +14,6 @@ export default css`
     width: 100%;
     margin-bottom: 0.5rem;
     padding: 2px 0.75em 4px 0.75em;
-    filter: brightness(103%) saturate(10%);
 
     /*
     background: linear-gradient(
@@ -28,15 +27,12 @@ export default css`
     background-color: var(--sl-color-neutral-100);
     border-radius: 1px;
     xxxborder-left: 1px solid var(--sl-color-neutral-600);
-    border-bottom: 1px solid var(--sl-color-neutral-200);
+    border-bottom: 1px solid var(--sl-color-neutral-300);
     box-sizing: border-box;
     border-radius: 2px;
     color: var(--sl-color-neutral-1000);
     font-size: calc(100% - 1px);
     font-weight: var(--sl-font-weight-semibold);
-
-    background-color: var(--sl-color-primary-100);
-    border-bottom: 1px solid var(--sl-color-primary-300);
   }
 
   .caption:before {
