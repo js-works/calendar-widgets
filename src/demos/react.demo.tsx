@@ -37,7 +37,8 @@ function Demo() {
 
   const onPromptDialogClick = async () => {
     const name = await showDialog('prompt', {
-      message: 'Please enter your name'
+      label: 'Your name',
+      required: true
     });
 
     if (name !== null) {
@@ -51,11 +52,10 @@ function Demo() {
   const onInputDialogClick = async () => {
     const data = await showDialog('input', {
       title: 'Switch user',
-      labelLayout: 'horizontal',
       width: '25rem',
 
       content: (
-        <>
+        <Fieldset label-layout="horizontal">
           <TextField label="Username" name="username" required autofocus />
 
           <TextField
@@ -64,7 +64,7 @@ function Demo() {
             name="password"
             required
           />
-        </>
+        </Fieldset>
       )
     });
 

@@ -62,9 +62,12 @@ type ApproveDialogOptions<C> = DialogBaseOptions<C> & {
 };
 
 type PromptDialogOptions<C> = DialogBaseOptions<C> & {
+  label?: string | (() => string) | null;
   okText?: string | (() => string) | null;
   cancelText?: string | (() => string) | null;
   value?: string | null;
+  required?: boolean;
+  autocomplete?: boolean | string;
 };
 
 type InputDialogOptions<C> = DialogBaseOptions<C> & {

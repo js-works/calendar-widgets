@@ -64,6 +64,9 @@ class TextField extends LitElement implements FormField<string> {
   @property()
   size: 'small' | 'medium' | 'large' = 'medium';
 
+  @property()
+  autocomplete = '';
+
   private _slInputRef = createRef<SlInput>();
   private _localize = new LocalizeController(this);
 
@@ -127,6 +130,7 @@ class TextField extends LitElement implements FormField<string> {
         @blur=${this._onBlur}
         ?required=${this.required}
         label=${this.label}
+        autocomplete=${this.autocomplete}
         exportparts="form-control,form-control-label,form-control-input"
       >
         ${when(
