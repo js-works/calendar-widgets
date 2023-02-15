@@ -61,50 +61,6 @@ class FormDemo extends Component {
 
   render() {
     return html`
-      <style>
-        .validity-styles sl-input,
-        .validity-styles sl-select {
-          margin-bottom: var(--sl-spacing-medium);
-        }
-
-        /* user invalid styles */
-        .validity-styles sl-input[data-user-invalid]::part(base),
-        .validity-styles sl-select[data-user-invalid]::part(control) {
-          border-color: var(--sl-color-danger-600);
-        }
-
-        .validity-styles [data-user-invalid]::part(form-control-label),
-        .validity-styles [data-user-invalid]::part(form-control-help-text) {
-          color: var(--sl-color-danger-700);
-        }
-
-        .validity-styles sl-input:focus-within[data-user-invalid]::part(base),
-        .validity-styles
-          sl-select:focus-within[data-user-invalid]::part(control) {
-          border-color: var(--sl-color-danger-600);
-          box-shadow: 0 0 0 var(--sl-focus-ring-width)
-            var(--sl-color-danger-300);
-        }
-
-        /* User valid styles */
-        .validity-styles sl-input[data-user-valid]::part(base),
-        .validity-styles sl-select[data-user-valid]::part(control) {
-          border-color: var(--sl-color-success-600);
-        }
-
-        .validity-styles [data-user-valid]::part(form-control-label),
-        .validity-styles [data-user-valid]::part(form-control-help-text) {
-          color: var(--sl-color-success-700);
-        }
-
-        .validity-styles sl-input:focus-within[data-user-valid]::part(base),
-        .validity-styles
-          sl-select:focus-within[data-user-valid]::part(control) {
-          border-color: var(--sl-color-success-600);
-          box-shadow: 0 0 0 var(--sl-focus-ring-width)
-            var(--sl-color-success-300);
-        }
-      </style>
       <sl-card>
         <div slot="header">Form demo</div>
         <form class="input-validation-required" ${ref(this._formRef)}>
@@ -158,11 +114,7 @@ class DialogsDemo2 extends Component {
     ${styles}
   `;
 
-  firstUpdated() {
-    const form = this.shadowRoot!.querySelector('form')!;
-
-    alterValidation(form);
-  }
+  firstUpdated() {}
 
   render() {
     return html`
@@ -212,27 +164,4 @@ class DialogsDemo2 extends Component {
       </form>
     `;
   }
-}
-
-function alterValidation(form: HTMLFormElement) {
-  //form.setAttribute('novalidate', '');
-
-  form.addEventListener('submit', (ev) => {
-    ev.preventDefault();
-
-    alert('All fields are valid');
-  });
-
-  form.addEventListener(
-    'invalid',
-    (ev: Event) => {
-      alert('invalid');
-      ev.preventDefault();
-    },
-    true
-  );
-
-  form.addEventListener('input', (ev: Event) =>
-    console.log('input', (ev.target as any).value)
-  );
 }

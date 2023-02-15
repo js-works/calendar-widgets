@@ -93,6 +93,14 @@ class TextField extends LitElement implements FormField<string> {
       get: () => this._slInputRef.value!.value,
       set: (value: string) => void (this._slInputRef.value!.value = value)
     });
+
+    this._slInputRef.value!.addEventListener('sl-invalid', (ev) => {
+      this._formFieldCtrl.emitInvalidEvent(ev);
+    });
+
+    this._slInputRef.value!.updateComplete.then(() => {
+      this._formFieldCtrl.updateValidity();
+    });
   }
 
   private _onKeyDown = (ev: KeyboardEvent) => {
@@ -131,7 +139,7 @@ class TextField extends LitElement implements FormField<string> {
         ?required=${this.required}
         label=${this.label}
         autocomplete=${this.autocomplete}
-        exportparts="form-control,form-control-label,form-control-input"
+        exportparts="base,form-control,form-control-label,form-control-input,form-control-help-text"
       >
         ${when(
           icon,
@@ -154,5 +162,13 @@ class TextField extends LitElement implements FormField<string> {
 
   reportValidity(): boolean {
     return this._slInputRef.value?.reportValidity() || false;
+  }
+
+  get validity() {
+    return this._slInputRef.value!.validity;
+  }
+
+  get validationMessage() {
+    return this._slInputRef.value!.validationMessage;
   }
 }

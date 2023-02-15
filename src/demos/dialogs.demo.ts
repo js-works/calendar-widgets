@@ -139,7 +139,7 @@ class DialogsDemo extends Component {
       title: 'Switch user',
       width: '15rem',
       content: html`
-        <sx-fieldset label-layout="horizontal">
+        <sx-fieldset label-layout="horizontal" validation-mode="inline">
           <sx-text-field
             label="Username"
             name="username"

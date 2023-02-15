@@ -51,7 +51,8 @@ class FormFieldController<V extends string | string[], W> {
         },
 
         reportValidity: () => formField.reportValidity(),
-        value: () => formField.value
+        value: () => formField.value,
+        assumeInteractionOn: ['sl-blur', 'sl-input'] // TODO!!
       }
     );
   }
@@ -113,5 +114,13 @@ class FormFieldController<V extends string | string[], W> {
 
   reset() {
     this.#formControlController.reset();
+  }
+
+  emitInvalidEvent(ev: Event) {
+    this.#formControlController.emitInvalidEvent(ev);
+  }
+
+  updateValidity() {
+    this.#formControlController.updateValidity();
   }
 }

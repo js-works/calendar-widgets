@@ -14,6 +14,9 @@ interface FormField<V extends string | string[]>
   disabled: boolean;
   required: boolean;
 
+  validationMessage: string;
+  validity: ValidityState;
+
   checkValidity: () => boolean;
   reportValidity: () => boolean;
 }
