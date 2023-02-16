@@ -28,6 +28,13 @@ declare global {
   }
 }
 
+// === local constants ===============================================
+
+const typeMap: Record<string, string> = {
+  password: 'password',
+  email: 'email'
+};
+
 // === TextField =====================================================
 
 @customElement('sx-text-field')
@@ -127,9 +134,9 @@ class TextField extends LitElement implements FormField<string> {
 
     return html`
       <sl-input
-        type=${this.type === 'password' ? 'password' : 'text'}
+        type=${typeMap[this.type] ?? 'text'}
         ?password-toggle=${this.type === 'password'}
-        class="sl-control"
+        class="base"
         size=${this.size}
         ${ref(this._slInputRef)}
         value=${this.value}

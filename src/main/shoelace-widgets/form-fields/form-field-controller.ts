@@ -36,9 +36,7 @@ class FormFieldController<V extends string | string[], W> {
 
         form: () => {
           const ret = formField.closest('form');
-          console.log('formmmmmm', ret);
-          return ret;
-          /*
+
           // If there's a form attribute, use it to find the target form by id
           if (
             formField.hasAttribute('form') &&
@@ -53,7 +51,6 @@ class FormFieldController<V extends string | string[], W> {
           }
 
           return formField.closest('form');
-          */
         },
 
         reportValidity: () => formField.reportValidity(),
@@ -65,9 +62,8 @@ class FormFieldController<V extends string | string[], W> {
     const oldAttachForm = (this.#formControlController as any).attachForm.bind(
       this.#formControlController
     );
-    console.log(oldAttachForm);
+
     (this.#formControlController as any).attachForm = (...args: any) => {
-      console.log(9999, ...args);
       oldAttachForm(...args);
     };
   }

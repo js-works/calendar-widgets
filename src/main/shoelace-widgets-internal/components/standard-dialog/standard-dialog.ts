@@ -374,7 +374,7 @@ class StandardDialog extends LitElement {
                       this._cancelForm();
                     } else {
                       const form = this.querySelector('form');
-                      console.log(111, form?.reportValidity());
+
                       if (form && form.reportValidity()) {
                         console.log(2222);
                         form.submit();

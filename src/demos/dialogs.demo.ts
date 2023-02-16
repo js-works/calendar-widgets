@@ -140,10 +140,20 @@ class DialogsDemo extends Component {
       width: '15rem',
       content: html`
         <sx-fieldset label-layout="horizontal" validation-mode="inline">
+          <!--
           <sx-text-field
             label="Username"
             name="username"
             help-text="Please enter your username here"
+            required
+            autofocus
+          ></sx-text-field>
+    -->
+          <sx-text-field
+            label="Email"
+            name="Email"
+            type="email"
+            help-text="Please enter your email address"
             required
             autofocus
           ></sx-text-field>

@@ -40,7 +40,7 @@ export function activateInlineValidation(
     const message = formControl.validationMessage;
     const root = formControl.shadowRoot;
     const lastChild = root.lastChild;
-    const formControlPart = root.querySelector('[part=form-control]');
+    const baseElem = root.querySelector('[part=form-control], .base');
     let validationMessagePart: HTMLElement;
 
     if (
@@ -66,6 +66,7 @@ export function activateInlineValidation(
 
     validationMessagePart.innerText = message;
 
+    /*
     if (message === '') {
       formControlPart.removeAttribute('aria-errormessage');
     } else {
@@ -74,6 +75,7 @@ export function activateInlineValidation(
         'form-control-validation-message'
       );
     }
+    */
   };
 
   // Updates the error attributes for all Shoelace form controls
@@ -161,7 +163,7 @@ export function activateInlineValidation(
         lastChild.getAttribute('part') === 'form-control-validation-message'
       ) {
         formControl
-          .shadowRoot!.querySelector('[part=form-control]')
+          .shadowRoot!.querySelector('[part=form-control], .base')
           ?.removeAttribute('aria-errormessage');
 
         lastChild.remove();
