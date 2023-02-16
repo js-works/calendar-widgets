@@ -124,12 +124,14 @@ class DialogsDemo2 extends Component {
             <sx-text-field
               name="firstName"
               label="First name"
+              autocomplete="off"
               required
             ></sx-text-field>
             <sx-text-field
               name="lastName"
               label="Last name"
               help-text="We will always call you by your last name"
+              autocomplete="off"
               required
             ></sx-text-field>
             <sl-select

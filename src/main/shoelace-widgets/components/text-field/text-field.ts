@@ -94,12 +94,12 @@ class TextField extends LitElement implements FormField<string> {
       set: (value: string) => void (this._slInputRef.value!.value = value)
     });
 
-    this._slInputRef.value!.addEventListener('sl-invalid', (ev) => {
-      this._formFieldCtrl.emitInvalidEvent(ev);
-    });
-
     this._slInputRef.value!.updateComplete.then(() => {
       this._formFieldCtrl.updateValidity();
+
+      this._slInputRef.value!.addEventListener('sl-invalid', (ev) =>
+        this._onInvalid(ev)
+      );
     });
   }
 
@@ -112,9 +112,9 @@ class TextField extends LitElement implements FormField<string> {
   };
 
   private _onInvalid = (ev: Event) => {
-    console.log('onInvalid');
-    alert(111);
-    this.dispatchEvent(ev);
+    this._formFieldCtrl.emitInvalidEvent(ev);
+
+    this._formFieldCtrl.updateValidity();
   };
 
   render() {
@@ -157,11 +157,19 @@ class TextField extends LitElement implements FormField<string> {
   }
 
   checkValidity(): boolean {
-    return this._slInputRef.value?.checkValidity() || false;
+    return this._slInputRef.value!.checkValidity();
   }
 
   reportValidity(): boolean {
-    return this._slInputRef.value?.reportValidity() || false;
+    const ret = this._slInputRef.value!.reportValidity();
+
+    this._formFieldCtrl.updateValidity();
+
+    if (!ret) {
+      this.setAttribute('data-user-invalid', ''); // TODO!!!!!!!!!!!!!!!!!!!!!!
+    }
+
+    return ret;
   }
 
   get validity() {

@@ -143,6 +143,7 @@ class DialogsDemo extends Component {
           <sx-text-field
             label="Username"
             name="username"
+            help-text="Please enter your username here"
             required
             autofocus
           ></sx-text-field>

@@ -89,21 +89,27 @@ export default /*css*/ `
     box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-color-success-300);
   }
 
+  /* inline validation styles */
 
   sx-fieldset[validation-mode=inline] :is(:not([data-user-invalid]), [data-user-invalid])::part(form-control-validation-message) {
     display: block;
     overflow: hidden;
     color: var(--sl-color-danger-700);
-    height: 1.5em;
-    transition: max-height 0.5s;
+    line-height: calc(var(--sl-font-size-medium) + 0.25em);
+    font-size: var(--sl-font-size-medium);
+    height: calc(var(--sl-font-size-medium) + 0.25em);
+    box-sizing: border-box;
   }
 
   sx-fieldset[validation-mode=inline] [data-user-invalid]::part(form-control-validation-message) {
-    max-height: 2rem;
+    padding-top: 2px;
+    max-height: 5rem;
+    transition: max-height 0.5s linear;
   }
   
   sx-fieldset[validation-mode=inline] :not([data-user-invalid])::part(form-control-validation-message) {
     max-height: 0;
+    transition: max-height 0.4s ease-out;
   }
 
   sx-fieldset[validation-mode=inline] sx-text-field[data-user-valid]::part(form-control-input) {
@@ -114,4 +120,13 @@ export default /*css*/ `
     border: 1px solid var(--sl-color-danger-600);
   }
   
-  `;
+  sx-fieldset[validation-mode=inline] sx-text-field:focus-within[data-user-valid]::part(base) {
+    border-color: var(--sl-color-success-600);
+    box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-color-success-300);
+  }
+
+  sx-fieldset[validation-mode=inline] sx-text-field:focus-within[data-user-invalid]::part(base) {
+    border-color: var(--sl-color-danger-600);
+    box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-color-danger-300);
+  }
+`;
