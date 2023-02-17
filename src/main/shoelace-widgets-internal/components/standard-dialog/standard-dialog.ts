@@ -378,7 +378,6 @@ class StandardDialog extends LitElement {
                       const form = this.querySelector('form');
 
                       if (form && form.reportValidity()) {
-                        console.log(2222);
                         form.submit();
                       }
                     }

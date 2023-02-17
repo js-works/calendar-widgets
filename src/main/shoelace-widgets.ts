@@ -2,7 +2,7 @@ import './shoelace-widgets/icons/register-icons';
 
 // function
 export { loadBaseStyles } from './shoelace-widgets/styles/load-base-styles';
-export { setValidationMode } from './shoelace-widgets/misc/validation-modes';
+export { setValidationMode } from './shoelace-widgets/misc/set-validation-mode';
 
 // components
 export { Fieldset } from './shoelace-widgets/components/fieldset/fieldset';

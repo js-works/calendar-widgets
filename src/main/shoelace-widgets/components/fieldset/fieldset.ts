@@ -2,7 +2,6 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
-//import { activateInlineValidation } from '../../misc/inline-validation';
 
 // styles
 import fieldsetStyles from './fieldset.styles';

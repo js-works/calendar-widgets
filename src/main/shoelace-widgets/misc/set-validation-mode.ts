@@ -1,40 +1,32 @@
-import {
-  FormControlController,
-  FormControlControllerType
-} from '../misc/form-control-controller';
+import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import type { FormControlController } from '@shoelace-style/shoelace/dist/internal/form';
+
+// === types =========================================================
+
+type ValidationMode = 'default' | 'inline' | 'inline/static';
 
 let patched = false;
-let styleElem: HTMLStyleElement | null = null;
+let validationMode: ValidationMode = 'default';
+const formControlSelector = 'sx-fieldset *';
 
-export function setValidationMode(mode: 'default' | 'inline') {
-  if (!patched) {
+export function setValidationMode(mode: ValidationMode) {
+  if (!patched && mode !== 'default') {
     patchFormControlController();
     patched = true;
   }
 
-  if (!styleElem) {
-    styleElem = document.createElement('style');
-    document.head.append(styleElem);
-  }
-
-  styleElem.innerText = `
-    :root {
-      --validation-mode: ${mode};
-    }
-  `;
+  validationMode = mode;
 }
 
 function patchFormControlController() {
   // we have to monkey patch
-  const proto: FormControlControllerType = (FormControlController as any)
-    .prototype;
+  const proto = getFormControlControllerPrototype();
   const oldHostConnectedFn = proto.hostConnected;
-  const oldAttachFormFn = (proto as any).attachForm;
 
   proto.hostConnected = function () {
     oldHostConnectedFn.apply(this);
 
-    if (this.host.matches('sx-fieldset *')) {
+    if (this.host.matches(formControlSelector)) {
       this.host.addEventListener('sl-input', () => {
         updateValidationMessage(this.host);
       });
@@ -42,11 +34,10 @@ function patchFormControlController() {
       this.form?.addEventListener(
         'sl-invalid',
         (ev: Event) => {
-          const validationMode = getComputedStyle(this.host).getPropertyValue(
-            '--validation-mode'
-          );
-
-          if (validationMode !== 'inline') {
+          if (
+            validationMode !== 'inline' &&
+            validationMode !== 'inline/static'
+          ) {
             return;
           }
 
@@ -61,6 +52,25 @@ function patchFormControlController() {
   };
 }
 
+function getFormControlControllerPrototype(): FormControlController {
+  const slInput = new SlInput();
+  const values = Object.values(slInput);
+
+  let proto: FormControlController | null = null;
+
+  for (const value of values) {
+    if (value && value.updateValidity) {
+      proto = value.constructor.prototype;
+    }
+  }
+
+  if (!proto) {
+    throw "Couldn't detect prototype of FormControlController";
+  }
+
+  return proto;
+}
+
 // Updates the error data attribute of a given Shoelace form control,
 // depending on the form control's `validationMessage` property
 const updateValidationMessage = (formControl: any) => {
@@ -68,15 +78,17 @@ const updateValidationMessage = (formControl: any) => {
   const root = formControl.shadowRoot;
   const lastChild = root.lastChild;
   const baseElem = root.querySelector('[part=form-control], .base');
-  let validationMessageElem: HTMLElement;
   let externalContentElem: HTMLElement;
+  let validationElem: HTMLElement;
+  let validationMessageElem: HTMLElement;
 
   if (
     lastChild instanceof HTMLElement &&
     lastChild.getAttribute('id') === '__external-content__'
   ) {
     externalContentElem = lastChild;
-    validationMessageElem = lastChild.lastChild!.lastChild as HTMLElement;
+    validationElem = externalContentElem.lastChild as HTMLElement;
+    validationMessageElem = validationElem.lastChild as HTMLElement;
   } else {
     externalContentElem = document.createElement('div');
     externalContentElem.setAttribute('id', '__external-content__');
@@ -91,7 +103,7 @@ const updateValidationMessage = (formControl: any) => {
     validationIconElem.id = '__validation-icon__';
     validationIconElem.src = exclamationIcon;
 
-    const validationElem = document.createElement('div');
+    validationElem = document.createElement('div');
     validationElem.id = '__validation__';
     validationElem.append(validationIconElem, validationMessageElem);
 
@@ -101,19 +113,23 @@ const updateValidationMessage = (formControl: any) => {
   }
 
   if (validationMessageElem.innerText !== message) {
-    if (message !== '') {
+    if (validationMode !== 'inline') {
       validationMessageElem.innerText = message;
-
-      openValidationMessage(externalContentElem).then(() => {
-        externalContentElem.style.maxHeight = 'none';
-        externalContentElem.style.overflow = 'auto';
-      });
     } else {
-      closeValidationMessage(externalContentElem).then(() => {
-        externalContentElem.style.maxHeight = '0';
-        externalContentElem.style.overflow = 'hidden';
-        validationMessageElem.innerText = '';
-      });
+      if (message !== '') {
+        validationMessageElem.innerText = message;
+
+        openValidationMessage(externalContentElem).then(() => {
+          externalContentElem.style.maxHeight = 'none';
+          externalContentElem.style.overflow = 'auto';
+        });
+      } else {
+        closeValidationMessage(externalContentElem).then(() => {
+          externalContentElem.style.maxHeight = '0';
+          externalContentElem.style.overflow = 'hidden';
+          validationMessageElem.innerText = '';
+        });
+      }
     }
   }
 
@@ -155,7 +171,7 @@ function openValidationMessage(
 
 function closeValidationMessage(
   node: HTMLElement,
-  duration = '2.25s',
+  duration = '0.25s',
   timing = 'linear'
 ): Promise<void> {
   const oldTransition = node.style.transition;
@@ -166,7 +182,7 @@ function closeValidationMessage(
   node.style.maxHeight = node.scrollHeight + 'px';
   node.style.overflow = 'hidden';
 
-  setTimeout(() => {
+  requestAnimationFrame(() => {
     node.style.maxHeight = '0';
   });
 
@@ -183,7 +199,6 @@ function closeValidationMessage(
 
 const validationMessageStyles = /*css*/ `
   #__external-content__ {
-    height: 0;
     max-height: 0;
     overflow: hidden;
     font-size: var(--sl-font-size-small);
@@ -195,24 +210,15 @@ const validationMessageStyles = /*css*/ `
   #__validation__ {
     display: flex;
     align-items: center;
-  }
-   
-  #__validation-icon__,
-  #__validation-message__ {
-    font-size: var(--sl-font-size-small);
-  }
-
-  :host([data-user-invalid]) #__external-content__ {
-    height: auto;
-    max-height: none;
+    margin: 0.25em 0;
     color: var(--sl-color-danger-700);
+    font-size: var(--sl-font-size-small);
     font-weight: var(--sl-font-weight-semibold);
-    padding: 0.25em 0;
+    gap: 0.4em;
   }
-
-  #__validation-icon__ {
-    color: var(--sl-color-danger-600);
-    margin-inline-end: 0.5em;
+  
+  :host([data-user-invalid]) #__external-content__ {
+    max-height: none;
   }
 `;
 
