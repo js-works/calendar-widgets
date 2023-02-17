@@ -50,7 +50,7 @@ export default /*css*/ `
     }
 
     /* inline validation styles */
-
+    
   sx-fieldset[validation-mode=inline] :is([data-valid], [data-invalid]):not(sl-button) {
     display: block;
     margin-bottom: var(--sl-spacing-small);
@@ -91,13 +91,13 @@ export default /*css*/ `
 
   /* inline validation styles */
 
+  /*
   sx-fieldset[validation-mode=inline] :is(:not([data-user-invalid]), [data-user-invalid])::part(form-control-validation-message) {
     display: block;
     overflow: hidden;
     color: var(--sl-color-danger-700);
     line-height: calc(var(--sl-font-size-medium) + 0.25em);
     font-size: var(--sl-font-size-medium);
-    height: calc(var(--sl-font-size-medium) + 0.25em);
     box-sizing: border-box;
   }
 

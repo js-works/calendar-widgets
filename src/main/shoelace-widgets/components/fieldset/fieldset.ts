@@ -2,7 +2,7 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
-import { activateInlineValidation } from '../../misc/inline-validation';
+//import { activateInlineValidation } from '../../misc/inline-validation';
 
 // styles
 import fieldsetStyles from './fieldset.styles';
@@ -34,12 +34,7 @@ class Fieldset extends LitElement {
   @property({ attribute: 'validation-mode', reflect: true })
   validationMode: 'default' | 'inline' | null = null;
 
-  firstUpdated() {
-    // TODO!!!!!!!!!!!!!!!!!!!
-    setTimeout(() => {
-      activateInlineValidation(this);
-    }, 10);
-  }
+  firstUpdated() {}
 
   render() {
     return html`

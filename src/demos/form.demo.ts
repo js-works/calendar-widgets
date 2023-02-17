@@ -8,7 +8,9 @@ import '@shoelace-style/shoelace/dist/components/card/card';
 import '@shoelace-style/shoelace/dist/components/input/input';
 import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
-import 'shoelace-widgets';
+import { setValidationMode } from 'shoelace-widgets';
+
+setValidationMode('inline');
 
 export const formDemo = () => '<form-demo2></form-demo2>';
 
@@ -119,6 +121,42 @@ class DialogsDemo2 extends Component {
   render() {
     return html`
       <form class="demo-form">
+        <sl-input
+          name="firstName"
+          label="First name"
+          autocomplete="off"
+          required
+        ></sl-input>
+        <sl-input
+          name="lastName"
+          label="Last name"
+          help-text="We will always call you by your last name"
+          autocomplete="off"
+          required
+        ></sl-input>
+        <sl-select
+          name="country"
+          label="Country"
+          help-text="Only Great Britain and USA allowed"
+          required
+          clearable
+        >
+          <sl-option value="gb">Great Britain</sl-option>
+          <sl-option value="us">United States</sl-option>
+        </sl-select>
+        <sl-input name="phone" type="phone" label="Phone" required></sl-input>
+        <sl-input name="email" type="email" label="Email" required></sl-input>
+        <br />
+        <sl-button type="submit" variant="primary">Submit</sl-button>
+        <sl-button type="reset">Reset</sl-button>
+      </form>
+    `;
+  }
+
+  /*
+  render() {
+    return html`
+      <form class="demo-form">
         <sx-fieldset label-layout="horizontal">
           <sx-fieldset caption="Address">
             <sx-text-field
@@ -166,4 +204,5 @@ class DialogsDemo2 extends Component {
       </form>
     `;
   }
+  */
 }

@@ -1,11 +1,11 @@
-import { FormControlController } from '@shoelace-style/shoelace/dist/internal/form';
+import { FormControlController } from '../misc/form-control-controller';
 import type { FormField, Validator } from './form-fields';
 
 export { FormFieldController };
 
 class FormFieldController<V extends string | string[], W> {
   #formField: FormField<V>;
-  #formControlController: FormControlController;
+  #formControlController: typeof FormControlController;
   #getDefaultValue: () => W;
   #setValue: (value: W) => void;
   #suppressError = true;
@@ -26,12 +26,12 @@ class FormFieldController<V extends string | string[], W> {
     this.#validation = config.validation ?? null;
 
     // TODO!!!
-    this.#formControlController = new FormControlController(
+    this.#formControlController = new (FormControlController as any)(
       formField as unknown as any,
       {
         name: () => formField.name,
         defaultValue: () => this.#setValue(this.#getDefaultValue()),
-        setValue: (_, value) => this.#setValue(value as W),
+        setValue: (_: any, value: any) => this.#setValue(value as W),
         disabled: () => formField.disabled,
 
         form: () => {
