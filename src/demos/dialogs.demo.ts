@@ -152,7 +152,7 @@ class DialogsDemo extends Component {
           <sl-input
             label="Email"
             name="Email"
-            type="email"
+            xxxtype="email"
             required
             autofocus
           ></sl-input>

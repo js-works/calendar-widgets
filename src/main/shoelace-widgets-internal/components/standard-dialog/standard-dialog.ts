@@ -208,22 +208,24 @@ class StandardDialog extends LitElement {
       const value = this.config.value === 'string' ? this.config.value : '';
 
       additionalContent = html`
-        <sx-text-field
-          name="input"
-          size="small"
-          autofocus
-          value=${value}
-          label=${typeof this.config.label === 'function'
-            ? this.config.label()
-            : this.config.label}
-          ?required=${this.config.required}
-          .autocomplete=${typeof this.config.autocomplete === 'string'
-            ? this.config.autocomplete
-            : this.config.autocomplete === true
-            ? ''
-            : 'off'}
-        >
-        </sx-text-field>
+        <sx-fieldset>
+          <sx-text-field
+            name="input"
+            size="small"
+            autofocus
+            value=${value}
+            label=${typeof this.config.label === 'function'
+              ? this.config.label()
+              : this.config.label}
+            ?required=${this.config.required}
+            .autocomplete=${typeof this.config.autocomplete === 'string'
+              ? this.config.autocomplete
+              : this.config.autocomplete === true
+              ? ''
+              : 'off'}
+          >
+          </sx-text-field>
+        </sx-fieldset>
       `;
 
       const additionalContainer = document.createElement('div');

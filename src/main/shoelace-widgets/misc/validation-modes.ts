@@ -6,9 +6,7 @@ import {
 let patched = false;
 let styleElem: HTMLStyleElement | null = null;
 
-export function setValidationMode(
-  mode: 'default' | 'inline' | 'inline/animated'
-) {
+export function setValidationMode(mode: 'default' | 'inline') {
   if (!patched) {
     patchFormControlController();
     patched = true;
@@ -71,30 +69,52 @@ const updateValidationMessage = (formControl: any) => {
   const lastChild = root.lastChild;
   const baseElem = root.querySelector('[part=form-control], .base');
   let validationMessageElem: HTMLElement;
+  let externalContentElem: HTMLElement;
 
   if (
     lastChild instanceof HTMLElement &&
     lastChild.getAttribute('id') === '__external-content__'
   ) {
-    validationMessageElem = lastChild.lastChild as HTMLElement;
+    externalContentElem = lastChild;
+    validationMessageElem = lastChild.lastChild!.lastChild as HTMLElement;
   } else {
-    const externalContent = document.createElement('div');
-    externalContent.setAttribute('id', '__external-content__');
+    externalContentElem = document.createElement('div');
+    externalContentElem.setAttribute('id', '__external-content__');
 
     const styleElem = document.createElement('style');
     styleElem.innerText = validationMessageStyles;
+
     validationMessageElem = document.createElement('div');
+    validationMessageElem.id = '__validation-message__';
 
-    const iconElem = document.createElement('sl-icon');
-    iconElem.src = exclamationIcon;
+    const validationIconElem = document.createElement('sl-icon');
+    validationIconElem.id = '__validation-icon__';
+    validationIconElem.src = exclamationIcon;
 
-    externalContent.append(styleElem, iconElem, validationMessageElem);
+    const validationElem = document.createElement('div');
+    validationElem.id = '__validation__';
+    validationElem.append(validationIconElem, validationMessageElem);
 
-    root.append(externalContent);
+    externalContentElem.append(styleElem, validationElem);
+
+    root.append(externalContentElem);
   }
 
   if (validationMessageElem.innerText !== message) {
-    validationMessageElem.innerText = message;
+    if (message !== '') {
+      validationMessageElem.innerText = message;
+
+      openValidationMessage(externalContentElem).then(() => {
+        externalContentElem.style.maxHeight = 'none';
+        externalContentElem.style.overflow = 'auto';
+      });
+    } else {
+      closeValidationMessage(externalContentElem).then(() => {
+        externalContentElem.style.maxHeight = '0';
+        externalContentElem.style.overflow = 'hidden';
+        validationMessageElem.innerText = '';
+      });
+    }
   }
 
   /*
@@ -109,29 +129,88 @@ const updateValidationMessage = (formControl: any) => {
     */
 };
 
+function openValidationMessage(
+  node: HTMLElement,
+  duration = '0.25s',
+  timing = 'linear'
+): Promise<void> {
+  const oldTransition = node.style.transition;
+  const oldMaxHeight = node.style.maxHeight;
+  const oldOverflow = node.style.overflow;
+
+  node.style.transition = `max-height ${duration} ${timing}`;
+  node.style.maxHeight = node.scrollHeight + 'px';
+  node.style.overflow = 'hidden';
+
+  return new Promise((resolve) => {
+    node.addEventListener('transitionend', function listener() {
+      node.removeEventListener('transitionend', listener);
+      node.style.transition = oldTransition;
+      node.style.maxHeight = oldMaxHeight;
+      node.style.overflow = oldOverflow;
+      resolve();
+    });
+  });
+}
+
+function closeValidationMessage(
+  node: HTMLElement,
+  duration = '2.25s',
+  timing = 'linear'
+): Promise<void> {
+  const oldTransition = node.style.transition;
+  const oldMaxHeight = node.style.maxHeight;
+  const oldOverflow = node.style.overflow;
+
+  node.style.transition = `max-height ${duration} ${timing}`;
+  node.style.maxHeight = node.scrollHeight + 'px';
+  node.style.overflow = 'hidden';
+
+  setTimeout(() => {
+    node.style.maxHeight = '0';
+  });
+
+  return new Promise((resolve) => {
+    node.addEventListener('transitionend', function listener() {
+      node.removeEventListener('transitionend', listener);
+      node.style.transition = oldTransition;
+      node.style.maxHeight = oldMaxHeight;
+      node.style.overflow = oldOverflow;
+      resolve();
+    });
+  });
+}
+
 const validationMessageStyles = /*css*/ `
   #__external-content__ {
-    display: none;
+    height: 0;
+    max-height: 0;
+    overflow: hidden;
     font-size: var(--sl-font-size-small);
-    padding: 0.25em 0;
     font-size: var(--sl-font-size-medium);
     margin-left: calc(var(--label-width) + var(--gap-width));
     box-sizing: border-box;
   }
+
+  #__validation__ {
+    display: flex;
+    align-items: center;
+  }
    
-  #__external-content__ > * {
+  #__validation-icon__,
+  #__validation-message__ {
     font-size: var(--sl-font-size-small);
-    padding: 0.25em 0;
   }
 
   :host([data-user-invalid]) #__external-content__ {
-    display: flex;
-    align-items: center;
+    height: auto;
+    max-height: none;
     color: var(--sl-color-danger-700);
-    xxxfont-weight: var(--sl-font-weight-semibold);
+    font-weight: var(--sl-font-weight-semibold);
+    padding: 0.25em 0;
   }
 
-  #__external-content__ sl-icon {
+  #__validation-icon__ {
     color: var(--sl-color-danger-600);
     margin-inline-end: 0.5em;
   }
