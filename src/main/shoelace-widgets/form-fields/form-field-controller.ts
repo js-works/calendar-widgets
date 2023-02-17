@@ -1,11 +1,14 @@
-import { FormControlController } from '../misc/form-control-controller';
+import {
+  FormControlController,
+  FormControlControllerType
+} from '../misc/form-control-controller';
 import type { FormField, Validator } from './form-fields';
 
 export { FormFieldController };
 
 class FormFieldController<V extends string | string[], W> {
   #formField: FormField<V>;
-  #formControlController: typeof FormControlController;
+  #formControlController: FormControlControllerType;
   #getDefaultValue: () => W;
   #setValue: (value: W) => void;
   #suppressError = true;

@@ -1,4 +1,7 @@
-import { FormControlController } from '../misc/form-control-controller';
+import {
+  FormControlController,
+  FormControlControllerType
+} from '../misc/form-control-controller';
 
 let patched = false;
 let styleElem: HTMLStyleElement | null = null;
@@ -25,8 +28,10 @@ export function setValidationMode(
 
 function patchFormControlController() {
   // we have to monkey patch
-  const proto = (FormControlController as any).prototype;
+  const proto: FormControlControllerType = (FormControlController as any)
+    .prototype;
   const oldHostConnectedFn = proto.hostConnected;
+  const oldAttachFormFn = (proto as any).attachForm;
 
   proto.hostConnected = function () {
     oldHostConnectedFn.apply(this);
@@ -35,19 +40,30 @@ function patchFormControlController() {
       updateValidationMessage(this.host);
     });
 
-    this.host.addEventListener('sl-invalid', (ev: Event) => {
-      const validationMode = getComputedStyle(this.host).getPropertyValue(
-        '--validation-mode'
-      );
+    this.host.parentElement!.addEventListener(
+      'sl-invalid',
+      (ev: Event) => {
+        const validationMode = getComputedStyle(this.host).getPropertyValue(
+          '--validation-mode'
+        );
 
-      if (validationMode !== 'inline') {
-        return;
-      }
+        if (validationMode !== 'inline') {
+          return;
+        }
 
-      console.log('!!!!!invalid!!!!!', validationMode);
+        (this as any).setUserInteracted(this.host, true);
+        updateValidationMessage(this.host);
+        console.log('!!!!!invalid!!!!!', validationMode);
 
-      ev.preventDefault();
-    });
+        ev.preventDefault();
+      },
+      true
+    );
+  };
+
+  (proto as any).attachForm = function (formControl: any) {
+    oldAttachFormFn.call(this, formControl);
+    console.log('attachForm', formControl);
   };
 }
 
@@ -66,6 +82,7 @@ const updateValidationMessage = (formControl: any) => {
   ) {
     validationMessagePart = lastChild;
   } else {
+    console.log(lastChild);
     validationMessagePart = document.createElement('div');
 
     validationMessagePart.setAttribute('id', 'form-control-validation-message');
@@ -99,5 +116,14 @@ const validationMessageStyles = `
 
   :host([data-user-invalid]) #form-control-validation-message {
     display: block;
+    color: var(--sl-color-danger-700);
+    font-size: var(--sl-font-size: medium);
+    margin-left: calc(var(--label-width) + var(--gap-width));
+    padding-top: 0.25em;
+  }
+  
+  :host([data-user-invalid]) #form-control-validation-message::before {
+    content: '\u26a0 ';
+    font-family: monospace;
   }
 `;

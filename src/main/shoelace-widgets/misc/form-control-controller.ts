@@ -1,5 +1,8 @@
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
+import { FormFieldController } from '../form-fields/form-field-controller';
 import type { FormControlController as FormControlControllerType } from '@shoelace-style/shoelace/dist/internal/form';
+
+export { FormControlController, FormControlControllerType };
 
 const slInput = new SlInput();
 const values = Object.values(slInput);
@@ -12,5 +15,5 @@ for (const value of values) {
   }
 }
 
-export const FormControlController: FormControlControllerType =
+const FormControlController: FormControlControllerType =
   formControlController.constructor;
