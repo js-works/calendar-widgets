@@ -110,6 +110,22 @@ class TextField extends LitElement implements FormField<string> {
     });
   }
 
+  updated() {
+    const input = this._slInputRef.value!;
+
+    input.updateComplete.then(() => {
+      this._formFieldCtrl.updateValidity();
+
+      if (this.getAttribute('data-user-valid')) {
+        input.setAttribute('data-user-valid', '');
+      }
+
+      if (this.getAttribute('data-user-invalid')) {
+        input.setAttribute('data-user-invalid', '');
+      }
+    });
+  }
+
   private _onKeyDown = (ev: KeyboardEvent) => {
     void (ev.key === 'Enter' && this._formFieldCtrl.submit());
   };

@@ -12,7 +12,7 @@ export default css`
     width: 100%;
   }
 
-  xsl-input::part(input) {
+  xxxsl-input::part(input) {
     width: 100%;
   }
 `;

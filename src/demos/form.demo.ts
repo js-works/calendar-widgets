@@ -121,31 +121,33 @@ class DialogsDemo2 extends Component {
   render() {
     return html`
       <form class="demo-form">
-        <sl-input
-          name="firstName"
-          label="First name"
-          autocomplete="off"
-          required
-        ></sl-input>
-        <sl-input
-          name="lastName"
-          label="Last name"
-          help-text="We will always call you by your last name"
-          autocomplete="off"
-          required
-        ></sl-input>
-        <sl-select
-          name="country"
-          label="Country"
-          help-text="Only Great Britain and USA allowed"
-          required
-          clearable
-        >
-          <sl-option value="gb">Great Britain</sl-option>
-          <sl-option value="us">United States</sl-option>
-        </sl-select>
-        <sl-input name="phone" type="phone" label="Phone" required></sl-input>
-        <sl-input name="email" type="email" label="Email" required></sl-input>
+        <sx-fieldset>
+          <sl-input
+            name="firstName"
+            label="First name"
+            autocomplete="off"
+            required
+          ></sl-input>
+          <sl-input
+            name="lastName"
+            label="Last name"
+            help-text="We will always call you by your last name"
+            autocomplete="off"
+            required
+          ></sl-input>
+          <sl-select
+            name="country"
+            label="Country"
+            help-text="Only Great Britain and USA allowed"
+            required
+            clearable
+          >
+            <sl-option value="gb">Great Britain</sl-option>
+            <sl-option value="us">United States</sl-option>
+          </sl-select>
+          <sl-input name="phone" type="phone" label="Phone" required></sl-input>
+          <sl-input name="email" type="email" label="Email" required></sl-input>
+        </sx-fieldset>
         <br />
         <sl-button type="submit" variant="primary">Submit</sl-button>
         <sl-button type="reset">Reset</sl-button>

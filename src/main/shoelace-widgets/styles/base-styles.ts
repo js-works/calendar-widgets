@@ -21,8 +21,13 @@ export default /*css*/ `
     /* sx-fieldset */
 
     sx-fieldset {
-      --label-width: 10em;
-      --gap-width: 1em;
+      --label-width: auto;
+      --gap-width: 0;
+    }
+    
+    ${fieldSelector} {
+      --label-width: 10rem;
+      --gap-width: 1rem;
     }
 
     ${fieldSelector} + ${fieldSelector} {
@@ -50,7 +55,7 @@ export default /*css*/ `
     }
 
     /* inline validation styles */
-    
+  /*  
   sx-fieldset[validation-mode=inline] :is([data-valid], [data-invalid]):not(sl-button) {
     display: block;
     margin-bottom: var(--sl-spacing-small);
@@ -60,8 +65,7 @@ export default /*css*/ `
     display: inline-block;
     margin-right: 1rem;
   }
-
-  /* user invalid styles */
+  
   sx-fieldset[validation-mode=inline] sl-input[data-user-invalid]::part(base),
   sx-fieldset[validation-mode=inline] sl-textarea[data-user-invalid]::part(base),
   sx-fieldset[validation-mode=inline] sl-select[data-user-invalid]::part(combobox) {
@@ -75,7 +79,6 @@ export default /*css*/ `
     box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-color-danger-300);
   }
 
-  /* User valid styles */
   sx-fieldset[validation-mode=inline] sl-input[data-user-valid]::part(base),
   sx-fieldset[validation-mode=inline] sl-textarea[data-user-valid]::part(base),
   sx-fieldset[validation-mode=inline] sl-select[data-user-valid]::part(combobox) {
@@ -88,6 +91,7 @@ export default /*css*/ `
     border-color: var(--sl-color-success-600);
     box-shadow: 0 0 0 var(--sl-focus-ring-width) var(--sl-color-success-300);
   }
+  */
 
   /* inline validation styles */
 

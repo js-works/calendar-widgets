@@ -69,7 +69,7 @@
   },
   "dependencies": {
     "@shoelace-style/localize": "^3.0.4",
-    "@shoelace-style/shoelace": "^2.1.0",
+    "@shoelace-style/shoelace": "file:../shoelace",
     "lit": "^2.6.1"
   }
 }
