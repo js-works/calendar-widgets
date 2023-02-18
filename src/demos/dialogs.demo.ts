@@ -149,13 +149,13 @@ class DialogsDemo extends Component {
             autofocus
           ></sx-text-field>
     -->
-          <sl-input
+          <sx-text-field
             label="Email"
             name="Email"
             type="email"
             required
             autofocus
-          ></sl-input>
+          ></sx-text-field>
           <sl-input
             label="Password"
             type="password"

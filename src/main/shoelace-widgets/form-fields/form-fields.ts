@@ -1,24 +1,26 @@
-import type { ReactiveControllerHost } from 'lit';
+import { LitElement } from 'lit';
 
-export { Validators };
-export type { FormField, Validator };
+export { FormField, Validators };
+export type { Validator };
 
 // === exports =================================================================
 
-interface FormField<V extends string | string[]>
-  extends HTMLElement,
-    ReactiveControllerHost {
-  form: string;
-  name: string;
-  value: V;
-  disabled: boolean;
-  required: boolean;
+abstract class FormField<V extends string | string[]> extends LitElement {
+  constructor() {
+    super();
+  }
 
-  validationMessage: string;
-  validity: ValidityState;
+  abstract form: string;
+  abstract name: string;
+  abstract value: V;
+  abstract disabled: boolean;
+  abstract required: boolean;
 
-  checkValidity: () => boolean;
-  reportValidity: () => boolean;
+  abstract validationMessage: string;
+  abstract validity: ValidityState;
+
+  abstract checkValidity(): boolean;
+  abstract reportValidity(): boolean;
 }
 
 type Validator<T> = (value: T) => string | null;

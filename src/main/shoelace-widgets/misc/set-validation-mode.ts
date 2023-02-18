@@ -1,67 +1,162 @@
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-import type { FormControlController } from '@shoelace-style/shoelace/dist/internal/form';
+import { FormField } from '../form-fields/form-fields';
+import { html } from 'lit';
+import { LitElement } from 'lit';
+import { TextField } from '../components/text-field/text-field';
 
 // === types =========================================================
 
 type ValidationMode = 'default' | 'inline' | 'inline/static';
 
-let patched = false;
+let hasSetValidationMode = false;
 let validationMode: ValidationMode = 'default';
-const formControlSelector = 'sx-fieldset *';
+const formControlMatcher = 'form *';
+
+const formControlTags = [
+  // shoelace core
+  'sl-color-picker',
+  'sl-input',
+  'sl-select',
+  'sl-radio-group',
+  'sl-range',
+  'sl-switch',
+  'sl-textarea',
+
+  // shoelace-widgets
+  'sx-text-field'
+];
+
+const exclamationIcon =
+  'data:image/svg+xml,' +
+  encodeURIComponent(`
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
+      <path d="M8.982 1.566a1.13 1.13 0 0 0-1.96 0L.165 13.233c-.457.778.091 1.767.98 1.767h13.713c.889 0 1.438-.99.98-1.767L8.982 1.566zM8 5c.535 0 .954.462.9.995l-.35 3.507a.552.552 0 0 1-1.1 0L7.1 5.995A.905.905 0 0 1 8 5zm.002 6a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"/>
+    </svg>
+  `);
+
+const externalContent = html`
+  <div id="__external-content__">
+    <style>
+      #__external-content__ {
+        max-height: 0;
+        overflow: hidden;
+        font-size: var(--sl-font-size-small);
+        font-size: var(--sl-font-size-medium);
+        margin-left: calc(var(--label-width, 0) + var(--gap-width, 0));
+        box-sizing: border-box;
+      }
+
+      #__validation__ {
+        display: flex;
+        align-items: center;
+        margin: 0.25em 0;
+        color: var(--sl-color-danger-700);
+        font-size: var(--sl-font-size-small);
+        font-weight: var(--sl-font-weight-semibold);
+        gap: 0.4em;
+      }
+
+      :host([data-user-invalid]) #__external-content__ {
+        max-height: none;
+      }
+    </style>
+    <div id="__validation__">
+      <sl-icon id="__validation-icon__" src=${exclamationIcon}></sl-icon>
+      <div id="__validation-message__"></div>
+    </div>
+  </div>
+`;
 
 export function setValidationMode(mode: ValidationMode) {
-  if (!patched && mode !== 'default') {
-    patchFormControlController();
-    patched = true;
+  if (hasSetValidationMode) {
+    throw new Error('The validation mode can only be set once');
+  }
+
+  if (!['default', 'inline', 'inline/static'].includes(mode)) {
+    throw new Error(`Illegal validation mode "${mode}"`);
+  }
+
+  hasSetValidationMode = true;
+
+  if (mode === 'default') {
+    return;
   }
 
   validationMode = mode;
+
+  patchCustomElementRegistry();
 }
 
-function patchFormControlController() {
-  // we have to monkey patch
-  const proto = getFormControlControllerPrototype();
-  const oldHostConnectedFn = proto.hostConnected;
+function patchCustomElementRegistry() {
+  const oldDefineFn = customElements.define;
 
-  proto.hostConnected = function () {
-    oldHostConnectedFn.apply(this);
+  const alreadyPatchedClasses = new Set<CustomElementConstructor>();
 
-    if (this.host.matches(formControlSelector)) {
-      this.host.addEventListener('sl-input', () => {
-        updateValidationMessage(this.host);
-      });
+  [...formControlTags, 'sx-text-field'].forEach((tag) => {
+    const componentClass = customElements.get(tag);
 
-      this.form?.addEventListener(
-        'sl-invalid',
-        (ev: Event) => {
-          if (
-            validationMode !== 'inline' &&
-            validationMode !== 'inline/static'
-          ) {
-            return;
-          }
-
-          (this as any).setUserInteracted(this.host, true);
-          updateValidationMessage(this.host);
-
-          ev.preventDefault();
-        },
-        true
-      );
+    if (componentClass && !alreadyPatchedClasses.has(componentClass)) {
+      alreadyPatchedClasses.add(componentClass);
+      patchFormControlClass(componentClass);
     }
+  });
+
+  customElements.define = (name, constructor, options) => {
+    if (
+      !alreadyPatchedClasses.has(constructor) &&
+      formControlTags.includes(name)
+    ) {
+      alreadyPatchedClasses.add(constructor);
+
+      patchFormControlClass(constructor);
+    }
+
+    oldDefineFn.call(customElements, name, constructor, options);
   };
 }
 
-function getFormControlControllerPrototype(): FormControlController {
-  const proto = Object.values(new SlInput()).find(
-    (it) => it && typeof it === 'object' && 'updateValidity' in it
-  ).constructor.prototype;
+function patchFormControlClass(formControlClass: Function) {
+  const proto = formControlClass.prototype;
+  const oldRenderFn = proto.render;
 
-  if (!proto) {
-    throw "Couldn't detect prototype of FormControlController";
-  }
+  proto.render = function (this: LitElement) {
+    if (!this.hasUpdated) {
+      this.updateComplete.then(() => {
+        const form = this.closest('form'); // TODO!!!!!!
 
-  return proto;
+        if (form instanceof HTMLFormElement) {
+          // TODO!!!!!!!!!!!!!!!!!
+          form.addEventListener('reset', () => updateValidationMessage(this));
+
+          form.addEventListener('sl-input', () =>
+            updateValidationMessage(this)
+          );
+
+          form.addEventListener(
+            'sl-invalid',
+            (ev) => {
+              if (
+                (validationMode !== 'inline' &&
+                  validationMode !== 'inline/static') ||
+                !this.matches(formControlMatcher)
+              ) {
+                return;
+              }
+
+              updateValidationMessage(this);
+
+              ev.preventDefault();
+            },
+            true
+          );
+        }
+      });
+    }
+
+    const content = oldRenderFn.call(this);
+
+    return !this.matches('form *') ? content : [content, externalContent];
+  };
 }
 
 // Updates the error data attribute of a given Shoelace form control,
@@ -69,41 +164,15 @@ function getFormControlControllerPrototype(): FormControlController {
 const updateValidationMessage = (formControl: any) => {
   const message = formControl.validationMessage;
   const root = formControl.shadowRoot;
-  const lastChild = root.lastChild;
+  const lastChild = root.lastElementChild;
   const baseElem = root.querySelector('[part=form-control], .base');
   let externalContentElem: HTMLElement;
   let validationElem: HTMLElement;
   let validationMessageElem: HTMLElement;
 
-  if (
-    lastChild instanceof HTMLElement &&
-    lastChild.getAttribute('id') === '__external-content__'
-  ) {
-    externalContentElem = lastChild;
-    validationElem = externalContentElem.lastChild as HTMLElement;
-    validationMessageElem = validationElem.lastChild as HTMLElement;
-  } else {
-    externalContentElem = document.createElement('div');
-    externalContentElem.setAttribute('id', '__external-content__');
-
-    const styleElem = document.createElement('style');
-    styleElem.innerText = validationMessageStyles;
-
-    validationMessageElem = document.createElement('div');
-    validationMessageElem.id = '__validation-message__';
-
-    const validationIconElem = document.createElement('sl-icon');
-    validationIconElem.id = '__validation-icon__';
-    validationIconElem.src = exclamationIcon;
-
-    validationElem = document.createElement('div');
-    validationElem.id = '__validation__';
-    validationElem.append(validationIconElem, validationMessageElem);
-
-    externalContentElem.append(styleElem, validationElem);
-
-    root.append(externalContentElem);
-  }
+  externalContentElem = lastChild;
+  validationElem = externalContentElem.lastElementChild as HTMLElement;
+  validationMessageElem = validationElem.lastElementChild as HTMLElement;
 
   if (validationMessageElem.innerText !== message) {
     if (validationMode !== 'inline') {
@@ -190,31 +259,6 @@ function closeValidationMessage(
   });
 }
 
-const validationMessageStyles = /*css*/ `
-  #__external-content__ {
-    max-height: 0;
-    overflow: hidden;
-    font-size: var(--sl-font-size-small);
-    font-size: var(--sl-font-size-medium);
-    margin-left: calc(var(--label-width) + var(--gap-width));
-    box-sizing: border-box;
-  }
-
-  #__validation__ {
-    display: flex;
-    align-items: center;
-    margin: 0.25em 0;
-    color: var(--sl-color-danger-700);
-    font-size: var(--sl-font-size-small);
-    font-weight: var(--sl-font-weight-semibold);
-    gap: 0.4em;
-  }
-  
-  :host([data-user-invalid]) #__external-content__ {
-    max-height: none;
-  }
-`;
-
 const exclamationIcon2 =
   'data:image/svg+xml,' +
   encodeURIComponent(`
@@ -224,7 +268,7 @@ const exclamationIcon2 =
     </svg>
   `);
 
-const exclamationIcon =
+const exclamationIcon3 =
   'data:image/svg+xml,' +
   encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
@@ -232,7 +276,7 @@ const exclamationIcon =
     </svg>
   `);
 
-const exclamationIcon3 =
+const exclamationIcon6 =
   'data:image/svg+xml,' +
   encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">

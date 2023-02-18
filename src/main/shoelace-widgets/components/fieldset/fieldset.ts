@@ -33,8 +33,6 @@ class Fieldset extends LitElement {
   @property({ attribute: 'validation-mode', reflect: true })
   validationMode: 'default' | 'inline' | null = null;
 
-  firstUpdated() {}
-
   render() {
     return html`
       <fieldset

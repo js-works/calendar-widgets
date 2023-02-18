@@ -5,8 +5,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
 
 import { FormFieldController } from '../../form-fields/form-field-controller';
-import { Validators } from '../../form-fields/form-fields';
-import type { FormField } from '../../form-fields/form-fields';
+import { FormField, Validators } from '../../form-fields/form-fields';
 
 // custom elements
 import '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -38,7 +37,7 @@ const typeMap: Record<string, string> = {
 // === TextField =====================================================
 
 @customElement('sx-text-field')
-class TextField extends LitElement implements FormField<string> {
+class TextField extends FormField<string> {
   static styles = textFieldStyles;
 
   @property()
@@ -195,6 +194,11 @@ class TextField extends LitElement implements FormField<string> {
     return ret;
   }
 
+  /*
+  connectedCallback() {
+    super.connectedCallback();
+  }
+*/
   get validity() {
     return this._slInputRef.value!.validity;
   }
