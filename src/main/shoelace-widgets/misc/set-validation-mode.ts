@@ -53,10 +53,7 @@ function patchFormControlController() {
 }
 
 function getFormControlControllerPrototype(): FormControlController {
-  const slInput = new SlInput();
-  const values = Object.values(slInput);
-
-  const proto = Object.values(document.createElement('sl-input')).find(
+  const proto = Object.values(new SlInput()).find(
     (it) => it && typeof it === 'object' && 'updateValidity' in it
   ).constructor.prototype;
 
@@ -227,7 +224,7 @@ const exclamationIcon2 =
     </svg>
   `);
 
-const exclamationIcon3 =
+const exclamationIcon =
   'data:image/svg+xml,' +
   encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-circle-fill" viewBox="0 0 16 16">
@@ -235,7 +232,7 @@ const exclamationIcon3 =
     </svg>
   `);
 
-const exclamationIcon =
+const exclamationIcon3 =
   'data:image/svg+xml,' +
   encodeURIComponent(`
     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-exclamation-triangle-fill" viewBox="0 0 16 16">
