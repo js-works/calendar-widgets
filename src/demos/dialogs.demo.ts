@@ -152,7 +152,7 @@ class DialogsDemo extends Component {
           <sl-input
             label="Email"
             name="Email"
-            xxxtype="email"
+            type="email"
             required
             autofocus
           ></sl-input>
@@ -212,7 +212,7 @@ class DialogsDemo extends Component {
               <sx-text-field name="zip"></sx-text-field>
               <sx-text-field name="city"></sx-text-field>
             </sx-compound-field>
-            <sl-select label="Country" required>
+            <sl-select label="Country" required help-text="Currently only USA and Canada available">
               <sl-option value="gb">Great Britain</sl-option>
               <sl-option value="us">United States</sl-option>
             </sl-select>

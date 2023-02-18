@@ -56,13 +56,9 @@ function getFormControlControllerPrototype(): FormControlController {
   const slInput = new SlInput();
   const values = Object.values(slInput);
 
-  let proto: FormControlController | null = null;
-
-  for (const value of values) {
-    if (value && value.updateValidity) {
-      proto = value.constructor.prototype;
-    }
-  }
+  const proto = Object.values(document.createElement('sl-input')).find(
+    (it) => it && typeof it === 'object' && 'updateValidity' in it
+  ).constructor.prototype;
 
   if (!proto) {
     throw "Couldn't detect prototype of FormControlController";

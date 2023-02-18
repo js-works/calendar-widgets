@@ -1,19 +1,10 @@
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-import { FormFieldController } from '../form-fields/form-field-controller';
-import type { FormControlController as FormControlControllerType } from '@shoelace-style/shoelace/dist/internal/form';
+import '@shoelace-style/shoelace/dist/components/input/input';
+import { FormControlController as FormControlControllerType } from '@shoelace-style/shoelace/dist/internal/form';
 
-export { FormControlController, FormControlControllerType };
+const constructor = Object.values(document.createElement('sl-input')).find(
+  (it) => it && typeof it === 'object' && 'updateValidity' in it
+).constructor;
 
-const slInput = new SlInput();
-const values = Object.values(slInput);
+const FormControlController: FormControlControllerType = constructor;
 
-let formControlController = null as any;
-
-for (const value of values) {
-  if (value && value.updateValidity) {
-    formControlController = value;
-  }
-}
-
-const FormControlController: FormControlControllerType =
-  formControlController.constructor;
+export { FormControlController };
