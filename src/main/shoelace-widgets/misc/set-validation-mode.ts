@@ -35,7 +35,11 @@ const exclamationIcon =
   `);
 
 const externalContent = html`
-  <div id="__external-content__">
+  <div
+    id="__external-content__"
+    aria-invalid="true"
+    aria-errormessage="__validation-message__"
+  >
     <style>
       #__external-content__ {
         max-height: 0;
@@ -126,7 +130,14 @@ function patchFormControlClass(formControlClass: Function) {
 
         if (form instanceof HTMLFormElement) {
           // TODO!!!!!!!!!!!!!!!!!
-          form.addEventListener('reset', () => updateValidationMessage(this));
+          form.addEventListener('reset', () => {
+            setTimeout(() => updateValidationMessage(this));
+            console.log(
+              this.tagName,
+              (this as any).validationMessage,
+              (this as any).validity.valid
+            );
+          });
 
           form.addEventListener('sl-input', () =>
             updateValidationMessage(this)

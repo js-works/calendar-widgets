@@ -70,6 +70,7 @@ class FormDemo extends Component {
             name="firstName"
             value="Jane"
             label="First name"
+            autocomplete="off"
             required
           >
           </sx-text-field>
@@ -77,6 +78,7 @@ class FormDemo extends Component {
             name="lastName"
             value="Doe"
             label="Last name"
+            autocomplete="off"
             required
           ></sx-text-field>
 

@@ -155,12 +155,14 @@ class DialogsDemo extends Component {
             type="email"
             required
             autofocus
+            autocomplete="off"
           ></sx-text-field>
           <sl-input
             label="Password"
             type="password"
             name="password"
             required
+            autocomplete="off"
           ></sl-input>
         </sx-fieldset>
       `
