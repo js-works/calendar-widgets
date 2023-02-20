@@ -1,4 +1,5 @@
-import { LitElement } from 'lit';
+import { LitElement, ReactiveController } from 'lit';
+import { getPluginOption } from '../misc/plugins';
 
 export { FormField, Validators };
 export type { Validator };
@@ -8,6 +9,32 @@ export type { Validator };
 abstract class FormField<V extends string | string[]> extends LitElement {
   constructor() {
     super();
+
+    const onComponentInit = getPluginOption('onComponentInit');
+
+    if (onComponentInit) {
+      let isInitialized = false;
+
+      const controller: ReactiveController = {
+        hostConnected: () => {
+          this.removeController(controller);
+
+          if (!isInitialized) {
+            isInitialized = true;
+            onComponentInit(this);
+          }
+        }
+      };
+
+      this.addController(controller);
+    }
+
+    const mapper = getPluginOption('componentContentMapper');
+
+    if (mapper) {
+      const render = this.render;
+      this.render = () => mapper(render.call(this), this);
+    }
   }
 
   abstract form: string;

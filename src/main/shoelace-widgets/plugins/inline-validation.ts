@@ -1,29 +1,22 @@
-import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
-import { FormField } from '../form-fields/form-fields';
 import { html } from 'lit';
-import { LitElement } from 'lit';
-import { TextField } from '../components/text-field/text-field';
+import { getPluginOption, Plugin } from '../misc/plugins';
+
+// === export ========================================================
+
+export { inlineValidation };
 
 // === types =========================================================
 
-type ValidationMode = 'default' | 'inline' | 'inline/static';
-
-let hasSetValidationMode = false;
-let validationMode: ValidationMode = 'default';
 const formControlMatcher = 'form *';
 
 const formControlTags = [
-  // shoelace core
   'sl-color-picker',
   'sl-input',
   'sl-select',
   'sl-radio-group',
   'sl-range',
   'sl-switch',
-  'sl-textarea',
-
-  // shoelace-widgets
-  'sx-text-field'
+  'sl-textarea'
 ];
 
 const exclamationIcon =
@@ -71,37 +64,19 @@ const externalContent = html`
   </div>
 `;
 
-export function setValidationMode(mode: ValidationMode) {
-  if (hasSetValidationMode) {
-    throw new Error('The validation mode can only be set once');
-  }
-
-  if (!['default', 'inline', 'inline/static'].includes(mode)) {
-    throw new Error(`Illegal validation mode "${mode}"`);
-  }
-
-  hasSetValidationMode = true;
-
-  if (mode === 'default') {
-    return;
-  }
-
-  validationMode = mode;
-
-  patchCustomElementRegistry();
-}
+patchCustomElementRegistry();
 
 function patchCustomElementRegistry() {
   const oldDefineFn = customElements.define;
 
   const alreadyPatchedClasses = new Set<CustomElementConstructor>();
 
-  [...formControlTags, 'sx-text-field'].forEach((tag) => {
+  formControlTags.forEach((tag) => {
     const componentClass = customElements.get(tag);
 
     if (componentClass && !alreadyPatchedClasses.has(componentClass)) {
       alreadyPatchedClasses.add(componentClass);
-      patchFormControlClass(componentClass);
+      patchCoreFormControl(componentClass);
     }
   });
 
@@ -112,67 +87,81 @@ function patchCustomElementRegistry() {
     ) {
       alreadyPatchedClasses.add(constructor);
 
-      patchFormControlClass(constructor);
+      patchCoreFormControl(constructor);
     }
 
     oldDefineFn.call(customElements, name, constructor, options);
   };
 }
 
-function patchFormControlClass(formControlClass: Function) {
-  const proto = formControlClass.prototype;
-  const oldRenderFn = proto.render;
+function patchCoreFormControl(formControlClass: Function) {
+  const render = formControlClass.prototype.render;
 
-  proto.render = function (this: LitElement) {
+  formControlClass.prototype.render = function () {
     if (!this.hasUpdated) {
-      this.updateComplete.then(() => {
-        const form = this.closest('form'); // TODO!!!!!!
-
-        if (form instanceof HTMLFormElement) {
-          // TODO!!!!!!!!!!!!!!!!!
-          form.addEventListener('reset', () => {
-            setTimeout(() => updateValidationMessage(this));
-            console.log(
-              this.tagName,
-              (this as any).validationMessage,
-              (this as any).validity.valid
-            );
-          });
-
-          form.addEventListener('sl-input', () =>
-            updateValidationMessage(this)
-          );
-
-          form.addEventListener(
-            'sl-invalid',
-            (ev) => {
-              if (
-                (validationMode !== 'inline' &&
-                  validationMode !== 'inline/static') ||
-                !this.matches(formControlMatcher)
-              ) {
-                return;
-              }
-
-              updateValidationMessage(this);
-
-              ev.preventDefault();
-            },
-            true
-          );
-        }
-      });
+      getPluginOption('onComponentInit')?.(this);
     }
 
-    const content = oldRenderFn.call(this);
+    const content = render.call(this);
+    const mapper = getPluginOption('componentContentMapper');
 
-    return !this.matches('form *') ? content : [content, externalContent];
+    return mapper ? mapper(content, this) : content;
   };
+}
+
+function inlineValidation(type: 'static' | 'animated'): Plugin {
+  return (options) => ({
+    onComponentInit: (elem) => {
+      options.onComponentInit?.(elem);
+
+      if (!('validity' in elem) || !('validationMessage' in elem)) {
+        return;
+      }
+
+      const form = elem.closest('form'); // TODO!!!!!!
+
+      if (form instanceof HTMLFormElement) {
+        // TODO!!!!!!!!!!!!!!!!!
+        form.addEventListener('reset', () => {
+          setTimeout(() => updateValidationMessage(elem, type));
+        });
+
+        form.addEventListener('sl-input', () =>
+          updateValidationMessage(elem, type)
+        );
+
+        form.addEventListener(
+          'sl-invalid',
+          (ev) => {
+            if (!elem.matches(formControlMatcher)) {
+              return;
+            }
+
+            updateValidationMessage(elem, type);
+
+            ev.preventDefault();
+          },
+          true
+        );
+      }
+    },
+
+    componentContentMapper: (content, elem) => {
+      return !('validity' in elem) ||
+        !('validationMessage' in elem) ||
+        !elem.matches(formControlMatcher)
+        ? content
+        : [content, externalContent];
+    }
+  });
 }
 
 // Updates the error data attribute of a given Shoelace form control,
 // depending on the form control's `validationMessage` property
-const updateValidationMessage = (formControl: any) => {
+const updateValidationMessage = (
+  formControl: any,
+  type: 'static' | 'animated'
+) => {
   const message = formControl.validationMessage;
   const root = formControl.shadowRoot;
   const lastChild = root.lastElementChild;
@@ -186,7 +175,7 @@ const updateValidationMessage = (formControl: any) => {
   validationMessageElem = validationElem.lastElementChild as HTMLElement;
 
   if (validationMessageElem.innerText !== message) {
-    if (validationMode !== 'inline') {
+    if (type !== 'animated') {
       validationMessageElem.innerText = message;
     } else {
       if (message !== '') {

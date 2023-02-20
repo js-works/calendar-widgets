@@ -2,15 +2,16 @@ import { css, html, PropertyValueMap } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement } from 'lit/decorators.js';
 import { Component } from './demo-app/component';
+import { loadPlugin } from 'shoelace-widgets';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/card/card';
 import '@shoelace-style/shoelace/dist/components/input/input';
 import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
-import { setValidationMode } from 'shoelace-widgets';
+import { inlineValidation } from 'shoelace-widgets';
 
-setValidationMode('inline');
+loadPlugin(inlineValidation('animated'));
 
 export const formDemo = () => '<form-demo2></form-demo2>';
 
@@ -32,9 +33,7 @@ class FormDemo extends Component {
   private _onFormSubmit = (ev: SubmitEvent) => {
     ev.preventDefault();
     const form = ev.target as HTMLFormElement;
-
     const formData = new FormData(form);
-
     const values: Record<string, string> = {};
 
     for (const [key, value] of formData.entries()) {

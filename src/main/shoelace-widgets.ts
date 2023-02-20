@@ -1,8 +1,7 @@
 import './shoelace-widgets/icons/register-icons';
 
-// function
-export { loadBaseStyles } from './shoelace-widgets/styles/load-base-styles';
-export { setValidationMode } from './shoelace-widgets/misc/set-validation-mode';
+// types
+export type { Plugin } from './shoelace-widgets/misc/plugins';
 
 // components
 export { Fieldset } from './shoelace-widgets/components/fieldset/fieldset';
@@ -14,3 +13,10 @@ export { HBox } from './shoelace-widgets/components/hbox/hbox';
 export { Sidenav } from './shoelace-widgets/components/sidenav/sidenav';
 export { TextField } from './shoelace-widgets/components/text-field/text-field';
 export { VBox } from './shoelace-widgets/components/vbox/vbox';
+
+// functions
+export { loadBaseStyles } from './shoelace-widgets/styles/load-base-styles';
+export { getPluginOption, loadPlugin } from './shoelace-widgets/misc/plugins';
+
+// plugins
+export { inlineValidation } from './shoelace-widgets/plugins/inline-validation';
