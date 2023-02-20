@@ -11,7 +11,7 @@ import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
 import { inlineValidation } from 'shoelace-widgets';
 
-loadPlugin(inlineValidation('animated'));
+loadPlugin(inlineValidation('static'));
 
 export const formDemo = () => '<form-demo2></form-demo2>';
 

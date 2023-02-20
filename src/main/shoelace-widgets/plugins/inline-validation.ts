@@ -110,50 +110,65 @@ function patchCoreFormControl(formControlClass: Function) {
 }
 
 function inlineValidation(type: 'static' | 'animated'): Plugin {
-  return (options) => ({
-    onComponentInit: (elem) => {
-      options.onComponentInit?.(elem);
+  return {
+    id: 'inlineValidation',
 
-      if (!('validity' in elem) || !('validationMessage' in elem)) {
-        return;
-      }
+    optionsMapper: (options) => ({
+      onComponentInit: (elem) => {
+        options.onComponentInit?.(elem);
 
-      const form = elem.closest('form'); // TODO!!!!!!
+        if (!('validity' in elem) || !('validationMessage' in elem)) {
+          return;
+        }
 
-      if (form instanceof HTMLFormElement) {
-        // TODO!!!!!!!!!!!!!!!!!
-        form.addEventListener('reset', () => {
-          setTimeout(() => updateValidationMessage(elem, type));
-        });
+        const form = elem.closest('form'); // TODO!!!!!!
 
-        form.addEventListener('sl-input', () =>
-          updateValidationMessage(elem, type)
-        );
+        if (form instanceof HTMLFormElement) {
+          // TODO!!!!!!!!!!!!!!!!!
+          form.addEventListener('reset', () => {
+            setTimeout(() => updateValidationMessage(elem, type));
+          });
 
-        form.addEventListener(
-          'sl-invalid',
-          (ev) => {
-            if (!elem.matches(formControlMatcher)) {
+          const handler = (ev: Event) => {
+            if (ev.target !== elem) {
               return;
             }
 
-            updateValidationMessage(elem, type);
+            setTimeout(() => {
+              if (
+                elem.hasAttribute('data-user-valid') ||
+                elem.hasAttribute('data-user-invalid')
+              ) {
+                updateValidationMessage(elem, type);
+              }
+            });
+          };
 
-            ev.preventDefault();
-          },
-          true
-        );
+          form.addEventListener('sl-input', handler);
+          form.addEventListener('sl-blur', handler);
+
+          form.addEventListener(
+            'sl-invalid',
+            (ev) => {
+              if (elem.matches(formControlMatcher)) {
+                updateValidationMessage(elem, type);
+                ev.preventDefault();
+              }
+            },
+            true
+          );
+        }
+      },
+
+      componentContentMapper: (content, elem) => {
+        return !('validity' in elem) ||
+          !('validationMessage' in elem) ||
+          !elem.matches(formControlMatcher)
+          ? content
+          : [content, externalContent];
       }
-    },
-
-    componentContentMapper: (content, elem) => {
-      return !('validity' in elem) ||
-        !('validationMessage' in elem) ||
-        !elem.matches(formControlMatcher)
-        ? content
-        : [content, externalContent];
-    }
-  });
+    })
+  };
 }
 
 // Updates the error data attribute of a given Shoelace form control,
@@ -177,6 +192,8 @@ const updateValidationMessage = (
   if (validationMessageElem.innerText !== message) {
     if (type !== 'animated') {
       validationMessageElem.innerText = message;
+
+      externalContentElem.style.maxHeight = message === '' ? '0' : 'none';
     } else {
       if (message !== '') {
         validationMessageElem.innerText = message;
