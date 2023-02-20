@@ -17,6 +17,12 @@ declare global {
         content: unknown,
         element: LitElement
       ) => unknown;
+
+      validationMessageMapper: (
+        validationMessage: string,
+        validity: ValidityState,
+        element: LitElement
+      ) => string;
     }
   }
 }

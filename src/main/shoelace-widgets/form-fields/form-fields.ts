@@ -4,7 +4,7 @@ import { getPluginOption } from '../misc/plugins';
 export { FormField, Validators };
 export type { Validator };
 
-// === exports =================================================================
+const patchedPrototypes = new WeakSet<CustomElementConstructor>();
 
 abstract class FormField<V extends string | string[]> extends LitElement {
   constructor() {
@@ -29,11 +29,42 @@ abstract class FormField<V extends string | string[]> extends LitElement {
       this.addController(controller);
     }
 
-    const mapper = getPluginOption('componentContentMapper');
+    const contentMapper = getPluginOption('componentContentMapper');
 
-    if (mapper) {
+    if (contentMapper) {
       const render = this.render;
-      this.render = () => mapper(render.call(this), this);
+      this.render = () => contentMapper(render.call(this), this);
+    }
+
+    if ('validationMessage' in this && 'validity' in this) {
+      const validationMessageMapper = getPluginOption(
+        'validationMessageMapper'
+      );
+
+      if (
+        validationMessageMapper &&
+        !patchedPrototypes.has(this.constructor.prototype)
+      ) {
+        patchedPrototypes.add(this.constructor.prototype);
+
+        const descriptor = Object.getOwnPropertyDescriptor(
+          this.constructor.prototype,
+          'validationMessage'
+        );
+
+        const getValidationMessage = descriptor?.get;
+
+        if (getValidationMessage) {
+          Object.defineProperty(this, 'validationMessage', {
+            get: () =>
+              validationMessageMapper(
+                getValidationMessage.call(this),
+                this.validity,
+                this
+              )
+          });
+        }
+      }
     }
   }
 

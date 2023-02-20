@@ -3,7 +3,7 @@ import { getPluginOption, Plugin } from '../misc/plugins';
 
 // === export ========================================================
 
-export { inlineValidation };
+export { inlineValidationPlugin };
 
 // === types =========================================================
 
@@ -100,6 +100,32 @@ function patchCoreFormControl(formControlClass: Function) {
   formControlClass.prototype.render = function () {
     if (!this.hasUpdated) {
       getPluginOption('onComponentInit')?.(this);
+
+      if ('validationMessage' in this && 'validity' in this) {
+        const validationMessageMapper = getPluginOption(
+          'validationMessageMapper'
+        );
+
+        if (validationMessageMapper) {
+          const descriptor = Object.getOwnPropertyDescriptor(
+            this.constructor.prototype,
+            'validationMessage'
+          );
+
+          const getValidationMessage = descriptor?.get;
+
+          if (getValidationMessage) {
+            Object.defineProperty(this, 'validationMessage', {
+              get: () =>
+                validationMessageMapper(
+                  getValidationMessage.call(this),
+                  this.validity,
+                  this
+                )
+            });
+          }
+        }
+      }
     }
 
     const content = render.call(this);
@@ -109,7 +135,9 @@ function patchCoreFormControl(formControlClass: Function) {
   };
 }
 
-function inlineValidation(type: 'static' | 'animated'): Plugin {
+function inlineValidationPlugin(
+  type: 'animated' | 'static' = 'animated'
+): Plugin {
   return {
     id: 'inlineValidation',
 

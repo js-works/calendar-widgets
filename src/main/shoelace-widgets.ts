@@ -19,4 +19,5 @@ export { loadBaseStyles } from './shoelace-widgets/styles/load-base-styles';
 export { getPluginOption, loadPlugin } from './shoelace-widgets/misc/plugins';
 
 // plugins
-export { inlineValidation } from './shoelace-widgets/plugins/inline-validation';
+export { inlineValidationPlugin } from './shoelace-widgets/plugins/inline-validation-plugin';
+export { validationMessagePlugin } from './shoelace-widgets/plugins/validation-message-plugin';
