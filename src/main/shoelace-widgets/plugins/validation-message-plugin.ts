@@ -1,8 +1,8 @@
-import { getPluginOption, Plugin } from '../misc/plugins';
+import { Plugin } from '../misc/plugins';
 
 export function validationMessagePlugin(): Plugin {
   return {
-    id: 'validationMessage',
+    id: Symbol('validationMessage'),
 
     optionsMapper: (options) => {
       const mapper = options.validationMessageMapper;

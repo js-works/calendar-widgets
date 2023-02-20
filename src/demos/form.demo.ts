@@ -12,8 +12,8 @@ import '@shoelace-style/shoelace/dist/components/option/option';
 import { inlineValidationPlugin } from 'shoelace-widgets';
 import { validationMessagePlugin } from 'shoelace-widgets';
 
-loadPlugin(inlineValidationPlugin('static'));
-loadPlugin(validationMessagePlugin());
+loadPlugin(inlineValidationPlugin());
+// loadPlugin(validationMessagePlugin());
 
 export const formDemo = () => '<form-demo2></form-demo2>';
 

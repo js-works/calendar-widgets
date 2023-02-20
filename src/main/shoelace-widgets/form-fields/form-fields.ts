@@ -13,16 +13,10 @@ abstract class FormField<V extends string | string[]> extends LitElement {
     const onComponentInit = getPluginOption('onComponentInit');
 
     if (onComponentInit) {
-      let isInitialized = false;
-
       const controller: ReactiveController = {
         hostConnected: () => {
           this.removeController(controller);
-
-          if (!isInitialized) {
-            isInitialized = true;
-            onComponentInit(this);
-          }
+          onComponentInit(this);
         }
       };
 

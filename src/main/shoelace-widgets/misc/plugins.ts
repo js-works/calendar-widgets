@@ -1,8 +1,10 @@
 import type { LitElement } from 'lit';
 
 export type Plugin = {
-  id: string;
+  id: symbol;
 
+  // mapper function that gets the old plugin options
+  // and returns new plugin options
   optionsMapper: (
     options: Partial<Shoelace.PluginOptions>
   ) => Partial<Shoelace.PluginOptions>;
@@ -10,14 +12,20 @@ export type Plugin = {
 
 declare global {
   namespace Shoelace {
-    export interface PluginOptions {
+    interface PluginOptions {
+      // will be called each time a component is initialized
       onComponentInit: (element: LitElement) => void;
 
+      // will be used to map the return value of the component's
+      // `render` function
       componentContentMapper: (
         content: unknown,
         element: LitElement
       ) => unknown;
 
+      // this might come in near future to allow all validation messages
+      // to be shown in app language (currently the standard validation
+      // messages are shown in the browser's UI language).
       validationMessageMapper: (
         validationMessage: string,
         validity: ValidityState,
@@ -27,9 +35,9 @@ declare global {
   }
 }
 
-let pluginOptionsAlreadyRead = false;
 let pluginOptions: Partial<Shoelace.PluginOptions> = {};
-let loadedPluginIds = new Set<string>();
+let pluginOptionsAlreadyRead = false;
+let loadedPluginIds = new Set<symbol>();
 
 export function getPluginOption<K extends keyof Shoelace.PluginOptions>(
   key: K
@@ -44,7 +52,9 @@ export function loadPlugin(plugin: Plugin) {
       'Function `loadPlugin` must not be called after method `getPluginOptions` has already been called'
     );
   } else if (loadedPluginIds.has(plugin.id)) {
-    throw new Error(`Plugin "${plugin.id}" has already been loaded`);
+    throw new Error(
+      `Plugin "${plugin.id.description}" has already been loaded`
+    );
   }
 
   pluginOptions = { ...pluginOptions, ...plugin.optionsMapper(pluginOptions) };

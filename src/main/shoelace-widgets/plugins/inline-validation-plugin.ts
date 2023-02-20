@@ -139,7 +139,7 @@ function inlineValidationPlugin(
   type: 'animated' | 'static' = 'animated'
 ): Plugin {
   return {
-    id: 'inlineValidation',
+    id: Symbol('inlineValidation'),
 
     optionsMapper: (options) => ({
       onComponentInit: (elem) => {
