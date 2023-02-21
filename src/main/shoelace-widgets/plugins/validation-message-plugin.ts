@@ -4,7 +4,7 @@ export function validationMessagePlugin(): Plugin {
   return {
     id: Symbol('validationMessage'),
 
-    optionsMapper: (options) => {
+    mapOptions: (options) => {
       const mapper = options.validationMessageMapper;
 
       return {

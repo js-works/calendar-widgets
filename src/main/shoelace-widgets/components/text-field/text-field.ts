@@ -3,6 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
+import { pluginable } from '../../misc/plugins';
 
 import { FormFieldController } from '../../form-fields/form-field-controller';
 import { FormField, Validators } from '../../form-fields/form-fields';
@@ -36,6 +37,7 @@ const typeMap: Record<string, string> = {
 
 // === TextField =====================================================
 
+@pluginable
 @customElement('sx-text-field')
 class TextField extends FormField<string> {
   static styles = textFieldStyles;
@@ -207,5 +209,3 @@ class TextField extends FormField<string> {
     return this._slInputRef.value!.validationMessage;
   }
 }
-
-console.log(TextField.constructor.name);

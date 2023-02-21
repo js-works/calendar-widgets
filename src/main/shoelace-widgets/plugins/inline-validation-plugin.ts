@@ -9,16 +9,6 @@ export { inlineValidationPlugin };
 
 const formControlMatcher = 'form *';
 
-const formControlTags = [
-  'sl-color-picker',
-  'sl-input',
-  'sl-select',
-  'sl-radio-group',
-  'sl-range',
-  'sl-switch',
-  'sl-textarea'
-];
-
 const exclamationIcon =
   'data:image/svg+xml,' +
   encodeURIComponent(`
@@ -64,84 +54,13 @@ const externalContent = html`
   </div>
 `;
 
-patchCustomElementRegistry();
-
-function patchCustomElementRegistry() {
-  const oldDefineFn = customElements.define;
-
-  const alreadyPatchedClasses = new Set<CustomElementConstructor>();
-
-  formControlTags.forEach((tag) => {
-    const componentClass = customElements.get(tag);
-
-    if (componentClass && !alreadyPatchedClasses.has(componentClass)) {
-      alreadyPatchedClasses.add(componentClass);
-      patchCoreFormControl(componentClass);
-    }
-  });
-
-  customElements.define = (name, constructor, options) => {
-    if (
-      !alreadyPatchedClasses.has(constructor) &&
-      formControlTags.includes(name)
-    ) {
-      alreadyPatchedClasses.add(constructor);
-
-      patchCoreFormControl(constructor);
-    }
-
-    oldDefineFn.call(customElements, name, constructor, options);
-  };
-}
-
-function patchCoreFormControl(formControlClass: Function) {
-  const render = formControlClass.prototype.render;
-
-  formControlClass.prototype.render = function () {
-    if (!this.hasUpdated) {
-      getPluginOption('onComponentInit')?.(this);
-
-      if ('validationMessage' in this && 'validity' in this) {
-        const validationMessageMapper = getPluginOption(
-          'validationMessageMapper'
-        );
-
-        if (validationMessageMapper) {
-          const descriptor = Object.getOwnPropertyDescriptor(
-            this.constructor.prototype,
-            'validationMessage'
-          );
-
-          const getValidationMessage = descriptor?.get;
-
-          if (getValidationMessage) {
-            Object.defineProperty(this, 'validationMessage', {
-              get: () =>
-                validationMessageMapper(
-                  getValidationMessage.call(this),
-                  this.validity,
-                  this
-                )
-            });
-          }
-        }
-      }
-    }
-
-    const content = render.call(this);
-    const mapper = getPluginOption('componentContentMapper');
-
-    return mapper ? mapper(content, this) : content;
-  };
-}
-
 function inlineValidationPlugin(
   type: 'animated' | 'static' = 'animated'
 ): Plugin {
   return {
     id: Symbol('inlineValidation'),
 
-    optionsMapper: (options) => ({
+    mapOptions: (options) => ({
       onComponentInit: (elem) => {
         options.onComponentInit?.(elem);
 
