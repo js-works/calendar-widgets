@@ -5,6 +5,7 @@ import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '@shoelace-style/localize';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
+import { BaseElement } from '../../misc/base-element';
 
 // custom elements
 import SlInput from '@shoelace-style/shoelace/dist/components/input/input';
@@ -37,7 +38,7 @@ declare global {
 void DatePicker || SlDropdown || SlIcon || SlIconButton || SlInput;
 
 @customElement('sx-date-field')
-export class DateField extends LitElement {
+export class DateField extends BaseElement {
   static styles = dateFieldStyles;
 
   @property({ type: String, attribute: 'selection-mode' })

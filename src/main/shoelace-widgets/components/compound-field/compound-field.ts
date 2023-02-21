@@ -5,6 +5,7 @@ import { repeat } from 'lit/directives/repeat.js';
 import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
+import { BaseElement } from '../../misc/base-element';
 
 // styles
 import compoundFieldStyles from './compound-field.styles';
@@ -24,7 +25,7 @@ declare global {
 // === Compound field ================================================
 
 @customElement('sx-compound-field')
-class CompoundField extends LitElement {
+class CompoundField extends BaseElement {
   static styles = compoundFieldStyles;
 
   static {

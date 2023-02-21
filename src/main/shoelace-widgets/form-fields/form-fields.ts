@@ -1,67 +1,14 @@
 import { LitElement, ReactiveController } from 'lit';
-import { getPluginOption } from '../misc/plugins';
+import { initWidget } from 'shoelace-widgets/internal';
 
-export { FormField, Validators };
+export { FormField as FormField, Validators };
 export type { Validator };
-
-const patchedPrototypes = new WeakSet<CustomElementConstructor>();
 
 abstract class FormField<V extends string | string[]> extends LitElement {
   constructor() {
     super();
-
-    const onComponentInit = getPluginOption('onComponentInit');
-
-    if (onComponentInit) {
-      const controller: ReactiveController = {
-        hostConnected: () => {
-          this.removeController(controller);
-          onComponentInit(this);
-        }
-      };
-
-      this.addController(controller);
-    }
-
-    const contentMapper = getPluginOption('componentContentMapper');
-
-    if (contentMapper) {
-      const render = this.render;
-      this.render = () => contentMapper(render.call(this), this);
-    }
-
-    if ('validationMessage' in this && 'validity' in this) {
-      const validationMessageMapper = getPluginOption(
-        'validationMessageMapper'
-      );
-
-      if (
-        validationMessageMapper &&
-        !patchedPrototypes.has(this.constructor.prototype)
-      ) {
-        patchedPrototypes.add(this.constructor.prototype);
-
-        const descriptor = Object.getOwnPropertyDescriptor(
-          this.constructor.prototype,
-          'validationMessage'
-        );
-
-        const getValidationMessage = descriptor?.get;
-
-        if (getValidationMessage) {
-          Object.defineProperty(this, 'validationMessage', {
-            get: () =>
-              validationMessageMapper(
-                getValidationMessage.call(this),
-                this.validity,
-                this
-              )
-          });
-        }
-      }
-    }
+    initWidget(this);
   }
-
   abstract form: string;
   abstract name: string;
   abstract value: V;

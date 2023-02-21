@@ -207,3 +207,5 @@ class TextField extends FormField<string> {
     return this._slInputRef.value!.validationMessage;
   }
 }
+
+console.log(TextField.constructor.name);

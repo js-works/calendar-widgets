@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { BaseElement } from '../../misc/base-element';
 
 // styles
 import hboxStyles from './vbox.styles';
@@ -19,7 +20,7 @@ declare global {
 // === VBox ==========================================================
 
 @customElement('sx-vbox')
-class VBox extends LitElement {
+class VBox extends BaseElement {
   static styles = hboxStyles;
 
   @property()

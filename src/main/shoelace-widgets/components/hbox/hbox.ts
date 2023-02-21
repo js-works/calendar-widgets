@@ -1,5 +1,6 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
+import { BaseElement } from '../../misc/base-element';
 
 // styles
 import hboxStyles from './hbox.styles';
@@ -19,7 +20,7 @@ declare global {
 // === HBox ==========================================================
 
 @customElement('sx-hbox')
-class HBox extends LitElement {
+class HBox extends BaseElement {
   static styles = hboxStyles;
 
   @property({ attribute: 'align-items' })

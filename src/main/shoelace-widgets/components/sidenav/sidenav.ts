@@ -5,6 +5,7 @@ import { classMap } from 'lit/directives/class-map.js';
 import { repeat } from 'lit/directives/repeat.js';
 import { when } from 'lit/directives/when.js';
 import { createEmitter, Listener } from '../../misc/events';
+import { BaseElement } from '../../misc/base-element';
 
 import sidenavStyles from './sidenav.styles';
 
@@ -25,7 +26,7 @@ namespace Sidenav {
 // === Sidenav =======================================================
 
 @customElement('sx-sidenav')
-class Sidenav extends LitElement {
+class Sidenav extends BaseElement {
   static styles = sidenavStyles;
 
   @state()
