@@ -24,7 +24,7 @@ export default css`
     */
 
     position: relative;
-    background-color: var(--sl-color-neutral-100);
+    background-color: var(--sl-color-neutral-50);
     border-radius: 1px;
     xxxborder-left: 1px solid var(--sl-color-neutral-600);
     border-bottom: 1px solid var(--sl-color-neutral-300);

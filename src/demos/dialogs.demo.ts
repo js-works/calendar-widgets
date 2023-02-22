@@ -179,7 +179,7 @@ class DialogsDemo extends Component {
   private _onInput2Click = async () => {
     const data = await this._dialogs.show('input', {
       title: 'Add new user',
-      width: '40rem',
+      width: '36rem',
       height: '34rem',
       padding: '0.25rem 1rem',
 
