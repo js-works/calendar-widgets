@@ -3,6 +3,7 @@
   "words": [
     "esbuild", //
     "hbox",
+    "pluginable",
     "preact",
     "outfile",
     "vbox"

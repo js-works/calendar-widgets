@@ -1,5 +1,5 @@
 import { LitElement, ReactiveController } from 'lit';
-import { makePluginable } from '../misc/plugins';
+import { makePluginable } from '../../shoelace-widgets-lit/plugins/plugins';
 
 export { FormField as FormField, Validators };
 export type { Validator };

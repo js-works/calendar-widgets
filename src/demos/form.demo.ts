@@ -2,7 +2,7 @@ import { css, html, PropertyValueMap } from 'lit';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { customElement } from 'lit/decorators.js';
 import { Component } from './demo-app/component';
-import { loadPlugin } from 'shoelace-widgets';
+import { loadPlugin } from 'shoelace-widgets/lit';
 
 import '@shoelace-style/shoelace/dist/components/button/button';
 import '@shoelace-style/shoelace/dist/components/card/card';

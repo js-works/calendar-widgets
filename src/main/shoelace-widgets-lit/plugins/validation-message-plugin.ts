@@ -1,4 +1,4 @@
-import { Plugin } from '../misc/plugins';
+import { Plugin } from './plugins';
 
 export function validationMessagePlugin(): Plugin {
   return {

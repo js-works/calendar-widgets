@@ -3,7 +3,7 @@ import { customElement, property } from 'lit/decorators.js';
 import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
-import { pluginable } from '../../misc/plugins';
+import { pluginable } from '../../../shoelace-widgets-lit/plugins/plugins';
 
 import { FormFieldController } from '../../form-fields/form-field-controller';
 import { FormField, Validators } from '../../form-fields/form-fields';

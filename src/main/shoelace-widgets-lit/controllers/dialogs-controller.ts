@@ -3,7 +3,7 @@ import type { ReactiveControllerHost, TemplateResult } from 'lit';
 import { repeat } from 'lit/directives/repeat.js';
 import type { DialogConfig, ToastConfig } from 'shoelace-widgets/internal';
 
-import baseStyles from '../shoelace-widgets/styles/base-styles';
+import baseStyles from '../../shoelace-widgets/styles/base-styles';
 
 import {
   AbstractDialogsController,
