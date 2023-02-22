@@ -41,7 +41,8 @@ const externalContent = html`
         font-size: calc(var(--sl-font-size-small) - 1px);
         font-weight: var(--sl-font-weight-semibold);
         gap: 0.4em;
-        background-color: var(--sl-color-danger-100);
+        background-color: var(--sl-color-danger-50);
+        border: 1px solid var(--sl-color-danger-100);
         border-radius: 2px;
         padding: 0.25em 0.5em;
       }
