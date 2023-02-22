@@ -139,7 +139,7 @@ class DialogsDemo extends Component {
       title: 'Switch user',
       width: '15rem',
       content: html`
-        <sx-fieldset label-layout="horizontal" validation-mode="inline">
+        <sx-fieldset label-layout="horizontal">
           <!--
           <sx-text-field
             label="Username"
@@ -179,12 +179,12 @@ class DialogsDemo extends Component {
   private _onInput2Click = async () => {
     const data = await this._dialogs.show('input', {
       title: 'Add new user',
-      width: '34rem',
+      width: '40rem',
       height: '34rem',
       padding: '0.25rem 1rem',
 
       content: html`
-        <sx-fieldset label-layout="horizontal" validation-mode="inline">
+        <sx-fieldset label-layout="horizontal">
           <sx-fieldset caption="User">
             <sl-radio-group label="Salutation" required data-horizontal>
               <sl-radio value="mrs">Mrs.</sl-radio>

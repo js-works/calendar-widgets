@@ -38,9 +38,21 @@ const externalContent = html`
         align-items: center;
         margin: 0.25em 0;
         color: var(--sl-color-danger-700);
-        font-size: var(--sl-font-size-small);
+        font-size: calc(var(--sl-font-size-small) - 1px);
         font-weight: var(--sl-font-weight-semibold);
         gap: 0.4em;
+        background-color: var(--sl-color-danger-100);
+        border-radius: 2px;
+        padding: 0.25em 0.5em;
+      }
+
+      #__validation-icon__ {
+        flex-grow: 0;
+        flex-shrink: 0;
+        padding: 0 0.25em;
+      }
+
+      #__validation-message__ {
       }
 
       :host([data-user-invalid]) #__external-content__ {
@@ -107,7 +119,7 @@ function inlineValidationPlugin(
         }
       },
 
-      componentContentMapper: (content, elem) => {
+      mapRendering: (content, elem) => {
         return !('validity' in elem) ||
           !('validationMessage' in elem) ||
           !elem.matches(formControlMatcher)

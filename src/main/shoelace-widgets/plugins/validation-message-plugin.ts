@@ -5,10 +5,10 @@ export function validationMessagePlugin(): Plugin {
     id: Symbol('validationMessage'),
 
     mapOptions: (options) => {
-      const mapper = options.validationMessageMapper;
+      const mapper = options.mapValidationMessage;
 
       return {
-        validationMessageMapper: (msg, elem, validity) =>
+        mapValidationMessage: (msg, elem, validity) =>
           // TODO!!!!
           !mapper ? msg : mapper(msg, elem, validity)
       };

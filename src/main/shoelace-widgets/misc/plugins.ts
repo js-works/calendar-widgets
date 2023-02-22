@@ -30,10 +30,7 @@ declare global {
 
       // will be used to map the return value of the component's
       // `render` function
-      componentContentMapper: (
-        content: unknown,
-        element: LitElement
-      ) => unknown;
+      mapRendering: (content: unknown, element: LitElement) => unknown;
 
       // will allow track the invocation of the `render`
       // method - useful reactive libraries like Mobx etc.
@@ -42,7 +39,7 @@ declare global {
       // this might come in near future to allow all validation messages
       // to be shown in app language (currently the standard validation
       // messages are shown in the browser's UI language).
-      validationMessageMapper: (
+      mapValidationMessage: (
         validationMessage: string,
         validity: ValidityState,
         element: LitElement
@@ -118,7 +115,7 @@ function handlePlugins(element: LitElement) {
     element.addController(controller);
   }
 
-  const contentMapper = getPluginOption('componentContentMapper');
+  const contentMapper = getPluginOption('mapRendering');
   const tracker = getPluginOption('trackRendering');
   const elem = element as LitElement & { render: () => unknown };
 
