@@ -17,6 +17,7 @@ import { LocalizeController } from '../../../shoelace-widgets/i18n/i18n';
 
 // components
 import SlAlert from '@shoelace-style/shoelace/dist/components/alert/alert';
+import SlAnimation from '@shoelace-style/shoelace/dist/components/animation/animation';
 import SlButton from '@shoelace-style/shoelace/dist/components/button/button';
 import SlDialog from '@shoelace-style/shoelace/dist/components/dialog/dialog';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -141,7 +142,7 @@ class StandardDialog extends LitElement {
 
   static {
     // required components (to prevent too much tree shaking)
-    void [SlAlert, SlButton, SlDialog, SlIcon, TextField];
+    void [SlAnimation, SlAlert, SlButton, SlDialog, SlIcon, TextField];
   }
 
   @property({ attribute: false })
@@ -181,7 +182,23 @@ class StandardDialog extends LitElement {
     this.resolve!(result);
   }
 
-  override willUpdate() {
+  constructor() {
+    super();
+
+    this.addEventListener(
+      'sl-invalid',
+      (ev) => {
+        setTimeout(() => {
+          if (ev.defaultPrevented) {
+            this.shadowRoot!.querySelector('sl-animation')!.play = true;
+          }
+        }, 250);
+      },
+      true
+    );
+  }
+
+  protected override willUpdate() {
     // TODO - this is not always working
     const colorScheme = getComputedStyle(this).colorScheme;
 
@@ -341,29 +358,31 @@ class StandardDialog extends LitElement {
             )}
             <div class="title">${title}</div>
           </div>
-          <div
-            class="main"
-            style=${styleMap({
-              padding:
-                'padding' in this.config ? (this.config as any).padding : null
-            })}
-          >
-            ${when(
-              this.config.message,
-              () => html`
-                <div class="message">
-                  ${textToResultTemplate(
-                    typeof this.config!.message === 'function'
-                      ? this.config!.message()
-                      : this.config!.message
-                  )}
-                </div>
-              `
-            )}
-            <div class="content">
-              <slot></slot>
+          <sl-animation name="" duration="1000" iterations="1">
+            <div
+              class="main"
+              style=${styleMap({
+                padding:
+                  'padding' in this.config ? (this.config as any).padding : null
+              })}
+            >
+              ${when(
+                this.config.message,
+                () => html`
+                  <div class="message">
+                    ${textToResultTemplate(
+                      typeof this.config!.message === 'function'
+                        ? this.config!.message()
+                        : this.config!.message
+                    )}
+                  </div>
+                `
+              )}
+              <div class="content">
+                <slot></slot>
+              </div>
             </div>
-          </div>
+          </sl-animation>
           <div slot="footer">
             <div class="buttons">
               ${repeat(
