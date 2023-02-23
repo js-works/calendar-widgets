@@ -1,7 +1,7 @@
 import './shoelace-widgets/icons/register-icons';
 
 // types
-export type { Plugin } from './shoelace-widgets-lit/plugins/plugins';
+export type { Plugin } from './shoelace-widgets-plugins/plugins';
 
 // components
 export { Fieldset } from './shoelace-widgets/components/fieldset/fieldset';
@@ -18,5 +18,5 @@ export { VBox } from './shoelace-widgets/components/vbox/vbox';
 export { loadBaseStyles } from './shoelace-widgets/styles/load-base-styles';
 
 // plugins
-export { inlineValidationPlugin } from './shoelace-widgets-lit/plugins/inline-validation-plugin';
-export { validationMessagePlugin } from './shoelace-widgets-lit/plugins/validation-message-plugin';
+export { inlineValidationPlugin } from './shoelace-widgets-plugins/inline-validation-plugin';
+export { validationMessagePlugin } from './shoelace-widgets-plugins/validation-message-plugin';

@@ -1,5 +1,5 @@
 import { html } from 'lit';
-import { getPluginOption, Plugin } from './plugins';
+import type { Plugin } from './plugins';
 
 // === export ========================================================
 

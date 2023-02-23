@@ -5,6 +5,9 @@ import type { LitElement, ReactiveController } from 'lit';
 // as there will be a clean way to achieve the same, we'll change this - sorry ;-)
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 
+// we'll find a better way here
+import { TextField } from 'shoelace-widgets';
+
 // === exports =======================================================
 
 export { getPluginOption, makePluginable, pluginable, loadPlugin };
@@ -76,6 +79,7 @@ function loadPlugin(plugin: Plugin) {
 
   if (loadedPluginIds.size === 0) {
     makePluginable(Object.getPrototypeOf(SlIcon));
+    makePluginable(Object.getPrototypeOf(Object.getPrototypeOf(TextField)));
   }
 
   pluginOptions = { ...pluginOptions, ...plugin.mapOptions(pluginOptions) };
@@ -91,7 +95,10 @@ function makePluginable(constructor: typeof LitElement) {
     const controller: ReactiveController = {
       hostConnected() {
         element.removeController(controller);
-        handlePlugins(element as LitElement);
+
+        if (!element.hasAttribute('data-not-pluginable')) {
+          handlePlugins(element as LitElement);
+        }
       }
     };
 

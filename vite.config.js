@@ -12,6 +12,7 @@ export default defineConfig({
       '@shoelace-style/shoelace/dist/internal/form':
         '../../node_modules/@shoelace-style/shoelace/dist/internal/form.js',
       'shoelace-widgets/lit': '/src/main/shoelace-widgets-lit.ts',
+      'shoelace-widgets/plugins': '/src/main/shoelace-widgets-plugins.ts',
       'shoelace-widgets/internal': '/src/main/shoelace-widgets-internal.ts',
       'shoelace-widgets': '/src/main/shoelace-widgets.ts'
     }

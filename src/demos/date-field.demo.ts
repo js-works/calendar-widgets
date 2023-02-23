@@ -2,7 +2,6 @@ import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
 import { DateField } from '../main/shoelace-widgets/components/date-field/date-field';
 import { Fieldset } from '../main/shoelace-widgets/components/fieldset/fieldset';
-import { BaseElement } from '../main/shoelace-widgets/misc/base-element';
 
 export default {
   title: 'shoelace-widgets'
@@ -33,7 +32,7 @@ const styles = css`
 `;
 
 @customElement('date-field-demo')
-class DatePickerDemo extends BaseElement {
+class DatePickerDemo extends LitElement {
   static styles = styles;
 
   static {

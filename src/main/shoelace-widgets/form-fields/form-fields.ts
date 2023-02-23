@@ -1,13 +1,13 @@
-import { LitElement, ReactiveController } from 'lit';
-import { makePluginable } from '../../shoelace-widgets-lit/plugins/plugins';
+import { BaseElement } from '../misc/base-element';
 
 export { FormField as FormField, Validators };
 export type { Validator };
 
-abstract class FormField<V extends string | string[]> extends LitElement {
+abstract class FormField<V extends string | string[]> extends BaseElement {
   constructor() {
     super();
   }
+
   abstract form: string;
   abstract name: string;
   abstract value: V;
@@ -20,8 +20,6 @@ abstract class FormField<V extends string | string[]> extends LitElement {
   abstract checkValidity(): boolean;
   abstract reportValidity(): boolean;
 }
-
-makePluginable(FormField as unknown as any);
 
 type Validator<T> = (value: T) => string | null;
 

@@ -24,6 +24,7 @@
     "paths": {
       "shoelace-widgets": ["./src/main/shoelace-widgets.ts"],
       "shoelace-widgets/lit": ["./src/main/shoelace-widgets-lit.ts"],
+      "shoelace-widgets/plugins": ["./src/main/shoelace-widgets-plugins.ts"],
       "shoelace-widgets/internal": ["./src/main/shoelace-widgets-internal.ts"]
     },
     "typeRoots": ["node_modules/@types"],

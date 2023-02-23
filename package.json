@@ -21,6 +21,10 @@
       "import": "./dist/shoelace-widgets-preact.js",
       "types": "./dist/types/shoelace-widgets-preact.d.ts"
     },
+    "./plugins": {
+      "import": "./dist/shoelace-widgets-plugins.js",
+      "types": "./dist/types/shoelace-widgets-plugins.d.ts"
+    },
     "./internal": {
       "import": "./dist/shoelace-widgets-internal.js",
       "types": "./dist/types/shoelace-widgets-internal.d.ts"
