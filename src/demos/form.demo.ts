@@ -9,11 +9,6 @@ import '@shoelace-style/shoelace/dist/components/card/card';
 import '@shoelace-style/shoelace/dist/components/input/input';
 import '@shoelace-style/shoelace/dist/components/select/select';
 import '@shoelace-style/shoelace/dist/components/option/option';
-import { inlineValidationPlugin } from 'shoelace-widgets';
-import { validationMessagePlugin } from 'shoelace-widgets';
-
-loadPlugin(inlineValidationPlugin('animated'));
-// loadPlugin(validationMessagePlugin());
 
 export const formDemo = () => '<form-demo2></form-demo2>';
 

@@ -16,7 +16,3 @@ export { VBox } from './shoelace-widgets/components/vbox/vbox';
 
 // functions
 export { loadBaseStyles } from './shoelace-widgets/styles/load-base-styles';
-
-// plugins
-export { inlineValidationPlugin } from './shoelace-widgets-plugins/inline-validation-plugin';
-export { validationMessagePlugin } from './shoelace-widgets-plugins/validation-message-plugin';

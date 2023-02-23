@@ -38,15 +38,6 @@ declare global {
       // will allow track the invocation of the `render`
       // method - useful reactive libraries like Mobx etc.
       trackRendering: (action: () => void, element: LitElement) => void;
-
-      // this might come in near future to allow all validation messages
-      // to be shown in app language (currently the standard validation
-      // messages are shown in the browser's UI language).
-      mapValidationMessage: (
-        validationMessage: string,
-        validity: ValidityState,
-        element: LitElement
-      ) => string;
     }
   }
 }
