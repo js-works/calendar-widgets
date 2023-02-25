@@ -281,8 +281,10 @@ class StandardDialog extends LitElement {
       });
     };
   }
-  private _onAfterShow = () => {
-    (this.querySelector('[autofocus]') as unknown as any)?.focus?.();
+  private _onAfterShow = (ev: Event) => {
+    if (ev.target === this._dialogRef.value) {
+      (this.querySelector('[autofocus]') as unknown as any)?.focus?.();
+    }
   };
 
   private _onAfterHide = (ev: Event) => {
