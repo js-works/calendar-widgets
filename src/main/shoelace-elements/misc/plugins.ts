@@ -46,7 +46,9 @@ function loadPlugin(plugin: Plugin) {
   }
 
   if (loadedPluginIds.has(plugin.id)) {
-    return;
+    throw new Error(
+      `Plugin "${plugin.id.description} must not been loaded multiple times`
+    );
   }
 
   pluginOptions = { ...pluginOptions, ...plugin.mapOptions(pluginOptions) };

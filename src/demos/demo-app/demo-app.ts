@@ -46,7 +46,7 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
     theme: customizeTheme(
       defaultTheme,
       ThemeModifiers.builder()
-        .colors(ColorSetups.bostonBlue)
+        .colors(ColorSetups.skyBlue)
         .modern()
         .compact()
         .build()
@@ -83,6 +83,7 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
     theme: customizeTheme(
       lilTheme,
       ThemeModifiers.builder() //
+        .colors(ColorSetups.pink)
         .modern()
         .compact()
         .build()
@@ -110,7 +111,7 @@ class DemoApp extends LitElement {
   static styles = [unsafeCSS(baseStyles), demoStyles];
 
   static {
-    loadPlugin(inlineValidationPlugin('animated'));
+    loadPlugin(inlineValidationPlugin('tooltip'));
 
     // required components (to prevent too much tree-shaking)
     void [

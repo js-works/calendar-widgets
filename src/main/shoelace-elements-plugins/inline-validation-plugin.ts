@@ -2,12 +2,17 @@ import { html } from 'lit';
 import type { Plugin } from 'shoelace-elements';
 
 import { makeShoelaceCorePluginable } from '../shoelace-elements-internal/plugins/pluginable';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip';
 
 // === export ========================================================
 
 export { inlineValidationPlugin };
 
 // === types =========================================================
+
+type InlineValidationMode = 'animated' | 'static' | 'tooltip';
+
+// === local variables ===============================================
 
 const formControlMatcher = 'form *';
 
@@ -45,6 +50,7 @@ const externalContent = html`
   >
     <style>
       #__external-content__ {
+        position: relative;
         max-height: 0;
         overflow: hidden;
         font-size: var(--sl-font-size-small);
@@ -57,9 +63,9 @@ const externalContent = html`
         display: flex;
         align-items: center;
         margin: 0.25em 0;
-        color: var(--sl-color-danger-900);
+        width: 100%;
+        color: var(--sl-color-danger-800);
         font-size: calc(var(--sl-font-size-small) - 1px);
-        xfont-weight: var(--sl-font-weight-semibold);
         gap: 0.4em;
         background-color: var(--sl-color-danger-50);
         border: 1px solid var(--sl-color-danger-100);
@@ -88,8 +94,56 @@ const externalContent = html`
   </div>
 `;
 
+const mapContentWithTooltip = (content: unknown): unknown => {
+  return html`
+    <style>
+      #__validation__ {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.5em;
+      }
+
+      #__validation-tooltip__ {
+        --sl-tooltip-arrow-size: 0;
+      }
+
+      #__validation-tooltip__::part(body),
+      #__validation-tooltip__::part(base__arrow) {
+        color: var(--sl-color-neutral-0);
+        background-color: var(--sl-color-neutral-1000);
+      }
+
+      #__validation-icon__ {
+        xxxcolor: var(--sl-color-danger-500);
+      }
+
+      :host(:not([data-user-invalid]))
+        #__validation-tooltip__::part(base__popup) {
+        display: none;
+      }
+    </style>
+    <sl-tooltip
+      hoist
+      trigger="hover focus"
+      position="top"
+      distance="12"
+      id="__validation-tooltip__"
+    >
+      <div slot="content" id="__validation__">
+        <div id="__validation-icon__">
+          <sl-icon src=${exclamationIcon}></sl-icon>
+        </div>
+        <div id="__validation-message__"></div>
+      </div>
+
+      ${content}
+    </sl-tooltip>
+  `;
+};
+
 function inlineValidationPlugin(
-  type: 'animated' | 'static' = 'animated'
+  mode: InlineValidationMode = 'animated'
 ): Plugin {
   return {
     id: Symbol('inlineValidation'),
@@ -113,7 +167,7 @@ function inlineValidationPlugin(
             if (form instanceof HTMLFormElement) {
               // TODO!!!!!!!!!!!!!!!!!
               form.addEventListener('reset', () => {
-                setTimeout(() => updateValidationMessage(elem, type));
+                setTimeout(() => updateValidationMessage(elem, mode));
               });
 
               const handler = (ev: Event) => {
@@ -126,7 +180,7 @@ function inlineValidationPlugin(
                     elem.hasAttribute('data-user-valid') ||
                     elem.hasAttribute('data-user-invalid')
                   ) {
-                    updateValidationMessage(elem, type);
+                    updateValidationMessage(elem, mode);
                   }
                 });
               };
@@ -138,7 +192,7 @@ function inlineValidationPlugin(
                 'sl-invalid',
                 (ev) => {
                   if (elem.matches(formControlMatcher)) {
-                    updateValidationMessage(elem, type);
+                    updateValidationMessage(elem, mode);
                     ev.preventDefault();
                   }
                 },
@@ -148,15 +202,23 @@ function inlineValidationPlugin(
           },
 
           mapFormFieldContent: (content, elem) => {
+            if (
+              !('validity' in elem) ||
+              !('validationMessage' in elem) ||
+              !elem.matches(formControlMatcher)
+            ) {
+              return content;
+            }
+
             if (oldConfig?.mapFormFieldContent) {
               content = oldConfig.mapFormFieldContent(content, elem);
             }
 
-            return !('validity' in elem) ||
-              !('validationMessage' in elem) ||
-              !elem.matches(formControlMatcher)
-              ? content
-              : [content, externalContent];
+            if (mode === 'tooltip') {
+              return mapContentWithTooltip(content);
+            }
+
+            return [content, externalContent];
           }
         }
       };
@@ -168,24 +230,28 @@ function inlineValidationPlugin(
 // depending on the form control's `validationMessage` property
 const updateValidationMessage = (
   formControl: any,
-  type: 'static' | 'animated'
+  mode: InlineValidationMode
 ) => {
   const message = formControl.validationMessage;
   const root = formControl.shadowRoot;
+  const validationMessageElem = root.getElementById('__validation-message__');
+
+  if (mode === 'tooltip') {
+    validationMessageElem.innerText = message;
+    return;
+  }
+
   const lastChild = root.lastElementChild;
   const baseElem = root.querySelector('[part=form-control], .base');
   let externalContentElem: HTMLElement;
   let validationElem: HTMLElement;
-  let validationMessageElem: HTMLElement;
 
   externalContentElem = lastChild;
   validationElem = externalContentElem.lastElementChild as HTMLElement;
-  validationMessageElem = validationElem.lastElementChild as HTMLElement;
 
   if (validationMessageElem.innerText !== message) {
-    if (type !== 'animated') {
+    if (mode !== 'animated') {
       validationMessageElem.innerText = message;
-
       externalContentElem.style.maxHeight = message === '' ? '0' : 'none';
     } else {
       if (message !== '') {
