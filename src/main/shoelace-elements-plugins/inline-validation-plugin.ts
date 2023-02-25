@@ -105,7 +105,7 @@ const mapContentWithTooltip = (content: unknown): unknown => {
       }
 
       #__validation-tooltip__ {
-        --sl-tooltip-arrow-size: 0;
+        --sl-tooltip-arrow-size: 0px;
       }
 
       #__validation-tooltip__::part(body),
@@ -118,6 +118,10 @@ const mapContentWithTooltip = (content: unknown): unknown => {
         xxxcolor: var(--sl-color-danger-500);
       }
 
+      #__validation-tooltip__::part(base__popup) {
+        overflow: hidden;
+      }
+
       :host(:not([data-user-invalid]))
         #__validation-tooltip__::part(base__popup) {
         display: none;
@@ -125,8 +129,8 @@ const mapContentWithTooltip = (content: unknown): unknown => {
     </style>
     <sl-tooltip
       hoist
-      trigger="hover focus"
-      position="top"
+      trigger="focus hover"
+      placement="top-end"
       distance="12"
       id="__validation-tooltip__"
     >
@@ -136,7 +140,6 @@ const mapContentWithTooltip = (content: unknown): unknown => {
         </div>
         <div id="__validation-message__"></div>
       </div>
-
       ${content}
     </sl-tooltip>
   `;

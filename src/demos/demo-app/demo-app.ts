@@ -83,7 +83,7 @@ const customThemes: Record<string, { name: string; theme: Theme }> = {
     theme: customizeTheme(
       lilTheme,
       ThemeModifiers.builder() //
-        .colors(ColorSetups.pink)
+        .colors(ColorSetups.skyBlue)
         .modern()
         .compact()
         .build()
