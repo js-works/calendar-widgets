@@ -6,11 +6,11 @@ import SlCheckbox from '@shoelace-style/shoelace/dist/components/checkbox/checkb
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
 import SlOption from '@shoelace-style/shoelace/dist/components/option/option';
 
-import { DatePicker } from '../main/shoelace-widgets';
-import { DateField } from '../main/shoelace-widgets';
+import { DatePicker } from '../main/shoelace-elements';
+import { DateField } from '../main/shoelace-elements';
 
 export default {
-  title: 'shoelace-widgets'
+  title: 'shoelace-elements'
 };
 
 export const datePicker = () => '<date-picker-demo></date-picker-demo>';

@@ -17,12 +17,12 @@ async function build() {
   await rm('./dist', { recursive: true, force: true });
 
   for (const pkg of [
-    'shoelace-widgets',
-    'shoelace-widgets-lit',
-    'shoelace-widgets-react',
-    'shoelace-widgets-preact',
-    'shoelace-widgets-plugins',
-    'shoelace-widgets-internal'
+    'shoelace-elements',
+    'shoelace-elements-lit',
+    'shoelace-elements-react',
+    'shoelace-elements-preact',
+    'shoelace-elements-plugins',
+    'shoelace-elements-internal'
   ]) {
     const outfile = `./dist/${pkg}.js`;
 
@@ -44,8 +44,8 @@ async function build() {
         'react-dom',
         'react-dom/client',
         'preact',
-        'shoelace-widgets',
-        'shoelace-widgets/internal'
+        'shoelace-elements',
+        'shoelace-elements/internal'
       ],
       define: {
         'process.env.NODE_ENV': '"production"'

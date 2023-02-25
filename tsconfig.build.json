@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
-  "files": ["src/main/shoelace-widgets.ts"],
+  "files": ["src/main/shoelace-elements.ts"],
   "include": ["src/main/**/*.ts", "src/main/**/*.tsx"]
 }

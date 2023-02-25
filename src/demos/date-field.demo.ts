@@ -1,10 +1,10 @@
 import { css, html, LitElement } from 'lit';
 import { customElement, property, state } from 'lit/decorators.js';
-import { DateField } from '../main/shoelace-widgets/components/date-field/date-field';
-import { Fieldset } from '../main/shoelace-widgets/components/fieldset/fieldset';
+import { DateField } from '../main/shoelace-elements/components/date-field/date-field';
+import { Fieldset } from '../main/shoelace-elements/components/fieldset/fieldset';
 
 export default {
-  title: 'shoelace-widgets'
+  title: 'shoelace-elements'
 };
 
 export const dateFields = () => '<date-field-demo></date-field-demo>';

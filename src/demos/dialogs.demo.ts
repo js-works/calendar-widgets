@@ -6,15 +6,15 @@ import { Component } from './demo-app/component';
 import SlTab from '@shoelace-style/shoelace/dist/components/tab/tab';
 import SlTabGroup from '@shoelace-style/shoelace/dist/components/tab-group/tab-group';
 import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-panel';
-import { DialogsController, ToastType } from '../main/shoelace-widgets-lit';
-import { TextField } from '../main/shoelace-widgets';
-import { CompoundField } from '../main/shoelace-widgets';
-import { Fieldset } from '../main/shoelace-widgets';
-import { FormSection } from '../main/shoelace-widgets';
-import 'shoelace-widgets';
+import { DialogsController, ToastType } from '../main/shoelace-elements-lit';
+import { TextField } from '../main/shoelace-elements';
+import { CompoundField } from '../main/shoelace-elements';
+import { Fieldset } from '../main/shoelace-elements';
+import { FormSection } from '../main/shoelace-elements';
+import 'shoelace-elements';
 
 export default {
-  title: 'shoelace-widgets'
+  title: 'shoelace-elements'
 };
 
 export const dialogs = () =>

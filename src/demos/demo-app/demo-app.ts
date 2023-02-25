@@ -8,7 +8,7 @@ import { formDemo } from '../form.demo';
 import { dialogs } from '../dialogs.demo';
 import { reactDemo } from '../react.demo';
 import { preactDemo } from '../preact.demo';
-import { loadPlugin } from 'shoelace-widgets';
+import { loadPlugin } from 'shoelace-elements';
 
 import {
   convertThemeToCss,
@@ -29,9 +29,9 @@ import SlTabPanel from '@shoelace-style/shoelace/dist/components/tab-panel/tab-p
 import SlRadioButton from '@shoelace-style/shoelace/dist/components/radio-button/radio-button';
 import SlRadioGroup from '@shoelace-style/shoelace/dist/components/radio-group/radio-group';
 import SlSelect from '@shoelace-style/shoelace/dist/components/select/select';
-import { inlineValidationPlugin } from 'shoelace-widgets/plugins';
+import { inlineValidationPlugin } from 'shoelace-elements/plugins';
 
-import baseStyles from '../../main/shoelace-widgets/styles/base-styles';
+import baseStyles from '../../main/shoelace-elements/styles/base-styles';
 import demoStyles from './demo-app.styles';
 import demoIcon from './demo-app.icon';
 
@@ -180,7 +180,7 @@ class DemoApp extends LitElement {
       <div class="base" @sl-tab-show=${this._onTabShow}>
         <div class="header">
           <sl-icon src=${demoIcon} class="header-icon"></sl-icon>
-          <div class="header-title">Shoelace Widgets - Demo</div>
+          <div class="header-title">Shoelace Elements - Demo</div>
           <sl-select
             class="theme-selector label-on-left"
             label="Theme"

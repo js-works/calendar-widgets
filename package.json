@@ -1,33 +1,33 @@
 {
-  "name": "shoelace-widgets",
-  "version": "0.0.4",
+  "name": "shoelace-elements",
+  "version": "0.0.1",
   "description": "",
   "type": "module",
-  "types": "./dist/types/shoelace-widgets.d.ts",
+  "types": "./dist/types/shoelace-elements.d.ts",
   "exports": {
     ".": {
-      "import": "./dist/shoelace-widgets.js",
-      "types": "./dist/types/shoelace-widgets.d.ts"
+      "import": "./dist/shoelace-elements.js",
+      "types": "./dist/types/shoelace-elements.d.ts"
     },
     "./lit": {
-      "import": "./dist/shoelace-widgets-lit.js",
-      "types": "./dist/types/shoelace-widgets-lit.d.ts"
+      "import": "./dist/shoelace-elements-lit.js",
+      "types": "./dist/types/shoelace-elements-lit.d.ts"
     },
     "./react": {
-      "import": "./dist/shoelace-widgets-react.js",
-      "types": "./dist/types/shoelace-widgets-react.d.ts"
+      "import": "./dist/shoelace-elements-react.js",
+      "types": "./dist/types/shoelace-elements-react.d.ts"
     },
     "./preact": {
-      "import": "./dist/shoelace-widgets-preact.js",
-      "types": "./dist/types/shoelace-widgets-preact.d.ts"
+      "import": "./dist/shoelace-elements-preact.js",
+      "types": "./dist/types/shoelace-elements-preact.d.ts"
     },
     "./plugins": {
-      "import": "./dist/shoelace-widgets-plugins.js",
-      "types": "./dist/types/shoelace-widgets-plugins.d.ts"
+      "import": "./dist/shoelace-elements-plugins.js",
+      "types": "./dist/types/shoelace-elements-plugins.d.ts"
     },
     "./internal": {
-      "import": "./dist/shoelace-widgets-internal.js",
-      "types": "./dist/types/shoelace-widgets-internal.d.ts"
+      "import": "./dist/shoelace-elements-internal.js",
+      "types": "./dist/types/shoelace-elements-internal.d.ts"
     }
   },
   "files": [
@@ -43,14 +43,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/js-works/shoelace-widgets.git"
+    "url": "git+https://github.com/js-works/shoelace-elements.git"
   },
   "author": "",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/js-works/shoelace-widgets/issues"
+    "url": "https://github.com/js-works/shoelace-elements/issues"
   },
-  "homepage": "https://github.com/js-works/shoelace-widgets#readme",
+  "homepage": "https://github.com/js-works/shoelace-elements#readme",
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@types/react": "^18.0.28",
