@@ -54,25 +54,25 @@
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@types/react": "^18.0.28",
-    "@types/react-dom": "^18.0.10",
+    "@types/react-dom": "^18.0.11",
     "@web/dev-server": "^0.1.35",
     "@web/dev-server-esbuild": "^0.3.3",
     "@web/dev-server-import-maps": "^0.0.7",
     "archiver": "^5.3.1",
     "del": "^7.0.0",
-    "esbuild": "^0.17.7",
+    "esbuild": "^0.17.10",
     "lit-html": "^2.6.1",
-    "preact": "^10.12.1",
+    "preact": "^10.13.0",
     "prettier": "^2.8.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "shoelace-themes": "^0.0.28",
-    "terser": "^5.16.3",
+    "terser": "^5.16.5",
     "typescript": "4.9.5",
-    "vite": "^4.1.1"
+    "vite": "^4.1.4"
   },
   "dependencies": {
-    "@shoelace-style/localize": "^3.0.4",
+    "@shoelace-style/localize": "^3.1.0",
     "@shoelace-style/shoelace": "file:../shoelace",
     "lit": "^2.6.1"
   }

@@ -13,27 +13,27 @@ type Plugin = {
   // mapper function that gets the old plugin options
   // and returns new plugin options
   mapOptions: (
-    options: Partial<Shoelace.PluginOptions>
-  ) => Partial<Shoelace.PluginOptions>;
+    options: Partial<ShoelaceElements.PluginOptions>
+  ) => Partial<ShoelaceElements.PluginOptions>;
 };
 
 declare global {
-  namespace Shoelace {
+  namespace ShoelaceElements {
     interface PluginOptions {}
   }
 }
 
 // === local variables ===============================================
 
-let pluginOptions: Partial<Shoelace.PluginOptions> = {};
+let pluginOptions: Partial<ShoelaceElements.PluginOptions> = {};
 let pluginOptionsAlreadyRead = false;
 let loadedPluginIds = new Set<symbol>();
 
 // === exported functions =============================================
 
-function getPluginOption<K extends keyof Shoelace.PluginOptions>(
+function getPluginOption<K extends keyof ShoelaceElements.PluginOptions>(
   key: K
-): Shoelace.PluginOptions[K] | undefined {
+): ShoelaceElements.PluginOptions[K] | undefined {
   pluginOptionsAlreadyRead = true;
   return pluginOptions[key];
 }
@@ -43,10 +43,10 @@ function loadPlugin(plugin: Plugin) {
     throw new Error(
       'Function `loadPlugin` must not be called after method `getPluginOptions` has already been called'
     );
-  } else if (loadedPluginIds.has(plugin.id)) {
-    throw new Error(
-      `Plugin "${plugin.id.description}" has already been loaded`
-    );
+  }
+
+  if (loadedPluginIds.has(plugin.id)) {
+    return;
   }
 
   pluginOptions = { ...pluginOptions, ...plugin.mapOptions(pluginOptions) };

@@ -2,18 +2,27 @@ import type { LitElement, ReactiveController } from 'lit';
 import { getPluginOption } from 'shoelace-elements';
 import SlIcon from '@shoelace-style/shoelace/dist/components/icon/icon';
 
-export { makePluginable, makeShoelaceCorePluginable };
+export { makeElementPluginable, makeShoelaceCorePluginable };
 
-let alreadyPatchedCore = false;
+let alreadyPatchedShoelaceCore = false;
 
-function makePluginable(constructor: typeof LitElement) {
+function makeShoelaceCorePluginable() {
+  if (alreadyPatchedShoelaceCore) {
+    return;
+  }
+
+  makeElementClassPluginable(Object.getPrototypeOf(SlIcon));
+  alreadyPatchedShoelaceCore = true;
+}
+
+function makeElementClassPluginable(constructor: typeof LitElement) {
   constructor.addInitializer((element) => {
     const controller: ReactiveController = {
       hostConnected() {
         element.removeController(controller);
 
         if (!element.hasAttribute('data-not-pluginable')) {
-          handlePlugins(element as LitElement);
+          makeElementPluginable(element as LitElement);
         }
       }
     };
@@ -22,39 +31,38 @@ function makePluginable(constructor: typeof LitElement) {
   });
 }
 
-// === local helper functions ========================================
+function makeElementPluginable(element: LitElement) {
+  const config = getPluginOption('shoelace-elements/lit');
+  const onElementInit = config?.onElementInit;
 
-function handlePlugins(element: LitElement) {
-  const onComponentInit = getPluginOption('onComponentInit');
-
-  if (onComponentInit) {
+  if (onElementInit) {
     const controller: ReactiveController = {
       hostConnected: () => {
         element.removeController(controller);
-        onComponentInit(element);
+        onElementInit(element);
       }
     };
 
     element.addController(controller);
   }
 
-  const contentMapper = getPluginOption('mapRendering');
-  const tracker = getPluginOption('trackRendering');
+  const mapFormFieldContent = config?.mapFormFieldContent;
+  const trackRendering = config?.trackRendering;
   const elem = element as LitElement & { render: () => unknown };
 
   if (
-    (contentMapper || tracker) &&
+    (mapFormFieldContent || trackRendering) &&
     'render' in element &&
     typeof elem.render === 'function'
   ) {
     const oldRender = elem.render.bind(elem);
 
-    const render = !tracker
+    const render = !trackRendering
       ? () => oldRender()
       : () => {
           let content: unknown;
 
-          tracker(() => {
+          trackRendering(() => {
             content = oldRender();
           }, elem);
 
@@ -62,16 +70,6 @@ function handlePlugins(element: LitElement) {
         };
 
     elem.render = () =>
-      !contentMapper ? render() : contentMapper(render(), elem);
+      !mapFormFieldContent ? render() : mapFormFieldContent(render(), elem);
   }
-}
-
-function makeShoelaceCorePluginable() {
-  if (alreadyPatchedCore) {
-    return;
-  }
-
-  alreadyPatchedCore = true;
-
-  makePluginable(Object.getPrototypeOf(SlIcon));
 }

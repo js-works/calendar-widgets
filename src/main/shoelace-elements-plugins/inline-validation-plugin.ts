@@ -1,9 +1,7 @@
 import { html } from 'lit';
 import type { Plugin } from 'shoelace-elements';
-import {
-  makePluginable,
-  makeShoelaceCorePluginable
-} from 'shoelace-elements/internal';
+
+import { makeShoelaceCorePluginable } from '../shoelace-elements-internal/plugins/pluginable';
 
 // === export ========================================================
 
@@ -98,61 +96,71 @@ function inlineValidationPlugin(
 
     onLoad: () => makeShoelaceCorePluginable(),
 
-    mapOptions: (options) => ({
-      onComponentInit: (elem: any) => {
-        options.onComponentInit?.(elem);
+    mapOptions: (options) => {
+      const oldConfig = options['shoelace-elements/lit'] || {};
 
-        if (!('validity' in elem) || !('validationMessage' in elem)) {
-          return;
-        }
+      return {
+        'shoelace-elements/lit': {
+          onElementInit: (elem: any) => {
+            oldConfig?.onElementInit?.(elem);
 
-        const form = elem.closest('form'); // TODO!!!!!!
-
-        if (form instanceof HTMLFormElement) {
-          // TODO!!!!!!!!!!!!!!!!!
-          form.addEventListener('reset', () => {
-            setTimeout(() => updateValidationMessage(elem, type));
-          });
-
-          const handler = (ev: Event) => {
-            if (ev.target !== elem) {
+            if (!('validity' in elem) || !('validationMessage' in elem)) {
               return;
             }
 
-            setTimeout(() => {
-              if (
-                elem.hasAttribute('data-user-valid') ||
-                elem.hasAttribute('data-user-invalid')
-              ) {
-                updateValidationMessage(elem, type);
-              }
-            });
-          };
+            const form = elem.closest('form'); // TODO!!!!!!
 
-          form.addEventListener('sl-input', handler);
-          form.addEventListener('sl-blur', handler);
+            if (form instanceof HTMLFormElement) {
+              // TODO!!!!!!!!!!!!!!!!!
+              form.addEventListener('reset', () => {
+                setTimeout(() => updateValidationMessage(elem, type));
+              });
 
-          form.addEventListener(
-            'sl-invalid',
-            (ev) => {
-              if (elem.matches(formControlMatcher)) {
-                updateValidationMessage(elem, type);
-                ev.preventDefault();
-              }
-            },
-            true
-          );
+              const handler = (ev: Event) => {
+                if (ev.target !== elem) {
+                  return;
+                }
+
+                setTimeout(() => {
+                  if (
+                    elem.hasAttribute('data-user-valid') ||
+                    elem.hasAttribute('data-user-invalid')
+                  ) {
+                    updateValidationMessage(elem, type);
+                  }
+                });
+              };
+
+              form.addEventListener('sl-input', handler);
+              form.addEventListener('sl-blur', handler);
+
+              form.addEventListener(
+                'sl-invalid',
+                (ev) => {
+                  if (elem.matches(formControlMatcher)) {
+                    updateValidationMessage(elem, type);
+                    ev.preventDefault();
+                  }
+                },
+                true
+              );
+            }
+          },
+
+          mapFormFieldContent: (content, elem) => {
+            if (oldConfig?.mapFormFieldContent) {
+              content = oldConfig.mapFormFieldContent(content, elem);
+            }
+
+            return !('validity' in elem) ||
+              !('validationMessage' in elem) ||
+              !elem.matches(formControlMatcher)
+              ? content
+              : [content, externalContent];
+          }
         }
-      },
-
-      mapRendering: (content, elem) => {
-        return !('validity' in elem) ||
-          !('validationMessage' in elem) ||
-          !elem.matches(formControlMatcher)
-          ? content
-          : [content, externalContent];
-      }
-    })
+      };
+    }
   };
 }
 

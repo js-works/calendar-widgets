@@ -13,6 +13,6 @@ export { StandardToast } from './shoelace-elements-internal/components/standard-
 export { createUseDialogsHook } from './shoelace-elements-internal/hooks/create-use-dialogs-hook';
 
 export {
-  makePluginable,
+  makeElementPluginable,
   makeShoelaceCorePluginable
-} from './shoelace-elements-internal/plugins/make-pluginable';
+} from './shoelace-elements-internal/plugins/pluginable';
