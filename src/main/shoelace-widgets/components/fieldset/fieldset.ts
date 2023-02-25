@@ -2,7 +2,8 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
-import { BaseElement } from '../../misc/base-element';
+
+import { shoelaceElement } from 'shoelace-widgets/lit';
 
 // styles
 import fieldsetStyles from './fieldset.styles';
@@ -21,10 +22,11 @@ declare global {
 
 // === Fieldset ======================================================
 
-@customElement('sx-fieldset')
-class Fieldset extends BaseElement {
-  static styles = fieldsetStyles;
-
+@shoelaceElement({
+  tag: 'sx-fieldset',
+  styles: fieldsetStyles
+})
+class Fieldset extends LitElement {
   @property()
   caption = '';
 

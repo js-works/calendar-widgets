@@ -1,24 +1,19 @@
-import { BaseElement } from '../misc/base-element';
+import { LitElement } from 'lit';
+export { Validators };
+export type { FormField, Validator };
 
-export { FormField as FormField, Validators };
-export type { Validator };
+interface FormField<V extends string | string[]> extends LitElement {
+  form: string;
+  name: string;
+  value: V;
+  disabled: boolean;
+  required: boolean;
 
-abstract class FormField<V extends string | string[]> extends BaseElement {
-  constructor() {
-    super();
-  }
+  validationMessage: string;
+  validity: ValidityState;
 
-  abstract form: string;
-  abstract name: string;
-  abstract value: V;
-  abstract disabled: boolean;
-  abstract required: boolean;
-
-  abstract validationMessage: string;
-  abstract validity: ValidityState;
-
-  abstract checkValidity(): boolean;
-  abstract reportValidity(): boolean;
+  checkValidity(): boolean;
+  reportValidity(): boolean;
 }
 
 type Validator<T> = (value: T) => string | null;

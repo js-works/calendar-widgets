@@ -1,5 +1,9 @@
 import { html } from 'lit';
-import type { Plugin } from './plugins';
+import type { Plugin } from 'shoelace-widgets';
+import {
+  makePluginable,
+  makeShoelaceCorePluginable
+} from 'shoelace-widgets/internal';
 
 // === export ========================================================
 
@@ -55,14 +59,14 @@ const externalContent = html`
         display: flex;
         align-items: center;
         margin: 0.25em 0;
-        color: var(--sl-color-danger-800);
+        color: var(--sl-color-danger-900);
         font-size: calc(var(--sl-font-size-small) - 1px);
         xfont-weight: var(--sl-font-weight-semibold);
         gap: 0.4em;
         background-color: var(--sl-color-danger-50);
         border: 1px solid var(--sl-color-danger-100);
         border-radius: 2px;
-        padding: 0.25em 0.5em;
+        padding: 0.125em 0.5em;
       }
 
       #__validation-icon__ {
@@ -92,8 +96,10 @@ function inlineValidationPlugin(
   return {
     id: Symbol('inlineValidation'),
 
+    onLoad: () => makeShoelaceCorePluginable(),
+
     mapOptions: (options) => ({
-      onComponentInit: (elem) => {
+      onComponentInit: (elem: any) => {
         options.onComponentInit?.(elem);
 
         if (!('validity' in elem) || !('validationMessage' in elem)) {

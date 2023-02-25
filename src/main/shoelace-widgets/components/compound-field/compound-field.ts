@@ -5,7 +5,8 @@ import { repeat } from 'lit/directives/repeat.js';
 import { when } from 'lit/directives/when.js';
 import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
-import { BaseElement } from '../../misc/base-element';
+
+import { shoelaceElement } from 'shoelace-widgets/lit';
 
 // styles
 import compoundFieldStyles from './compound-field.styles';
@@ -24,15 +25,11 @@ declare global {
 
 // === Compound field ================================================
 
-@customElement('sx-compound-field')
-class CompoundField extends BaseElement {
-  static styles = compoundFieldStyles;
-
-  static {
-    // dependencies (to prevent too much tree shaking)
-    void [];
-  }
-
+@shoelaceElement({
+  tag: 'sx-compound-field',
+  styles: compoundFieldStyles
+})
+class CompoundField extends LitElement {
   @property()
   label = '';
 

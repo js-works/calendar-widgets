@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { BaseElement } from '../../misc/base-element';
+
+import { shoelaceElement } from 'shoelace-widgets/lit';
 
 // styles
 import hboxStyles from './vbox.styles';
@@ -19,10 +20,11 @@ declare global {
 
 // === VBox ==========================================================
 
-@customElement('sx-vbox')
-class VBox extends BaseElement {
-  static styles = hboxStyles;
-
+@shoelaceElement({
+  tag: 'sx-vbox',
+  styles: hboxStyles
+})
+class VBox extends LitElement {
   @property()
   alignItems: 'top' | 'center' | 'bottom' = 'center';
 

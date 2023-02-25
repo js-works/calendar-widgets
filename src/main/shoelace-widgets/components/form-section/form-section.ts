@@ -2,7 +2,8 @@ import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { when } from 'lit/directives/when.js';
-import { BaseElement } from '../../misc/base-element';
+
+import { shoelaceElement } from 'shoelace-widgets/lit';
 
 // === exports =======================================================
 
@@ -10,8 +11,10 @@ export { FormSection };
 
 // === exported types ==========================================
 
-@customElement('sx-form-section')
-class FormSection extends BaseElement {
+@shoelaceElement({
+  tag: 'sx-form-section'
+})
+class FormSection extends LitElement {
   @property()
   caption = '';
 

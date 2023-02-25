@@ -6,7 +6,8 @@ import { LocalizeController } from '@shoelace-style/localize/dist/index';
 import { DatePicker as Picker } from './vanilla/date-picker';
 import { dateAttributeConverter } from '../../utils/attribute-converters';
 import { GregorianCalendar } from './vanilla/calendars/gregorian/gregorian-calendar';
-import { BaseElement } from '../../misc/base-element';
+
+import { shoelaceFormField } from 'shoelace-widgets/lit';
 import type { Calendar } from './vanilla/calendar';
 
 // === exports =======================================================
@@ -71,10 +72,11 @@ const datePickerCustomStyles = css`
 `;
 // === components ====================================================
 
-@customElement('sx-date-picker')
-class DatePicker extends BaseElement {
-  static styles = [unsafeCSS(Picker.styles), datePickerCustomStyles];
-
+@shoelaceFormField({
+  tag: 'sx-date-picker',
+  styles: [unsafeCSS(Picker.styles), datePickerCustomStyles]
+})
+class DatePicker extends LitElement {
   @property()
   get value(): string {
     return this._picker.getValue();

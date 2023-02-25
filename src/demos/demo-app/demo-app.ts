@@ -8,7 +8,7 @@ import { formDemo } from '../form.demo';
 import { dialogs } from '../dialogs.demo';
 import { reactDemo } from '../react.demo';
 import { preactDemo } from '../preact.demo';
-import { loadPlugin } from 'shoelace-widgets/plugins';
+import { loadPlugin } from 'shoelace-widgets';
 
 import {
   convertThemeToCss,

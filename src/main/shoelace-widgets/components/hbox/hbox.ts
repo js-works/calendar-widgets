@@ -1,6 +1,7 @@
 import { html, LitElement } from 'lit';
 import { customElement, property } from 'lit/decorators.js';
-import { BaseElement } from '../../misc/base-element';
+
+import { shoelaceElement } from 'shoelace-widgets/lit';
 
 // styles
 import hboxStyles from './hbox.styles';
@@ -19,10 +20,11 @@ declare global {
 
 // === HBox ==========================================================
 
-@customElement('sx-hbox')
-class HBox extends BaseElement {
-  static styles = hboxStyles;
-
+@shoelaceElement({
+  tag: 'sx-hbox',
+  styles: hboxStyles
+})
+class HBox extends LitElement {
   @property({ attribute: 'align-items' })
   alignItems: 'top' | 'center' | 'bottom' = 'top';
 

@@ -5,6 +5,7 @@ import { createRef, ref } from 'lit/directives/ref.js';
 import { LocalizeController } from '../../i18n/i18n';
 import { FormFieldController } from '../../form-fields/form-field-controller';
 import { FormField, Validators } from '../../form-fields/form-fields';
+import { shoelaceFormField } from 'shoelace-widgets/lit';
 
 // custom elements
 import '@shoelace-style/shoelace/dist/components/icon/icon';
@@ -35,10 +36,11 @@ const typeMap: Record<string, string> = {
 
 // === TextField =====================================================
 
-@customElement('sx-text-field')
-class TextField extends FormField<string> {
-  static styles = textFieldStyles;
-
+@shoelaceFormField({
+  tag: 'sx-text-field',
+  styles: textFieldStyles
+})
+class TextField extends LitElement {
   @property()
   form = '';
 

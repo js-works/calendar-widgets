@@ -1,7 +1,7 @@
 import './shoelace-widgets/icons/register-icons';
 
 // types
-export type { Plugin } from './shoelace-widgets-plugins/plugins';
+export type { Plugin } from './shoelace-widgets/misc/plugins';
 
 // components
 export { Fieldset } from './shoelace-widgets/components/fieldset/fieldset';
@@ -16,3 +16,4 @@ export { VBox } from './shoelace-widgets/components/vbox/vbox';
 
 // functions
 export { loadBaseStyles } from './shoelace-widgets/styles/load-base-styles';
+export { getPluginOption, loadPlugin } from './shoelace-widgets/misc/plugins';
