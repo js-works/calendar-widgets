@@ -63,7 +63,6 @@ const externalContent = html`
         display: flex;
         align-items: center;
         margin: 0.25em 0;
-        width: 100%;
         color: var(--sl-color-danger-800);
         font-size: calc(var(--sl-font-size-small) - 1px);
         gap: 0.4em;
@@ -71,6 +70,7 @@ const externalContent = html`
         border: 1px solid var(--sl-color-danger-100);
         border-radius: 2px;
         padding: 0.125em 0.5em;
+        box-sizing: border-box;
       }
 
       #__validation-icon__ {

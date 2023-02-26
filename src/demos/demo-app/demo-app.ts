@@ -111,7 +111,7 @@ class DemoApp extends LitElement {
   static styles = [unsafeCSS(baseStyles), demoStyles];
 
   static {
-    loadPlugin(inlineValidationPlugin('tooltip'));
+    loadPlugin(inlineValidationPlugin('animated'));
 
     // required components (to prevent too much tree-shaking)
     void [
