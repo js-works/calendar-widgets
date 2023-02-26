@@ -405,11 +405,6 @@
   resolved "https://registry.yarnpkg.com/@shoelace-style/animations/-/animations-1.1.0.tgz#17539abafd6dcbf2a79e089e1593175e9f7835b5"
   integrity sha512-Be+cahtZyI2dPKRm8EZSx3YJQ+jLvEcn3xzRP7tM4tqBnvd/eW/64Xh0iOf0t2w5P8iJKfdBbpVNE9naCaOf2g==
 
-"@shoelace-style/localize@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-3.0.4.tgz#e2b71e077f34deff01eca08ef63c49e70e2a2852"
-  integrity sha512-HFY90KD+b1Td2otSBryCOpQjBEArIwlV6Tv4J4rC/E/D5wof2eLF6JUVrbiRNn8GRmwATe4YDAEK7NUD08xO1w==
-
 "@shoelace-style/localize@^3.1.0":
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/@shoelace-style/localize/-/localize-3.1.0.tgz#69eae2f6f6f3176af81578396aa237add9df5309"
@@ -422,7 +417,7 @@
     "@floating-ui/dom" "^1.1.0"
     "@lit-labs/react" "^1.1.1"
     "@shoelace-style/animations" "^1.1.0"
-    "@shoelace-style/localize" "^3.0.4"
+    "@shoelace-style/localize" "^3.1.0"
     lit "^2.6.1"
     qr-creator "^1.0.0"
 
@@ -2123,10 +2118,10 @@ setprototypeof@1.2.0:
   resolved "https://registry.yarnpkg.com/setprototypeof/-/setprototypeof-1.2.0.tgz#66c9a24a73f9fc28cbe66b09fed3d33dcaf1b424"
   integrity sha512-E5LDX7Wrp85Kil5bhZv46j8jOeboKq5JMmYM3gVGdGH8xFpPWXUMsNrlODCrkoxMEeNi/XZIwuRvY4XNwYMJpw==
 
-shoelace-themes@^0.0.28:
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/shoelace-themes/-/shoelace-themes-0.0.28.tgz#f9825de6a6add11626377a2fbea242d2cf40c99a"
-  integrity sha512-yhj2MFjLU+YdjaudK23oNy+ezCE3M8zcpkMJhEuQAJAduRTd8/QRytaUoMd0hWuSN7S0Gyh0WI+jJvbuDgYJew==
+shoelace-themes@^0.0.29:
+  version "0.0.29"
+  resolved "https://registry.yarnpkg.com/shoelace-themes/-/shoelace-themes-0.0.29.tgz#f799a3d25b4b6e6c3c42bbd70b2ec9f529df9c05"
+  integrity sha512-ZVwDw4OSSgdi5gtSRU3d5IipeXh8kBUUzkwQwmmIYEGo32Hjwg4Xv8ZPgor5QWk+rUXxaXDz9wktNeaaJDAFvg==
 
 slash@^4.0.0:
   version "4.0.0"

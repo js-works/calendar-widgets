@@ -12,11 +12,9 @@ import { loadPlugin } from 'shoelace-elements';
 
 import {
   convertThemeToCss,
-  customizeTheme,
   defaultTheme,
-  lilTheme,
-  ColorSetups,
-  ThemeModifiers,
+  miniTheme,
+  ThemeBuilder,
   Theme
 } from 'shoelace-themes';
 
@@ -43,62 +41,45 @@ import darkTheme from '@shoelace-style/shoelace/dist/themes/dark.styles';
 const customThemes: Record<string, { name: string; theme: Theme }> = {
   'custom-light': {
     name: 'Custom (light)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.skyBlue)
-        .modern()
-        .compact()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('skyBlue')
+      .size('compact')
+      .variant('modern')
+      .build()
   },
 
   'custom-dark': {
     name: 'Custom (dark)',
-    theme: customizeTheme(
-      defaultTheme,
-      ThemeModifiers.builder()
-        .colors(ColorSetups.skyBlue)
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+    theme: ThemeBuilder.from(defaultTheme)
+      .colors('skyBlue')
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   },
   'lil-theme-light': {
-    name: 'Lil theme (light)',
-    theme: lilTheme
+    name: 'Mini theme (light)',
+    theme: miniTheme
   },
   'lil-theme-dark': {
-    name: 'Lil theme (dark)',
-    theme: customizeTheme(
-      lilTheme,
-      ThemeModifiers.builder() //
-        .dark()
-        .build()
-    )
+    name: 'Mini theme (dark)',
+    theme: ThemeBuilder.from(miniTheme).dark().build()
   },
   'lil-theme-custom-light': {
-    name: 'Lil theme custom (light)',
-    theme: customizeTheme(
-      lilTheme,
-      ThemeModifiers.builder() //
-        .colors(ColorSetups.skyBlue)
-        .modern()
-        .compact()
-        .build()
-    )
+    name: 'Mini theme custom (light)',
+    theme: ThemeBuilder.from(miniTheme)
+      .colors('skyBlue')
+      .size('compact')
+      .variant('modern')
+      .build()
   },
   'lil-theme-custom-dark': {
-    name: 'Lil theme custom (dark)',
-    theme: customizeTheme(
-      lilTheme,
-      ThemeModifiers.builder() //
-        .modern()
-        .compact()
-        .dark()
-        .build()
-    )
+    name: 'Mini theme custom (dark)',
+    theme: ThemeBuilder.from(miniTheme)
+      .size('compact')
+      .variant('modern')
+      .dark()
+      .build()
   }
 };
 

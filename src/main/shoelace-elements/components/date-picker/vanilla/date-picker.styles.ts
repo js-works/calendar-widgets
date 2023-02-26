@@ -8,6 +8,7 @@ export default /*css*/ `
     font-size: var(--cal-font-size);
     user-select: none;
     min-width: 20em;
+    min-height: 17em;
   }
   
   .cal-base * {
