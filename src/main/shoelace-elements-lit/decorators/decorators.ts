@@ -1,4 +1,4 @@
-import { CSSResult, LitElement, ReactiveController } from 'lit';
+import { CSSResult, LitElement } from 'lit';
 import { customElement } from 'lit/decorators.js';
 import { getPluginOption } from 'shoelace-elements';
 import { makeElementPluginable } from '../../shoelace-elements-internal/plugins/pluginable';
@@ -17,22 +17,30 @@ function shoelaceElement(params: {
   uses?: any;
 }): <T extends typeof LitElement>(constructor: T) => T {
   return <T extends typeof LitElement>(constructor: T) => {
-    const clazz: any = class extends (constructor as any) {
+    class ShoelaceCustomElement extends (constructor as any) {
       static styles = params.styles || null;
+
+      static properties = {
+        lang: { type: String },
+        dir: { type: String }
+      };
 
       constructor() {
         super();
         const config = getPluginOption('shoelace-elements/lit');
         config?.onElementInit?.(this as unknown as LitElement);
-        makeElementPluginable(this as unknown as LitElement);
-      }
-    };
 
-    Object.defineProperty(clazz, 'name', {
+        if (config) {
+          makeElementPluginable(this as unknown as LitElement);
+        }
+      }
+    }
+
+    Object.defineProperty(ShoelaceCustomElement, 'name', {
       value: constructor.name
     });
 
-    const ret = customElement(params.tag)(clazz);
+    const ret = customElement(params.tag)(ShoelaceCustomElement as any);
     return ret as any;
   };
 }
