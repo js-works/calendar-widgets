@@ -47,7 +47,7 @@ class TextField extends LitElement {
   @property()
   type: 'text' | 'password' | 'email' | 'phone' | 'cellphone' = 'text';
 
-  @property()
+  @property({ reflect: true })
   name = '';
 
   @property()
@@ -56,7 +56,7 @@ class TextField extends LitElement {
   @property()
   defaultValue = '';
 
-  @property()
+  @property({ reflect: true })
   label = '';
 
   @property({ type: Boolean })

@@ -67,16 +67,16 @@ const externalContent = html`
         font-size: calc(var(--sl-font-size-small) - 1px);
         gap: 0.4em;
         background-color: var(--sl-color-danger-50);
-        border: 1px solid var(--sl-color-danger-100);
+        border: 1px solid var(--sl-color-danger-200);
         border-radius: 2px;
-        padding: 0.125em 0.5em;
+        padding: 0.25em 0.5em;
         box-sizing: border-box;
       }
 
       #__validation-icon__ {
         flex-grow: 0;
         flex-shrink: 0;
-        padding: 0 0.25em;
+        padding: 0 0.125em;
         font-size: calc(var(--sl-font-size-small));
       }
 
@@ -105,7 +105,7 @@ const mapContentWithTooltip = (content: unknown): unknown => {
       }
 
       #__validation-tooltip__ {
-        --sl-tooltip-arrow-size: 0px;
+        --sl-tooltip-arrow-size: 4px;
       }
 
       #__validation-tooltip__::part(body),
@@ -130,9 +130,10 @@ const mapContentWithTooltip = (content: unknown): unknown => {
     <sl-tooltip
       hoist
       trigger="focus hover"
-      placement="top-end"
+      placement="top-start"
       distance="12"
       id="__validation-tooltip__"
+      exportparts="base__popup: __validation-tooltip__"
     >
       <div slot="content" id="__validation__">
         <div id="__validation-icon__">

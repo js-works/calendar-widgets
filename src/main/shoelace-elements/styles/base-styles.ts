@@ -53,6 +53,10 @@ export default /*css*/ `
     ${fieldSelector}::part(form-control-validation-message) {
       margin-left: calc(var(--label-width) + var(--gap-width));
     }
+    
+    ${fieldSelector}::part(__validation-tooltip__) {
+      margin-left: calc(var(--label-width) + var(--gap-width));
+    }
 
     /* inline validation styles */
   /*  

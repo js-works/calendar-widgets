@@ -1,5 +1,9 @@
 import { h, render, Ref, ComponentChild, Fragment } from 'preact';
-import { useDialogs, ToastType } from '../main/shoelace-elements-preact';
+import {
+  useDialogs,
+  useForm,
+  ToastType
+} from '../main/shoelace-elements-preact';
 
 export const preactDemo = () => {
   const container = document.createElement('div');
@@ -16,6 +20,7 @@ const styles = /*css*/ `
 
 function Demo() {
   const { showDialog, showToast, renderDialogs } = useDialogs();
+  const fld = useForm();
 
   const onInfoDialogClick = () => {
     showDialog('info', {
@@ -48,14 +53,14 @@ function Demo() {
       width: '25rem',
 
       content: (
-        <sx-fieldset label-layout="horizontal">
-          <sx-text-field label="Username" name="username" required autofocus />
+        <sx-fieldset xxxlabel-layout="horizontal">
+          <sl-input label="Username" required autofocus {...fld.username} />
 
-          <sx-text-field
+          <sl-input
             type="password"
             label="Password"
-            name="password"
             required
+            {...fld.password}
           />
         </sx-fieldset>
       )
